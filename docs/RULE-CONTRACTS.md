@@ -4,7 +4,7 @@ V0.2b.1 adds `src/rules/contracts.js` as a JSON-only boundary. Character Definit
 
 `coverage({version:1, mode, primitives, requirements})` computes a status using the executor's primitive registry. A partial plan is rejected wholesale by automatic execution. Declaring a primitive available is not enough: content compilation and all referenced prerequisites still need validation. Runtime guards are authoritative; the report is descriptive.
 
-## Decisions and triggers (contract only in this sub-lot)
+## Decisions and triggers (contract only; P0 manual adjudication is separate)
 
 A decision pins an event ID, actor, expected revision, option IDs/costs and a continuation phase. The explicit policy is `block-dependent-resolution`; no wall-clock auto-accept or fallback. Pending windows must be persisted before presenting options. A future response must reference the decision/event/option and current revision, pay costs only on acceptance, mark it resolved once, then resume that same event. Decline consumes no reaction/resource. Independent commands require an explicit allowlist; dependent attack/damage/turn resolution must block. Undo must restore event, decision, costs and all affected actors as one coherent boundary; immutable receipts prevent replaying a consumed continuation.
 
@@ -23,3 +23,7 @@ A transformation references a versioned creature/profile, separate form HP, reta
 ## Authority
 
 Local/Free modes execute locally. Encounter mode continues to require Encounter authority before changes, including manual outcomes, effects, turn transitions and decisions. Future transport forwards intents and consumes authoritative events with durable IDs; Pilot20 must not calculate and then reapply the same final damage. No WebSocket or competing combat authority is added.
+
+## P0 executable layer
+
+V0.2b.2 adds versioned `combat` profiles and temporary runtime state in `src/rules/combat.js`, validated by `schemas/combat-rules-v1.schema.json`. See [the exact P0 contract](V0.2b-P0.md). The primitive registry denotes bounded executable primitives, not complete official spells or complete D&D condition semantics. Generic reaction, trigger, transformation and post-hit decision execution remains unavailable.

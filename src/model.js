@@ -1,3 +1,4 @@
+import {validateProfile,validateAdvanced} from './rules/combat.js';
 /** Portable, JSON-only domain model. All external data crosses this validator. */
 export const VERSION = 1;
 export const copy = value => structuredClone(value);
@@ -35,8 +36,10 @@ export function validateDefinition(d) {
   requireThat(integer(d.level,1,20) && integer(d.maxHp,1) && integer(d.ac,0,100) && integer(d.attacksPerAction,1,10), 'Character statistics');
   requireThat(object(d.saves) && integer(d.saves.con,-20,100), 'Constitution save');
   requireThat(object(d.resources) && object(d.abilities), 'Resources and abilities');
+  if(d.speed!==undefined) requireThat(integer(d.speed,0,1000),'Speed');
   for (const [key,r] of Object.entries(d.resources)) {
     requireThat(id(key) && object(r) && integer(r.max) && ['short','long','none'].includes(r.recovery), 'Resource definition');
+    if(r.slotLevel!==undefined) requireThat(integer(r.slotLevel,1,9) && ['standard','pact'].includes(r.pool),'Slot metadata');
   }
   for (const [key,a] of Object.entries(d.abilities)) {
     requireThat(id(key) && object(a) && typeof a.name === 'string' && costs.includes(a.cost) && ['self','selected'].includes(a.target), 'Ability definition');
@@ -48,10 +51,23 @@ export function validateDefinition(d) {
       requireThat(object(a.concentration) && Object.keys(a.concentration).every(k=>['effectId','start'].includes(k)) && id(a.concentration.effectId) && ['activation','hit'].includes(a.concentration.start), 'Concentration activation rule');
       requireThat(a.concentration.start !== 'hit' || !!a.attack, 'Hit-gated concentration requires an attack');
     }
+    if(a.combat!==undefined) {
+      requireThat(Object.keys(a).every(k=>['name','cost','target','maxTargets','effects','attackAction','attack','resource','concentration','combat','save','manualPlan'].includes(k)),'Unsupported ability field');
+      validateProfile(a.combat,{compiled:true});
+      requireThat(!a.concentration || a.combat.mode!=='automatic' || !!a.combat.duration,'Explicit concentration duration required');
+      requireThat(!a.combat.spell || !a.resource,'Spell slot and fixed cost are mutually exclusive');
+      requireThat(!a.combat.grant || (a.cost==='none' && a.target==='self' && !!a.resource),'Resource-backed action grant');
+      if(a.combat.upcast && a.combat.mode==='automatic') requireThat(a.effects[a.combat.upcast.effectIndex]?.dice!==undefined,'Dice upcast effect');
+      requireThat(!(a.combat.ongoing??[]).some(e=>e.concentration) || a.concentration?.start==='activation','Ongoing concentration activation required');
+      if(a.combat.weapon) requireThat(!!a.attack && a.combat.actionKind==='weaponAttack','Weapon attack profile');
+    }
+    if(a.save!==undefined) requireThat(object(a.save) && ['str','dex','con','int','wis','cha'].includes(a.save.ability) && integer(a.save.dc,1,100) && ['full','half','none'].includes(a.save.onSuccess) && !a.attack && !!a.combat,'Save profile');
     for (const e of a.effects) {
+      if(a.combat) requireThat(Object.keys(e).every(k=>['kind','amount','dice','damageType','when'].includes(k)),'Unsupported effect field');
       requireThat(object(e) && ['damage','heal','tempHp'].includes(e.kind), 'Unsupported effect');
       requireThat((e.amount === undefined) !== (e.dice === undefined), 'One effect amount or dice formula required');
       if (e.dice !== undefined) diceSpec(e.dice); else requireThat(integer(e.amount), 'Effect amount');
+      if(e.when!==undefined) requireThat(['always','success','failure'].includes(e.when) && !!a.save,'Conditional save effect');
       if (e.kind === 'damage') requireThat(id(e.damageType), 'Damage type');
     }
   }
@@ -84,6 +100,7 @@ function validateGame(state) {
   requireThat(Object.hasOwn(state.actors,state.activeActorId), 'Active actor');
   for (const [key,a] of Object.entries(state.actors)) {
     requireThat(id(key) && object(a) && key === a.definition?.id, 'Actor identity'); validateDefinition(a.definition);
+    validateAdvanced(a,state);
     requireThat(object(a.hp) && integer(a.hp.max,1) && integer(a.hp.current,0,a.hp.max) && integer(a.hp.temp), 'HP bounds');
     requireThat(object(a.resources) && Object.keys(a.resources).length === Object.keys(a.definition.resources).length, 'Resource state');
     for (const [r,value] of Object.entries(a.resources)) requireThat(Object.hasOwn(a.definition.resources,r) && integer(value,0,a.definition.resources[r].max), 'Resource bounds');

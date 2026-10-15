@@ -12,7 +12,8 @@
     "benchmark": "node scripts/benchmark-history.mjs",
     "demo:characters": "node examples/character-demo.mjs",
     "coverage": "node scripts/coverage-report.mjs",
-    "coverage:check": "node scripts/coverage-report.mjs --check"
+    "coverage:check": "node scripts/coverage-report.mjs --check",
+    "demo:combat": "node examples/advanced-combat-demo.mjs"
   },
   "devDependencies": {
     "fake-indexeddb": "6.2.4",

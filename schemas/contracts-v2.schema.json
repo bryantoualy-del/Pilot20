@@ -137,6 +137,13 @@
                   "prototype"
                 ]
               }
+            },
+            "when": {
+              "enum": [
+                "always",
+                "success",
+                "failure"
+              ]
             }
           },
           "required": [
@@ -159,6 +166,13 @@
             },
             "dice": {
               "$ref": "#/$defs/dice"
+            },
+            "when": {
+              "enum": [
+                "always",
+                "success",
+                "failure"
+              ]
             }
           },
           "required": [
@@ -412,6 +426,9 @@
         },
         "source": {
           "$ref": "#/$defs/source"
+        },
+        "combat": {
+          "$ref": "https://pilot20.invalid/schemas/combat-rules-v1.schema.json#/$defs/profile"
         }
       },
       "required": [
@@ -1773,6 +1790,9 @@
         },
         "incapacitated": {
           "type": "boolean"
+        },
+        "advanced": {
+          "$ref": "https://pilot20.invalid/schemas/combat-rules-v1.schema.json#/$defs/advancedRuntime"
         }
       },
       "required": [

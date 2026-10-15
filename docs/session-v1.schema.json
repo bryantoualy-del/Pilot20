@@ -100,6 +100,17 @@
             "long",
             "none"
           ]
+        },
+        "slotLevel": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9
+        },
+        "pool": {
+          "enum": [
+            "standard",
+            "pact"
+          ]
         }
       },
       "required": [
@@ -258,6 +269,42 @@
             "start"
           ],
           "additionalProperties": false
+        },
+        "combat": {
+          "$ref": "https://pilot20.invalid/schemas/combat-rules-v1.schema.json#/$defs/compiledProfile"
+        },
+        "save": {
+          "type": "object",
+          "properties": {
+            "ability": {
+              "enum": [
+                "str",
+                "dex",
+                "con",
+                "int",
+                "wis",
+                "cha"
+              ]
+            },
+            "dc": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "onSuccess": {
+              "enum": [
+                "full",
+                "half",
+                "none"
+              ]
+            }
+          },
+          "required": [
+            "ability",
+            "dc",
+            "onSuccess"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [
@@ -371,6 +418,11 @@
           "items": {
             "$ref": "#/$defs/id"
           }
+        },
+        "speed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
         }
       },
       "required": [
@@ -508,6 +560,9 @@
         },
         "incapacitated": {
           "type": "boolean"
+        },
+        "advanced": {
+          "$ref": "https://pilot20.invalid/schemas/combat-rules-v1.schema.json#/$defs/advancedRuntime"
         }
       },
       "required": [

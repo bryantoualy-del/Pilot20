@@ -9,7 +9,7 @@ import {catalog} from '../src/catalog/srd51.js';
 test('versioned structural schemas accept data from every public producer',async()=>{
  const schema=JSON.parse(await readFile(new URL('../schemas/contracts-v2.schema.json',import.meta.url)));
  const legacy=JSON.parse(await readFile(new URL('../docs/session-v1.schema.json',import.meta.url)));
- const ajv=new Ajv2020({strict:false});ajv.addSchema(legacy);
+ const ajv=new Ajv2020({strict:false});ajv.addSchema(JSON.parse(await readFile(new URL('../schemas/combat-rules-v1.schema.json',import.meta.url))));ajv.addSchema(legacy);
  const legacyValidate=ajv.getSchema(legacy.$id),validate=ajv.compile(schema);
  for(const c of referenceClasses) {
    const d=characterFixture(c),s=createCombat('schema-'+c,[{instanceId:'actor',character:d}]);

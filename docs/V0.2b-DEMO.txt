@@ -1,0 +1,9 @@
+Pilot20 — selected-target combat demonstration, D&D 2014
+Eligibility, areas, components and narrative consequences are adjudicated externally.
+Round 1
+Fighter: 3 ordinary + 3 additional + 1 restricted weapon attack. Pact blast: 10 / 0 / 40 / 20. HP: [ 47, 93, 103, 63, 83 ]
+Round 2 — resumed from JSON
+Five-target save spell: 24 / 6 / 0 / 24 / 12. HP: [ 0, 75, 103, 39, 71 ]
+Round 3
+Concentration failed; Haste effects removed; Fighter cannot act until own turn ends. HP: [ 0, 65, 103, 0, 51 ]
+Verified: exact final HP, slot expenditure, independent budgets, concentration cleanup, reload and unchanged permanent sheets.

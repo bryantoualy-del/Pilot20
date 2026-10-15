@@ -1,3 +1,5 @@
+import {json} from './character/contracts.js';
+import {advanced,profileExecutable,statistic,saveModes,hasCondition,cleanupConcentration,boundary,checkCanAct,payAction,prepareCast,establish,addEffect,removeEffect} from './rules/combat.js';
 import {copy, validate, requireThat as check, integer, id, diceSpec} from './model.js';
 const game = s => copy({actors:s.actors,activeActorId:s.activeActorId,turnId:s.turnId});
 function dieRoll(rolls, sides, count) {
@@ -35,55 +37,125 @@ function resolveAmount(e, rolls, critical) {
   return Math.max(0,dieRoll(rolls,spec.sides,count).reduce((a,b)=>a+b,0)+spec.bonus);
 }
 function actor(s,key) { check(Object.hasOwn(s.actors,key),'Unknown actor'); return s.actors[key]; }
+function activation(s,c,manual=false) {
+  const a=actor(s,c.actorId);check(Object.hasOwn(a.definition.abilities,c.abilityId),'Unknown ability');
+  const ability=copy(a.definition.abilities[c.abilityId]),p=ability.combat;
+  checkCanAct(s,a);
+  check(!ability.concentration || !hasCondition(a,'cannotConcentrate'),'Concentration restricted');
+  if(manual) check(p?.mode==='manual','Explicit manual profile required');
+  else if(p) check(profileExecutable(p),'Ability is not automatically executable');
+  if(!['reaction','none'].includes(ability.cost)) check(s.activeActorId===c.actorId,'Not actor turn');
+  const ids=ability.target==='self'?[c.actorId]:c.targetIds;
+  check(Array.isArray(ids) && ids.length>0 && ids.length<=ability.maxTargets && new Set(ids).size===ids.length,'Invalid targets');
+  const targets=ids.map(key=>[key,actor(s,key)]);
+  check(!ability.attack || ids.length===1,'One attack target required');
+  check(!a.checks.length || ability.concentration?.start==='activation','Resolve concentration first');
+  payAction(s,a,ability,c);
+  if(ability.resource) {const r=ability.resource;check(a.resources[r.id]>=r.amount,'Resource depleted');a.resources[r.id]-=r.amount;}
+  const slotLevel=prepareCast(a,ability,c);
+  if(p?.upcast) {
+    const e=ability.effects[p.upcast.effectIndex],d=diceSpec(e.dice),count=d.count+(slotLevel-p.spell.level)*p.upcast.dicePerLevel;
+    e.dice=count+'d'+d.sides+(d.bonus<0?'':'+')+d.bonus;diceSpec(e.dice);
+  }
+  return {a,ability,targets,slotLevel};
+}
 function useAbility(s,c) {
-  const a = actor(s,c.actorId), ability = a.definition.abilities[c.abilityId];
-  check(Object.hasOwn(a.definition.abilities,c.abilityId),'Unknown ability');
-  check(a.hp.current > 0 && !a.incapacitated,'Actor cannot act');
-  if (!['reaction','none'].includes(ability.cost)) check(s.activeActorId === c.actorId,'Not actor turn');
-  const ids = ability.target === 'self' ? [c.actorId] : c.targetIds;
-  check(Array.isArray(ids) && ids.length > 0 && ids.length <= ability.maxTargets && new Set(ids).size === ids.length,'Invalid targets');
-  const targets = ids.map(key=>[key,actor(s,key)]);
-  check(!ability.attack || ids.length === 1,'One attack target required');
-  // Activation rules are actor-scoped. A hit-gated activation must first settle
-  // pending checks; an unconditional replacement retires its old instance.
-  check(!a.checks.length || ability.concentration?.start === 'activation','Resolve concentration first');
-  if (ability.cost === 'action' && ability.attackAction === true) {
-    if (!a.economy.attacks) { check(a.economy.action,'Action spent'); a.economy.action = false; a.economy.attacks = a.definition.attacksPerAction; }
-    a.economy.attacks--;
-  } else if (ability.cost !== 'none') {
-    check(a.economy[ability.cost], 'Action spent'); a.economy[ability.cost] = false;
-    if (ability.cost === 'action') a.economy.attacks = 0;
+  const {a,ability,targets,slotLevel}=activation(s,c);
+  let hit=true,critical=false,total=null;
+  if(ability.attack) {
+    const natural=d20(c.attackRolls,c.advantage===true,c.disadvantage===true);
+    total=natural+statistic(a,'attack',ability.attack.bonus);critical=natural===20;
+    hit=natural!==1 && (critical || total>=statistic(targets[0][1],'ac',targets[0][1].definition.ac));
   }
-  if (ability.resource) {
-    const r = ability.resource; check(a.resources[r.id] >= r.amount,'Resource depleted'); a.resources[r.id] -= r.amount;
-  }
-  let hit = true, critical = false, total = null;
-  if (ability.attack) {
-    const natural = d20(c.attackRolls,c.advantage === true,c.disadvantage === true);
-    total = natural+ability.attack.bonus; critical = natural === 20;
-    hit = natural !== 1 && (critical || total >= targets[0][1].definition.ac);
-  }
-  activateConcentration(a,ability.concentration,c.id,hit);
-  const results = [];
-  if (hit) for (const [key,target] of targets) {
-    // Aggregate typed components before applying resistance and concentration once per hit.
-    const components = new Map();
-    for (const [i,e] of ability.effects.entries()) {
-      const n = resolveAmount(e,c.effectRolls?.[i],critical);
-      if (e.kind === 'damage') components.set(e.damageType,(components.get(e.damageType)||0)+n);
-      if (e.kind === 'heal') target.hp.current = Math.min(target.hp.max,target.hp.current+n);
-      if (e.kind === 'tempHp') target.hp.temp = Math.max(target.hp.temp,n);
+  activateConcentration(a,ability.concentration,c.id,hit);cleanupConcentration(s);
+  const results=[],lasting=[];
+  const amounts=hit?ability.effects.map((e,i)=>resolveAmount(e,c.effectRolls?.[i],critical)):[];
+  if(hit) for(const [key,target] of targets) {
+    let save=null;
+    if(ability.save) {
+      const r=ability.save,m=saveModes(target,r.ability);
+      check(integer(target.definition.saves[r.ability],-100,100),'Target save statistic required');
+      const total=d20(c.saveRolls?.[key],m.advantage,m.disadvantage)+statistic(target,'save.'+r.ability,target.definition.saves[r.ability]);
+      save={ability:r.ability,dc:r.dc,total,success:total>=r.dc};
     }
-    if (components.size) {
-      const n = [...components].reduce((sum,[type,n])=>sum+effectiveDamage(n,type,target.definition),0);
-      results.push({targetId:key,...damage(target,n,c.id+':'+key)});
-    } else results.push({targetId:key,hp:copy(target.hp)});
+    const components=new Map();let damageBonusUsed=false;
+    for(const [i,e] of ability.effects.entries()) {
+      if(e.when==='success' && !save?.success || e.when==='failure' && save?.success) continue;
+      let n=amounts[i];
+      if(e.kind==='damage') {
+        if(!damageBonusUsed) {n=Math.max(0,statistic(a,'damage',n));damageBonusUsed=true;}
+        components.set(e.damageType,(components.get(e.damageType)||0)+n);
+      }
+      if(e.kind==='heal') target.hp.current=Math.min(target.hp.max,target.hp.current+n);
+      if(e.kind==='tempHp') target.hp.temp=Math.max(target.hp.temp,n);
+    }
+    let detail={targetId:key,hp:copy(target.hp)};
+    if(components.size) {
+      const n=[...components].reduce((sum,[type,n])=>{
+        // Saving-throw reduction precedes resistance/vulnerability, once per typed total.
+        if(save?.success) n=ability.save.onSuccess==='half'?Math.floor(n/2):ability.save.onSuccess==='none'?0:n;
+        return sum+effectiveDamage(n,type,target.definition);
+      },0);
+      detail={targetId:key,...damage(target,n,c.id+':'+key)};
+    }
+    if(save) detail.save=save;
+    results.push(detail);
+    // P0 persistent effects with a save are established only on failure.
+    lasting.push(key);
   }
-  return {hit,critical,total,results};
+  establish(s,a,ability,c,lasting,Object.fromEntries(results.filter(r=>r.save).map(r=>[r.targetId,r.save.success])));cleanupConcentration(s);
+  return {hit,critical,total,results,...(ability.combat?.spell?{slotLevel}: {})};
+}
+function declareManual(s,c) {
+  check(typeof c.reason==='string' && c.reason.trim(),'Manual declaration reason required');
+  const {a,ability,targets,slotLevel}=activation(s,c,true);
+  check(ability.concentration?.start!=='hit','Manual hit-gated concentration unsupported');
+  activateConcentration(a,ability.concentration,c.id,true);cleanupConcentration(s);
+  if(ability.combat.duration && a.concentration?.instanceId===c.id) {const d=ability.combat.duration;advanced(a).concentrationClock={instanceId:c.id,remaining:d.value*(d.unit==='minute'?10:1),boundary:d.boundary};}
+  advanced(a).pendingManual={id:c.id,abilityId:c.abilityId,actorId:c.actorId,targetIds:targets.map(([key])=>key),declaration:c.reason,slotLevel};
+  return {pending:c.id,slotLevel,reason:c.reason};
+}
+function resolveManual(s,c) {
+  const a=actor(s,c.actorId),x=advanced(a),pending=x.pendingManual;
+  check(pending && pending.id===c.declarationId,'Stale manual decision');
+  check(typeof c.reason==='string' && c.reason.trim() && Array.isArray(c.outcomes) && c.outcomes.length<=100,'Manual resolution and reason');
+  const results=[];
+  for(const o of c.outcomes) {
+    check(pending.targetIds.includes(o.actorId),'Outcome target was not declared');const t=actor(s,o.actorId);
+    check(typeof o.reason==='string' && o.reason.trim(),'Outcome reason required');
+    if(o.kind==='damage') {check(integer(o.amount),'Adjudicated damage');results.push({actorId:o.actorId,...damage(t,o.amount,c.id+':'+results.length)});}
+    else if(o.kind==='heal') {check(integer(o.amount),'Healing');t.hp.current=Math.min(t.hp.max,t.hp.current+o.amount);}
+    else if(o.kind==='tempHp') {check(integer(o.amount),'Temporary HP');t.hp.temp=Math.max(t.hp.temp,o.amount);}
+    else if(o.kind==='resource') {check(Object.hasOwn(t.resources,o.resourceId) && integer(o.value,0,t.definition.resources[o.resourceId].max),'Manual resource bounds');t.resources[o.resourceId]=o.value;}
+    else if(o.kind==='effect') addEffect(s,o.actorId,c.actorId,o.rule,c.id+':m'+results.length);
+    else if(o.kind==='removeEffect') removeEffect(t,o.effectId);
+    else if(o.kind==='incapacitated') {check(typeof o.value==='boolean','Boolean incapacity');t.incapacitated=o.value;}
+    else throw Error('Unsupported manual outcome');
+    if(o.kind!=='damage') results.push({actorId:o.actorId,kind:o.kind,reason:o.reason});
+  }
+  x.pendingManual=null;cleanupConcentration(s);return {resolved:pending.id,reason:c.reason,results};
 }
 function apply(s,c) {
   if (c.type === 'useAbility') return useAbility(s,c);
+  if (c.type === 'declareManual') return declareManual(s,c);
+  if (c.type === 'resolveManual') return resolveManual(s,c);
+  if (c.type === 'endTurn') {
+    check(s.activeActorId===c.actorId,'Not actor turn');const a=actor(s,c.actorId);
+    check(a.advanced?.turnOpen!==false,'Turn already ended');advanced(a);boundary(s,c.actorId,'end');advanced(a).turnOpen=false;return {ended:c.actorId};
+  }
+  if (c.type === 'move') {
+    const a=actor(s,c.actorId);checkCanAct(s,a);check(s.activeActorId===c.actorId && a.advanced?.turnOpen!==false && !hasCondition(a,'cannotMove'),'Movement restricted');
+    check(integer(c.distance,1,10000),'Movement distance');const x=advanced(a),speed=Math.max(0,statistic(a,'speed',a.definition.speed??0));
+    check(x.movementSpent+c.distance<=speed*(1+x.dashCount),'Movement budget exceeded');x.movementSpent+=c.distance;return {distance:c.distance,remaining:speed*(1+x.dashCount)-x.movementSpent};
+  }
+  if (c.type === 'removeEffect') {
+    check(typeof c.reason==='string' && c.reason.trim(),'Removal reason required');removeEffect(actor(s,c.actorId),c.effectId);return {removed:c.effectId,reason:c.reason};
+  }
+  if (c.type === 'endConcentration') {loseConcentration(actor(s,c.actorId));return {ended:true};}
   if (c.type === 'startTurn') {
+    if(s.actors[s.activeActorId].advanced?.turnOpen!==false) boundary(s,s.activeActorId,'end');
+    boundary(s,c.actorId,'start');
+    for(const a of Object.values(s.actors)) if(a.advanced) a.advanced.casts=[];
     const a = actor(s,c.actorId); s.activeActorId = c.actorId; s.turnId++;
     a.economy = {action:true,bonus:true,reaction:true,attacks:0}; return {turnId:s.turnId};
   }
@@ -91,7 +163,8 @@ function apply(s,c) {
     const a = actor(s,c.actorId), q = a.checks.find(q=>q.id === c.checkId);
     check(q && q.instanceId === a.concentration?.instanceId,'Stale concentration check');
     check(integer(c.bonus ?? 0,-100,100) && integer(c.penalty ?? 0,0,100),'Save adjustments');
-    const total = d20(c.rolls,c.advantage === true,c.disadvantage === true)+a.definition.saves.con+(c.bonus||0)-(c.penalty||0);
+    const modes=saveModes(a,'con');
+    const total = d20(c.rolls,c.advantage === true || modes.advantage,c.disadvantage === true || modes.disadvantage)+statistic(a,'save.con',a.definition.saves.con)+(c.bonus||0)-(c.penalty||0);
     const success = total >= q.dc; a.checks = a.checks.filter(x=>x.id !== q.id);
     if (!success) loseConcentration(a); return {total,dc:q.dc,success};
   }
@@ -113,7 +186,8 @@ function apply(s,c) {
     return {reason:c.reason};
   }
   if (c.type === 'rest') {
-    check(['short','long'].includes(c.kind),'Rest kind'); const a=actor(s,c.actorId);
+    check(['short','long'].includes(c.kind),'Rest kind');
+    check(!Object.values(s.actors).some(a=>a.advanced?.effects.length),'Resolve timed effects before rest'); const a=actor(s,c.actorId);
     for (const [k,r] of Object.entries(a.definition.resources)) if (r.recovery === c.kind || (c.kind === 'long' && r.recovery === 'short')) a.resources[k]=r.max;
     if (c.kind === 'long') {a.hp.current=a.hp.max; a.hp.temp=0; loseConcentration(a);}
     return {rest:c.kind};
@@ -122,16 +196,20 @@ function apply(s,c) {
 }
 /** Pure transaction: invalid commands leave input untouched; caller persists before publication. */
 export function execute(input, command, context = {}) {
-  validate(input); check(command && id(command.id) && typeof command.type === 'string','Command identity');
+  validate(input);
+  check(command && Object.getPrototypeOf(command)===Object.prototype,'Plain command required');
+  command=Object.fromEntries(Object.entries(command).filter(([,v])=>v!==undefined));json(command); check(command && id(command.id) && typeof command.type === 'string','Command identity');
+  if (input.mode === 'encounter') check(context.authority === 'encounter','Encounter authority required');
   const fingerprint = JSON.stringify(command), prior=input.receipts[command.id];
   if (prior) { check(prior.fingerprint === fingerprint,'Command ID collision'); return {state:copy(input),result:copy(prior.result),replayed:true}; }
-  if (input.mode === 'encounter') check(context.authority === 'encounter','Encounter authority required');
-  if (['correct','damage','setIncapacitated','startTurn','rest','undo'].includes(command.type)) check(context.role === 'gm' || input.mode !== 'encounter','GM command required');
+  if (['correct','damage','setIncapacitated','startTurn','endTurn','rest','undo','removeEffect','declareManual','resolveManual'].includes(command.type)) check(context.role === 'gm' || input.mode !== 'encounter','GM command required');
+  if(command.expectedRevision!==undefined) check(command.expectedRevision===input.revision,'Revision conflict');
+  if(Object.values(input.actors).some(a=>a.advanced?.pendingManual)) check(['resolveManual','undo'].includes(command.type),'Resolve pending manual decision first');
   const state=copy(input), before=game(input); let result;
   if (command.type === 'undo') {
     const latest=state.history.at(-1); check(latest && latest.id === command.actionId,'Only latest transaction can be undone');
     Object.assign(state,copy(latest.before)); state.history.pop(); result={undone:latest.id};
-  } else { result=apply(state,command); state.history.push({id:command.id,command:JSON.parse(JSON.stringify(command)),result:copy(result),before}); }
+  } else { result=apply(state,command); cleanupConcentration(state); state.history.push({id:command.id,command:JSON.parse(JSON.stringify(command)),result:copy(result),before}); }
   state.revision++; state.receipts[command.id]={fingerprint,result:copy(result)};
   validate(state); return {state,result,replayed:false};
 }
