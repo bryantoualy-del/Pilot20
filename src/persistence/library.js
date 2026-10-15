@@ -1,39 +1,50 @@
-import {check,id,integer,json,preferences,defaultPreferences} from '../character/contracts.js';
+import {check,id,json,preferences,defaultPreferences} from '../character/contracts.js';
 import {validateCharacter,migrateCharacter} from '../character/definition.js';
 import {StorageError} from './adapters.js';
-const clone=structuredClone;
+const clone=structuredClone,same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
 function record(r) {
   check(r && typeof r.archived==='boolean','Corrupt character record');
-  validateCharacter(r.definition);preferences(r.preferences);
-  check(r.preferences.characterId===r.definition.id,'Preference identity');return r;
+  validateCharacter(r.definition);return r;
 }
 export function characterLibrary(storage,{newId=()=>globalThis.crypto.randomUUID()}={}) {
-  async function get(characterId) {check(id(characterId),'Character ID');const r=await storage.get('characters',characterId);return r===undefined?null:clone(record(r));}
-  async function save(d,{expectedRevision=null,prefs=defaultPreferences(d.id)}={}) {
-    validateCharacter(d);preferences(prefs);check(prefs.characterId===d.id,'Preferences mismatch');
-    const old=await storage.get('characters',d.id);
-    if(old!==undefined) record(old);
-    check(old===undefined?expectedRevision===null && d.revision===1:expectedRevision===old.definition.revision && d.revision===expectedRevision+1,'Revision conflict');
-    const r={definition:clone(d),preferences:clone(prefs),archived:old?.archived||false};
-    await storage.batch([{store:'characters',key:d.id,value:old}],[{store:'characters',key:d.id,value:r},{store:'preferences',key:d.id,value:clone(prefs)}]);
-    return clone(r);
+  async function read(characterId) {
+    check(id(characterId),'Character ID');const raw=await storage.get('characters',characterId);
+    if(raw===undefined)return null;record(raw);
+    const prefs=await storage.get('preferences',characterId);preferences(prefs);check(prefs.characterId===characterId,'Preference identity');
+    if(!same(raw,await storage.get('characters',characterId))) throw new StorageError('conflict');
+    return {raw,prefs};
+  }
+  async function get(characterId) {const r=await read(characterId);return r?{...clone(r.raw),preferences:clone(r.prefs)}:null;}
+  async function save(d,{expectedRevision=null,prefs}={}) {
+    validateCharacter(d);
+    const old=await read(d.id);
+    check(old===null?expectedRevision===null && d.revision===1:expectedRevision===old.raw.definition.revision && d.revision===expectedRevision+1,'Revision conflict');
+    const p=prefs??old?.prefs??defaultPreferences(d.id);preferences(p);check(p.characterId===d.id,'Preferences mismatch');
+    const raw={definition:clone(d),archived:old?.raw.archived||false};
+    await storage.batch([{store:'characters',key:d.id,value:old?.raw},{store:'preferences',key:d.id,value:old?.prefs}],
+      [{store:'characters',key:d.id,value:raw},{store:'preferences',key:d.id,value:clone(p)}]);
+    return {...clone(raw),preferences:clone(p)};
   }
   return {
     get,save,
-    async list({includeArchived=false}={}) {const rows=await storage.list('characters');return rows.map(r=>clone(record(r.value))).filter(r=>includeArchived || !r.archived);},
-    async duplicate(characterId) {const r=await get(characterId);check(r,'Unknown character');const d=clone(r.definition);d.id=newId();d.revision=1;const p={...r.preferences,characterId:d.id};return save(d,{prefs:p});},
+    async list({includeArchived=false}={}) {
+      const rows=await storage.list('characters'),out=[];
+      for(const row of rows) {const r=await get(row.key);check(r,'Concurrent library edit');if(includeArchived || !r.archived)out.push(r);}
+      return out;
+    },
+    async duplicate(characterId) {const r=await get(characterId);check(r,'Unknown character');const d=clone(r.definition);d.id=newId();d.revision=1;return save(d,{prefs:{...r.preferences,characterId:d.id}});},
     async setPreferences(characterId,prefs) {
-      preferences(prefs);check(prefs.characterId===characterId,'Preferences mismatch');const r=await get(characterId);check(r,'Unknown character');
-      const next={...r,preferences:clone(prefs)};
-      await storage.batch([{store:'characters',key:characterId,value:r}],[{store:'characters',key:characterId,value:next},{store:'preferences',key:characterId,value:clone(prefs)}]);return next;
+      preferences(prefs);check(prefs.characterId===characterId,'Preferences mismatch');const old=await read(characterId);check(old,'Unknown character');
+      await storage.batch([{store:'characters',key:characterId,value:old.raw},{store:'preferences',key:characterId,value:old.prefs}],[{store:'preferences',key:characterId,value:clone(prefs)}]);
+      return {...clone(old.raw),preferences:clone(prefs)};
     },
     async archive(characterId,archived=true) {
-      check(typeof archived==='boolean','Archive flag');const r=await get(characterId);check(r,'Unknown character');
-      await storage.batch([{store:'characters',key:characterId,value:r}],[{store:'characters',key:characterId,value:{...r,archived}}]);
+      check(typeof archived==='boolean','Archive flag');const old=await read(characterId);check(old,'Unknown character');
+      await storage.batch([{store:'characters',key:characterId,value:old.raw}],[{store:'characters',key:characterId,value:{...old.raw,archived}}]);
     },
     async remove(characterId,{confirmId}={}) {
-      check(confirmId===characterId,'Explicit delete confirmation required');const r=await get(characterId);check(r,'Unknown character');
-      await storage.batch([{store:'characters',key:characterId,value:r}],[{store:'characters',key:characterId,delete:true},{store:'preferences',key:characterId,delete:true}]);
+      check(confirmId===characterId,'Explicit delete confirmation required');const old=await read(characterId);check(old,'Unknown character');
+      await storage.batch([{store:'characters',key:characterId,value:old.raw},{store:'preferences',key:characterId,value:old.prefs}],[{store:'characters',key:characterId,delete:true},{store:'preferences',key:characterId,delete:true}]);
     },
     async exportJSON(characterId) {const r=await get(characterId);check(r,'Unknown character');return JSON.stringify({kind:'pilot20-character-export',schemaVersion:2,...r});},
     async importJSON(raw) {
@@ -41,7 +52,6 @@ export function characterLibrary(storage,{newId=()=>globalThis.crypto.randomUUID
       const e=JSON.parse(raw);json(e);check(e.kind==='pilot20-character-export' && [1,2].includes(e.schemaVersion),'Import envelope');
       const d=migrateCharacter(e.definition),p=preferences(e.preferences);
       check(!(await get(d.id)),'Import ID already exists');
-      // Imported revision starts a new local lineage; original retained in the export.
       d.revision=1;return save(d,{prefs:p});
     }
   };

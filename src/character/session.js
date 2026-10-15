@@ -1,4 +1,4 @@
-import {createSession,validate,validateDefinition} from '../model.js';
+import {createSession,validate,validateDefinition,migrate} from '../model.js';
 import {execute} from '../engine.js';
 import {check,id,integer,keys,json} from './contracts.js';
 import {derive} from './derive.js';
@@ -35,4 +35,10 @@ export function runtimeOf(s,instanceId) {
   validateCombat(s);check(Object.hasOwn(s.engine.actors,instanceId),'Unknown participant');
   const {definition,...runtime}=s.engine.actors[instanceId];
   return {kind:'runtime',schemaVersion:2,sessionId:s.id,instanceId,characterId:s.participants[instanceId].characterId,definitionRevision:s.participants[instanceId].definitionRevision,...structuredClone(runtime)};
+}
+
+/** Explicit legacy bridge requires caller-resolved character identities; no guessed permanent sheet. */
+export function migrateLegacyCombat(sessionId,input,characterRefs) {
+  const engine=migrate(input);
+  return validateCombat({kind:'combat',schemaVersion:2,id:sessionId,participants:structuredClone(characterRefs),engine,initiative:[],targets:[]});
 }

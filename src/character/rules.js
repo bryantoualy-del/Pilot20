@@ -1,4 +1,4 @@
-import {check,keys,integer,id,source,ABILITIES,text} from './contracts.js';
+import {check,keys,integer,id,source,ABILITIES,SKILLS,text} from './contracts.js';
 import {diceSpec,validateDefinition} from '../model.js';
 export function expression(e, stats, depth=0) {
   check(depth<12,'Expression depth');
@@ -80,7 +80,7 @@ export function compileAbilities(d,stats,resources) {
 export function validateRuleData(d) {
   const refs=['level','proficiency','attacksPerAction','maxHp','ac','speed','initiative',
     ...ABILITIES.flatMap(k=>['mod.'+k,'save.'+k]),
-    ...Object.keys(d.skills).map(k=>'skill.'+k),
+    ...Object.keys(SKILLS).map(k=>'skill.'+k),
     ...d.classes.flatMap(c=>['class.'+c.id,'spellAttack.'+c.id,'spellDC.'+c.id]),
     ...d.equipment.filter(e=>e.weapon!==null).flatMap(e=>['weaponAttack.'+e.id,'weaponDamage.'+e.id])];
   const stats=Object.fromEntries(refs.map(k=>[k,1]));

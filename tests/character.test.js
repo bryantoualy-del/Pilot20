@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {characterFixture,referenceClasses,ability,resource} from '../examples/characters.mjs';
 import {validateCharacter,validateBuild,migrateCharacter} from '../src/character/definition.js';
 import {derive,modifier,proficiencyBonus,spellSlots} from '../src/character/derive.js';
-import {createCombat,executeCombat,runtimeOf} from '../src/character/session.js';
+import {createCombat,executeCombat,runtimeOf,migrateLegacyCombat} from '../src/character/session.js';
 import {expression} from '../src/character/rules.js';
 import {catalog,HOMEBREW} from '../src/catalog/srd51.js';
 import {validateCatalog} from '../src/catalog/validate.js';
@@ -118,4 +118,13 @@ test('explicit prototype migration is pure; future versions rejected',()=>{
 test('catalog provenance and public/private boundary',()=>{
  validateCatalog(catalog,{distribution:'public'});
  const c=structuredClone(catalog);c.items[0].source.kind='private';assert.throws(()=>validateCatalog(c,{distribution:'public'}));validateCatalog(c);
+});
+
+test('legacy session migration preserves full history, receipts and independence',()=>{
+ const c=createCombat('legacy-source',[{instanceId:'a',character:characterFixture('fighter')}]);
+ const out=executeCombat(c,{id:'old',type:'damage',actorId:'a',amount:4,damageType:'fire'});
+ const legacy=structuredClone(out.state.engine),before=structuredClone(legacy);
+ const migrated=migrateLegacyCombat('legacy-import',legacy,{a:{characterId:'fighter-fixture',definitionRevision:1}});
+ assert.deepEqual(migrated.engine.receipts,legacy.receipts);assert.deepEqual(migrated.engine.history,legacy.history);assert.deepEqual(legacy,before);
+ assert.equal(executeCombat(migrated,{id:'old',type:'damage',actorId:'a',amount:4,damageType:'fire'}).replayed,true);
 });
