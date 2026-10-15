@@ -30,7 +30,9 @@ Les mesures détaillées, temps et risques de quota sont dans `HISTORY-MEASUREME
 
 ## GitHub Actions
 
-La matrice existante exécute `npm test` et `npm run demo` sous Node 22 et 24. Les nouveaux résultats du correctif seront vérifiés après le push ; aucun succès distant n’est déduit de la seule configuration.
+La CI des correctifs du commit `1eb155e2e1178069796a93ef41e154c2a6b5e000` est **réussie sur Node 22 et Node 24** : jobs `core (22)` et `core (24)` terminés avec `conclusion: success`. Chaque job exécute `npm test` et `npm run demo`.
+
+Preuve : [GitHub Actions — run 38812282837](https://github.com/bryantoualy-del/Pilot20/actions/runs/38812282837). Le benchmark chiffré a été exécuté localement sous Node 24, pas dans ces jobs ; aucun temps de benchmark sous Node 22 n’est revendiqué.
 
 ## Limites et tests non exécutés
 
@@ -39,3 +41,10 @@ Pas de tests navigateur/iPad, de stockage localStorage réel, de connexion WebSo
 Le benchmark utilise des fixtures simples et des stockages mémoire ; ses temps ne mesurent ni le disque ni la latence de l’interface. Le quota 5 Mio est une simulation documentée, pas une mesure des quotas Safari. Le schéma n’a pas été exécuté par un validateur JSON Schema externe, indisponible dans l’environnement ; la validation runtime et les tests couvrent les contraintes fonctionnelles.
 
 La bibliothèque multipersonnage, la séparation physique définition/runtime, les identifiants de participants distincts, les préférences par personnage, IndexedDB et le compactage non destructif sont documentés pour V0.2. Aucun dashboard, créateur, intégration réseau ou contenu propriétaire n’a été ajouté.
+
+
+## Conclusion pré-merge
+
+**PR prête à fusionner : OUI, pour le socle moteur V0.1 et son périmètre documenté.** Les défauts confirmés de concentration sont corrigés, les anciennes sauvegardes restent lisibles après normalisation, les 57 tests et la démo passent localement et sur la matrice Node 22/24. La simulation confirme les annulations et l’idempotence après 500 transactions ; le refus de quota conserve la dernière sauvegarde validée.
+
+La saturation du stockage local et les coûts croissants restent des limites de capacité documentées à traiter en V0.2 avant de livrer de longues sessions en navigateur. Cette conclusion n’est pas une validation du dashboard, du créateur, du réseau ou des performances iPad. La PR n’est ni fusionnée ni déployée par cette intervention.
