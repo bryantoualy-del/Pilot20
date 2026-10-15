@@ -1,0 +1,2807 @@
+{
+  "inspectedAt": "2026-10-15",
+  "sources": [
+    {
+      "repository": "bryantoualy-del/Brackmard",
+      "ref": "main",
+      "commit": "8868f30c1e870d6cb4d677c3930b8bed2a660373",
+      "fileCount": 52,
+      "jsHtmlBytes": 459546,
+      "files": [
+        {
+          "path": "COMPANION_API.md",
+          "sha256": "a33265fc5f9259b4e29fd66b45eb0485fcacabc2691cac81965d9834b806817e",
+          "bytes": 6280
+        },
+        {
+          "path": "rpg-journal-ui.js",
+          "sha256": "c8ded100bf3260ad13fc4babdb4b97e09b153e81febfbd6d9dbf003856fa32eb",
+          "bytes": 6475
+        },
+        {
+          "path": "rpg-effective-damage.js",
+          "sha256": "c24b76cd6957a7d9f99f77c723f23d8535f9a3964d89cb1cfc9c9e5aa1fd2101",
+          "bytes": 3331
+        },
+        {
+          "path": "rpg-opportunities.js",
+          "sha256": "41959059bde47f3fe1b0c30e7aa27d5b734ca1ed53feb93f73395653cfb48910",
+          "bytes": 2882
+        },
+        {
+          "path": "rpg-brack-client.js",
+          "sha256": "5c568c6d76b0dc4f239647a95594530ffe1450760364c0fa3abbbc1e6b062ab4",
+          "bytes": 4586
+        },
+        {
+          "path": "MJ-UNDO-20261007.md",
+          "sha256": "b5462f80c8fa5a05862057e1f21b9848b2e7d6a7a7c1eddae4d758bcd4d0e8cc",
+          "bytes": 1333
+        },
+        {
+          "path": "README.md",
+          "sha256": "93b19bc176c95928df8e90d77ee193de8825c22be6bb2b635e7d10c69f3e6e39",
+          "bytes": 11
+        },
+        {
+          "path": "rpg-corrections.js",
+          "sha256": "c66972617e33e8fbe352f889f7c189b45e8a58bb458258b67f1ca78ca38ad8de",
+          "bytes": 16766
+        },
+        {
+          "path": "rpg-combat-effects-client.js",
+          "sha256": "cb5bdf3ba2ce8708970f031ea9f90e253ff3f1a961cd5c15e6053851e76bd1d1",
+          "bytes": 14775
+        },
+        {
+          "path": "rpg-turn-start.js",
+          "sha256": "2593465ac0f1ab6b47a3dd9b6847b5aa51c0425d2023a5d8025bae7398298f66",
+          "bytes": 1652
+        },
+        {
+          "path": "rpg-health.js",
+          "sha256": "48fd21eeb377eb4065b2225906db942eb30880ad4d582d8895f5d653ca620361",
+          "bytes": 9953
+        },
+        {
+          "path": "mj-journal-model.js",
+          "sha256": "2d7b17389f5eec4d546a238ce8b5458e801162611a168d9c9dcd9b26bd16523a",
+          "bytes": 2180
+        },
+        {
+          "path": "companion-api.js",
+          "sha256": "54439125c360d4065532412e0c33c6bc19b6db98da3cdb934d29f13bbf9b2362",
+          "bytes": 18500
+        },
+        {
+          "path": "dice-engine.js",
+          "sha256": "2c54fad205597214bcc3eab71e17da340d1e122370c09bfc8d8bc220591bcde0",
+          "bytes": 18933
+        },
+        {
+          "path": "rpg-connect-client.js",
+          "sha256": "a24966a4a5bfac33f390b0d4a6bb1ca6451e881a2a0847f4154b7cca6aaacc57",
+          "bytes": 71152
+        },
+        {
+          "path": "social-dice.js",
+          "sha256": "3be7591ed52fac89f01f1bc0e14a36da165617fed3e8f2b2a26b679f44a29bbd",
+          "bytes": 3811
+        },
+        {
+          "path": "rpg-weapon-gate.js",
+          "sha256": "dcdb25b83461c51c0dfccfa135ab0eea8814063874fb8412170b9a7722b6a81c",
+          "bytes": 2932
+        },
+        {
+          "path": "rpg-instruction.js",
+          "sha256": "7816599c0a78ea3e66b9e09787b4ec6594695eff538ca4dcf683867e4e130fc0",
+          "bytes": 2169
+        },
+        {
+          "path": "rpg-dialogs.js",
+          "sha256": "dcc8121c958f1297d7a042b6c9f58742b7bb025e01eafdd2f1203dee8d4f08b3",
+          "bytes": 3639
+        },
+        {
+          "path": "rpg-player-saves.js",
+          "sha256": "87c836745302b59417372e6210c101e98e5552d9977700c8de2a4a3997be9692",
+          "bytes": 18170
+        },
+        {
+          "path": "rpg-resolution.js",
+          "sha256": "707ddd16ab5704e72838048f883bddd447390019de20305aaa4d3ecda062af03",
+          "bytes": 16573
+        },
+        {
+          "path": "index.html",
+          "sha256": "99d2a88c12ae9bb2caf5daf725b20aa35d43582ed5fd52571b3efb4cef3c02f4",
+          "bytes": 125714
+        },
+        {
+          "path": "rpg-group.js",
+          "sha256": "b0da44b8bea8805ea21266096da9120b85832eeb619e7d26deae0483ea3c7ef6",
+          "bytes": 9656
+        },
+        {
+          "path": "rpg-activity.js",
+          "sha256": "fdb0b0c9a8c9e87f75ea6cee9046261b71e5ac6eeb2b58198bc1d1b2ab9d5f9e",
+          "bytes": 4543
+        },
+        {
+          "path": "companion-v3.js",
+          "sha256": "6ca3d8f41da54f2c238767b63c8b70ff21cb72704acf7e3f42907816e8fa7f7d",
+          "bytes": 28568
+        },
+        {
+          "path": "rpg-combat-fx.js",
+          "sha256": "45eea99dedbe2755146e5a8264064ba545deb228b5afaa92edd043897a3a243c",
+          "bytes": 2256
+        },
+        {
+          "path": "rpg-triggered-effects.js",
+          "sha256": "20c2fef4018c435fc744af782b79ae4a580b1d000a5f08d76c935ec56c9f4705",
+          "bytes": 1142
+        },
+        {
+          "path": "rpg-resources.js",
+          "sha256": "bdd051aa651c1218273eaa7406e16f2d8a843aa1655e1e17f7a113ed58bab440",
+          "bytes": 2006
+        },
+        {
+          "path": "companion-turnbar.js",
+          "sha256": "5627443329973c0aa09e395fa0df0203fb50d12e275fff8c88196011dca96e42",
+          "bytes": 7806
+        },
+        {
+          "path": "COMPANION_V3_AUDIT.md",
+          "sha256": "e03e854b713235c0f7403863c0d9cc8bddff866fa7fda8ad4eec112771b2be6d",
+          "bytes": 6269
+        },
+        {
+          "path": "rpg-concentration.js",
+          "sha256": "06b9573337400f9c43a2b684371daad6dcc5702864fe308bd8339a2dc64dde46",
+          "bytes": 8654
+        },
+        {
+          "path": "rpg-undo.js",
+          "sha256": "432a029ce23eb9ce4a9404b29f4f9d38d31942d8ee7f61027494761823ec4144",
+          "bytes": 6530
+        },
+        {
+          "path": "rpg-multi-target.js",
+          "sha256": "bd9b2806f2d4a090e885f6870e299dbaca782ad3309ad034ada84d6ce0b79691",
+          "bytes": 10661
+        },
+        {
+          "path": "rpg-connect-icon-registry.js",
+          "sha256": "ad4ad453a3d591003429bb2dbf75bfc55b5ef8102a048b21e90b81ffb575a128",
+          "bytes": 3810
+        },
+        {
+          "path": "rpg-correction-schema.js",
+          "sha256": "778a7e4bbb56b691d061b9d401de0b430fbe1f795386d9bf0136386adb7e30d1",
+          "bytes": 6221
+        },
+        {
+          "path": "rpg-reactions.js",
+          "sha256": "cd402819b81bc061007443051492661fcdd892cbd07767e312d06fc7816ea86a",
+          "bytes": 9185
+        },
+        {
+          "path": "rpg-multi-target-ui.js",
+          "sha256": "d53d145846699047621d0da604430a221b78c50d0ba0231c4dff60867b95f718",
+          "bytes": 13586
+        },
+        {
+          "path": "companion-feedback.js",
+          "sha256": "26916af2dd7f69fb293595dc6fba6e9953f0a59202b249640a406138b42376c2",
+          "bytes": 729
+        }
+      ]
+    },
+    {
+      "repository": "bryantoualy-del/Encounter",
+      "ref": "main",
+      "commit": "693cb70cb530bfe5c00d954d705ef270592c48b5",
+      "fileCount": 350,
+      "jsHtmlBytes": 1179834,
+      "files": [
+        {
+          "path": "encounter-guide.js",
+          "sha256": "6c89ef023b54d88337413a46ccbb89f4abe53ca6a139fb0e91232c1d4786d067",
+          "bytes": 11929
+        },
+        {
+          "path": "rpg-monster-spells.test.js",
+          "sha256": "bd715e260598d63aaeeeba1f6f32b0540fcb43a91f073ea2ff0ac765b45e214c",
+          "bytes": 7547
+        },
+        {
+          "path": "rpg-kentaro-armor-rules.js",
+          "sha256": "8c8ae809a785f5e5382498bec0af37ed23d7b449b6aaacc8d4b4417fb9a0f6a0",
+          "bytes": 1014
+        },
+        {
+          "path": "app.js",
+          "sha256": "07261915ecf0e0774f83843de183aebc3e9d188d0d29dfa4ba04cecf61fc397b",
+          "bytes": 178296
+        },
+        {
+          "path": "rpg-connect-mj.test.js",
+          "sha256": "efce0f914ebdb1dc49d59ca96172b77403ef130da220e1b3b691a9ced4cf2649",
+          "bytes": 28333
+        },
+        {
+          "path": "rpg-samoth-automatismes.test.js",
+          "sha256": "50ba300c42f1efe1bc5b35106691bd31147f33e1aa92e11e0da1f94d4508b117",
+          "bytes": 9421
+        },
+        {
+          "path": "monster-assistant-ui.js",
+          "sha256": "dd3521b908cf1cccc56935fd0affbc805b1ca83087fcb235e07afb214ecc1147",
+          "bytes": 15920
+        },
+        {
+          "path": "rpg-journal-ui.js",
+          "sha256": "c8ded100bf3260ad13fc4babdb4b97e09b153e81febfbd6d9dbf003856fa32eb",
+          "bytes": 6475
+        },
+        {
+          "path": "assistant-method.js",
+          "sha256": "7a0f2843ce7f44e118bee8a5e330a6e30ad611f778612ecc7f093caceb9dc62f",
+          "bytes": 6991
+        },
+        {
+          "path": "rpg-samoth-perception.js",
+          "sha256": "f7453fe28fc8af5c891ad2c93dcf1909023987733cc3fe20b722450755600fab",
+          "bytes": 2015
+        },
+        {
+          "path": "mj-conditions.js",
+          "sha256": "5aaee86c1634df9d22257a3c42fafa383e3e91a72127b5811ec64f9ce8b8fbbb",
+          "bytes": 2356
+        },
+        {
+          "path": "rpg-connect-server.js",
+          "sha256": "194a328433d2a4ec35091968016f2149a21b17de184fee4f76e170807bfb0c63",
+          "bytes": 9539
+        },
+        {
+          "path": "rpg-condition-rolls.js",
+          "sha256": "9214da5290d9f5fd3e2e7bb048c251e401d47ec4374a84629577275b6d4bc6f0",
+          "bytes": 4989
+        },
+        {
+          "path": "rpg-condition-rolls.test.js",
+          "sha256": "86df9df60c004bf7eae10fcf5f53802b454872b667f5165d5f129bb8b9a53b53",
+          "bytes": 3202
+        },
+        {
+          "path": "rpg-rufus-authority.test.js",
+          "sha256": "180f859a56b2203e102e985bb52c431da9d70039671bd797cbdad33cd4ca8fd8",
+          "bytes": 10395
+        },
+        {
+          "path": "rpg-effective-damage.test.js",
+          "sha256": "c0e3238e262bc2118d6dd2ff60a98ed398a4a31cf54949cb8169f97cc17837b3",
+          "bytes": 2957
+        },
+        {
+          "path": "README.md",
+          "sha256": "6a64792df8dc42e89e8dc6be8d6f22cc3a136f36a2fac6959dd9ee0426702bc9",
+          "bytes": 6762
+        },
+        {
+          "path": "rpg-player-save-authority.test.js",
+          "sha256": "187fe5884e87c2414bc1bb0d360f7347afae5acc10690d62e9240d14dc5f6af5",
+          "bytes": 1329
+        },
+        {
+          "path": "ANALYSE-ERGONOMIE.md",
+          "sha256": "7232b8b22826f95f1e559ff46f0492615d76318925a5ddab8aa673a874ba2edd",
+          "bytes": 4545
+        },
+        {
+          "path": "rpg-kentaro-authority.test.js",
+          "sha256": "47ad189d33392ce2d3c2f0308e33e6b4fe3d7a3d1fea179d9d4b185b4d691783",
+          "bytes": 12382
+        },
+        {
+          "path": "mj-import-compatibility.js",
+          "sha256": "ac989c60c49adec02f67954f4f61c3c5f74a146619eb8124061d4eb2d3a8faa4",
+          "bytes": 3364
+        },
+        {
+          "path": "rpg-nans-authority.test.js",
+          "sha256": "e2fd623ed2cf172303fa173252c36e8925a1dd57a074110b32516aa3c4e0ee9d",
+          "bytes": 8847
+        },
+        {
+          "path": "rpg-diversion-authority.js",
+          "sha256": "6fe53d4190d328ea6281482b431ca2c0f5ed3a7d1ffac7883a6fe5df3b6952fe",
+          "bytes": 1911
+        },
+        {
+          "path": "rpg-multi-target.test.js",
+          "sha256": "a354aaebcea27089ebac117e42375948e159c34207e261d3336cafb5bd0f33f3",
+          "bytes": 14354
+        },
+        {
+          "path": "rpg-connect-bridges.test.js",
+          "sha256": "2fa386ef854b25c52989ba4321cb888417e753a40fc1d9956e9aeb478eafb0bc",
+          "bytes": 6523
+        },
+        {
+          "path": "package-lock.json",
+          "sha256": "afadbb3a83407bd42a76aa8fc6d9875f525093b92d347aea27df5ab075151b83",
+          "bytes": 21431
+        },
+        {
+          "path": "rpg-combat-effects-client.js",
+          "sha256": "db4ad8f1cd0a5e9bf4f533495a40df9e1d027338933d927713c23bf2b6ab7c6c",
+          "bytes": 14590
+        },
+        {
+          "path": "mj-journal.js",
+          "sha256": "c374a94cf64711c80f1e913128569f6e1b3960d1f56ff02f290fd37afaa651b4",
+          "bytes": 40362
+        },
+        {
+          "path": "rpg-zephyr-authority.js",
+          "sha256": "c4114552262e1f5933994a59336352312d419dde5b135cf92d5c365d418bd6a4",
+          "bytes": 13056
+        },
+        {
+          "path": "RPG_CONNECT.md",
+          "sha256": "43ffa30a293387e377a06ceafb673d34b7ff3e314342a6cf611670c35ffeff16",
+          "bytes": 5302
+        },
+        {
+          "path": "session-reliability.test.js",
+          "sha256": "248f390d3b169ee9cd5d96d28dbbcd5e1fae07c6e0c44a566879a7b2a1300f14",
+          "bytes": 6646
+        },
+        {
+          "path": "rpg-triggered-effects.test.js",
+          "sha256": "d18f649f4e3c72613332ddc0d43f9f61cba3f97002685ca7edfa39ed4a3a3af1",
+          "bytes": 3657
+        },
+        {
+          "path": "hybrid-test-results.json",
+          "sha256": "d40c4de29751e4532daac8d8f2ef7e15ad03f70699113a03ea0b778f0a0d0aea",
+          "bytes": 4267
+        },
+        {
+          "path": "mj-interactions.js",
+          "sha256": "7553a56493593e7ffffa761910a3ae40d6dab3e73e5f2c6cbe897e9907f47fce",
+          "bytes": 4836
+        },
+        {
+          "path": "rpg-reactions-client.test.js",
+          "sha256": "539d55f2b670d11b2bb320ae5802b7fe5f64c25c6348aba29c42823f45e025aa",
+          "bytes": 6406
+        },
+        {
+          "path": "mj-compatibility-ui.js",
+          "sha256": "432ae3514ae531df44ad5d06dbc5b556b1c2337aacaec8e261e3d99ca2651d8c",
+          "bytes": 4856
+        },
+        {
+          "path": "mj-journal-model.js",
+          "sha256": "2d7b17389f5eec4d546a238ce8b5458e801162611a168d9c9dcd9b26bd16523a",
+          "bytes": 2180
+        },
+        {
+          "path": "REVUE-V4.1.md",
+          "sha256": "a2a81ea17561f9636a1c9dd1a80c01ab4715798142ce255422025d92ad62074d",
+          "bytes": 6570
+        },
+        {
+          "path": "rpg-brack-authority.js",
+          "sha256": "c2014cd1ee61da5554b62563f72fe45d7417e96ca2965e8e30111fd5c4d95ea7",
+          "bytes": 11231
+        },
+        {
+          "path": "rpg-participant-profiles.js",
+          "sha256": "5d6d5343ad23d57ff3e1647b004c9a57ecadc2793e00486bc82852ee9240e87e",
+          "bytes": 1006
+        },
+        {
+          "path": "mj-decisions.js",
+          "sha256": "8262b2021bb04080ff7e9eed1c42427613a1ee6eabba973aa2fe5945b5cf1815",
+          "bytes": 7825
+        },
+        {
+          "path": "rpg-turn-start.test.js",
+          "sha256": "cab3991c15d1b6341b0a0197c9f36f24323b3d8cd8ac67756e319e2cfea5fd04",
+          "bytes": 1925
+        },
+        {
+          "path": "rpg-health-authority.test.js",
+          "sha256": "749141b725cd321a326bf2097bf077e7e50ccb23758e76f06cdf3d1ae832742b",
+          "bytes": 10548
+        },
+        {
+          "path": "rpg-kentaro-authority.js",
+          "sha256": "501a0d7bc522c58c26c6e0dcb1be3cf8b828a2e3262f755c7cb77a205390d2a4",
+          "bytes": 16880
+        },
+        {
+          "path": "mj-local-concentration.js",
+          "sha256": "24876892f3490065835843d48ccd8f669fda64d88b3625268eb319ca1d49483d",
+          "bytes": 4227
+        },
+        {
+          "path": "rpg-concentration.test.js",
+          "sha256": "5b546b7343027b7720098b06a4c347e76eefe465f92b2b57e23b190027cbad07",
+          "bytes": 5380
+        },
+        {
+          "path": "rpg-brack-authority.test.js",
+          "sha256": "1193fce99708c010bd3903d8582f9a57852006f93ca7c34c9c509d1df643f043",
+          "bytes": 10019
+        },
+        {
+          "path": "rpg-counterspell.test.js",
+          "sha256": "c701271f097e91065c897fea3bbd19d0dc15eb4fac3169e60d61a8fa7333b44f",
+          "bytes": 2171
+        },
+        {
+          "path": "monster-assistant.js",
+          "sha256": "d99b8c5ed65ecaab5811bcf5ec746eba6e163a5d1e0520753299c99719f08379",
+          "bytes": 11282
+        },
+        {
+          "path": "rpg-connect-protocol.test.js",
+          "sha256": "55ac76cf977447571b02fd54f698992c0c0ccded3587249a966f9670d0b63b7e",
+          "bytes": 7695
+        },
+        {
+          "path": "mj-portraits.js",
+          "sha256": "f7cd36307680d17831d30618766d6a7b614672cba534b2772b2aa30893833abb",
+          "bytes": 1231
+        },
+        {
+          "path": "rpg-connect-client.test.js",
+          "sha256": "7a80addb6c92369901fbcd909fd6865cac64d833b47d8d7ea94e097ff2536c99",
+          "bytes": 4737
+        },
+        {
+          "path": "monsters.json",
+          "sha256": "d591a2345c05c8a7ee5f3dd32c6956d5cb6f0b2c0517a2c42681cf5c1b2a72e0",
+          "bytes": 33383
+        },
+        {
+          "path": "rpg-health-authority.js",
+          "sha256": "8387fc290dcb5870b1dcec3ebdbb884a92e8e764bc22ddfba15f6d07f4c2343f",
+          "bytes": 10821
+        },
+        {
+          "path": "mj-icons.js",
+          "sha256": "b2f7154db63f8730451c5c3264a9fb405f100f62946e233aa96f351aab5cf1d5",
+          "bytes": 8633
+        },
+        {
+          "path": "rpg-connect-mj.js",
+          "sha256": "38d88ca9c7af50a98ac92ef6d9348a6e9d811605d8d8f29a186c1660c3628b40",
+          "bytes": 241709
+        },
+        {
+          "path": "index.html",
+          "sha256": "8e0e9777deda151cf56a412714e12f39fd452a826c9aded86a55d711c5996c68",
+          "bytes": 38427
+        },
+        {
+          "path": "creature-icons.test.js",
+          "sha256": "81a7b791464e7b211260a5728be082eeb6c1d26acfee6abf9deb5e464399138d",
+          "bytes": 1765
+        },
+        {
+          "path": "package.json",
+          "sha256": "9ebc76ca11c0b0c42818e989593fd33fc6286524b399303b8625ae09000a90cf",
+          "bytes": 3708
+        },
+        {
+          "path": "mj-spell-slots.test.js",
+          "sha256": "a32f1b9954c39863cc68b567f2c3b72d36015cfe4d88b4ef0dd5b888e3f58e40",
+          "bytes": 2775
+        },
+        {
+          "path": "rpg-activity.test.js",
+          "sha256": "b1f9a7f3f07e69d95dcdb67b17a2870776a6eed53e0a27c8bb70e0a3caa121e5",
+          "bytes": 1990
+        },
+        {
+          "path": "mj-library-model.js",
+          "sha256": "151d5de7beb654094865653f9e74308e103757910034046253640b7082cf8d8c",
+          "bytes": 1347
+        },
+        {
+          "path": "mj-concentration-turn.test.js",
+          "sha256": "7b50f9aa2dc0ec2974e1bf844f13a77cab8cc7efce7c944ac7ff3ebace5bda0f",
+          "bytes": 2411
+        },
+        {
+          "path": "monster-assistant.test.js",
+          "sha256": "80f11babc5d440704df0f85ff747b1a5ddedad1b240e4944b2efb8b9861779b6",
+          "bytes": 5476
+        },
+        {
+          "path": "rpg-summon-authority.test.js",
+          "sha256": "e24b035cbd58b8a3bf11aa3eca8af6b165c4309877be3a378793a197fe7e7387",
+          "bytes": 4364
+        },
+        {
+          "path": "rpg-summon-authority.js",
+          "sha256": "b5642625d290daf4ee51538274f27275311508e680ef7021bd2414b3df2fd741",
+          "bytes": 3550
+        },
+        {
+          "path": "rpg-activity.js",
+          "sha256": "1ee96add2775c23488c7026b253b57c5fa6b017b425c68f65633333e2d273793",
+          "bytes": 3674
+        },
+        {
+          "path": "mj-collective.js",
+          "sha256": "92125fd44c24d9a1b03678939857622a3234a470a913836f76de7322077a5a7d",
+          "bytes": 13792
+        },
+        {
+          "path": "rpg-target-names.js",
+          "sha256": "c0be6511989cdde4b5cfe6fbf10231872095fb564bb1ddfa0954b529dea56cbe",
+          "bytes": 807
+        },
+        {
+          "path": "mj-library-journal.test.js",
+          "sha256": "640e92b19c564416cb74eb59f3fdcebda8c6d367ecfb4dc4a76655249782981c",
+          "bytes": 3132
+        },
+        {
+          "path": "GUIDE-INTEGRE-20261010.md",
+          "sha256": "954b5d422dac9669787716feb448cfb3bba9ce0314dd207e359a8ced632498dc",
+          "bytes": 2798
+        },
+        {
+          "path": "ZEPHYR-INTEGRATION-20261008.md",
+          "sha256": "085761781337e9bce1821f5f3d58a25974d2e61fd6de28cf400164410a66cf38",
+          "bytes": 6180
+        },
+        {
+          "path": "rpg-journal-ui.test.js",
+          "sha256": "7904c4afa4e8a236ddf131118aebba4ea892f94e391f2a80866caad82c58aca4",
+          "bytes": 4883
+        },
+        {
+          "path": "rpg-reaction-authority.js",
+          "sha256": "e31150a73c7d1de5ac10b08c7f0c972b6763baa25a2c17474437cbab518cbe8e",
+          "bytes": 5167
+        },
+        {
+          "path": "rpg-group-mission.test.js",
+          "sha256": "7aa1f45ae4def1c781170711ebbfbc0319a61d7b0ed51463a18ec0b5cb691649",
+          "bytes": 8179
+        },
+        {
+          "path": "rpg-player-save-authority.js",
+          "sha256": "30ef1f1fb53575d0a6ec581167b5d75d7c001a4b0e1772a1e47e1c0e79d2f017",
+          "bytes": 1071
+        },
+        {
+          "path": "BRACK-INTEGRATION-20261009.md",
+          "sha256": "4f0337aaf4d2f74a12cd7ff8266bbcf31163b22b20d71ef01fa1101e1b012fc2",
+          "bytes": 8036
+        },
+        {
+          "path": "encounter-persistence.js",
+          "sha256": "536556e27890a3d2c0c9f47733fa3fa63664a74c1a51c7e649782f0d608a0dd3",
+          "bytes": 8710
+        },
+        {
+          "path": "rpg-combat-effects.js",
+          "sha256": "dfe5a1f2ae6b1f28a979531b8cb1732ac94a4d08e2758311a61c53cb002e3879",
+          "bytes": 4143
+        },
+        {
+          "path": "rpg-save-authority.js",
+          "sha256": "6ddd758d819f83cb3a51d540ead6c9f14e645084a6f75a806a7825d35a193bf1",
+          "bytes": 14168
+        },
+        {
+          "path": "rpg-rufus-authority.js",
+          "sha256": "e802dff48fe3abd6357dced0573fd0ad97a367c90c3c8533af4bd76ffa172b41",
+          "bytes": 13423
+        },
+        {
+          "path": "rpg-participant-profiles.test.js",
+          "sha256": "7bc4249d40e1f210fcd9481d16e054c5fb36e10e6ffc8717f06497637bb644cf",
+          "bytes": 1051
+        },
+        {
+          "path": "rpg-health-client.test.js",
+          "sha256": "da53a16ed7bfb04fa54d188766a98b8a68daeb478e0d365d65b10ea870c50c05",
+          "bytes": 6928
+        },
+        {
+          "path": "service-worker.js",
+          "sha256": "bdcbe788d3e254d1777d876e18565c4cc15ee9768fb4ffbcf15172e283e1147d",
+          "bytes": 6345
+        },
+        {
+          "path": "mj-spell-slots.js",
+          "sha256": "cf08bbf4e0016367e161937c4279f274fafd7cfe4f7ff2a8fe19ebb8f982088d",
+          "bytes": 2218
+        },
+        {
+          "path": "rpg-nans-authority.js",
+          "sha256": "458fc167760d9179ad0aa6ca4c9a082d502df62069e65eb6318653b1cb681efc",
+          "bytes": 13604
+        },
+        {
+          "path": "rpg-samoth-authority.js",
+          "sha256": "ffe5c0ac2db0256fde38065cf5d3a76be0f593e0b63cd81edbec61e3cae08f07",
+          "bytes": 13481
+        },
+        {
+          "path": "assistant-method.html",
+          "sha256": "f5841fee658849a6918c62e661469931030814436adc80bd51e1e6ef0fd2b78e",
+          "bytes": 6726
+        },
+        {
+          "path": "mj-decisions.test.js",
+          "sha256": "81babbb0bdbf62ec4616be33d5a523dd5a2734c92cbbc2680ddbb56e0b9d6815",
+          "bytes": 4325
+        },
+        {
+          "path": "encounter-typed-damage.js",
+          "sha256": "63f8884348a0d74d8a2b4fd08c61eefc0c14fc2930559bef8997739bc92849f0",
+          "bytes": 2249
+        },
+        {
+          "path": "mj-library-ui.js",
+          "sha256": "0e78e6a7f8b4117b086962026ac53a7c80337672bec318e78b0ed147e33bdc9a",
+          "bytes": 14805
+        },
+        {
+          "path": "rpg-multi-target-ui.test.js",
+          "sha256": "c1afd979ef6beabb1f578e292dfa0b0618748b4ddf8b83013bab1c71b349b51c",
+          "bytes": 5134
+        },
+        {
+          "path": "creature-icons.js",
+          "sha256": "95d6a539399e12e995dbebe130c483751dac2c7b0ad1246b58c5684d2f3bf2b8",
+          "bytes": 7511
+        },
+        {
+          "path": "builtins.js",
+          "sha256": "7712961da895cb2a18d9c289c521387d66df14e606b3eb8e2b3d206236e21d31",
+          "bytes": 59349
+        },
+        {
+          "path": "mj-panels.js",
+          "sha256": "307e3f219c5fe4f32da6ac5d5982f7ae0e1c482f4a4b33516d6cf5a36b97a904",
+          "bytes": 11972
+        },
+        {
+          "path": "assistant-dice-engine.js",
+          "sha256": "2c54fad205597214bcc3eab71e17da340d1e122370c09bfc8d8bc220591bcde0",
+          "bytes": 18933
+        },
+        {
+          "path": "bibliotheque-integree.json",
+          "sha256": "c6f95978c870ee439cb6b2e0e3dace84f6dbd7a7fcff073621f15a12630ad693",
+          "bytes": 71016
+        },
+        {
+          "path": "table.js",
+          "sha256": "152190772a2fa6e0c38dbe95bfd9ae1232daaddb42a94265c38d342becf08ec0",
+          "bytes": 11099
+        },
+        {
+          "path": "rpg-connect-icon-registry.js",
+          "sha256": "9ab985d72cad8f5e329f769dcf0805480bd9a2c9b55d774761160261a8f5fb8e",
+          "bytes": 3811
+        },
+        {
+          "path": "rpg-correction-schema.js",
+          "sha256": "778a7e4bbb56b691d061b9d401de0b430fbe1f795386d9bf0136386adb7e30d1",
+          "bytes": 6221
+        },
+        {
+          "path": "fight-continuity.test.js",
+          "sha256": "cafcbc43d7ea1331bd8ac22791a0747aa50fa1b51ad477c2dd87d28aa62df396",
+          "bytes": 4486
+        },
+        {
+          "path": "GROUP-REACTIONS-AUDIT.md",
+          "sha256": "c8c383cf652db0b9997e5a1329c96db3b8a50a128539dc2a94fac2a62f7a2d54",
+          "bytes": 17975
+        },
+        {
+          "path": "rpg-reaction-authority.test.js",
+          "sha256": "dd85be9f18ca448a27c11be601cf20e9ffa53f6ff65357bfd569d079435fba96",
+          "bytes": 4137
+        },
+        {
+          "path": "rpg-kentaro-armor-rules.test.js",
+          "sha256": "99dffb361113c645c2c5492040efb6c4d2b63fd691e2d450b9f4fb5dc35979af",
+          "bytes": 4022
+        },
+        {
+          "path": "mj-connected-feedback.js",
+          "sha256": "3a98427dc56ef32727eaf2d92bd048ba82fea5ada4623ac3be536991225179e0",
+          "bytes": 3016
+        },
+        {
+          "path": "rpg-zephyr-authority.test.js",
+          "sha256": "64033f7d574086c95b70ffc78b9e30fa2218fba53700381d02e8188ee6c21d71",
+          "bytes": 8600
+        },
+        {
+          "path": "audit/stabilization-e2e.mjs",
+          "sha256": "f56b29f7a270028cb8e82b9d501d4c3437a35009c122cf2cedab1249a8ef707e",
+          "bytes": 6439
+        },
+        {
+          "path": "audit/version-matrix.json",
+          "sha256": "a92c22648fdc331973633c22b242c74d63bed81a65488d2f926c2f715a2b9933",
+          "bytes": 6124
+        },
+        {
+          "path": "audit/SUMMONS-STAGING-20261006.md",
+          "sha256": "2933c566395b57add07efecdd8e34436b43ebc281cc81a23848180ff22dc2fb0",
+          "bytes": 8626
+        },
+        {
+          "path": "audit/opportunity-browser.mjs",
+          "sha256": "a83a1531db027913f5c9c1e0a19f83675b103898b179ccec082b94e4ebbdd498",
+          "bytes": 9940
+        },
+        {
+          "path": "audit/lot4-connected-attacks-e2e.cjs",
+          "sha256": "7359154aef1f0702b6e73df0a06b191d2cebb05701454f9773f5929a303478e6",
+          "bytes": 10971
+        },
+        {
+          "path": "audit/lot2-e2e.cjs",
+          "sha256": "e58a30291345ee319cc79a188d09f246a08a00b389f350f5f1c1202797760141",
+          "bytes": 23428
+        },
+        {
+          "path": "audit/hybrid-test-dom.js",
+          "sha256": "3b945912f5c03f6880a0bd6c108d8a64de50493a10c65573121d9468356e78ec",
+          "bytes": 937
+        },
+        {
+          "path": "audit/MJ-UNDO-PROTOCOL-20261007.md",
+          "sha256": "7fba8d874efce069f691399b85a40244325e9efe337aed2042becb0e00ee0516",
+          "bytes": 3803
+        },
+        {
+          "path": "audit/NANS-INTEGRATION.md",
+          "sha256": "985e2b4fa518fd1f342584dc0487351ce47b6a752cd114516afc752e05534e5f",
+          "bytes": 9728
+        },
+        {
+          "path": "audit/PREPARATION-CONTROLS-2026-10-06.md",
+          "sha256": "4ab2ef156afeb5f421914affa846bfbd4c3179ca446b5716869a228df9d212a1",
+          "bytes": 1020
+        },
+        {
+          "path": "audit/RUFUS-INTEGRATION.md",
+          "sha256": "ce25dbb60de662fc5484de9da49b292b2b09c14afe1ddbadb9a6a52c86834e2c",
+          "bytes": 9088
+        },
+        {
+          "path": "audit/session-summon-undo-browser.mjs",
+          "sha256": "6900cb9ad29f1ca964c352529f8a3d84533662f18801020ac36770a107887226",
+          "bytes": 9272
+        },
+        {
+          "path": "audit/hybrid-offline.cjs",
+          "sha256": "917486a4f6d70aa69ea00a8b7b7c17aed8b5f5d1c5fbab38557ff75296aa8023",
+          "bytes": 3683
+        },
+        {
+          "path": "audit/load-saturation-browser.mjs",
+          "sha256": "43731855488d12ada7f986225b5bee7be22e99732770d6164403bd8ca494bad4",
+          "bytes": 4732
+        },
+        {
+          "path": "audit/hybrid-free-ui-checks.cjs",
+          "sha256": "a3be0c34a63080f385177ee1b253799e5e6a1d32f2fe3cc135417f99f9bee62c",
+          "bytes": 3428
+        },
+        {
+          "path": "audit/agathys-browser.mjs",
+          "sha256": "f049174e9bf7b96c7b56cb2d159441de2967a5882aa1e90d8290f4d111cca070",
+          "bytes": 9687
+        },
+        {
+          "path": "audit/instance-pencil-results.json",
+          "sha256": "6faffd45e17e34cf6829588b1466b462acaad7fd6ce40470ee2b482b592cf026",
+          "bytes": 632
+        },
+        {
+          "path": "audit/rufus-browser.mjs",
+          "sha256": "736b47605929ae4b9e74ddae0ebcb96316b77ce720cc2f5a98b30a60ad4f3065",
+          "bytes": 28875
+        },
+        {
+          "path": "audit/LOT4-REPRISE-BLOCAGE-20261014.md",
+          "sha256": "07710c9a9c79943a8b742f375e841ff05d510e31fe94225f579feea89675a96d",
+          "bytes": 13666
+        },
+        {
+          "path": "audit/health-regression-browser.mjs",
+          "sha256": "03a9c33c7f1e3e6c721a48505cf65d347ba1f05ca7354ddf51f6341197899cf1",
+          "bytes": 7577
+        },
+        {
+          "path": "audit/SPELLCASTERS-WOLF-20261007.md",
+          "sha256": "fd9bc751a3786c644df9ea27b76b30024b9fbfb0edc46def07fefbdff07e0617",
+          "bytes": 4503
+        },
+        {
+          "path": "audit/samoth-automatismes-browser.mjs",
+          "sha256": "4ebc684f523a2719ed6bcccfdd1690419983b8566799026fc6c99c1959be4b94",
+          "bytes": 17059
+        },
+        {
+          "path": "audit/import-profile-check.test.cjs",
+          "sha256": "42a1a8a4dbb44651694efa0f1b0f52aef039f8b47da9cf049cfc52c136a5eb0d",
+          "bytes": 2126
+        },
+        {
+          "path": "audit/lot3v2-e2e.cjs",
+          "sha256": "b160829fded7f95babab1f1722b2f2d4d2b1a0d7eec0cc5fecdfdccad82953da",
+          "bytes": 26464
+        },
+        {
+          "path": "audit/lot4-hex-armor-e2e.cjs",
+          "sha256": "0b057b5c52abe419008f7739993c3086c8643a3feb5bfcd197968c82da440cb5",
+          "bytes": 15267
+        },
+        {
+          "path": "audit/mj-offline.mjs",
+          "sha256": "5a3b39901456aed80579264f03b754ea585d51b64b9b60f2ffa2857dc75c6594",
+          "bytes": 5299
+        },
+        {
+          "path": "audit/e2e.mjs",
+          "sha256": "03d8eb909f09b0c5155c964ae5a5638bb14e275f128124b5a5473366788e8b34",
+          "bytes": 39782
+        },
+        {
+          "path": "audit/healing-e2e.mjs",
+          "sha256": "4bec8ead80ff1135e4c26ad73475bd1ba55263f6c4c7e18d9a3f5f1a596c827f",
+          "bytes": 17366
+        },
+        {
+          "path": "audit/lot4-ui-fx-e2e.cjs",
+          "sha256": "33703bf6151b83f8260f970228d7bfb2f0a165e78fda304ebf71d79f685d1c83",
+          "bytes": 13864
+        },
+        {
+          "path": "audit/healing-validation.json",
+          "sha256": "2aa5f875195e245e4e5f306969f8167f03c8d9a6491271ef9c2a447da0204a26",
+          "bytes": 64236
+        },
+        {
+          "path": "audit/healing-compat-e2e.mjs",
+          "sha256": "9cde31fc935706ac13cb1bae9ab1a5768f7cbbaeb3ca93fd8048eb9ac03e7041",
+          "bytes": 6991
+        },
+        {
+          "path": "audit/haste-menu-e2e.cjs",
+          "sha256": "a0da88746b39e0fa838b21b85f1eeb76636fdbce4a6d5bc0d6b9092e21a5660d",
+          "bytes": 18077
+        },
+        {
+          "path": "audit/session-spell-slots-browser.mjs",
+          "sha256": "02d0e90d7af06ba23f3a0a320f247f3e35beaa91c2cdd6664432e4fb20cc77b2",
+          "bytes": 9307
+        },
+        {
+          "path": "audit/lot4-e2e.cjs",
+          "sha256": "61da0f99603a987b156398050f1769da978b334d3c185549adda1b5c220b7537",
+          "bytes": 16983
+        },
+        {
+          "path": "audit/lot4-dragon-pyro-e2e.cjs",
+          "sha256": "63f25c5e170771d528363da90fbb584c13c114bea65337048fa07aa455e61c06",
+          "bytes": 15526
+        },
+        {
+          "path": "audit/backup-notice-browser.mjs",
+          "sha256": "aff2e7ce741a35e9d9c9a647e3bbb069c2666fd59cbb88227d1d1c2da4586536",
+          "bytes": 4882
+        },
+        {
+          "path": "audit/mission-browser.mjs",
+          "sha256": "fa34e72188b1b7aee75e9cff225760fac4071a8ce89d1dc8d2767fc3e0175892",
+          "bytes": 22128
+        },
+        {
+          "path": "audit/PREPARATION-SUMMONS-ASSISTANT-20261007.json",
+          "sha256": "cad17996fab29c0c075e4fe4005962c88cdc6c97c5cf655c7fbce133c4a8d078",
+          "bytes": 52402
+        },
+        {
+          "path": "audit/mj-touch-browser.mjs",
+          "sha256": "94ee9e8b6cb2aeb3613693d452b15c525dfa14e8380a2682ee4d42ac53426394",
+          "bytes": 7251
+        },
+        {
+          "path": "audit/session-persistence-browser.mjs",
+          "sha256": "9fc9ce5a0023a002d6d57acc469eef0998a03d57ba7b3e1491a05ec3446e43fc",
+          "bytes": 11207
+        },
+        {
+          "path": "audit/brack-browser.mjs",
+          "sha256": "e48c4042f344a0bbd81333d88f5a096b66565f4c0242ae1e310b1fcdbb824bc9",
+          "bytes": 24754
+        },
+        {
+          "path": "audit/kentaro-validation.json",
+          "sha256": "ce9051b5780e58939d1b7b2e15c47b983a6cd5bfb132ae47f0fba57e83675b08",
+          "bytes": 12550
+        },
+        {
+          "path": "audit/kentaro-browser.mjs",
+          "sha256": "baab4dc0f99634b8cbfe051960efadf9f18570ae6f492da7f25bee0c5c4521fd",
+          "bytes": 22274
+        },
+        {
+          "path": "audit/profile-browser.mjs",
+          "sha256": "b54573ba8db3ebfaa8648b73e579842bf201198856155e8d184a4bead3a248fc",
+          "bytes": 8158
+        },
+        {
+          "path": "audit/MJ-ERGONOMIE-JOURNAL-20261007.md",
+          "sha256": "f007c53d0ed3b18bed6f72fa36304e19b0f9f3f13df524d88957ed6ea2be75ca",
+          "bytes": 20902
+        },
+        {
+          "path": "audit/reaction-browser.mjs",
+          "sha256": "6b569f6cc01dcadee0dbdeea174b02b83b59c7bc29b43ccce23a944f8db3f7f3",
+          "bytes": 7558
+        },
+        {
+          "path": "audit/DUPLICATE-TARGETS-2026-10-06.md",
+          "sha256": "35f974c52f4feaf8e54f04565ee7fb1995c2cf279f0502fd78bc47a2b9670025",
+          "bytes": 1633
+        },
+        {
+          "path": "audit/five-round-browser.mjs",
+          "sha256": "449f57381cf1fb1c01b4039b909ba2e15dfe72904532a4d48e8447d5611722a0",
+          "bytes": 28378
+        },
+        {
+          "path": "audit/multi-target-ui-companions-browser.mjs",
+          "sha256": "676b549271484fa9f430bd9741b2f7297c6c0f5f0fc0ebaf0bb2aa06a5a4fc9a",
+          "bytes": 11994
+        },
+        {
+          "path": "audit/spellcasters-wolf-browser.mjs",
+          "sha256": "dfbdf248ca234371e2b21ff2c954f1ce6052937c0b66f87f7a9ae07f9136c27e",
+          "bytes": 13852
+        },
+        {
+          "path": "audit/typed-damage-combat.test.cjs",
+          "sha256": "d437e6a5dc86b267b30991efe613a2c504492c62e8775ba3de3dcf91dde6def9",
+          "bytes": 2536
+        },
+        {
+          "path": "audit/multi-target-ui-browser.mjs",
+          "sha256": "86526178adf29b48583c721c0d4263b28e3b3c75fd9c103042ffbe9a3203f948",
+          "bytes": 14009
+        },
+        {
+          "path": "audit/MJ-PAGES-404-20261008.md",
+          "sha256": "7c5d8fa8c85fa8274092e92fbc193e94ba8c764576ac74b22f926f43549c53cb",
+          "bytes": 2638
+        },
+        {
+          "path": "audit/hybrid-e2e.cjs",
+          "sha256": "fa3718f42aed7b9e6926584cf57e81a8d8e5a146bf4588e7898d5a5d703b5d56",
+          "bytes": 14961
+        },
+        {
+          "path": "audit/counterspell-browser.mjs",
+          "sha256": "da0c85aab270e3f534dd3e026e10a62baeacbc950b1439c852ed096b9f4fb9bf",
+          "bytes": 9810
+        },
+        {
+          "path": "audit/architecture-validation-20261006.json",
+          "sha256": "8d98916e8d8f5a60a1a338ed766ef6e76dbf7a95c3ccecdb3786bb79edae3cff",
+          "bytes": 5115
+        },
+        {
+          "path": "audit/architecture-e2e.mjs",
+          "sha256": "a5a169a18c8ecc817c81cd275e9491f42859f39b924975e183a60fb2b88c263b",
+          "bytes": 25327
+        },
+        {
+          "path": "audit/session-horn-browser.mjs",
+          "sha256": "81963d8dbfacb539d9b0874489aa6636b79f76b9f695a604c12bf3164d04fd01",
+          "bytes": 9604
+        },
+        {
+          "path": "audit/summon-e2e.mjs",
+          "sha256": "f09ed206fc5c8e18781dfaf5bb2c1437e0e9e71f369c414cb8e2be1a9b4134b1",
+          "bytes": 20385
+        },
+        {
+          "path": "audit/load-saturation-results.json",
+          "sha256": "c32b340a737d5458c1b0390a659f1a15c1d02e5c1f8fcc8333bf7bf7554deca5",
+          "bytes": 346
+        },
+        {
+          "path": "audit/KENTARO-MISSION.md",
+          "sha256": "1cdf2fb08323bc9d070ebd50fb823247ce32449952574e6142ebb870dc6eda11",
+          "bytes": 5636
+        },
+        {
+          "path": "audit/architecture-delivery-20261007.json",
+          "sha256": "3f59df563ab593c9d51e4ac4054ac8a0270e25bc6ae4d733e9ddb1fad3b98197",
+          "bytes": 14053
+        },
+        {
+          "path": "audit/MJ-VALIDATION-20261007.json",
+          "sha256": "03a758af1f1e00ab285614f334aae1cd22d6301a14da60b8557509c7b3e1f543",
+          "bytes": 75638
+        },
+        {
+          "path": "audit/hybrid-dialog-checks.cjs",
+          "sha256": "ebb97df1b7f11620d6bf316d20e89674fc06ed2faf0f07eb000307d2b05ab6ad",
+          "bytes": 2907
+        },
+        {
+          "path": "audit/save-import-results.json",
+          "sha256": "31175d35e3248c579e78ec0eaecbe2e8269b38e26aeff13c1870442ca3fbd3c7",
+          "bytes": 822
+        },
+        {
+          "path": "audit/backup-notice-results.json",
+          "sha256": "25ad318766e6d417a06c2b9d7a37f1370a65bb62cc3c57ad04f0b040a93f4463",
+          "bytes": 556
+        },
+        {
+          "path": "audit/player-saves-browser.mjs",
+          "sha256": "007011dd66dfd1810302ca5901134367f8b8684c398430e7a6ea2b9b894dca61",
+          "bytes": 10654
+        },
+        {
+          "path": "audit/lot4-local-attacks-e2e.cjs",
+          "sha256": "82ceb1251ab59379880d9cc885beac92f92f61a403bfc5dfa5c5032022d81190",
+          "bytes": 15616
+        },
+        {
+          "path": "audit/save-import-file-results.json",
+          "sha256": "94550586a5bcab2337d699a9376bcb333313164b6382b25b0bd84c9a6e2d16e6",
+          "bytes": 514
+        },
+        {
+          "path": "audit/rpg-panel-ui-helpers.cjs",
+          "sha256": "c3b02a7ad98180ccf975da93e0b378e77d6ec11744c489cf2a163f1f85688546",
+          "bytes": 4377
+        },
+        {
+          "path": "audit/staging-manifest.json",
+          "sha256": "050800f6ec0d3a5e96f4604c3035eaad99294bb2070557354501a2e45b663b15",
+          "bytes": 1157
+        },
+        {
+          "path": "audit/mj-finishes-browser.mjs",
+          "sha256": "f056bb2fd15452bdf932c95a1e6b66aa97ac1ff04286359b7018634304341899",
+          "bytes": 18816
+        },
+        {
+          "path": "audit/autonomous-e2e.mjs",
+          "sha256": "1c14b2945f13d9fbf3b46a580cf56c40ec9d64ca3e8473df6b475f3de1d3f70d",
+          "bytes": 8076
+        },
+        {
+          "path": "audit/save-import-file-browser.mjs",
+          "sha256": "b937ce1bc408cb32ba8c4228edc976994ae5c018eb754eaaf78eb900cedc5394",
+          "bytes": 4829
+        },
+        {
+          "path": "audit/hybrid-free-ui2-checks.cjs",
+          "sha256": "2064ccb9ff13e1fec4a5f0954a41307c32fa97897ca152a825171d4a34214cc2",
+          "bytes": 2579
+        },
+        {
+          "path": "audit/duplicate-target-browser.mjs",
+          "sha256": "e1c80213834104044dddd9249ed18f1fa0e0514f04fb71640bbe268f9c357960",
+          "bytes": 11441
+        },
+        {
+          "path": "audit/MULTI-TARGET-TESTS-2026-10-05.md",
+          "sha256": "2e1efc88f36060778b4930135e8c749370545f836ff3d5396435b750e32844cb",
+          "bytes": 14332
+        },
+        {
+          "path": "audit/lot4-combat-e2e.cjs",
+          "sha256": "2678f145c29ce64fafe7aadb65fd15d601502c1c4a361c11250c29ff8984aa29",
+          "bytes": 18068
+        },
+        {
+          "path": "audit/ASSISTANT-GUIDE-METHODE.md",
+          "sha256": "666fd7d648c87051a779bcb17f066448d37966e6e2734c9047a5a4b8040cd51e",
+          "bytes": 5701
+        },
+        {
+          "path": "audit/preparation-remove-browser.mjs",
+          "sha256": "6c41189396d1b0c204d91e14d6b644796e1b2f807431530778070d791e907976",
+          "bytes": 8643
+        },
+        {
+          "path": "audit/PREPARATION-SUMMONS-ASSISTANT-20261007.md",
+          "sha256": "0b6ede22b73441cd6b0a7de99f2b1e83dc075307e1d3abbf18494f598b0223ae",
+          "bytes": 11448
+        },
+        {
+          "path": "audit/SAMOTH-AUTOMATISMES-20261008.md",
+          "sha256": "d359c22613de13257fd46e635122f54d837604d9feeb8176e74c9e4bee2d416a",
+          "bytes": 4794
+        },
+        {
+          "path": "audit/LOT4-FINAL-VALIDATION.md",
+          "sha256": "1f47125464012de0cd441e736c9ad40b472259fddf94a8d029b64e71467bc376",
+          "bytes": 9246
+        },
+        {
+          "path": "audit/instance-pencil-browser.mjs",
+          "sha256": "52601b7bd66b72c50e565b93ecc80eac8a5e166e48cf0567b4b10ae30eec8d10",
+          "bytes": 6207
+        },
+        {
+          "path": "audit/COMBAT-ARCHITECTURE-20261006.md",
+          "sha256": "6306a4414fc5d2b9da1741849a455587bf85ff8cffb9b4501cf46b3dfee58882",
+          "bytes": 17432
+        },
+        {
+          "path": "audit/combats-e2e.mjs",
+          "sha256": "4dbba039f5f4ce74c08de96e65e01fd622c075897a41ce1ab4b14eb4eb904b1d",
+          "bytes": 27706
+        },
+        {
+          "path": "audit/session-long-combat.mjs",
+          "sha256": "862bbceb9c9070b1dbf23ad6947e1803865216e2a4ba709836fd5ab66e847c3d",
+          "bytes": 16954
+        },
+        {
+          "path": "audit/brack-haste-e2e.cjs",
+          "sha256": "c1ba7469c63ba10679fb8c96b1928adf03a6d7d1fdf897b5f3193f6f44f81e43",
+          "bytes": 19579
+        },
+        {
+          "path": "audit/mj-panels-browser.mjs",
+          "sha256": "81b65886581ed602da1e0de980ffe374c56efc74d980f6700e187cbd137a514c",
+          "bytes": 7958
+        },
+        {
+          "path": "audit/guide-real-dom.test.cjs",
+          "sha256": "09497b5ab32881e2fcf050185aeb8e85541d2d1d34db382d8d78e7a309bcc6ff",
+          "bytes": 6070
+        },
+        {
+          "path": "audit/mj-browser.mjs",
+          "sha256": "51e213b60dbaae7567e109abe8998e64b00702e8938589b53cdb6d8c7463832e",
+          "bytes": 21942
+        },
+        {
+          "path": "audit/profile-check.test.cjs",
+          "sha256": "18436fa1ecf5330153d9c90fe5466d95ba467e811ab2c579e5c6ae565d612533",
+          "bytes": 2770
+        },
+        {
+          "path": "audit/STABILIZATION-2026-10-05.md",
+          "sha256": "f4a9c37e1b96305ac65e9b88a28f29f5126bc71ce1137e7f3f5b66291d05960c",
+          "bytes": 2684
+        },
+        {
+          "path": "audit/hybrid-dialogs-offline.cjs",
+          "sha256": "c78f2e149a7d636a90bcc83e8a7a96007f8f0901b0f925ce13e9bd0ee96fec44",
+          "bytes": 5408
+        },
+        {
+          "path": "audit/concentration-browser.mjs",
+          "sha256": "72d51dda924d66164a07e8d461727c1046e59532952c09172d9c49475e8a5afd",
+          "bytes": 9253
+        },
+        {
+          "path": "audit/group-browser.mjs",
+          "sha256": "ae6c5f43651ad7c752d71cbcfda31a1cf9505748a43bdcb85dd97e218621d148",
+          "bytes": 25532
+        },
+        {
+          "path": "audit/PLAYER-SAVES-20261007.md",
+          "sha256": "5bc8e5f9e4df59cdc4b7beec326a301ec3e24b211cfc9d7fcd02860ba223661f",
+          "bytes": 4352
+        },
+        {
+          "path": "audit/SAMOTH-VALIDATION-20261008.json",
+          "sha256": "95c1049568bf1f137d7f84a47a1c0416bb759dfc4161d8bbe50a1d2158b0aa48",
+          "bytes": 2341
+        },
+        {
+          "path": "audit/health-complex-e2e.mjs",
+          "sha256": "acf6d712bf064878fff1c88ab19be1896d7e73e2a5bba335bc90211024d339e1",
+          "bytes": 16734
+        },
+        {
+          "path": "audit/CONTEXTE-JOURNAL-20261009.md",
+          "sha256": "3ef013fd3831d57884449470853fcf03ad744c2678e572bb049c8857fa24a75a",
+          "bytes": 5372
+        },
+        {
+          "path": "audit/health-families-e2e.mjs",
+          "sha256": "1683b0cf63cc9d5d35d11cbbbcd3c15186bac438e8cd802292485496d3fbda6a",
+          "bytes": 20478
+        },
+        {
+          "path": "audit/summon-validation.json",
+          "sha256": "f30cc0f9ecac1ccbc2bc3d7f86106a3c7f923fc70b9d7c7b8e26055bf2bbb77a",
+          "bytes": 66855
+        },
+        {
+          "path": "audit/HEALING-STAGING-20261006.md",
+          "sha256": "1b8c491125aeb3d8c25fa500005e4afa534a82b8e41364d2f90304de7bfa48ee",
+          "bytes": 14579
+        },
+        {
+          "path": "audit/multi-target-browser.mjs",
+          "sha256": "b9ee6c2087ced6a774e664cae1d650f5c6e57cd876092b1fed80f44cb96b62e5",
+          "bytes": 21289
+        },
+        {
+          "path": "audit/reset-pending-e2e.mjs",
+          "sha256": "0142ca0473b94b7e6b50d276a32fd5164021b8c311ec63d24e2d5cbed8abd333",
+          "bytes": 23659
+        },
+        {
+          "path": "audit/mission-baseline-browser.mjs",
+          "sha256": "f664b8bfdad9e59d65cc0f5b5896401d4f1565ba0e19d70789ba7ac2ce320fb4",
+          "bytes": 6340
+        },
+        {
+          "path": "audit/MJ-FINISHES-20261008.md",
+          "sha256": "0672e8cc351c02ac13aa3637d10dd99b116c61d3ec993ecb3ff966b95ae784ef",
+          "bytes": 5893
+        },
+        {
+          "path": "audit/session-defenses-browser.mjs",
+          "sha256": "f140ded5168f2fa3c9dc68a394bca5d61313c03c881186d8c11bb9eef727a914",
+          "bytes": 13082
+        },
+        {
+          "path": "audit/lot3-e2e.cjs",
+          "sha256": "c1ca8f41a87807711223810aae82eb54f80688160eda0b04310464d0b1655105",
+          "bytes": 20062
+        },
+        {
+          "path": "audit/save-import-browser.mjs",
+          "sha256": "d19329f20cfe7a9bd830899f8af1767f209017e601b53e511aed2ad0ed655266",
+          "bytes": 7515
+        },
+        {
+          "path": "audit/checkout.mjs",
+          "sha256": "16f56ef62529a88e1bba120f8e2762da1ae7480f5897931fc401da3311b2d39f",
+          "bytes": 951
+        },
+        {
+          "path": "audit/RUFUS-VALIDATION.json",
+          "sha256": "d21ec6ced3266bac1e1fe57b020d31ab0c06ff788f8fe6bd49f52d72303a6a78",
+          "bytes": 65196
+        },
+        {
+          "path": "audit/zephyr-browser.mjs",
+          "sha256": "76a9cb49250ab6eb8774b4c262d5b6d85fe4be204496d5e7d9246f3458b2ad38",
+          "bytes": 20427
+        },
+        {
+          "path": "audit/healing-hitdice-e2e.mjs",
+          "sha256": "8f0d06faae3ea239d82c20569c8610ef026eca0e3fc13b0acee37d13a16c911e",
+          "bytes": 6229
+        },
+        {
+          "path": "audit/AUDIT.md",
+          "sha256": "a8f3f1de6a1ed5be2081cad373a2a0e37b5019f7fc396b08b0dd20eecfbb8125",
+          "bytes": 19222
+        },
+        {
+          "path": "audit/MULTI-TARGET-UI-2026-10-06.md",
+          "sha256": "e0b30d23937fd3646c82d44a27a1a0c086cd19fa44b840599c244b89512c9732",
+          "bytes": 3658
+        },
+        {
+          "path": "audit/session-eclipse-browser.mjs",
+          "sha256": "d75774943409ecc9051b1c3f50c1bafb44792f68e04c4433dbe55dacf26c931f",
+          "bytes": 10238
+        },
+        {
+          "path": "audit/nans-browser.mjs",
+          "sha256": "1dd87c9b2684756104f9c7a99f5680f13aceee6442e34cde50c0347cb238384a",
+          "bytes": 35383
+        },
+        {
+          "path": "docs/creation-adversaires-guide.md",
+          "sha256": "e0286c3ac654294f52bd2ebe32db3ffad4756e770cb60679f9b7aa842adc615a",
+          "bytes": 4611
+        },
+        {
+          "path": "docs/modified-files.json",
+          "sha256": "114dd3fb524abdff7a9620208b391f5acae506459458ed46c1dd7dba5aeda4a0",
+          "bytes": 3022
+        },
+        {
+          "path": "docs/legacy-json-audit.json",
+          "sha256": "16ad5a13a647114100112d457221937d9c0ff9fafb649639805f82fce3fee56b",
+          "bytes": 944
+        },
+        {
+          "path": "docs/MJ-SESSION-RELIABILITY.md",
+          "sha256": "47b3873645f491391eb49f191dc13bd249c5074ce5665450a27443b10602a5cd",
+          "bytes": 18455
+        },
+        {
+          "path": "docs/main-baseline.json",
+          "sha256": "d626890417e8d5fb42a61a040dbeaffcbc71f5bd0ca7527f8c8f4e53d4347182",
+          "bytes": 460
+        },
+        {
+          "path": "docs/verification.json",
+          "sha256": "70923e945291da913b5a53abe64f9070444a1cecd58964a913deca1f48f4a369",
+          "bytes": 44074
+        },
+        {
+          "path": "assets/mj/manifest.json",
+          "sha256": "65c1448128382c59ab675f8d40ca12ff932ae8ede4356464dcc37578bc0094ea",
+          "bytes": 9955
+        },
+        {
+          "path": "audit/brack-results/validation.json",
+          "sha256": "ac8db12cd8c6c03fbb45906b02cacd49f411ece78cab2a54f6ea8bf7bdb3e086",
+          "bytes": 3268
+        },
+        {
+          "path": "audit/brack-results/shared-validation.json",
+          "sha256": "aa640b26ce2da0989171997890d936c4f0878ecdb1621d691b6c49745f8b6408",
+          "bytes": 10949
+        },
+        {
+          "path": "audit/evidence/feedback.json",
+          "sha256": "b09c89707736f351f161501cc031d354b0701a77b18e84e6cc7fb3aed53b7b4a",
+          "bytes": 14807
+        },
+        {
+          "path": "audit/evidence/automated-tests.json",
+          "sha256": "5ea5bc7211b96fc88b82be11d5504619c0486be857b775088d85ecb88be12ca5",
+          "bytes": 2477
+        },
+        {
+          "path": "audit/evidence/states.json",
+          "sha256": "0d18f8e4daf1a3f17c501bb1c23f4556b0df883c0cc19ba5b8466a15997d8821",
+          "bytes": 15013
+        },
+        {
+          "path": "audit/evidence/saves.json",
+          "sha256": "f2eef7e2b498ad72f1cafeb4f1da659b3b5737b773e5dead311cb5afcfe46314",
+          "bytes": 10837
+        },
+        {
+          "path": "audit/evidence/retest-2026-10-05.json",
+          "sha256": "14f96fb9e174ebf699eeeb017ea5e583b3eee579f5dc5ebd4b218fb63b0b31cf",
+          "bytes": 25392
+        },
+        {
+          "path": "audit/evidence/current-report.json",
+          "sha256": "44f284830d2e8bf7d392165874a1eff1f513adc7db726a165752ea77791585fb",
+          "bytes": 2107
+        },
+        {
+          "path": "audit/evidence/baseline-report.json",
+          "sha256": "e9e9ea81e5572fd0c17a680b6d29d335b66c1b9da75df42fc550655f279aeca5",
+          "bytes": 1454
+        },
+        {
+          "path": "audit/evidence/reliability.json",
+          "sha256": "ab66c94a5d1283fa4f74ce4082c3f9b3302a5166d1560fe96e8fb9e9738a0df9",
+          "bytes": 2167
+        },
+        {
+          "path": "audit/evidence/brack-attacks.json",
+          "sha256": "0675260e69997998b58d51002cd6fef7c18327f1760d3404bf27c5abd441c509",
+          "bytes": 11726
+        },
+        {
+          "path": "audit/evidence/main-unchanged.json",
+          "sha256": "ef7123c995fd8a47baec8e944e06efef65acddfaee509ec95da36984e43e80a4",
+          "bytes": 621
+        },
+        {
+          "path": "audit/evidence/final.json",
+          "sha256": "fb34415c13416601e579fa97fc7f657adaa81b1f09210ccece4f88e600a5ac3c",
+          "bytes": 24005
+        },
+        {
+          "path": "audit/evidence/presentation.json",
+          "sha256": "f77a280c205fdab0085a1187d77df435a14ff9608dfe6f925989e4289a4b0bcd",
+          "bytes": 17238
+        },
+        {
+          "path": "audit/evidence/stacking-contexts.json",
+          "sha256": "d32d572a301fade829d378bffc5417b048508277ec7bd29acaa53049804d8823",
+          "bytes": 64805
+        },
+        {
+          "path": "audit/mj-finishes-evidence/kentaro.json",
+          "sha256": "319dc5e6c378063d5d82987315e9c2f8b92f8c97ec1c81f7e3c4a42c17c81b7a",
+          "bytes": 4363
+        },
+        {
+          "path": "audit/mj-finishes-evidence/samoth.json",
+          "sha256": "59e4a8da56186d15beb349a2941a008216fb38f83072bbc971ff5490c2a3f352",
+          "bytes": 9616
+        },
+        {
+          "path": "audit/mj-finishes-evidence/ci-browser.json",
+          "sha256": "816337d641fd97db7bd560b6a7df283c2e5d37c0ca96e57f8de177d8666580a3",
+          "bytes": 49434
+        },
+        {
+          "path": "audit/mj-finishes-evidence/ergonomics.json",
+          "sha256": "aff149f8b15f2b51566f69595140cbbbea2155c54b9ddcee03f82cfbe261eb85",
+          "bytes": 3246
+        },
+        {
+          "path": "audit/fixtures/condition-icons.json",
+          "sha256": "69b7959050f4b0d5232f65420bc447fdc501cfceea83a48e433b4ba857465fbf",
+          "bytes": 84054
+        },
+        {
+          "path": "audit/nans-results/validation.json",
+          "sha256": "01139509564998898e0f1bc3464fb8db8481b2b497096384083b443a79a05f31",
+          "bytes": 4807
+        },
+        {
+          "path": "audit/nans-results/horn-validation.json",
+          "sha256": "1ffe7657155de3d8fd4260380b57016dfba504e2e37f7695568deb32c058b5f3",
+          "bytes": 1362
+        },
+        {
+          "path": "audit/lot4-validation/haste-menu-results.json",
+          "sha256": "0043591a5ab5bcdfe689c4cc04ad0fbe4ecdaba4d7bf287eb81412dea6e4cef3",
+          "bytes": 8065
+        },
+        {
+          "path": "audit/lot4-validation/lot4-hex-armor-results.json",
+          "sha256": "4345622651ca85c56ec699e900f90cf61ad11f154e2a653e4358ab937e83ebd8",
+          "bytes": 1989
+        },
+        {
+          "path": "audit/lot4-validation/lot4-results.json",
+          "sha256": "b4937118bc0639c25ae657a11a901189d98f50b82df793d36c871f5a7044e42c",
+          "bytes": 2955
+        },
+        {
+          "path": "audit/lot4-validation/lot4-combat-results.json",
+          "sha256": "0b2ad10ff46d7073a3f27b8bc95596f195d8f0e55e5593f1471d317dbac478be",
+          "bytes": 1755
+        },
+        {
+          "path": "audit/lot4-validation/lot4-local-attacks-results.json",
+          "sha256": "2708d2b7b7df9c358343a72835de2199844c43e9dd782233285ada330b4d1ef4",
+          "bytes": 2175
+        },
+        {
+          "path": "audit/lot4-validation/lot4-connected-attacks-results.json",
+          "sha256": "ff2302de7fa9b58c524bc0011f9a9bfa946f84a26142f02ceda273bd0aab575c",
+          "bytes": 1714
+        },
+        {
+          "path": "audit/lot4-validation/lot4-ui-fx-results.json",
+          "sha256": "338f77ae999f451b9d6b506f14c434952c1b270eaa9ed13fa99c65ba2b24471f",
+          "bytes": 1499
+        },
+        {
+          "path": "audit/lot4-validation/lot4-dragon-pyro-results.json",
+          "sha256": "6c1c3d4bd3002cc319d0d8d0ef0ef1b874356fab4d72258260f9213dde5551cf",
+          "bytes": 1483
+        },
+        {
+          "path": "audit/fixtures/lot3-server/rpg-connect-server.js",
+          "sha256": "126bdde782d3fc2db549ebf83b862c5704facf7ac69313c9b6701ed9c5b59945",
+          "bytes": 10394
+        },
+        {
+          "path": "audit/fixtures/lot3-server/rpg-activity-protocol.js",
+          "sha256": "71c19bbd40d10f69b0bf833fdd6ba20cb50b0bb950cebb5a2ff11fc9c1ac720b",
+          "bytes": 1228
+        }
+      ]
+    },
+    {
+      "repository": "bryantoualy-del/Kentaro",
+      "ref": "main",
+      "commit": "b1376f9541ceadf089c5c977ff53dd5d0181a2c1",
+      "fileCount": 97,
+      "jsHtmlBytes": 687083,
+      "files": [
+        {
+          "path": "COMPANION_API.md",
+          "sha256": "a33265fc5f9259b4e29fd66b45eb0485fcacabc2691cac81965d9834b806817e",
+          "bytes": 6280
+        },
+        {
+          "path": "OBSIDIAN_PLUGIN.md",
+          "sha256": "b715b6157e3950843b451450c933802142fb378353061270a2be7de125c88945",
+          "bytes": 2442
+        },
+        {
+          "path": "rpg-journal-ui.js",
+          "sha256": "c8ded100bf3260ad13fc4babdb4b97e09b153e81febfbd6d9dbf003856fa32eb",
+          "bytes": 6475
+        },
+        {
+          "path": "rpg-effective-damage.js",
+          "sha256": "c24b76cd6957a7d9f99f77c723f23d8535f9a3964d89cb1cfc9c9e5aa1fd2101",
+          "bytes": 3331
+        },
+        {
+          "path": "rpg-opportunities.js",
+          "sha256": "c152a3ed5dde09670e4b2c32a7e578a013f285c8486b42926c393efcb1427bc5",
+          "bytes": 3640
+        },
+        {
+          "path": "MJ-UNDO-20261007.md",
+          "sha256": "b5462f80c8fa5a05862057e1f21b9848b2e7d6a7a7c1eddae4d758bcd4d0e8cc",
+          "bytes": 1333
+        },
+        {
+          "path": "rpg-corrections.js",
+          "sha256": "c66972617e33e8fbe352f889f7c189b45e8a58bb458258b67f1ca78ca38ad8de",
+          "bytes": 16766
+        },
+        {
+          "path": "kentaro-armure-malefice.js",
+          "sha256": "150f802f2326e4f86b1af8c92dd8adba8c4a60610c8fcc02012ce26476349407",
+          "bytes": 6009
+        },
+        {
+          "path": "rpg-native-reactions.js",
+          "sha256": "d1af823e3cab8771c62122340255ee57952c968530bce18c4bda7ac8cab45ff8",
+          "bytes": 943
+        },
+        {
+          "path": "rpg-combat-effects-client.js",
+          "sha256": "cb5bdf3ba2ce8708970f031ea9f90e253ff3f1a961cd5c15e6053851e76bd1d1",
+          "bytes": 14775
+        },
+        {
+          "path": "rpg-turn-start.js",
+          "sha256": "2593465ac0f1ab6b47a3dd9b6847b5aa51c0425d2023a5d8025bae7398298f66",
+          "bytes": 1652
+        },
+        {
+          "path": "kentaro-modern-ui.js",
+          "sha256": "c2286484b76263e4303a696c1e694005269092bcdc2ae6caaeb2333a2355a3c4",
+          "bytes": 19436
+        },
+        {
+          "path": "rpg-health.js",
+          "sha256": "4e5937a10e4967a8462403a2894407990af7c86a57b77ad3fb0aff6211ce3905",
+          "bytes": 10191
+        },
+        {
+          "path": "mj-journal-model.js",
+          "sha256": "2d7b17389f5eec4d546a238ce8b5458e801162611a168d9c9dcd9b26bd16523a",
+          "bytes": 2180
+        },
+        {
+          "path": "COMBAT-CONNECTE.md",
+          "sha256": "b0ee7f198dc164c0b5680454076f19f548ce578e4a30b101f83108e7a13d5d30",
+          "bytes": 2645
+        },
+        {
+          "path": "companion-api.js",
+          "sha256": "d10e82022b47d24ded8587185e30fbcd899c842c4274ef7570c0e622787ab809",
+          "bytes": 18849
+        },
+        {
+          "path": "dice-engine.js",
+          "sha256": "2c54fad205597214bcc3eab71e17da340d1e122370c09bfc8d8bc220591bcde0",
+          "bytes": 18933
+        },
+        {
+          "path": "rpg-connect-client.js",
+          "sha256": "0269e112d1fd1e21d7d58b8553ab52d97302fa6684287605008cfc2ec6406eb1",
+          "bytes": 74333
+        },
+        {
+          "path": "social-dice.js",
+          "sha256": "f36aaba1a04d0dd4475c895844beba80e4aacf994fa3f24e93969580d64c07dd",
+          "bytes": 3809
+        },
+        {
+          "path": "kentaro-social.js",
+          "sha256": "64afef335352ccb97b904895cead078d189b2a13b21384138fe5da77d504a14b",
+          "bytes": 8511
+        },
+        {
+          "path": "main.js",
+          "sha256": "b2cc70c142ce84a25e41ae3f6cdbbd1603381725f3f6a092454950208e79e0ce",
+          "bytes": 29334
+        },
+        {
+          "path": "rpg-weapon-gate.js",
+          "sha256": "dcdb25b83461c51c0dfccfa135ab0eea8814063874fb8412170b9a7722b6a81c",
+          "bytes": 2932
+        },
+        {
+          "path": "rpg-summons-client.js",
+          "sha256": "7d6aff4d25315b96bb512e3e84e359c68cb7cd58fc4c13fb4e0cec421b43012a",
+          "bytes": 1807
+        },
+        {
+          "path": "rpg-instruction.js",
+          "sha256": "7816599c0a78ea3e66b9e09787b4ec6594695eff538ca4dcf683867e4e130fc0",
+          "bytes": 2169
+        },
+        {
+          "path": "rpg-dialogs.js",
+          "sha256": "dcc8121c958f1297d7a042b6c9f58742b7bb025e01eafdd2f1203dee8d4f08b3",
+          "bytes": 3639
+        },
+        {
+          "path": "rpg-player-saves.js",
+          "sha256": "b4e5b69ab7018a1a048b8018b4c3ea37e102bc9edeec516acc45fd84571777d3",
+          "bytes": 14633
+        },
+        {
+          "path": "rpg-resolution.js",
+          "sha256": "707ddd16ab5704e72838048f883bddd447390019de20305aaa4d3ecda062af03",
+          "bytes": 16573
+        },
+        {
+          "path": "kentaro-shell.js",
+          "sha256": "8a2d640536b0d98b0a405167469fd7ab50a833e77ffc3c557ea8e8f7d5a80dbc",
+          "bytes": 1670
+        },
+        {
+          "path": "kentaro-session.js",
+          "sha256": "f100293e39ec52bffe2924ed766bc796284713c6c95efaf47520deede0a442fc",
+          "bytes": 50514
+        },
+        {
+          "path": "index.html",
+          "sha256": "97ebb9bb6c40ac72d6c603534bfeec4bd923834623a214dfd1bb4a65f4a44504",
+          "bytes": 149625
+        },
+        {
+          "path": "rpg-group.js",
+          "sha256": "b0da44b8bea8805ea21266096da9120b85832eeb619e7d26deae0483ea3c7ef6",
+          "bytes": 9656
+        },
+        {
+          "path": "kentaro-icons.js",
+          "sha256": "a17b85442691ecde5b1b8acb3ad7d5e333e0158b2ea92added963829247b05d4",
+          "bytes": 5605
+        },
+        {
+          "path": "rpg-activity.js",
+          "sha256": "fdb0b0c9a8c9e87f75ea6cee9046261b71e5ac6eeb2b58198bc1d1b2ab9d5f9e",
+          "bytes": 4543
+        },
+        {
+          "path": "kentaro-combat.js",
+          "sha256": "ae9b460b3d2e4a17c18c3837ee4df3402638551b7d3817e8ce390b9dd96db522",
+          "bytes": 26338
+        },
+        {
+          "path": "rpg-combat-fx.js",
+          "sha256": "45eea99dedbe2755146e5a8264064ba545deb228b5afaa92edd043897a3a243c",
+          "bytes": 2256
+        },
+        {
+          "path": "rpg-triggered-effects.js",
+          "sha256": "20c2fef4018c435fc744af782b79ae4a580b1d000a5f08d76c935ec56c9f4705",
+          "bytes": 1142
+        },
+        {
+          "path": "manifest.json",
+          "sha256": "a839bc85aec3f78032c87196805366e03d148ccb57fb6c48130c1c50f3f0e36f",
+          "bytes": 301
+        },
+        {
+          "path": "rpg-resources.js",
+          "sha256": "bdd051aa651c1218273eaa7406e16f2d8a843aa1655e1e17f7a113ed58bab440",
+          "bytes": 2006
+        },
+        {
+          "path": "companion-turnbar.js",
+          "sha256": "5627443329973c0aa09e395fa0df0203fb50d12e275fff8c88196011dca96e42",
+          "bytes": 7806
+        },
+        {
+          "path": "rpg-concentration.js",
+          "sha256": "06b9573337400f9c43a2b684371daad6dcc5702864fe308bd8339a2dc64dde46",
+          "bytes": 8654
+        },
+        {
+          "path": "kentaro-journal.js",
+          "sha256": "d8f594c5dba36c930479805ee63154563cb65d0316a2c3cc4a64aaf45652b2dc",
+          "bytes": 4116
+        },
+        {
+          "path": "rpg-undo.js",
+          "sha256": "ff90210b2e74bc0ee22277946c376a0cd82c7075e67a72299bb7f6b408405b81",
+          "bytes": 6593
+        },
+        {
+          "path": "kentaro-inventory.js",
+          "sha256": "829135b82f453f7e327f01c71b33ecc86548ceaf42385300c65ed5464762bec4",
+          "bytes": 28745
+        },
+        {
+          "path": "rpg-multi-target.js",
+          "sha256": "bd9b2806f2d4a090e885f6870e299dbaca782ad3309ad034ada84d6ce0b79691",
+          "bytes": 10661
+        },
+        {
+          "path": "kentaro-backup.js",
+          "sha256": "9f13e50ecb4a78f43db7785995adead41ac177d3a8aed2e69e0783270b897fd7",
+          "bytes": 5009
+        },
+        {
+          "path": "rpg-connect-icon-registry.js",
+          "sha256": "ad4ad453a3d591003429bb2dbf75bfc55b5ef8102a048b21e90b81ffb575a128",
+          "bytes": 3810
+        },
+        {
+          "path": "rpg-correction-schema.js",
+          "sha256": "778a7e4bbb56b691d061b9d401de0b430fbe1f795386d9bf0136386adb7e30d1",
+          "bytes": 6221
+        },
+        {
+          "path": "rpg-reactions.js",
+          "sha256": "cd402819b81bc061007443051492661fcdd892cbd07767e312d06fc7816ea86a",
+          "bytes": 9185
+        },
+        {
+          "path": "IMPORT_OBSIDIAN_IPAD.md",
+          "sha256": "bf239fe8123d1e8c55ea546f9522363e02db188b161aefc8553a5be8af8e2786",
+          "bytes": 2755
+        },
+        {
+          "path": "rpg-multi-target-ui.js",
+          "sha256": "d53d145846699047621d0da604430a221b78c50d0ba0231c4dff60867b95f718",
+          "bytes": 13586
+        },
+        {
+          "path": "companion-feedback.js",
+          "sha256": "26916af2dd7f69fb293595dc6fba6e9953f0a59202b249640a406138b42376c2",
+          "bytes": 729
+        },
+        {
+          "path": "kentaro-fx.js",
+          "sha256": "5d386238a130a3b2050b22f67bd26f237fe3a91cd1b99ee14129410c0dc34222",
+          "bytes": 26435
+        },
+        {
+          "path": "samoth/index.html",
+          "sha256": "50c74da385b025ea287d4766a4c4a7d47aa2b37330e5c5a6641a46ffd27e51c3",
+          "bytes": 21258
+        }
+      ]
+    },
+    {
+      "repository": "bryantoualy-del/Nans",
+      "ref": "main",
+      "commit": "4aca7847c4e456639ecd369004c55af8cf12409d",
+      "fileCount": 67,
+      "jsHtmlBytes": 430136,
+      "files": [
+        {
+          "path": "COMPANION_API.md",
+          "sha256": "a33265fc5f9259b4e29fd66b45eb0485fcacabc2691cac81965d9834b806817e",
+          "bytes": 6280
+        },
+        {
+          "path": "rpg-journal-ui.js",
+          "sha256": "c8ded100bf3260ad13fc4babdb4b97e09b153e81febfbd6d9dbf003856fa32eb",
+          "bytes": 6475
+        },
+        {
+          "path": "VOLTO-PROTECTION.md",
+          "sha256": "e788a29e922c89775e4d23d668402432b5a9d855f5737b85a8aeb0218d145bcf",
+          "bytes": 1826
+        },
+        {
+          "path": "rpg-effective-damage.js",
+          "sha256": "c24b76cd6957a7d9f99f77c723f23d8535f9a3964d89cb1cfc9c9e5aa1fd2101",
+          "bytes": 3331
+        },
+        {
+          "path": "rpg-opportunities.js",
+          "sha256": "c152a3ed5dde09670e4b2c32a7e578a013f285c8486b42926c393efcb1427bc5",
+          "bytes": 3640
+        },
+        {
+          "path": "MJ-UNDO-20261007.md",
+          "sha256": "b5462f80c8fa5a05862057e1f21b9848b2e7d6a7a7c1eddae4d758bcd4d0e8cc",
+          "bytes": 1333
+        },
+        {
+          "path": "README.md",
+          "sha256": "fa155995d80b977332ba916ec467869010b2f15e3bf806d6f3f3cc3095339a31",
+          "bytes": 6
+        },
+        {
+          "path": "rpg-corrections.js",
+          "sha256": "c66972617e33e8fbe352f889f7c189b45e8a58bb458258b67f1ca78ca38ad8de",
+          "bytes": 16766
+        },
+        {
+          "path": "rpg-native-reactions.js",
+          "sha256": "d1af823e3cab8771c62122340255ee57952c968530bce18c4bda7ac8cab45ff8",
+          "bytes": 943
+        },
+        {
+          "path": "rpg-combat-effects-client.js",
+          "sha256": "cb5bdf3ba2ce8708970f031ea9f90e253ff3f1a961cd5c15e6053851e76bd1d1",
+          "bytes": 14775
+        },
+        {
+          "path": "rpg-turn-start.js",
+          "sha256": "2593465ac0f1ab6b47a3dd9b6847b5aa51c0425d2023a5d8025bae7398298f66",
+          "bytes": 1652
+        },
+        {
+          "path": "rpg-health.js",
+          "sha256": "48fd21eeb377eb4065b2225906db942eb30880ad4d582d8895f5d653ca620361",
+          "bytes": 9953
+        },
+        {
+          "path": "mj-journal-model.js",
+          "sha256": "2d7b17389f5eec4d546a238ce8b5458e801162611a168d9c9dcd9b26bd16523a",
+          "bytes": 2180
+        },
+        {
+          "path": "companion-api.js",
+          "sha256": "c029482c9b442d8ebd1f7a687856264542eb2292a78681924e6106eb71f24310",
+          "bytes": 18500
+        },
+        {
+          "path": "dice-engine.js",
+          "sha256": "2c54fad205597214bcc3eab71e17da340d1e122370c09bfc8d8bc220591bcde0",
+          "bytes": 18933
+        },
+        {
+          "path": "rpg-connect-client.js",
+          "sha256": "a24966a4a5bfac33f390b0d4a6bb1ca6451e881a2a0847f4154b7cca6aaacc57",
+          "bytes": 71152
+        },
+        {
+          "path": "social-dice.js",
+          "sha256": "cee19b05a47cfe66c36f595a0a0c6fd4c0ed6777609cd9d44bd3b1daa7600159",
+          "bytes": 3806
+        },
+        {
+          "path": "rpg-weapon-gate.js",
+          "sha256": "dcdb25b83461c51c0dfccfa135ab0eea8814063874fb8412170b9a7722b6a81c",
+          "bytes": 2932
+        },
+        {
+          "path": "rpg-instruction.js",
+          "sha256": "7816599c0a78ea3e66b9e09787b4ec6594695eff538ca4dcf683867e4e130fc0",
+          "bytes": 2169
+        },
+        {
+          "path": "rpg-dialogs.js",
+          "sha256": "dcc8121c958f1297d7a042b6c9f58742b7bb025e01eafdd2f1203dee8d4f08b3",
+          "bytes": 3639
+        },
+        {
+          "path": "rpg-player-saves.js",
+          "sha256": "b4e5b69ab7018a1a048b8018b4c3ea37e102bc9edeec516acc45fd84571777d3",
+          "bytes": 14633
+        },
+        {
+          "path": "rpg-resolution.js",
+          "sha256": "707ddd16ab5704e72838048f883bddd447390019de20305aaa4d3ecda062af03",
+          "bytes": 16573
+        },
+        {
+          "path": "index.html",
+          "sha256": "46a5ba98d78727236d9fa89298b59705902e647303fd733cf598bd6e9f2e46df",
+          "bytes": 92388
+        },
+        {
+          "path": "rpg-group.js",
+          "sha256": "b0da44b8bea8805ea21266096da9120b85832eeb619e7d26deae0483ea3c7ef6",
+          "bytes": 9656
+        },
+        {
+          "path": "rpg-nans.js",
+          "sha256": "4c88c29d6e5684595397f4199a1c9b7cbf52d363ac7d475a0dc031315b51c356",
+          "bytes": 8292
+        },
+        {
+          "path": "rpg-activity.js",
+          "sha256": "fdb0b0c9a8c9e87f75ea6cee9046261b71e5ac6eeb2b58198bc1d1b2ab9d5f9e",
+          "bytes": 4543
+        },
+        {
+          "path": "companion-v3.js",
+          "sha256": "e03f5caec4e97bafa4dcac3f710542bd765aa6d7677bee5d44532de043eb480e",
+          "bytes": 28307
+        },
+        {
+          "path": "rpg-combat-fx.js",
+          "sha256": "45eea99dedbe2755146e5a8264064ba545deb228b5afaa92edd043897a3a243c",
+          "bytes": 2256
+        },
+        {
+          "path": "rpg-triggered-effects.js",
+          "sha256": "9b9ae675e25523fd39cbdade77a9b5391882eac91a22ec737bba9ad734842700",
+          "bytes": 1635
+        },
+        {
+          "path": "rpg-resources.js",
+          "sha256": "ac7887bbc86d5f43f8c59c0ce89e44cf5cfe8015856a6a37cc363b5635eaa58c",
+          "bytes": 2023
+        },
+        {
+          "path": "companion-turnbar.js",
+          "sha256": "5627443329973c0aa09e395fa0df0203fb50d12e275fff8c88196011dca96e42",
+          "bytes": 7806
+        },
+        {
+          "path": "rpg-concentration.js",
+          "sha256": "06b9573337400f9c43a2b684371daad6dcc5702864fe308bd8339a2dc64dde46",
+          "bytes": 8654
+        },
+        {
+          "path": "rpg-undo.js",
+          "sha256": "5eeabb834b9310aaaf34bd2255971ebc7e390bfebae1e1121cede0868b339434",
+          "bytes": 6546
+        },
+        {
+          "path": "rpg-multi-target.js",
+          "sha256": "bd9b2806f2d4a090e885f6870e299dbaca782ad3309ad034ada84d6ce0b79691",
+          "bytes": 10661
+        },
+        {
+          "path": "rpg-connect-icon-registry.js",
+          "sha256": "ad4ad453a3d591003429bb2dbf75bfc55b5ef8102a048b21e90b81ffb575a128",
+          "bytes": 3810
+        },
+        {
+          "path": "rpg-correction-schema.js",
+          "sha256": "778a7e4bbb56b691d061b9d401de0b430fbe1f795386d9bf0136386adb7e30d1",
+          "bytes": 6221
+        },
+        {
+          "path": "rpg-reactions.js",
+          "sha256": "cd402819b81bc061007443051492661fcdd892cbd07767e312d06fc7816ea86a",
+          "bytes": 9185
+        },
+        {
+          "path": "rpg-horn-effects.js",
+          "sha256": "ec53f22ccaeb430f31e43f2994d2e0420f5afcf43f70e375c30f5b2cfba333cb",
+          "bytes": 1786
+        },
+        {
+          "path": "rpg-multi-target-ui.js",
+          "sha256": "d53d145846699047621d0da604430a221b78c50d0ba0231c4dff60867b95f718",
+          "bytes": 13586
+        },
+        {
+          "path": "companion-feedback.js",
+          "sha256": "26916af2dd7f69fb293595dc6fba6e9953f0a59202b249640a406138b42376c2",
+          "bytes": 729
+        },
+        {
+          "path": "tests/volto-regression.cjs",
+          "sha256": "c5a635c687338adfd34b95bd4e0e4d4df6e0733a27b515b7cc8c7de9606b0d5e",
+          "bytes": 10354
+        }
+      ]
+    },
+    {
+      "repository": "bryantoualy-del/RPG-Connect",
+      "ref": "main",
+      "commit": "204f044860ef18ef6268494236a682fa201c5202",
+      "fileCount": 92,
+      "jsHtmlBytes": 53270,
+      "files": [
+        {
+          "path": "rpg-connect-server.js",
+          "sha256": "126bdde782d3fc2db549ebf83b862c5704facf7ac69313c9b6701ed9c5b59945",
+          "bytes": 10394
+        },
+        {
+          "path": "README.md",
+          "sha256": "5c835075effe6f554b9a74c5b2f95dff464baf50fb8b2a56e6a0b183ba075f71",
+          "bytes": 2397
+        },
+        {
+          "path": "package-lock.json",
+          "sha256": "ec5a210c88c7dba489870c4b3acd74e96f5b6b029ed2adb0913b1e7017f1ef00",
+          "bytes": 922
+        },
+        {
+          "path": "rpg-native-reactions.js",
+          "sha256": "d1af823e3cab8771c62122340255ee57952c968530bce18c4bda7ac8cab45ff8",
+          "bytes": 943
+        },
+        {
+          "path": "rpg-combat-effects-client.js",
+          "sha256": "899cf358c696d23a79d5b9086e7ffc317b1becb1c9bebe9aa3396f7acaf5e908",
+          "bytes": 8955
+        },
+        {
+          "path": "rpg-turn-start.js",
+          "sha256": "79c6cc5edb96dc4925b8ae2519633fd192b196c68c0a0239ce212001ab39c4bb",
+          "bytes": 1559
+        },
+        {
+          "path": "NANS-PROTOCOL.md",
+          "sha256": "cdf2ab8716e7bd5337f9d911122034c34a7d49aaddb2d47da40626b02c072388",
+          "bytes": 2639
+        },
+        {
+          "path": "rpg-activity-protocol.js",
+          "sha256": "71c19bbd40d10f69b0bf833fdd6ba20cb50b0bb950cebb5a2ff11fc9c1ac720b",
+          "bytes": 1228
+        },
+        {
+          "path": "rpg-weapon-gate.js",
+          "sha256": "74773a23f859d1d77b017762740885ba1b70c81e9d4c8a671230ee249b9c7820",
+          "bytes": 2708
+        },
+        {
+          "path": "rpg-connect-protocol.test.js",
+          "sha256": "336babc1013b3f7cabb5b6e565d4dacd476de135aa8524faabd97e4d543ba2d1",
+          "bytes": 9287
+        },
+        {
+          "path": "rpg-instruction.js",
+          "sha256": "d69cc1578444be69d4e38c4709a6222dd4b862cf723c6a40506122fb0033593b",
+          "bytes": 2157
+        },
+        {
+          "path": "GROUP-PROTOCOL.md",
+          "sha256": "5c4d437fb03254c6f2b1f1f57a073a92741106362044e15661e518abda4b5e51",
+          "bytes": 516
+        },
+        {
+          "path": "rpg-group.js",
+          "sha256": "65cc9b495393137bc597e737e1e653f1676ffb53b95f28b48ad21a8bc135d1d8",
+          "bytes": 7585
+        },
+        {
+          "path": "package.json",
+          "sha256": "4a24294f6058e0c02a96f83a20ce8d8c3b7224e5bdf922bfa140393057a57d3f",
+          "bytes": 308
+        },
+        {
+          "path": "manifest.json",
+          "sha256": "482655bf09ddef010a22393db229dbf31488edf8fb8509f8fb8e6ea4fad6a214",
+          "bytes": 3082
+        },
+        {
+          "path": "rpg-icons.js",
+          "sha256": "86bdbcaef6750235570b632583370ccbdfd36a98dcf4b6e71fd6311735457347",
+          "bytes": 2748
+        },
+        {
+          "path": "rpg-resources.js",
+          "sha256": "adbd4d1ead54b11c3d9f34d721ac5d3cb6430761b9032a654bd4ddf8c537904f",
+          "bytes": 1835
+        },
+        {
+          "path": "RUFUS-PROTOCOL.md",
+          "sha256": "e80d42390d2a7a057ba6107f2568c119762f6ee076f31108bf5af089432c71f9",
+          "bytes": 4044
+        },
+        {
+          "path": "BRACK-PROTOCOL.md",
+          "sha256": "b73055ff4bafb2f3d1991f2ae66b895de8b92cdb6f5aa59fa5f2e099a30dd3e7",
+          "bytes": 3036
+        },
+        {
+          "path": "COMBAT-EFFECTS-PROTOCOL.md",
+          "sha256": "ebc4d9b51ba478100f22dec154330ba91e9aa5a844b1d92d1dbce8bfafc2ab51",
+          "bytes": 1206
+        },
+        {
+          "path": "KENTARO-CONTRACT.md",
+          "sha256": "ed14da9afd9841a34636a959e5ab8194e28c8eec6815547766c61af42de2d149",
+          "bytes": 2388
+        },
+        {
+          "path": "rpg-connect-icon-registry.js",
+          "sha256": "3b70944cbd4d8279a3bcdca701a5bc43ef63a5835ec28a494f1afb098f8577cf",
+          "bytes": 3871
+        },
+        {
+          "path": "assets/icon-data/icon-data-09.json",
+          "sha256": "74b7f81d2badf0852c1d5a9efa295b2719e9bd1565f5cfe6b6ca1f9162234b36",
+          "bytes": 9975
+        },
+        {
+          "path": "assets/icon-data/icon-data-01.json",
+          "sha256": "2fc0f87f9a87c863a583d5f689cc1971fef319d47a48d2cea2fcd1903bb9f45a",
+          "bytes": 23411
+        },
+        {
+          "path": "assets/icon-data/icon-data-00.json",
+          "sha256": "c67e7c6da594bc672c7a72bff74dc282c6554855bf767327ac68e27a600d9e84",
+          "bytes": 33046
+        },
+        {
+          "path": "assets/icon-data/icon-data-02.json",
+          "sha256": "c284c5f242222fd3f65023883a1463647fb44fac94970bcd4f6b897dc93b6adf",
+          "bytes": 29026
+        },
+        {
+          "path": "assets/icon-data/icon-data-04.json",
+          "sha256": "340b71d33a515990afbf67f13f2cb44eca54377cf2bd2fdd9d2606d3efffb8ce",
+          "bytes": 27550
+        },
+        {
+          "path": "assets/icon-data/icon-data-07.json",
+          "sha256": "4297c8f8a0fc1f8742f69388574fb5bd26099be239cbebb15c3e5ebf888c7eca",
+          "bytes": 22106
+        },
+        {
+          "path": "assets/icon-data/icon-data-03.json",
+          "sha256": "3ecf1d78f4998de826023ce36a52214dda957513d64b71bc81e39457aa3a2ab8",
+          "bytes": 24012
+        },
+        {
+          "path": "assets/icon-data/icon-data-06.json",
+          "sha256": "b96fb9657f0219afc7b6c312406cd58825fe45d965f8522839aeb0d39f97eb11",
+          "bytes": 21619
+        },
+        {
+          "path": "assets/icon-data/icon-data-08.json",
+          "sha256": "00f3d8cc2ff5f4f323e2620ff48a9d4d64e6bb20cc6e51bc94bb1a5829ee2378",
+          "bytes": 24410
+        },
+        {
+          "path": "assets/icon-data/condition-icons.json",
+          "sha256": "4a2d1d6c91f07949831807c3b20fb8ff56a35b13886bce42e53b69c0477c6ef3",
+          "bytes": 84053
+        },
+        {
+          "path": "assets/icon-data/icon-data-05.json",
+          "sha256": "309c6334f2a30c140f9f9ed1e5e60be0c11da71d41d7aba14bae99582acb96a7",
+          "bytes": 24115
+        }
+      ]
+    },
+    {
+      "repository": "bryantoualy-del/Rufus",
+      "ref": "main",
+      "commit": "9179d039281115becfd4533e097b4548815d7680",
+      "fileCount": 52,
+      "jsHtmlBytes": 426908,
+      "files": [
+        {
+          "path": "COMPANION_API.md",
+          "sha256": "a33265fc5f9259b4e29fd66b45eb0485fcacabc2691cac81965d9834b806817e",
+          "bytes": 6280
+        },
+        {
+          "path": "rpg-journal-ui.js",
+          "sha256": "c8ded100bf3260ad13fc4babdb4b97e09b153e81febfbd6d9dbf003856fa32eb",
+          "bytes": 6475
+        },
+        {
+          "path": "rpg-rufus-defenses.js",
+          "sha256": "dd1cae869aba922edcc945cd7b0293ddd374ebdf147abf2981f880af1820497f",
+          "bytes": 479
+        },
+        {
+          "path": "rpg-effective-damage.js",
+          "sha256": "c24b76cd6957a7d9f99f77c723f23d8535f9a3964d89cb1cfc9c9e5aa1fd2101",
+          "bytes": 3331
+        },
+        {
+          "path": "rpg-opportunities.js",
+          "sha256": "c152a3ed5dde09670e4b2c32a7e578a013f285c8486b42926c393efcb1427bc5",
+          "bytes": 3640
+        },
+        {
+          "path": "MJ-UNDO-20261007.md",
+          "sha256": "b5462f80c8fa5a05862057e1f21b9848b2e7d6a7a7c1eddae4d758bcd4d0e8cc",
+          "bytes": 1333
+        },
+        {
+          "path": "README.md",
+          "sha256": "b95da19088dfa155a5b2eab86f365569d83ba6bf2562e7a393e8a41194e03e6e",
+          "bytes": 7
+        },
+        {
+          "path": "rpg-corrections.js",
+          "sha256": "c66972617e33e8fbe352f889f7c189b45e8a58bb458258b67f1ca78ca38ad8de",
+          "bytes": 16766
+        },
+        {
+          "path": "rpg-combat-effects-client.js",
+          "sha256": "cb5bdf3ba2ce8708970f031ea9f90e253ff3f1a961cd5c15e6053851e76bd1d1",
+          "bytes": 14775
+        },
+        {
+          "path": "rpg-turn-start.js",
+          "sha256": "2593465ac0f1ab6b47a3dd9b6847b5aa51c0425d2023a5d8025bae7398298f66",
+          "bytes": 1652
+        },
+        {
+          "path": "rpg-health.js",
+          "sha256": "48fd21eeb377eb4065b2225906db942eb30880ad4d582d8895f5d653ca620361",
+          "bytes": 9953
+        },
+        {
+          "path": "mj-journal-model.js",
+          "sha256": "2d7b17389f5eec4d546a238ce8b5458e801162611a168d9c9dcd9b26bd16523a",
+          "bytes": 2180
+        },
+        {
+          "path": "companion-api.js",
+          "sha256": "2c25fd3f60b4ccd6495b63f0e8deff8df616bf18e227fd7c7455b7060e46b9ea",
+          "bytes": 18486
+        },
+        {
+          "path": "dice-engine.js",
+          "sha256": "2c54fad205597214bcc3eab71e17da340d1e122370c09bfc8d8bc220591bcde0",
+          "bytes": 18933
+        },
+        {
+          "path": "rpg-connect-client.js",
+          "sha256": "2afd7cefd8fca3999b74a0632c74ccec907535eb6fc48b896d72b1cced5a8ba2",
+          "bytes": 71028
+        },
+        {
+          "path": "social-dice.js",
+          "sha256": "47d1c1e079f8021023a9944b8d2f4215778ca8025cd7d882a80b03d56af91f22",
+          "bytes": 3807
+        },
+        {
+          "path": "rpg-rufus-combat.js",
+          "sha256": "1f83ff04747e4dd9c55d34bab3f78e69490430045a4052f5b17d8ccd475bac0f",
+          "bytes": 11587
+        },
+        {
+          "path": "rpg-weapon-gate.js",
+          "sha256": "dcdb25b83461c51c0dfccfa135ab0eea8814063874fb8412170b9a7722b6a81c",
+          "bytes": 2932
+        },
+        {
+          "path": "rpg-instruction.js",
+          "sha256": "7816599c0a78ea3e66b9e09787b4ec6594695eff538ca4dcf683867e4e130fc0",
+          "bytes": 2169
+        },
+        {
+          "path": "rpg-dialogs.js",
+          "sha256": "dcc8121c958f1297d7a042b6c9f58742b7bb025e01eafdd2f1203dee8d4f08b3",
+          "bytes": 3639
+        },
+        {
+          "path": "rpg-player-saves.js",
+          "sha256": "9cfed6e7dc9ac3efbab496184946290ce945d7bb61fa60c96ab22ed571310786",
+          "bytes": 14857
+        },
+        {
+          "path": "rpg-resolution.js",
+          "sha256": "707ddd16ab5704e72838048f883bddd447390019de20305aaa4d3ecda062af03",
+          "bytes": 16573
+        },
+        {
+          "path": "index.html",
+          "sha256": "d3f93a899d6eb389eef75a0cf3c40638826f68c7305ddfdeb38a1007c903bd24",
+          "bytes": 36424
+        },
+        {
+          "path": "rpg-group.js",
+          "sha256": "b0da44b8bea8805ea21266096da9120b85832eeb619e7d26deae0483ea3c7ef6",
+          "bytes": 9656
+        },
+        {
+          "path": "rpg-activity.js",
+          "sha256": "fdb0b0c9a8c9e87f75ea6cee9046261b71e5ac6eeb2b58198bc1d1b2ab9d5f9e",
+          "bytes": 4543
+        },
+        {
+          "path": "companion-v3.js",
+          "sha256": "b231ac756956176bfa9ea5fe65276f2b207e9e858a40044cbc9117399ded1534",
+          "bytes": 80384
+        },
+        {
+          "path": "rpg-combat-fx.js",
+          "sha256": "45eea99dedbe2755146e5a8264064ba545deb228b5afaa92edd043897a3a243c",
+          "bytes": 2256
+        },
+        {
+          "path": "rpg-triggered-effects.js",
+          "sha256": "20c2fef4018c435fc744af782b79ae4a580b1d000a5f08d76c935ec56c9f4705",
+          "bytes": 1142
+        },
+        {
+          "path": "rpg-resources.js",
+          "sha256": "ca45dc3e970e20a2f06cbfb9ecff0b19e0ac0a619060a5d245b802462717232b",
+          "bytes": 2044
+        },
+        {
+          "path": "companion-turnbar.js",
+          "sha256": "ff7845b3dd1b5cbb9c6753d1eb0071db254cb816eaea89ddf5e8320e12e3eb7f",
+          "bytes": 7584
+        },
+        {
+          "path": "rpg-concentration.js",
+          "sha256": "06b9573337400f9c43a2b684371daad6dcc5702864fe308bd8339a2dc64dde46",
+          "bytes": 8654
+        },
+        {
+          "path": "rpg-undo.js",
+          "sha256": "ce3f9adc41054c98f158d2ff4eb6e6f6163a04a9dd673b758ec1b8d06d8dca0a",
+          "bytes": 6577
+        },
+        {
+          "path": "rpg-multi-target.js",
+          "sha256": "bd9b2806f2d4a090e885f6870e299dbaca782ad3309ad034ada84d6ce0b79691",
+          "bytes": 10661
+        },
+        {
+          "path": "rpg-connect-icon-registry.js",
+          "sha256": "ad4ad453a3d591003429bb2dbf75bfc55b5ef8102a048b21e90b81ffb575a128",
+          "bytes": 3810
+        },
+        {
+          "path": "rpg-correction-schema.js",
+          "sha256": "778a7e4bbb56b691d061b9d401de0b430fbe1f795386d9bf0136386adb7e30d1",
+          "bytes": 6221
+        },
+        {
+          "path": "rpg-reactions.js",
+          "sha256": "811efa4392dd078238f9ce4ede5a596a22911c0ad3ad3dee709e5653e56e20f7",
+          "bytes": 9375
+        },
+        {
+          "path": "rpg-multi-target-ui.js",
+          "sha256": "d53d145846699047621d0da604430a221b78c50d0ba0231c4dff60867b95f718",
+          "bytes": 13586
+        },
+        {
+          "path": "companion-feedback.js",
+          "sha256": "26916af2dd7f69fb293595dc6fba6e9953f0a59202b249640a406138b42376c2",
+          "bytes": 729
+        }
+      ]
+    },
+    {
+      "repository": "bryantoualy-del/Samoth",
+      "ref": "main",
+      "commit": "53e05b1f7524bf107d4bf89f8f728ef65d06e840",
+      "fileCount": 68,
+      "jsHtmlBytes": 445075,
+      "files": [
+        {
+          "path": "COMPANION_API.md",
+          "sha256": "a33265fc5f9259b4e29fd66b45eb0485fcacabc2691cac81965d9834b806817e",
+          "bytes": 6280
+        },
+        {
+          "path": "rpg-counterspell.js",
+          "sha256": "8fe1d1aba5f93d5c82ff347c49378a54d4beb2fb7067bbd44051dfc68b92fd07",
+          "bytes": 486
+        },
+        {
+          "path": "rpg-journal-ui.js",
+          "sha256": "c8ded100bf3260ad13fc4babdb4b97e09b153e81febfbd6d9dbf003856fa32eb",
+          "bytes": 6475
+        },
+        {
+          "path": "rpg-effective-damage.js",
+          "sha256": "c24b76cd6957a7d9f99f77c723f23d8535f9a3964d89cb1cfc9c9e5aa1fd2101",
+          "bytes": 3331
+        },
+        {
+          "path": "rpg-opportunities.js",
+          "sha256": "c152a3ed5dde09670e4b2c32a7e578a013f285c8486b42926c393efcb1427bc5",
+          "bytes": 3640
+        },
+        {
+          "path": "MJ-UNDO-20261007.md",
+          "sha256": "b5462f80c8fa5a05862057e1f21b9848b2e7d6a7a7c1eddae4d758bcd4d0e8cc",
+          "bytes": 1333
+        },
+        {
+          "path": "README.md",
+          "sha256": "b4224eab02041606b1005885ea4e3d45c74510d8f61fbf4d0e2b92371969c490",
+          "bytes": 2603
+        },
+        {
+          "path": "rpg-corrections.js",
+          "sha256": "c66972617e33e8fbe352f889f7c189b45e8a58bb458258b67f1ca78ca38ad8de",
+          "bytes": 16766
+        },
+        {
+          "path": "companion.js",
+          "sha256": "18eaa7b31e8430ee49e6b2ad441dda1b6edd0819292db451768c48e069acd28b",
+          "bytes": 113566
+        },
+        {
+          "path": "rpg-native-reactions.js",
+          "sha256": "af1da8c02beb3ec7bf46c0460bf7738f9dcf10f7c9a073f04be301ab5361f8f0",
+          "bytes": 2604
+        },
+        {
+          "path": "rpg-combat-effects-client.js",
+          "sha256": "cb5bdf3ba2ce8708970f031ea9f90e253ff3f1a961cd5c15e6053851e76bd1d1",
+          "bytes": 14775
+        },
+        {
+          "path": "rpg-turn-start.js",
+          "sha256": "2593465ac0f1ab6b47a3dd9b6847b5aa51c0425d2023a5d8025bae7398298f66",
+          "bytes": 1652
+        },
+        {
+          "path": "rpg-health.js",
+          "sha256": "c77250451d71e78cbcf704bec45e1ad0de3b6c7875a0e4fb02ec97b55d2cbbb5",
+          "bytes": 9981
+        },
+        {
+          "path": "mj-journal-model.js",
+          "sha256": "2d7b17389f5eec4d546a238ce8b5458e801162611a168d9c9dcd9b26bd16523a",
+          "bytes": 2180
+        },
+        {
+          "path": "companion-api.js",
+          "sha256": "a34c9fe1542d36722193a52fcb598ddce4b78d13637773bee4526b0b6b7f731a",
+          "bytes": 18797
+        },
+        {
+          "path": "dice-engine.js",
+          "sha256": "2c54fad205597214bcc3eab71e17da340d1e122370c09bfc8d8bc220591bcde0",
+          "bytes": 18933
+        },
+        {
+          "path": "rpg-connect-client.js",
+          "sha256": "640ede81a5dbd4b0be3881af1c8e63cd8bc21bdd815826ac70bfbf4d62d34848",
+          "bytes": 72906
+        },
+        {
+          "path": "social-dice.js",
+          "sha256": "ff80da72c34e52ee2f75dd601e7fbefe0a95bd6c2f3d7311685101c8e97417e4",
+          "bytes": 3809
+        },
+        {
+          "path": "rpg-weapon-gate.js",
+          "sha256": "dcdb25b83461c51c0dfccfa135ab0eea8814063874fb8412170b9a7722b6a81c",
+          "bytes": 2932
+        },
+        {
+          "path": "rpg-summons-client.js",
+          "sha256": "7d6aff4d25315b96bb512e3e84e359c68cb7cd58fc4c13fb4e0cec421b43012a",
+          "bytes": 1807
+        },
+        {
+          "path": "rpg-instruction.js",
+          "sha256": "7816599c0a78ea3e66b9e09787b4ec6594695eff538ca4dcf683867e4e130fc0",
+          "bytes": 2169
+        },
+        {
+          "path": "rpg-dialogs.js",
+          "sha256": "dcc8121c958f1297d7a042b6c9f58742b7bb025e01eafdd2f1203dee8d4f08b3",
+          "bytes": 3639
+        },
+        {
+          "path": "rpg-player-saves.js",
+          "sha256": "b4e5b69ab7018a1a048b8018b4c3ea37e102bc9edeec516acc45fd84571777d3",
+          "bytes": 14633
+        },
+        {
+          "path": "rpg-resolution.js",
+          "sha256": "707ddd16ab5704e72838048f883bddd447390019de20305aaa4d3ecda062af03",
+          "bytes": 16573
+        },
+        {
+          "path": "index.html",
+          "sha256": "7b80392ef799b2b7daae5c129a8d7119be8430cc786451f9d8c666266468198a",
+          "bytes": 19616
+        },
+        {
+          "path": "rpg-group.js",
+          "sha256": "bcfea0dc21186a10a39dce1af453c0355408ab6ee9685d33104704d652248261",
+          "bytes": 10222
+        },
+        {
+          "path": "rpg-activity.js",
+          "sha256": "fdb0b0c9a8c9e87f75ea6cee9046261b71e5ac6eeb2b58198bc1d1b2ab9d5f9e",
+          "bytes": 4543
+        },
+        {
+          "path": "rpg-combat-fx.js",
+          "sha256": "45eea99dedbe2755146e5a8264064ba545deb228b5afaa92edd043897a3a243c",
+          "bytes": 2256
+        },
+        {
+          "path": "rpg-triggered-effects.js",
+          "sha256": "20c2fef4018c435fc744af782b79ae4a580b1d000a5f08d76c935ec56c9f4705",
+          "bytes": 1142
+        },
+        {
+          "path": "rpg-resources.js",
+          "sha256": "bdd051aa651c1218273eaa7406e16f2d8a843aa1655e1e17f7a113ed58bab440",
+          "bytes": 2006
+        },
+        {
+          "path": "SAMOTH-AUTOMATISMES-20261008.md",
+          "sha256": "d359c22613de13257fd46e635122f54d837604d9feeb8176e74c9e4bee2d416a",
+          "bytes": 4794
+        },
+        {
+          "path": "companion-turnbar.js",
+          "sha256": "5627443329973c0aa09e395fa0df0203fb50d12e275fff8c88196011dca96e42",
+          "bytes": 7806
+        },
+        {
+          "path": "rpg-concentration.js",
+          "sha256": "06b9573337400f9c43a2b684371daad6dcc5702864fe308bd8339a2dc64dde46",
+          "bytes": 8654
+        },
+        {
+          "path": "rpg-samoth-automatismes.js",
+          "sha256": "5893fb7175566f35af570d497e4abccd29bd8c35d994094e7af7c4f3b571f914",
+          "bytes": 5144
+        },
+        {
+          "path": "rpg-undo.js",
+          "sha256": "432a029ce23eb9ce4a9404b29f4f9d38d31942d8ee7f61027494761823ec4144",
+          "bytes": 6530
+        },
+        {
+          "path": "rpg-multi-target.js",
+          "sha256": "bd9b2806f2d4a090e885f6870e299dbaca782ad3309ad034ada84d6ce0b79691",
+          "bytes": 10661
+        },
+        {
+          "path": "rpg-connect-icon-registry.js",
+          "sha256": "ad4ad453a3d591003429bb2dbf75bfc55b5ef8102a048b21e90b81ffb575a128",
+          "bytes": 3810
+        },
+        {
+          "path": "rpg-correction-schema.js",
+          "sha256": "778a7e4bbb56b691d061b9d401de0b430fbe1f795386d9bf0136386adb7e30d1",
+          "bytes": 6221
+        },
+        {
+          "path": "rpg-reactions.js",
+          "sha256": "13f4f30588dabfa744dd365286b53e0d0354fb5bb398dd6b5ff93de6e2249ff4",
+          "bytes": 9493
+        },
+        {
+          "path": "rpg-multi-target-ui.js",
+          "sha256": "d53d145846699047621d0da604430a221b78c50d0ba0231c4dff60867b95f718",
+          "bytes": 13586
+        },
+        {
+          "path": "companion-feedback.js",
+          "sha256": "26916af2dd7f69fb293595dc6fba6e9953f0a59202b249640a406138b42376c2",
+          "bytes": 729
+        },
+        {
+          "path": "tests/responsive.html",
+          "sha256": "fce49fc3c0dbefbbe6ed9af97083fff34ddd51dfb95a03bc07e821adcec35a21",
+          "bytes": 1002
+        }
+      ]
+    },
+    {
+      "repository": "bryantoualy-del/Zephyr",
+      "ref": "main",
+      "commit": "cc82caa1038c3aee36662fea02ef0bee323f84b1",
+      "fileCount": 87,
+      "jsHtmlBytes": 437954,
+      "files": [
+        {
+          "path": "COMPANION_API.md",
+          "sha256": "a33265fc5f9259b4e29fd66b45eb0485fcacabc2691cac81965d9834b806817e",
+          "bytes": 6280
+        },
+        {
+          "path": "rpg-journal-ui.js",
+          "sha256": "c8ded100bf3260ad13fc4babdb4b97e09b153e81febfbd6d9dbf003856fa32eb",
+          "bytes": 6475
+        },
+        {
+          "path": "rpg-effective-damage.js",
+          "sha256": "c24b76cd6957a7d9f99f77c723f23d8535f9a3964d89cb1cfc9c9e5aa1fd2101",
+          "bytes": 3331
+        },
+        {
+          "path": "rpg-opportunities.js",
+          "sha256": "c152a3ed5dde09670e4b2c32a7e578a013f285c8486b42926c393efcb1427bc5",
+          "bytes": 3640
+        },
+        {
+          "path": "MJ-UNDO-20261007.md",
+          "sha256": "b5462f80c8fa5a05862057e1f21b9848b2e7d6a7a7c1eddae4d758bcd4d0e8cc",
+          "bytes": 1333
+        },
+        {
+          "path": "rpg-corrections.js",
+          "sha256": "c66972617e33e8fbe352f889f7c189b45e8a58bb458258b67f1ca78ca38ad8de",
+          "bytes": 16766
+        },
+        {
+          "path": "rpg-native-reactions.js",
+          "sha256": "d1af823e3cab8771c62122340255ee57952c968530bce18c4bda7ac8cab45ff8",
+          "bytes": 943
+        },
+        {
+          "path": "zephyr-combat.js",
+          "sha256": "c1c6e5502cb5430f5dd0a16c96cb68adc50667945a94632f3afb2cb06298fcbe",
+          "bytes": 6983
+        },
+        {
+          "path": "rpg-combat-effects-client.js",
+          "sha256": "cb5bdf3ba2ce8708970f031ea9f90e253ff3f1a961cd5c15e6053851e76bd1d1",
+          "bytes": 14775
+        },
+        {
+          "path": "rpg-turn-start.js",
+          "sha256": "2593465ac0f1ab6b47a3dd9b6847b5aa51c0425d2023a5d8025bae7398298f66",
+          "bytes": 1652
+        },
+        {
+          "path": "rpg-health.js",
+          "sha256": "48fd21eeb377eb4065b2225906db942eb30880ad4d582d8895f5d653ca620361",
+          "bytes": 9953
+        },
+        {
+          "path": "mj-journal-model.js",
+          "sha256": "2d7b17389f5eec4d546a238ce8b5458e801162611a168d9c9dcd9b26bd16523a",
+          "bytes": 2180
+        },
+        {
+          "path": "companion-api.js",
+          "sha256": "b98eb1245cf4d613b7691ab2288077bda4edd9a2d4fa5a9267eba304b547c9b4",
+          "bytes": 18954
+        },
+        {
+          "path": "dice-engine.js",
+          "sha256": "2c54fad205597214bcc3eab71e17da340d1e122370c09bfc8d8bc220591bcde0",
+          "bytes": 18933
+        },
+        {
+          "path": "rpg-connect-client.js",
+          "sha256": "5c4b5b6ee5bfa0fabec69b59445a0eac48afe32c53df846cda25a20a2c1d336c",
+          "bytes": 71439
+        },
+        {
+          "path": "social-dice.js",
+          "sha256": "272d08511f49665e5496fe368682bc4cea9193e6bf4a2e869fe55890c13497d1",
+          "bytes": 3808
+        },
+        {
+          "path": "rpg-weapon-gate.js",
+          "sha256": "dcdb25b83461c51c0dfccfa135ab0eea8814063874fb8412170b9a7722b6a81c",
+          "bytes": 2932
+        },
+        {
+          "path": "rpg-instruction.js",
+          "sha256": "7816599c0a78ea3e66b9e09787b4ec6594695eff538ca4dcf683867e4e130fc0",
+          "bytes": 2169
+        },
+        {
+          "path": "rpg-dialogs.js",
+          "sha256": "dcc8121c958f1297d7a042b6c9f58742b7bb025e01eafdd2f1203dee8d4f08b3",
+          "bytes": 3639
+        },
+        {
+          "path": "rpg-player-saves.js",
+          "sha256": "b4e5b69ab7018a1a048b8018b4c3ea37e102bc9edeec516acc45fd84571777d3",
+          "bytes": 14633
+        },
+        {
+          "path": "rpg-resolution.js",
+          "sha256": "707ddd16ab5704e72838048f883bddd447390019de20305aaa4d3ecda062af03",
+          "bytes": 16573
+        },
+        {
+          "path": "index.html",
+          "sha256": "144fe661df2e0f4a20e575e93f7202d4299d735109cffeb5d6b1ff2bcaea47ea",
+          "bytes": 123409
+        },
+        {
+          "path": "rpg-group.js",
+          "sha256": "b0da44b8bea8805ea21266096da9120b85832eeb619e7d26deae0483ea3c7ef6",
+          "bytes": 9656
+        },
+        {
+          "path": "rpg-activity.js",
+          "sha256": "fdb0b0c9a8c9e87f75ea6cee9046261b71e5ac6eeb2b58198bc1d1b2ab9d5f9e",
+          "bytes": 4543
+        },
+        {
+          "path": "rpg-combat-fx.js",
+          "sha256": "45eea99dedbe2755146e5a8264064ba545deb228b5afaa92edd043897a3a243c",
+          "bytes": 2256
+        },
+        {
+          "path": "rpg-triggered-effects.js",
+          "sha256": "20c2fef4018c435fc744af782b79ae4a580b1d000a5f08d76c935ec56c9f4705",
+          "bytes": 1142
+        },
+        {
+          "path": "rpg-resources.js",
+          "sha256": "bdd051aa651c1218273eaa7406e16f2d8a843aa1655e1e17f7a113ed58bab440",
+          "bytes": 2006
+        },
+        {
+          "path": "companion-turnbar.js",
+          "sha256": "0059c373c58881944c8c144fe707c4dd3748a1da1f980f04dfc54cbf52a8f9b3",
+          "bytes": 8000
+        },
+        {
+          "path": "rpg-concentration.js",
+          "sha256": "06b9573337400f9c43a2b684371daad6dcc5702864fe308bd8339a2dc64dde46",
+          "bytes": 8654
+        },
+        {
+          "path": "spiritual-weapon.js",
+          "sha256": "dc0193536d928ead7a36ada2b1ce7d6cbcefa0f21f6ce6d0b21cfe8a8dbd3c26",
+          "bytes": 4852
+        },
+        {
+          "path": "companion-responsive-polish.js",
+          "sha256": "89555f7b422b4aa569c97daaf8e818a39a62a49c5da9f4e0aad40c8abf3e3ad4",
+          "bytes": 2936
+        },
+        {
+          "path": "rpg-undo.js",
+          "sha256": "432a029ce23eb9ce4a9404b29f4f9d38d31942d8ee7f61027494761823ec4144",
+          "bytes": 6530
+        },
+        {
+          "path": "rpg-multi-target.js",
+          "sha256": "bd9b2806f2d4a090e885f6870e299dbaca782ad3309ad034ada84d6ce0b79691",
+          "bytes": 10661
+        },
+        {
+          "path": "rpg-connect-icon-registry.js",
+          "sha256": "ad4ad453a3d591003429bb2dbf75bfc55b5ef8102a048b21e90b81ffb575a128",
+          "bytes": 3810
+        },
+        {
+          "path": "rpg-correction-schema.js",
+          "sha256": "778a7e4bbb56b691d061b9d401de0b430fbe1f795386d9bf0136386adb7e30d1",
+          "bytes": 6221
+        },
+        {
+          "path": "rpg-reactions.js",
+          "sha256": "cd402819b81bc061007443051492661fcdd892cbd07767e312d06fc7816ea86a",
+          "bytes": 9185
+        },
+        {
+          "path": "rpg-multi-target-ui.js",
+          "sha256": "d53d145846699047621d0da604430a221b78c50d0ba0231c4dff60867b95f718",
+          "bytes": 13586
+        },
+        {
+          "path": "companion-feedback.js",
+          "sha256": "26916af2dd7f69fb293595dc6fba6e9953f0a59202b249640a406138b42376c2",
+          "bytes": 729
+        }
+      ]
+    }
+  ]
+}

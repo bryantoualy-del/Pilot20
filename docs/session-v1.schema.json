@@ -1,0 +1,593 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pilot20.invalid/schemas/session-v1.schema.json",
+  "title": "Pilot20 session v1",
+  "description": "Structure only; model.js additionally checks dynamic bounds, references and uniqueness.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "ruleset": {
+      "const": "dnd5e-2014"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000
+    },
+    "mode": {
+      "enum": [
+        "local",
+        "free",
+        "encounter"
+      ]
+    },
+    "actors": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/actor"
+      },
+      "minProperties": 1,
+      "maxProperties": 100
+    },
+    "activeActorId": {
+      "$ref": "#/$defs/id"
+    },
+    "turnId": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000
+    },
+    "receipts": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/receipt"
+      }
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/history"
+      }
+    },
+    "layout": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "ruleset",
+    "revision",
+    "mode",
+    "actors",
+    "activeActorId",
+    "turnId",
+    "receipts",
+    "history",
+    "layout"
+  ],
+  "additionalProperties": true,
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+      "not": {
+        "enum": [
+          "constructor",
+          "prototype",
+          "__proto__"
+        ]
+      }
+    },
+    "resource": {
+      "type": "object",
+      "properties": {
+        "max": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "recovery": {
+          "enum": [
+            "short",
+            "long",
+            "none"
+          ]
+        }
+      },
+      "required": [
+        "max",
+        "recovery"
+      ],
+      "additionalProperties": true
+    },
+    "effect": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "damage",
+            "heal",
+            "tempHp"
+          ]
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "dice": {
+          "type": "string",
+          "pattern": "^\\d{1,2}d\\d{1,3}([+-]\\d{1,4})?$"
+        },
+        "damageType": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": true,
+      "oneOf": [
+        {
+          "required": [
+            "amount"
+          ],
+          "not": {
+            "required": [
+              "dice"
+            ]
+          }
+        },
+        {
+          "required": [
+            "dice"
+          ],
+          "not": {
+            "required": [
+              "amount"
+            ]
+          }
+        }
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "damage"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "damageType"
+            ]
+          }
+        }
+      ]
+    },
+    "ability": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "cost": {
+          "enum": [
+            "action",
+            "bonus",
+            "reaction",
+            "none"
+          ]
+        },
+        "target": {
+          "enum": [
+            "self",
+            "selected"
+          ]
+        },
+        "maxTargets": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/effect"
+          }
+        },
+        "attackAction": {
+          "type": "boolean"
+        },
+        "attack": {
+          "type": "object",
+          "properties": {
+            "bonus": {
+              "type": "integer",
+              "minimum": -20,
+              "maximum": 100
+            }
+          },
+          "required": [
+            "bonus"
+          ],
+          "additionalProperties": true
+        },
+        "resource": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/id"
+            },
+            "amount": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000
+            }
+          },
+          "required": [
+            "id",
+            "amount"
+          ],
+          "additionalProperties": true
+        },
+        "concentration": {
+          "type": "object",
+          "properties": {
+            "effectId": {
+              "$ref": "#/$defs/id"
+            },
+            "start": {
+              "enum": [
+                "activation",
+                "hit"
+              ]
+            }
+          },
+          "required": [
+            "effectId",
+            "start"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "name",
+        "cost",
+        "target",
+        "maxTargets",
+        "effects"
+      ],
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "concentration"
+            ],
+            "properties": {
+              "concentration": {
+                "properties": {
+                  "start": {
+                    "const": "hit"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "attack"
+            ]
+          }
+        }
+      ]
+    },
+    "definition": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "maxHp": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "ac": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "attacksPerAction": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "saves": {
+          "type": "object",
+          "properties": {
+            "con": {
+              "type": "integer",
+              "minimum": -20,
+              "maximum": 100
+            }
+          },
+          "required": [
+            "con"
+          ],
+          "additionalProperties": true
+        },
+        "resources": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/id"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/resource"
+          }
+        },
+        "abilities": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/id"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/ability"
+          }
+        },
+        "resistances": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "immunities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "vulnerabilities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "level",
+        "maxHp",
+        "ac",
+        "attacksPerAction",
+        "saves",
+        "resources",
+        "abilities",
+        "resistances",
+        "immunities",
+        "vulnerabilities"
+      ],
+      "additionalProperties": true
+    },
+    "actor": {
+      "type": "object",
+      "properties": {
+        "definition": {
+          "$ref": "#/$defs/definition"
+        },
+        "hp": {
+          "type": "object",
+          "properties": {
+            "current": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000
+            },
+            "temp": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000
+            }
+          },
+          "required": [
+            "current",
+            "max",
+            "temp"
+          ],
+          "additionalProperties": true
+        },
+        "resources": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/id"
+          },
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          }
+        },
+        "economy": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "boolean"
+            },
+            "bonus": {
+              "type": "boolean"
+            },
+            "reaction": {
+              "type": "boolean"
+            },
+            "attacks": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10
+            }
+          },
+          "required": [
+            "action",
+            "bonus",
+            "reaction",
+            "attacks"
+          ],
+          "additionalProperties": true
+        },
+        "concentration": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "effectId": {
+                  "$ref": "#/$defs/id"
+                },
+                "instanceId": {
+                  "$ref": "#/$defs/id"
+                }
+              },
+              "required": [
+                "effectId",
+                "instanceId"
+              ],
+              "additionalProperties": true
+            }
+          ]
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/id"
+              },
+              "instanceId": {
+                "$ref": "#/$defs/id"
+              },
+              "dc": {
+                "type": "integer",
+                "minimum": 10,
+                "maximum": 1000000
+              }
+            },
+            "required": [
+              "id",
+              "instanceId",
+              "dc"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "incapacitated": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "definition",
+        "hp",
+        "resources",
+        "economy",
+        "concentration",
+        "checks",
+        "incapacitated"
+      ],
+      "additionalProperties": true
+    },
+    "game": {
+      "type": "object",
+      "properties": {
+        "actors": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/id"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/actor"
+          },
+          "minProperties": 1,
+          "maxProperties": 100
+        },
+        "activeActorId": {
+          "$ref": "#/$defs/id"
+        },
+        "turnId": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        }
+      },
+      "required": [
+        "actors",
+        "activeActorId",
+        "turnId"
+      ],
+      "additionalProperties": false
+    },
+    "receipt": {
+      "type": "object",
+      "properties": {
+        "fingerprint": {
+          "type": "string"
+        },
+        "result": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "fingerprint",
+        "result"
+      ],
+      "additionalProperties": true
+    },
+    "history": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "command": {
+          "type": "object"
+        },
+        "result": {
+          "type": "object"
+        },
+        "before": {
+          "$ref": "#/$defs/game"
+        }
+      },
+      "required": [
+        "id",
+        "before"
+      ],
+      "additionalProperties": true
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "id": "demo-guardian",
+  "name": "Gardien de démonstration",
+  "level": 5,
+  "maxHp": 44,
+  "ac": 16,
+  "attacksPerAction": 2,
+  "saves": {
+    "con": 3
+  },
+  "resistances": [],
+  "immunities": [],
+  "vulnerabilities": [],
+  "resources": {
+    "recovery": {
+      "max": 1,
+      "recovery": "short"
+    },
+    "slot1": {
+      "max": 2,
+      "recovery": "long"
+    }
+  },
+  "abilities": {
+    "sword": {
+      "name": "Épée longue",
+      "cost": "action",
+      "target": "selected",
+      "maxTargets": 1,
+      "attackAction": true,
+      "attack": {
+        "bonus": 6
+      },
+      "effects": [
+        {
+          "kind": "damage",
+          "dice": "1d8+3",
+          "damageType": "slashing"
+        }
+      ]
+    },
+    "recover": {
+      "name": "Reprise de souffle (démo)",
+      "cost": "bonus",
+      "target": "self",
+      "maxTargets": 1,
+      "resource": {
+        "id": "recovery",
+        "amount": 1
+      },
+      "effects": [
+        {
+          "kind": "heal",
+          "dice": "1d10+5"
+        }
+      ]
+    },
+    "focus": {
+      "name": "Concentration de test",
+      "cost": "action",
+      "target": "self",
+      "maxTargets": 1,
+      "resource": {
+        "id": "slot1",
+        "amount": 1
+      },
+      "effects": [],
+      "concentration": {
+        "effectId": "demo-focus",
+        "start": "activation"
+      }
+    },
+    "parry": {
+      "name": "Riposte de test",
+      "cost": "reaction",
+      "target": "selected",
+      "maxTargets": 1,
+      "attack": {
+        "bonus": 6
+      },
+      "effects": [
+        {
+          "kind": "damage",
+          "dice": "1d8+3",
+          "damageType": "slashing"
+        }
+      ]
+    },
+    "ward": {
+      "name": "Protection de test",
+      "cost": "bonus",
+      "target": "self",
+      "maxTargets": 1,
+      "effects": [
+        {
+          "kind": "tempHp",
+          "amount": 8
+        }
+      ]
+    }
+  }
+}

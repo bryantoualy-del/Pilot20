@@ -1,0 +1,178 @@
+{
+  "measuredAt": "2026-10-15T21:43:53.321Z",
+  "node": "v24.19.0",
+  "platform": "linux",
+  "architecture": "x64",
+  "scenarios": [
+    {
+      "participants": 2,
+      "transactions": 500,
+      "commandsByType": {
+        "startTurn": 100,
+        "useAbility": 150,
+        "damage": 50,
+        "concentrationSave": 50,
+        "undo": 50,
+        "correct": 50,
+        "rest": 50
+      },
+      "samples": [
+        {
+          "transactions": 100,
+          "historyEntries": 80,
+          "receipts": 100,
+          "serializedUtf8Bytes": 189405,
+          "serializedCharacters": 189081,
+          "primaryAndBackupUtf16Bytes": 752170,
+          "historyUtf8Bytes": 167099,
+          "receiptsUtf8Bytes": 20339
+        },
+        {
+          "transactions": 250,
+          "historyEntries": 200,
+          "receipts": 250,
+          "serializedUtf8Bytes": 471435,
+          "serializedCharacters": 470631,
+          "primaryAndBackupUtf16Bytes": 1878364,
+          "historyUtf8Bytes": 418229,
+          "receiptsUtf8Bytes": 51239
+        },
+        {
+          "transactions": 500,
+          "historyEntries": 400,
+          "receipts": 500,
+          "serializedUtf8Bytes": 941490,
+          "serializedCharacters": 939886,
+          "primaryAndBackupUtf16Bytes": 3755382,
+          "historyUtf8Bytes": 836782,
+          "receiptsUtf8Bytes": 102740
+        }
+      ],
+      "timing": {
+        "execute": {
+          "totalMs": 4411.295335000008,
+          "meanMs": 8.822590670000016,
+          "p50Ms": 8.421266000000287,
+          "p95Ms": 16.899979999998322,
+          "maxMs": 42.199893999999404
+        },
+        "save": {
+          "totalMs": 7885.339345999961,
+          "meanMs": 15.77067869199992,
+          "p50Ms": 15.351376000000528,
+          "p95Ms": 30.34049799999775,
+          "maxMs": 36.40506900000037
+        },
+        "load": {
+          "totalMs": 6551.209912999989,
+          "meanMs": 13.102419825999977,
+          "p50Ms": 12.886473999999907,
+          "p95Ms": 24.816005000000587,
+          "maxMs": 39.11896100000013
+        }
+      },
+      "wallMs": 28464.995044,
+      "quotaSimulation": {
+        "budgetBytes": 5242880,
+        "accounting": "2 bytes per UTF-16 code unit, keys and previous-good copy included; illustrative, not a browser quota measurement",
+        "firstFailure": null,
+        "lastCommittedRevision": 500
+      },
+      "checks": {
+        "roundtripEveryTransaction": true,
+        "undoChecks": 50,
+        "idempotentCheckpoints": 3,
+        "oldAndUndoneReplay": true,
+        "conflictingIdRejected": true,
+        "quotaFailurePreservesPrimary": null
+      }
+    },
+    {
+      "participants": 7,
+      "transactions": 500,
+      "commandsByType": {
+        "startTurn": 100,
+        "useAbility": 150,
+        "damage": 50,
+        "concentrationSave": 50,
+        "undo": 50,
+        "correct": 50,
+        "rest": 50
+      },
+      "samples": [
+        {
+          "transactions": 100,
+          "historyEntries": 80,
+          "receipts": 100,
+          "serializedUtf8Bytes": 357075,
+          "serializedCharacters": 356751,
+          "primaryAndBackupUtf16Bytes": 1418710,
+          "historyUtf8Bytes": 332699,
+          "receiptsUtf8Bytes": 20339
+        },
+        {
+          "transactions": 250,
+          "historyEntries": 200,
+          "receipts": 250,
+          "serializedUtf8Bytes": 887505,
+          "serializedCharacters": 886701,
+          "primaryAndBackupUtf16Bytes": 3538504,
+          "historyUtf8Bytes": 832229,
+          "receiptsUtf8Bytes": 51239
+        },
+        {
+          "transactions": 500,
+          "historyEntries": 400,
+          "receipts": 500,
+          "serializedUtf8Bytes": 1771560,
+          "serializedCharacters": 1769956,
+          "primaryAndBackupUtf16Bytes": 7071522,
+          "historyUtf8Bytes": 1664782,
+          "receiptsUtf8Bytes": 102740
+        }
+      ],
+      "timing": {
+        "execute": {
+          "totalMs": 8384.339240000063,
+          "meanMs": 16.768678480000126,
+          "p50Ms": 16.465034000000742,
+          "p95Ms": 33.58803900000203,
+          "maxMs": 60.64792299999681
+        },
+        "save": {
+          "totalMs": 15107.798159999998,
+          "meanMs": 30.215596319999996,
+          "p50Ms": 29.79195100000652,
+          "p95Ms": 59.74186899999768,
+          "maxMs": 89.70568400000047
+        },
+        "load": {
+          "totalMs": 12583.674493999999,
+          "meanMs": 25.167348987999997,
+          "p50Ms": 24.970777999995335,
+          "p95Ms": 50.41291499999352,
+          "maxMs": 77.663572999998
+        }
+      },
+      "wallMs": 47834.226462,
+      "quotaSimulation": {
+        "budgetBytes": 5242880,
+        "accounting": "2 bytes per UTF-16 code unit, keys and previous-good copy included; illustrative, not a browser quota measurement",
+        "firstFailure": {
+          "transaction": 371,
+          "lastCommittedRevision": 370,
+          "storedBytes": 5242736
+        },
+        "lastCommittedRevision": 370
+      },
+      "checks": {
+        "roundtripEveryTransaction": true,
+        "undoChecks": 50,
+        "idempotentCheckpoints": 3,
+        "oldAndUndoneReplay": true,
+        "conflictingIdRejected": true,
+        "quotaFailurePreservesPrimary": true
+      }
+    }
+  ]
+}
