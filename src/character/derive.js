@@ -1,0 +1,72 @@
+import {check,keys,integer,id,source,ABILITIES,SKILLS} from './contracts.js';
+import {validateBuild} from './definition.js';
+import {expression,resourceDefinitions,compileAbilities} from './rules.js';
+export const modifier = score => {check(integer(score,1,30),'Score');return Math.floor((score-10)/2);};
+export const proficiencyBonus = level => {check(integer(level,1,20),'Level');return 2+Math.floor((level-1)/4);};
+const SLOTS=[
+[2],[3],[4,2],[4,3],[4,3,2],[4,3,3],[4,3,3,1],[4,3,3,2],[4,3,3,3,1],[4,3,3,3,2],
+[4,3,3,3,2,1],[4,3,3,3,2,1],[4,3,3,3,2,1,1],[4,3,3,3,2,1,1],[4,3,3,3,2,1,1,1],
+[4,3,3,3,2,1,1,1],[4,3,3,3,2,1,1,1,1],[4,3,3,3,3,1,1,1,1],[4,3,3,3,3,2,1,1,1],[4,3,3,3,3,2,2,1,1]];
+export function spellSlots(classes) {
+  const cs=classes.filter(c=>c.casting && c.casting.progression!=='pact');
+  const multi=cs.length>1;
+  const casterLevel=cs.reduce((n,c)=>{
+    const p=c.casting.progression;
+    if(p==='full') return n+c.level;
+    if(c.level<(p==='half'?2:3)) return n;
+    return n+(multi?Math.floor:Math.ceil)(c.level/(p==='half'?2:3));
+  },0);
+  const slots=Object.fromEntries((SLOTS[casterLevel-1]||[]).map((n,i)=>['slot'+(i+1),{max:n,recovery:'long'}]));
+  for(const c of classes.filter(c=>c.casting?.progression==='pact')) {
+    slots['pact:'+c.id]={max:c.level===1?1:c.level<11?2:c.level<17?3:4,recovery:'short'};
+  }
+  return {resources:slots,casterLevel,pactLevels:Object.fromEntries(classes.filter(c=>c.casting?.progression==='pact').map(c=>[c.id,Math.min(5,Math.ceil(c.level/2))]))};
+}
+export function derive(d) {
+  const report=validateBuild(d);check(report.valid,'Incomplete build: '+JSON.stringify(report.issues));
+  const level=d.classes.reduce((n,c)=>n+c.level,0),pb=proficiencyBonus(level),stats={level,proficiency:pb,attacksPerAction:1};
+  for(const c of d.classes) stats['class.'+c.id]=c.level;
+  for(const k of ABILITIES) stats['mod.'+k]=modifier(d.scores[k]);
+  const skills={},saves={},casting={};
+  for(const [k,a] of Object.entries(SKILLS)) skills[k]=stats['mod.'+a]+pb*(d.skills[k]||0);
+  for(const k of ABILITIES) saves[k]=stats['mod.'+k]+(d.saveProficiencies.includes(k)?pb:0);
+  let maxHp=d.progression.reduce((n,p)=>n+Math.max(1,p.hp+stats['mod.con']),0);
+  const worn=d.equipment.find(e=>e.equipped && e.kind==='armor'),shield=d.equipment.find(e=>e.equipped && e.kind==='shield');
+  const shieldBonus=shield?shield.armor.base+shield.armor.bonus:0;
+  const acOptions=[{id:worn?.id||'unarmored',value:worn?worn.armor.base+worn.armor.bonus+(worn.armor.heavy?0:Math.min(stats['mod.dex'],worn.armor.dexCap??100))+shieldBonus:10+stats['mod.dex']+shieldBonus}];
+  if(!worn) for(const a of d.armorRules.filter(a=>!shield || a.shieldAllowed)) acOptions.push({id:a.id,value:a.base+a.abilities.reduce((n,k)=>n+stats['mod.'+k],0)+(a.shieldAllowed?shieldBonus:0)});
+  let ac=Math.max(...acOptions.map(a=>a.value));
+  let speed=d.movement.walk-(worn?.armor.heavy && d.scores.str<worn.armor.minStrength && !d.movement.ignoreHeavyPenalty?10:0);
+  Object.assign(stats,{maxHp,ac,speed:Math.max(0,speed),initiative:stats['mod.dex']});
+  for(const k of ABILITIES) stats['save.'+k]=saves[k];
+  for(const k of Object.keys(SKILLS)) stats['skill.'+k]=skills[k];
+  for(const c of d.classes) if(c.casting) {
+    stats['spellAttack.'+c.id]=stats['mod.'+c.casting.ability]+pb;
+    stats['spellDC.'+c.id]=8+stats['spellAttack.'+c.id];
+  }
+  const trace=[];
+  for(const m of d.modifiers) {
+    keys(m,['id','stat','operation','value','reason','source']);source(m.source);
+    const allowed=['ac','maxHp','speed','initiative','attacksPerAction',...ABILITIES.map(k=>'save.'+k),...Object.keys(SKILLS).map(k=>'skill.'+k),...d.classes.flatMap(c=>['spellAttack.'+c.id,'spellDC.'+c.id])];
+    check(id(m.id) && allowed.includes(m.stat) && ['add','set','max'].includes(m.operation) && typeof m.reason==='string' && m.reason.trim(),'Explicit modifier');
+    const n=expression(m.value,stats);check(integer(n,-100000,100000),'Modifier integer');
+    const before=stats[m.stat];check(before!==undefined,'Modifier target');
+    stats[m.stat]=m.operation==='add'?before+n:m.operation==='max'?Math.max(before,n):n;
+    trace.push({id:m.id,stat:m.stat,before,after:stats[m.stat],reason:m.reason,source:structuredClone(m.source)});
+  }
+  check(integer(stats.maxHp,1) && integer(stats.ac,0,100) && integer(stats.speed,0,1000) && integer(stats.attacksPerAction,1,10),'Derived bounds');
+  for(const k of ABILITIES) saves[k]=stats['save.'+k];
+  for(const k of Object.keys(SKILLS)) skills[k]=stats['skill.'+k];
+  for(const c of d.classes) if(c.casting) casting[c.id]={attack:stats['spellAttack.'+c.id],dc:stats['spellDC.'+c.id]};
+  const weapons={};
+  for(const w of d.equipment.filter(e=>e.kind==='weapon')) {
+    const m=stats['mod.'+w.weapon.ability];
+    stats['weaponAttack.'+w.id]=m+(w.weapon.proficient?pb:0)+w.weapon.bonus;
+    stats['weaponDamage.'+w.id]=m+w.weapon.bonus;
+    weapons[w.id]={attack:stats['weaponAttack.'+w.id],damageBonus:stats['weaponDamage.'+w.id]};
+  }
+  const slots=spellSlots(d.classes),resources=resourceDefinitions(d,stats);
+  for(const [k,r] of Object.entries(slots.resources)) {check(!Object.hasOwn(resources,k),'Reserved spell resource');resources[k]=r;}
+  const compiled=compileAbilities(d,stats,resources);
+  return {level,proficiency:pb,modifiers:Object.fromEntries(ABILITIES.map(k=>[k,stats['mod.'+k]])),skills,saves,casting,weapons,ac:stats.ac,maxHp:stats.maxHp,speed:stats.speed,initiative:stats.initiative,attacksPerAction:stats.attacksPerAction,acOptions,resources,slotMetadata:{casterLevel:slots.casterLevel,pactLevels:slots.pactLevels},...compiled,trace};
+}

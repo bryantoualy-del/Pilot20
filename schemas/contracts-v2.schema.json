@@ -1,0 +1,1906 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pilot20.local/schemas/contracts-v2.schema.json",
+  "title": "Pilot20 V0.2 transport contracts",
+  "description": "Structural schemas; domain validators also enforce references, bounds, progression and executable coverage.",
+  "$defs": {
+    "source": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "srd",
+            "homebrew",
+            "private"
+          ]
+        },
+        "document": {
+          "type": "string"
+        },
+        "license": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "document",
+        "license",
+        "url"
+      ],
+      "additionalProperties": false
+    },
+    "expression": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "ref": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ref"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "enum": [
+                "add",
+                "multiply",
+                "max",
+                "min",
+                "floor",
+                "ceil"
+              ]
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/expression"
+              },
+              "minItems": 1,
+              "maxItems": 20
+            }
+          },
+          "required": [
+            "op",
+            "args"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "dice": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^\\d{1,2}d\\d{1,3}([+-]\\d{1,4})?$"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            },
+            "sides": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 100
+            },
+            "bonus": {
+              "$ref": "#/$defs/expression"
+            }
+          },
+          "required": [
+            "count",
+            "sides",
+            "bonus"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "effect": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "enum": [
+                "damage"
+              ]
+            },
+            "amount": {
+              "$ref": "#/$defs/expression"
+            },
+            "dice": {
+              "$ref": "#/$defs/dice"
+            },
+            "damageType": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+              "not": {
+                "enum": [
+                  "__proto__",
+                  "constructor",
+                  "prototype"
+                ]
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "damageType"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "enum": [
+                "heal",
+                "tempHp"
+              ]
+            },
+            "amount": {
+              "$ref": "#/$defs/expression"
+            },
+            "dice": {
+              "$ref": "#/$defs/dice"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "enum": [
+                "condition",
+                "modifier",
+                "grantAction",
+                "move",
+                "summon"
+              ]
+            },
+            "parameters": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "kind",
+            "parameters"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "ability": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "weapon",
+            "spell",
+            "class",
+            "racial",
+            "feat",
+            "item",
+            "custom",
+            "passive"
+          ]
+        },
+        "cost": {
+          "enum": [
+            "action",
+            "bonus",
+            "reaction",
+            "none"
+          ]
+        },
+        "target": {
+          "enum": [
+            "self",
+            "selected"
+          ]
+        },
+        "maxTargets": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "attackAction": {
+          "type": "boolean"
+        },
+        "attack": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "bonus": {
+                  "$ref": "#/$defs/expression"
+                }
+              },
+              "required": [
+                "bonus"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "resource": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                  "not": {
+                    "enum": [
+                      "__proto__",
+                      "constructor",
+                      "prototype"
+                    ]
+                  }
+                },
+                "amount": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "id",
+                "amount"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/effect"
+          }
+        },
+        "concentration": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "effectId": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                  "not": {
+                    "enum": [
+                      "__proto__",
+                      "constructor",
+                      "prototype"
+                    ]
+                  }
+                },
+                "start": {
+                  "enum": [
+                    "activation",
+                    "hit"
+                  ]
+                }
+              },
+              "required": [
+                "effectId",
+                "start"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "save": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "ability": {
+                  "enum": [
+                    "str",
+                    "dex",
+                    "con",
+                    "int",
+                    "wis",
+                    "cha"
+                  ]
+                },
+                "dc": {
+                  "$ref": "#/$defs/expression"
+                },
+                "onSuccess": {
+                  "enum": [
+                    "none",
+                    "half"
+                  ]
+                }
+              },
+              "required": [
+                "ability",
+                "dc",
+                "onSuccess"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "duration": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "unit": {
+                  "enum": [
+                    "round",
+                    "minute",
+                    "hour",
+                    "until-rest"
+                  ]
+                },
+                "value": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "unit",
+                "value"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "triggers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "cost",
+        "target",
+        "maxTargets",
+        "attackAction",
+        "attack",
+        "resource",
+        "effects",
+        "concentration",
+        "conditions",
+        "save",
+        "duration",
+        "triggers",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "resource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "max": {
+          "$ref": "#/$defs/expression"
+        },
+        "recovery": {
+          "enum": [
+            "short",
+            "long",
+            "none"
+          ]
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      },
+      "required": [
+        "id",
+        "max",
+        "recovery",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "modifier": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "stat": {
+          "type": "string"
+        },
+        "operation": {
+          "enum": [
+            "add",
+            "set",
+            "max"
+          ]
+        },
+        "value": {
+          "$ref": "#/$defs/expression"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      },
+      "required": [
+        "id",
+        "stat",
+        "operation",
+        "value",
+        "reason",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "class": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "subclassId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+              "not": {
+                "enum": [
+                  "__proto__",
+                  "constructor",
+                  "prototype"
+                ]
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hitDie": {
+          "enum": [
+            6,
+            8,
+            10,
+            12
+          ]
+        },
+        "casting": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "ability": {
+                  "enum": [
+                    "str",
+                    "dex",
+                    "con",
+                    "int",
+                    "wis",
+                    "cha"
+                  ]
+                },
+                "progression": {
+                  "enum": [
+                    "full",
+                    "half",
+                    "third",
+                    "pact"
+                  ]
+                }
+              },
+              "required": [
+                "ability",
+                "progression"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      },
+      "required": [
+        "id",
+        "level",
+        "subclassId",
+        "hitDie",
+        "casting",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "equipment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "kind": {
+          "enum": [
+            "weapon",
+            "armor",
+            "shield",
+            "item"
+          ]
+        },
+        "equipped": {
+          "type": "boolean"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        },
+        "armor": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "base": {
+                  "type": "integer"
+                },
+                "dexCap": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "bonus": {
+                  "type": "integer"
+                },
+                "minStrength": {
+                  "type": "integer"
+                },
+                "heavy": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "base",
+                "dexCap",
+                "bonus",
+                "minStrength",
+                "heavy"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "weapon": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "ability": {
+                  "enum": [
+                    "str",
+                    "dex",
+                    "con",
+                    "int",
+                    "wis",
+                    "cha"
+                  ]
+                },
+                "proficient": {
+                  "type": "boolean"
+                },
+                "bonus": {
+                  "type": "integer"
+                },
+                "dice": {
+                  "type": "string"
+                },
+                "damageType": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                  "not": {
+                    "enum": [
+                      "__proto__",
+                      "constructor",
+                      "prototype"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "ability",
+                "proficient",
+                "bonus",
+                "dice",
+                "damageType"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "equipped",
+        "source",
+        "armor",
+        "weapon"
+      ],
+      "additionalProperties": false
+    },
+    "character": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "character"
+        },
+        "schemaVersion": {
+          "const": 2
+        },
+        "ruleset": {
+          "const": "dnd5e-2014"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "identity": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "portrait": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "portrait",
+            "description"
+          ],
+          "additionalProperties": false
+        },
+        "ancestry": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+              "not": {
+                "enum": [
+                  "__proto__",
+                  "constructor",
+                  "prototype"
+                ]
+              }
+            },
+            "subraceId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                  "not": {
+                    "enum": [
+                      "__proto__",
+                      "constructor",
+                      "prototype"
+                    ]
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "source": {
+              "$ref": "#/$defs/source"
+            }
+          },
+          "required": [
+            "id",
+            "subraceId",
+            "source"
+          ],
+          "additionalProperties": false
+        },
+        "classes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/class"
+          },
+          "minItems": 1,
+          "maxItems": 20
+        },
+        "background": {
+          "type": "string"
+        },
+        "alignment": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scores": {
+          "type": "object",
+          "properties": {
+            "str": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 30
+            },
+            "dex": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 30
+            },
+            "con": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 30
+            },
+            "int": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 30
+            },
+            "wis": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 30
+            },
+            "cha": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 30
+            }
+          },
+          "required": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "additionalProperties": false
+        },
+        "skills": {
+          "type": "object",
+          "additionalProperties": {
+            "enum": [
+              0,
+              1,
+              2
+            ]
+          }
+        },
+        "saveProficiencies": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "proficiencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+            "not": {
+              "enum": [
+                "__proto__",
+                "constructor",
+                "prototype"
+              ]
+            }
+          },
+          "uniqueItems": true
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+            "not": {
+              "enum": [
+                "__proto__",
+                "constructor",
+                "prototype"
+              ]
+            }
+          },
+          "uniqueItems": true
+        },
+        "equipment": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/equipment"
+          }
+        },
+        "spells": {
+          "type": "object",
+          "properties": {
+            "known": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                "not": {
+                  "enum": [
+                    "__proto__",
+                    "constructor",
+                    "prototype"
+                  ]
+                }
+              },
+              "uniqueItems": true
+            },
+            "prepared": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                "not": {
+                  "enum": [
+                    "__proto__",
+                    "constructor",
+                    "prototype"
+                  ]
+                }
+              },
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "known",
+            "prepared"
+          ],
+          "additionalProperties": false
+        },
+        "progression": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "classId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                "not": {
+                  "enum": [
+                    "__proto__",
+                    "constructor",
+                    "prototype"
+                  ]
+                }
+              },
+              "hp": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 12
+              }
+            },
+            "required": [
+              "classId",
+              "hp"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 20
+        },
+        "choices": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                "not": {
+                  "enum": [
+                    "__proto__",
+                    "constructor",
+                    "prototype"
+                  ]
+                }
+              },
+              "level": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 20
+              },
+              "optionIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                  "not": {
+                    "enum": [
+                      "__proto__",
+                      "constructor",
+                      "prototype"
+                    ]
+                  }
+                },
+                "uniqueItems": true
+              },
+              "note": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "level",
+              "optionIds",
+              "note"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "choiceRules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                "not": {
+                  "enum": [
+                    "__proto__",
+                    "constructor",
+                    "prototype"
+                  ]
+                }
+              },
+              "level": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 20
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 20
+              },
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                  "not": {
+                    "enum": [
+                      "__proto__",
+                      "constructor",
+                      "prototype"
+                    ]
+                  }
+                },
+                "uniqueItems": true
+              },
+              "requires": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                  "not": {
+                    "enum": [
+                      "__proto__",
+                      "constructor",
+                      "prototype"
+                    ]
+                  }
+                },
+                "uniqueItems": true
+              },
+              "incompatible": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                  "not": {
+                    "enum": [
+                      "__proto__",
+                      "constructor",
+                      "prototype"
+                    ]
+                  }
+                },
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "id",
+              "level",
+              "count",
+              "options",
+              "requires",
+              "incompatible"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/resource"
+          }
+        },
+        "abilities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ability"
+          }
+        },
+        "modifiers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/modifier"
+          }
+        },
+        "defenses": {
+          "type": "object",
+          "properties": {
+            "resistances": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                "not": {
+                  "enum": [
+                    "__proto__",
+                    "constructor",
+                    "prototype"
+                  ]
+                }
+              },
+              "uniqueItems": true
+            },
+            "immunities": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                "not": {
+                  "enum": [
+                    "__proto__",
+                    "constructor",
+                    "prototype"
+                  ]
+                }
+              },
+              "uniqueItems": true
+            },
+            "vulnerabilities": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                "not": {
+                  "enum": [
+                    "__proto__",
+                    "constructor",
+                    "prototype"
+                  ]
+                }
+              },
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "resistances",
+            "immunities",
+            "vulnerabilities"
+          ],
+          "additionalProperties": false
+        },
+        "movement": {
+          "type": "object",
+          "properties": {
+            "walk": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 200
+            },
+            "ignoreHeavyPenalty": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "walk",
+            "ignoreHeavyPenalty"
+          ],
+          "additionalProperties": false
+        },
+        "armorRules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                "not": {
+                  "enum": [
+                    "__proto__",
+                    "constructor",
+                    "prototype"
+                  ]
+                }
+              },
+              "base": {
+                "type": "integer"
+              },
+              "abilities": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "str",
+                    "dex",
+                    "con",
+                    "int",
+                    "wis",
+                    "cha"
+                  ]
+                },
+                "uniqueItems": true
+              },
+              "shieldAllowed": {
+                "type": "boolean"
+              },
+              "source": {
+                "$ref": "#/$defs/source"
+              }
+            },
+            "required": [
+              "id",
+              "base",
+              "abilities",
+              "shieldAllowed",
+              "source"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "buildRules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "when",
+              "anyOf"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "when": {
+                "enum": [
+                  "always",
+                  "multiclass"
+                ]
+              },
+              "anyOf": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "score",
+                      "minimum"
+                    ],
+                    "properties": {
+                      "score": {
+                        "enum": [
+                          "str",
+                          "dex",
+                          "con",
+                          "int",
+                          "wis",
+                          "cha"
+                        ]
+                      },
+                      "minimum": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 30
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "kind",
+        "schemaVersion",
+        "ruleset",
+        "id",
+        "revision",
+        "identity",
+        "ancestry",
+        "classes",
+        "background",
+        "alignment",
+        "scores",
+        "skills",
+        "saveProficiencies",
+        "proficiencies",
+        "features",
+        "equipment",
+        "spells",
+        "progression",
+        "choices",
+        "choiceRules",
+        "resources",
+        "abilities",
+        "modifiers",
+        "defenses",
+        "movement",
+        "armorRules",
+        "buildRules"
+      ],
+      "additionalProperties": false
+    },
+    "dashboard": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "dashboard"
+        },
+        "schemaVersion": {
+          "const": 2
+        },
+        "characterId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "locale": {
+          "enum": [
+            "fr",
+            "en"
+          ]
+        },
+        "theme": {
+          "type": "string"
+        },
+        "colors": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "panels": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+            "not": {
+              "enum": [
+                "__proto__",
+                "constructor",
+                "prototype"
+              ]
+            }
+          },
+          "uniqueItems": true
+        },
+        "favorites": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+            "not": {
+              "enum": [
+                "__proto__",
+                "constructor",
+                "prototype"
+              ]
+            }
+          },
+          "uniqueItems": true
+        },
+        "shortcuts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "hidden": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+            "not": {
+              "enum": [
+                "__proto__",
+                "constructor",
+                "prototype"
+              ]
+            }
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "kind",
+        "schemaVersion",
+        "characterId",
+        "locale",
+        "theme",
+        "colors",
+        "panels",
+        "favorites",
+        "shortcuts",
+        "hidden"
+      ],
+      "additionalProperties": false
+    },
+    "participant": {
+      "type": "object",
+      "properties": {
+        "characterId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "definitionRevision": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "characterId",
+        "definitionRevision"
+      ],
+      "additionalProperties": false
+    },
+    "combat": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "combat"
+        },
+        "schemaVersion": {
+          "const": 2
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "participants": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/participant"
+          }
+        },
+        "engine": {
+          "$ref": "https://pilot20.invalid/schemas/session-v1.schema.json"
+        },
+        "initiative": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "instanceId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                "not": {
+                  "enum": [
+                    "__proto__",
+                    "constructor",
+                    "prototype"
+                  ]
+                }
+              },
+              "total": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "instanceId",
+              "total"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+            "not": {
+              "enum": [
+                "__proto__",
+                "constructor",
+                "prototype"
+              ]
+            }
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "kind",
+        "schemaVersion",
+        "id",
+        "participants",
+        "engine",
+        "initiative",
+        "targets"
+      ],
+      "additionalProperties": false
+    },
+    "runtime": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "runtime"
+        },
+        "schemaVersion": {
+          "const": 2
+        },
+        "sessionId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "instanceId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "characterId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "definitionRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "hp": {
+          "type": "object",
+          "properties": {
+            "current": {
+              "type": "integer"
+            },
+            "max": {
+              "type": "integer"
+            },
+            "temp": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "current",
+            "max",
+            "temp"
+          ],
+          "additionalProperties": false
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "economy": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "boolean"
+            },
+            "bonus": {
+              "type": "boolean"
+            },
+            "reaction": {
+              "type": "boolean"
+            },
+            "attacks": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "action",
+            "bonus",
+            "reaction",
+            "attacks"
+          ],
+          "additionalProperties": false
+        },
+        "concentration": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "effectId": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                  "not": {
+                    "enum": [
+                      "__proto__",
+                      "constructor",
+                      "prototype"
+                    ]
+                  }
+                },
+                "instanceId": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                  "not": {
+                    "enum": [
+                      "__proto__",
+                      "constructor",
+                      "prototype"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "effectId",
+                "instanceId"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                "not": {
+                  "enum": [
+                    "__proto__",
+                    "constructor",
+                    "prototype"
+                  ]
+                }
+              },
+              "instanceId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                "not": {
+                  "enum": [
+                    "__proto__",
+                    "constructor",
+                    "prototype"
+                  ]
+                }
+              },
+              "dc": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id",
+              "instanceId",
+              "dc"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "incapacitated": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "schemaVersion",
+        "sessionId",
+        "instanceId",
+        "characterId",
+        "definitionRevision",
+        "hp",
+        "resources",
+        "economy",
+        "concentration",
+        "checks",
+        "incapacitated"
+      ],
+      "additionalProperties": false
+    },
+    "catalog": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "catalog"
+        },
+        "schemaVersion": {
+          "const": 2
+        },
+        "ruleset": {
+          "const": "dnd5e-2014"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                "not": {
+                  "enum": [
+                    "__proto__",
+                    "constructor",
+                    "prototype"
+                  ]
+                }
+              },
+              "type": {
+                "enum": [
+                  "weapon",
+                  "armor",
+                  "spell",
+                  "class",
+                  "race",
+                  "feature",
+                  "item",
+                  "feat"
+                ]
+              },
+              "name": {
+                "type": "object",
+                "properties": {
+                  "en": {
+                    "type": "string"
+                  },
+                  "fr": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "en",
+                  "fr"
+                ],
+                "additionalProperties": false
+              },
+              "source": {
+                "$ref": "#/$defs/source"
+              },
+              "data": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "name",
+              "source",
+              "data"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "kind",
+        "schemaVersion",
+        "ruleset",
+        "id",
+        "items"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "anyOf": [
+    {
+      "$ref": "#/$defs/character"
+    },
+    {
+      "$ref": "#/$defs/dashboard"
+    },
+    {
+      "$ref": "#/$defs/combat"
+    },
+    {
+      "$ref": "#/$defs/runtime"
+    },
+    {
+      "$ref": "#/$defs/catalog"
+    }
+  ]
+}
