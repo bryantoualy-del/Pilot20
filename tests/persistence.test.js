@@ -106,3 +106,11 @@ test('bounded incremental writes retain every receipt over 120 commands',async()
  assert.equal((await repo.commit('combat',{id:'turn-0',type:'startTurn',actorId:'a'})).replayed,true);
  const rows=await store.list('history');assert.ok(!JSON.stringify(rows).includes('"definition"'));
 });
+
+test('preferences occupy a separate store and definition edits preserve them',async()=>{
+ const store=new MemoryStorage(),lib=characterLibrary(store),d=characterFixture('fighter');await lib.save(d);
+ const p=defaultPreferences(d.id);p.theme='copper';await lib.setPreferences(d.id,p);
+ assert.equal(Object.hasOwn(await store.get('characters',d.id),'preferences'),false);
+ d.revision=2;d.identity.name='Edited';await lib.save(d,{expectedRevision:1});
+ assert.equal((await lib.get(d.id)).preferences.theme,'copper');
+});

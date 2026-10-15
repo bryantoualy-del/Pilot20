@@ -33,8 +33,8 @@ export function derive(d) {
   let maxHp=d.progression.reduce((n,p)=>n+Math.max(1,p.hp+stats['mod.con']),0);
   const worn=d.equipment.find(e=>e.equipped && e.kind==='armor'),shield=d.equipment.find(e=>e.equipped && e.kind==='shield');
   const shieldBonus=shield?shield.armor.base+shield.armor.bonus:0;
-  const acOptions=[{id:worn?.id||'unarmored',value:worn?worn.armor.base+worn.armor.bonus+Math.min(stats['mod.dex'],worn.armor.dexCap??100)+shieldBonus:10+stats['mod.dex']+shieldBonus}];
-  if(!worn) for(const a of d.armorRules) acOptions.push({id:a.id,value:a.base+a.abilities.reduce((n,k)=>n+stats['mod.'+k],0)+(a.shieldAllowed?shieldBonus:0)});
+  const acOptions=[{id:worn?.id||'unarmored',value:worn?worn.armor.base+worn.armor.bonus+(worn.armor.heavy?0:Math.min(stats['mod.dex'],worn.armor.dexCap??100))+shieldBonus:10+stats['mod.dex']+shieldBonus}];
+  if(!worn) for(const a of d.armorRules.filter(a=>!shield || a.shieldAllowed)) acOptions.push({id:a.id,value:a.base+a.abilities.reduce((n,k)=>n+stats['mod.'+k],0)+(a.shieldAllowed?shieldBonus:0)});
   let ac=Math.max(...acOptions.map(a=>a.value));
   let speed=d.movement.walk-(worn?.armor.heavy && d.scores.str<worn.armor.minStrength && !d.movement.ignoreHeavyPenalty?10:0);
   Object.assign(stats,{maxHp,ac,speed:Math.max(0,speed),initiative:stats['mod.dex']});

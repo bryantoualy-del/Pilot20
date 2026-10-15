@@ -14,8 +14,8 @@ const classProfiles={
 export function characterFixture(classId,{id=classId+'-fixture',level=5,name=classId}={}) {
   const p=classProfiles[classId];if(!p)throw Error('Unknown fixture profile');
   const d={kind:'character',schemaVersion:2,ruleset:'dnd5e-2014',id,revision:1,identity:{name,portrait:'',description:'Synthetic integration build'},
-    ancestry:{id:'srd51:human',subraceId:null,source:SRD},classes:[{id:classId,level,subclassId:null,hitDie:p.hitDie,casting:p.casting,source:SRD}],
-    background:'',alignment:null,scores:{...p.scores},skills:{athletics:1,perception:classId==='rogue'?2:0},saveProficiencies:p.saves,
+    ancestry:{id:'srd51:human',subraceId:null,source:SRD},classes:[{id:classId,level,subclassId:null,hitDie:p.hitDie,casting:p.casting===null?null:{...p.casting},source:SRD}],
+    background:'',alignment:null,scores:{...p.scores},skills:{athletics:1,perception:classId==='rogue'?2:0},saveProficiencies:[...p.saves],
     proficiencies:['simple-weapons'],features:[],equipment:[],spells:{known:[],prepared:[]},
     progression:Array.from({length:level},(_,i)=>({classId,hp:i===0?p.hitDie:p.hitDie/2+1})),choices:[],choiceRules:[],resources:[],abilities:[],modifiers:[],
     defenses:{resistances:[],immunities:[],vulnerabilities:[]},movement:{walk:30,ignoreHeavyPenalty:false},armorRules:[],buildRules:[]};

@@ -40,7 +40,7 @@ test('armor alternatives, negative dex, shields, heavy strength speed penalty',(
  const shield={id:'shield',kind:'shield',equipped:true,source:HOMEBREW,weapon:null,armor:{base:2,dexCap:0,bonus:0,minStrength:0,heavy:false}};
  d.equipment.push(shield);assert.equal(derive(d).ac,14);
  d.equipment.push(structuredClone({...characterFixture('fighter').equipment[1]}));d.scores.str=8;
- assert.equal(derive(d).ac,17);assert.equal(derive(d).speed,20);
+ assert.equal(derive(d).ac,18);assert.equal(derive(d).speed,20);
  d.movement.ignoreHeavyPenalty=true;assert.equal(derive(d).speed,30);
 });
 test('explicit adjustments are traced and cannot touch identity',()=>{
@@ -134,4 +134,22 @@ test('generic multiclass ability prerequisites support AND/OR, independent of ch
  d.buildRules=[{id:'entry-one',when:'multiclass',anyOf:[[{score:'str',minimum:13}],[{score:'dex',minimum:13}]]},{id:'entry-two',when:'multiclass',anyOf:[[{score:'cha',minimum:13}]]}];
  assert.ok(validateBuild(d).issues.some(i=>i.code==='score-prerequisite'));
  d.scores.cha=13;assert.equal(validateBuild(d).valid,true);
+});
+
+test('a shield-incompatible unarmored formula is unavailable with a shield',()=>{
+ const d=characterFixture('barbarian');
+ d.armorRules=[{id:'no-shield-defense',base:20,abilities:[],shieldAllowed:false,source:HOMEBREW}];
+ assert.equal(derive(d).ac,20);
+ d.equipment.push({id:'shield',kind:'shield',equipped:true,source:HOMEBREW,weapon:null,armor:{base:2,dexCap:0,bonus:0,minStrength:0,heavy:false}});
+ assert.equal(derive(d).ac,14);assert.equal(derive(d).acOptions.length,1);
+});
+test('pact short rest recovery remains undoable and idempotent through the character adapter',()=>{
+ let s=createCombat('pact-rest',[{instanceId:'w',character:characterFixture('warlock')}]);
+ s=executeCombat(s,{id:'spend',type:'correct',actorId:'w',field:'resource',resourceId:'pact:warlock',value:0,reason:'Adjudicated spell'}).state;
+ s=executeCombat(s,{id:'short',type:'rest',actorId:'w',kind:'short'}).state;
+ assert.equal(s.engine.actors.w.resources['pact:warlock'],2);
+ s=executeCombat(s,{id:'undo-rest',type:'undo',actionId:'short'}).state;
+ assert.equal(s.engine.actors.w.resources['pact:warlock'],0);
+ const replay=executeCombat(s,{id:'short',type:'rest',actorId:'w',kind:'short'});
+ assert.equal(replay.replayed,true);assert.equal(replay.state.engine.actors.w.resources['pact:warlock'],0);
 });
