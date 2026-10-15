@@ -105,10 +105,9 @@ test('same definition can create multiple independent instances and sessions',()
  assert.equal(out.state.engine.actors.b.hp.current,49);assert.equal(t.engine.actors.a.hp.current,49);assert.equal(d.revision,1);
  d.scores.con=20;assert.equal(s.engine.actors.a.definition.maxHp,49);
 });
-test('dashboard preferences never affect derived values; shared creation modes use same data',()=>{
+test('dashboard preferences never affect derived values',()=>{
  const d=characterFixture('fighter'),s=derive(d),p=defaultPreferences(d.id);p.theme='copper';p.panels=['combat','resources'];preferences(p);
  assert.deepEqual(derive(d),s);
- for(const mode of ['guided','quick','expert']) {const draft=structuredClone(d);assert.deepEqual(derive(draft),s,mode);}
 });
 test('explicit prototype migration is pure; future versions rejected',()=>{
  const d=characterFixture('fighter');d.schemaVersion=1;delete d.revision;
@@ -127,4 +126,12 @@ test('legacy session migration preserves full history, receipts and independence
  const migrated=migrateLegacyCombat('legacy-import',legacy,{a:{characterId:'fighter-fixture',definitionRevision:1}});
  assert.deepEqual(migrated.engine.receipts,legacy.receipts);assert.deepEqual(migrated.engine.history,legacy.history);assert.deepEqual(legacy,before);
  assert.equal(executeCombat(migrated,{id:'old',type:'damage',actorId:'a',amount:4,damageType:'fire'}).replayed,true);
+});
+
+test('generic multiclass ability prerequisites support AND/OR, independent of character identity',()=>{
+ const d=characterFixture('fighter',{level:2}),s=characterFixture('sorcerer',{level:3});
+ d.classes.push(s.classes[0]);d.progression.push(...s.progression.map(p=>({...p,hp:4})));
+ d.buildRules=[{id:'entry-one',when:'multiclass',anyOf:[[{score:'str',minimum:13}],[{score:'dex',minimum:13}]]},{id:'entry-two',when:'multiclass',anyOf:[[{score:'cha',minimum:13}]]}];
+ assert.ok(validateBuild(d).issues.some(i=>i.code==='score-prerequisite'));
+ d.scores.cha=13;assert.equal(validateBuild(d).valid,true);
 });

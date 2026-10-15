@@ -7,6 +7,7 @@ export class StorageError extends Error {
 export function storageError(e) {return e instanceof StorageError?e:new StorageError(e?.name==='QuotaExceededError'?'quota':e?.name==='VersionError'?'migration':'write',e);}
 function validateBatch(conditions,writes) {
   check(Array.isArray(conditions) && Array.isArray(writes),'Storage batch');
+  for(const w of writes) check(w.delete===true ? !Object.hasOwn(w,'value') : Object.hasOwn(w,'value') && w.value!==undefined,'Storage write value');
   for(const op of [...conditions,...writes]) {check(STORES.includes(op.store) && typeof op.key==='string' && op.key.length<=500,'Storage address');if(Object.hasOwn(op,'value') && op.value!==undefined) json(op.value);}
 }
 /** Copy-on-commit adapter. Share the adapter across repository instances to model reloads. */
@@ -28,11 +29,12 @@ export class MemoryStorage {
 export async function openIndexedDB(name='pilot20',{indexedDB=globalThis.indexedDB}={}) {
   check(indexedDB && typeof indexedDB.open==='function','IndexedDB unavailable');
   const db=await new Promise((resolve,reject)=>{
+    let blocked=false;
     const r=indexedDB.open(name,1);
     r.onupgradeneeded=()=>{for(const s of STORES) if(!r.result.objectStoreNames.contains(s)) r.result.createObjectStore(s);};
     r.onerror=()=>reject(storageError(r.error));
-    r.onblocked=()=>reject(new StorageError('blocked'));
-    r.onsuccess=()=>resolve(r.result);
+    r.onblocked=()=>{blocked=true;reject(new StorageError('blocked'));};
+    r.onsuccess=()=>{if(blocked)r.result.close();else resolve(r.result);};
   });
   db.onversionchange=()=>db.close();
   function transaction(stores,mode,work) {

@@ -3,7 +3,7 @@ import {check,id,integer,keys,json,text,ids,source,ABILITIES,SKILLS} from './con
 export const SCHEMA_VERSION=2;
 export function validateCharacter(d) {
   json(d);
-  keys(d,['kind','schemaVersion','ruleset','id','revision','identity','ancestry','classes','background','alignment','scores','skills','saveProficiencies','proficiencies','features','equipment','spells','progression','choices','choiceRules','resources','abilities','modifiers','defenses','movement','armorRules']);
+  keys(d,['kind','schemaVersion','ruleset','id','revision','identity','ancestry','classes','background','alignment','scores','skills','saveProficiencies','proficiencies','features','equipment','spells','progression','choices','choiceRules','resources','abilities','modifiers','defenses','movement','armorRules','buildRules']);
   check(d.kind==='character' && d.schemaVersion===2 && d.ruleset==='dnd5e-2014' && id(d.id) && integer(d.revision,1),'Character header');
   keys(d.identity,['name','portrait','description']); check(text(d.identity.name) && d.identity.name.trim() && text(d.identity.portrait) && text(d.identity.description),'Identity');
   keys(d.ancestry,['id','subraceId','source']); check(id(d.ancestry.id) && (d.ancestry.subraceId===null || id(d.ancestry.subraceId)),'Ancestry');source(d.ancestry.source);
@@ -46,6 +46,11 @@ export function validateCharacter(d) {
   keys(d.movement,['walk','ignoreHeavyPenalty']);check(integer(d.movement.walk,0,200) && typeof d.movement.ignoreHeavyPenalty==='boolean','Movement');
   check(Array.isArray(d.armorRules),'Armor rules');
   for(const a of d.armorRules) {keys(a,['id','base','abilities','shieldAllowed','source']);check(id(a.id) && integer(a.base,0,30) && typeof a.shieldAllowed==='boolean','AC rule');ids(a.abilities);check(a.abilities.every(k=>ABILITIES.includes(k)),'AC abilities');source(a.source);}
+  check(Array.isArray(d.buildRules),'Build requirements');ids(d.buildRules.map(r=>r.id));
+  for(const r of d.buildRules) {
+    keys(r,['id','when','anyOf']);check(id(r.id) && ['always','multiclass'].includes(r.when) && Array.isArray(r.anyOf) && r.anyOf.length>0,'Prerequisite rule');
+    for(const all of r.anyOf) {check(Array.isArray(all) && all.length>0,'Prerequisite conjunction');for(const clause of all) {keys(clause,['score','minimum']);check(ABILITIES.includes(clause.score) && integer(clause.minimum,1,30),'Score prerequisite');}}
+  }
   validateRuleData(d);
   return d;
 }
@@ -61,6 +66,9 @@ export function validateBuild(d) {
     if(p.hp>c.hitDie || (i===0 && p.hp!==c.hitDie)) add('invalid-hit-die','progression.'+i);
   });
   for(const c of d.classes) if(counts[c.id]!==c.level) add('class-level-mismatch','classes.'+c.id);
+  for(const r of d.buildRules) if(r.when==='always' || d.classes.length>1) {
+    if(!r.anyOf.some(all=>all.every(c=>d.scores[c.score]>=c.minimum))) add('score-prerequisite','buildRules.'+r.id);
+  }
   const selected=new Set(d.choices.flatMap(c=>c.optionIds));
   for(const r of d.choiceRules) {
     if(r.level>level) continue;

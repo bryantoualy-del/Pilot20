@@ -18,7 +18,7 @@ export function characterFixture(classId,{id=classId+'-fixture',level=5,name=cla
     background:'',alignment:null,scores:{...p.scores},skills:{athletics:1,perception:classId==='rogue'?2:0},saveProficiencies:p.saves,
     proficiencies:['simple-weapons'],features:[],equipment:[],spells:{known:[],prepared:[]},
     progression:Array.from({length:level},(_,i)=>({classId,hp:i===0?p.hitDie:p.hitDie/2+1})),choices:[],choiceRules:[],resources:[],abilities:[],modifiers:[],
-    defenses:{resistances:[],immunities:[],vulnerabilities:[]},movement:{walk:30,ignoreHeavyPenalty:false},armorRules:[]};
+    defenses:{resistances:[],immunities:[],vulnerabilities:[]},movement:{walk:30,ignoreHeavyPenalty:false},armorRules:[],buildRules:[]};
   const melee=['fighter','paladin','barbarian'].includes(classId);
   d.equipment.push({id:'blade',kind:'weapon',equipped:true,source:SRD,armor:null,weapon:{ability:melee?'str':'dex',proficient:true,bonus:0,dice:'1d8',damageType:melee?'slashing':'piercing'}});
   if(['fighter','paladin'].includes(classId)) d.equipment.push({id:'chain',kind:'armor',equipped:true,source:SRD,weapon:null,armor:{base:16,dexCap:0,bonus:0,minStrength:13,heavy:true}});

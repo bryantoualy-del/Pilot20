@@ -23,7 +23,7 @@ for(const [label,make] of [['memory',async()=>new MemoryStorage()],['indexeddb',
      await lib.archive(a.id);assert.equal((await lib.list()).length,2);assert.equal((await lib.list({includeArchived:true})).length,3);
      await assert.rejects(lib.remove(a.id),/confirmation/);
      const raw=await lib.exportJSON(a.id);await lib.remove(a.id,{confirmId:a.id});assert.equal(await lib.get(a.id),null);
-     await lib.importJSON(raw);assert.equal((await lib.get(a.id)).preferences.theme,'copper');
+     await lib.importJSON(raw);assert.equal((await lib.get(a.id)).preferences.theme,'copper');assert.equal((await lib.get(a.id)).archived,true);
      await assert.rejects(lib.importJSON(raw),/already exists/);
    }finally{store.close?.();}
  });
