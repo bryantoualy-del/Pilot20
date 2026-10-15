@@ -3,6 +3,12 @@ const ref=ref=>({ref}),add=(...args)=>({op:'add',args}),mul=(...args)=>({op:'mul
 export const ability=(id,overrides={})=>({id,name:id,kind:'custom',cost:'action',target:'selected',maxTargets:1,attackAction:false,attack:null,resource:null,effects:[],concentration:null,conditions:[],save:null,duration:null,triggers:[],source:HOMEBREW,...overrides});
 export const resource=(id,max,recovery='long')=>({id,max,recovery,source:SRD});
 const classProfiles={
+  bard:{hitDie:8,casting:{ability:'cha',progression:'full'},saves:['dex','cha'],scores:{str:8,dex:14,con:14,int:10,wis:12,cha:18}},
+  cleric:{hitDie:8,casting:{ability:'wis',progression:'full'},saves:['wis','cha'],scores:{str:14,dex:10,con:14,int:10,wis:18,cha:10}},
+  druid:{hitDie:8,casting:{ability:'wis',progression:'full'},saves:['int','wis'],scores:{str:10,dex:14,con:14,int:12,wis:18,cha:8}},
+  wizard:{hitDie:6,casting:{ability:'int',progression:'full'},saves:['int','wis'],scores:{str:8,dex:14,con:14,int:18,wis:12,cha:10}},
+  monk:{hitDie:8,casting:null,saves:['str','dex'],scores:{str:10,dex:18,con:14,int:10,wis:16,cha:8}},
+  ranger:{hitDie:10,casting:{ability:'wis',progression:'half'},saves:['str','dex'],scores:{str:10,dex:18,con:14,int:10,wis:14,cha:10}},
   fighter:{hitDie:10,casting:null,saves:['str','con'],scores:{str:18,dex:12,con:16,int:10,wis:10,cha:8}},
   sorcerer:{hitDie:6,casting:{ability:'cha',progression:'full'},saves:['con','cha'],scores:{str:8,dex:14,con:14,int:10,wis:10,cha:18}},
   warlock:{hitDie:8,casting:{ability:'cha',progression:'pact'},saves:['wis','cha'],scores:{str:8,dex:14,con:14,int:10,wis:10,cha:18}},
@@ -23,7 +29,7 @@ export function characterFixture(classId,{id=classId+'-fixture',level=5,name=cla
   d.equipment.push({id:'blade',kind:'weapon',equipped:true,source:SRD,armor:null,weapon:{ability:melee?'str':'dex',proficient:true,bonus:0,dice:'1d8',damageType:melee?'slashing':'piercing'}});
   if(['fighter','paladin'].includes(classId)) d.equipment.push({id:'chain',kind:'armor',equipped:true,source:SRD,weapon:null,armor:{base:16,dexCap:0,bonus:0,minStrength:13,heavy:true}});
   d.abilities.push(ability('blade',{kind:'weapon',attackAction:true,attack:{bonus:ref('weaponAttack.blade')},effects:[{kind:'damage',damageType:melee?'slashing':'piercing',dice:{count:1,sides:8,bonus:ref('weaponDamage.blade')}}],source:SRD}));
-  if(['fighter','paladin','barbarian'].includes(classId)) d.modifiers.push({id:'extra-attack',stat:'attacksPerAction',operation:'max',value:classId==='fighter' && level>=20?4:classId==='fighter' && level>=11?3:level>=5?2:1,reason:'Class progression fixture; fighter level 11/20 tested separately',source:SRD});
+  if(['fighter','paladin','barbarian','monk','ranger'].includes(classId)) d.modifiers.push({id:'extra-attack',stat:'attacksPerAction',operation:'max',value:classId==='fighter' && level>=20?4:classId==='fighter' && level>=11?3:level>=5?2:1,reason:'Class progression fixture; fighter level 11/20 tested separately',source:SRD});
   if(classId==='fighter') {
     d.resources.push(resource('second-wind',1,'short'),resource('action-surge',level>=17?2:1,'short'),{...resource('maneuver-pool',4,'short'),source:HOMEBREW});
     d.abilities.push(ability('second-wind',{kind:'class',cost:'bonus',target:'self',resource:{id:'second-wind',amount:1},effects:[{kind:'heal',dice:{count:1,sides:10,bonus:ref('class.fighter')}}],source:SRD}),
@@ -51,8 +57,21 @@ export function characterFixture(classId,{id=classId+'-fixture',level=5,name=cla
   if(classId==='paladin') {
     d.resources.push(resource('lay-on-hands',mul(5,ref('class.paladin'))));
     d.abilities.push(ability('lay-on-hands-one',{kind:'class',resource:{id:'lay-on-hands',amount:1},effects:[{kind:'heal',amount:1}],source:SRD}),
-      ability('smite-case',{kind:'class',cost:'none',resource:{id:'slot1',amount:1},triggers:['melee-weapon-hit'],effects:[{kind:'damage',dice:'2d8',damageType:'radiant'}],source:SRD}));
+      ...(level>=2?[ability('smite-case',{kind:'class',cost:'none',resource:{id:'slot1',amount:1},triggers:['melee-weapon-hit'],effects:[{kind:'damage',dice:'2d8',damageType:'radiant'}],source:SRD})]:[]));
   }
+  const extra={
+    bard:{resource:'inspiration',max:4,recovery:level>=5?'short':'long',trigger:'ally-attacks'},
+    cleric:{resource:'channel',max:level>=18?3:level>=6?2:1,recovery:'short',trigger:'turn-start'},
+    druid:{resource:'wild-shape',max:2,recovery:'short',trigger:'turn-start'},
+    wizard:{resource:'arcane-recovery',max:1,recovery:'long',trigger:'spell-cast'},
+    monk:{resource:'ki',max:level>=2?level:0,recovery:'short',trigger:'attack-hit'},
+    ranger:{resource:'custom-feature',max:1,recovery:'long',trigger:'attack-hit'}
+  }[classId];
+  if(extra) {
+    d.resources.push({...resource(extra.resource,extra.max,extra.recovery),source:classId==='ranger'?HOMEBREW:SRD});
+    d.abilities.push(ability('class-reference',{kind:'class',cost:'none',target:'self',triggers:[extra.trigger],effects:[],source:SRD}));
+  }
+  if(classId==='monk') d.armorRules.push({id:'unarmored-defense',base:10,abilities:['dex','wis'],shieldAllowed:false,source:SRD});
   return d;
 }
 export const referenceClasses=Object.keys(classProfiles);

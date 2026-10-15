@@ -10,7 +10,9 @@
     "test": "node --test",
     "demo": "node examples/demo.mjs",
     "benchmark": "node scripts/benchmark-history.mjs",
-    "demo:characters": "node examples/character-demo.mjs"
+    "demo:characters": "node examples/character-demo.mjs",
+    "coverage": "node scripts/coverage-report.mjs",
+    "coverage:check": "node scripts/coverage-report.mjs --check"
   },
   "devDependencies": {
     "fake-indexeddb": "6.2.4",
