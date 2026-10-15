@@ -1,0 +1,18 @@
+{
+  "id": "demo-target",
+  "name": "Cible de test",
+  "level": 5,
+  "maxHp": 60,
+  "ac": 13,
+  "attacksPerAction": 1,
+  "saves": {
+    "con": 3
+  },
+  "resistances": [
+    "slashing"
+  ],
+  "immunities": [],
+  "vulnerabilities": [],
+  "resources": {},
+  "abilities": {}
+}
