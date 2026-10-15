@@ -1,5 +1,14 @@
 {
-  "name": "pilot20", "version": "0.1.0", "private": true, "type": "module",
-  "engines": {"node": ">=22"},
-  "scripts": {"test": "node --test", "demo": "node examples/demo.mjs"}
+  "name": "pilot20",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test",
+    "demo": "node examples/demo.mjs",
+    "benchmark": "node scripts/benchmark-history.mjs"
+  }
 }

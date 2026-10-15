@@ -64,12 +64,11 @@
         "id": "slot1",
         "amount": 1
       },
-      "effects": [
-        {
-          "kind": "concentration",
-          "effectId": "demo-focus"
-        }
-      ]
+      "effects": [],
+      "concentration": {
+        "effectId": "demo-focus",
+        "start": "activation"
+      }
     },
     "parry": {
       "name": "Riposte de test",

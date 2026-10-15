@@ -16,5 +16,6 @@ Node.js 22 ou 24. Aucune installation de dépendances nécessaire. La démo est 
 - [Schéma JSON V1](docs/session-v1.schema.json)
 - [Références épinglées et empreintes](docs/reference-manifest.json)
 - [Validation](docs/VALIDATION.md)
+- [Mesures sur 500 transactions](docs/HISTORY-MEASUREMENTS.md)
 
 Les capacités de démonstration sont des fixtures originales de mécanismes, pas un build de classe ni un catalogue D&D complet. Aucun contenu hors SRD des références n’est redistribué. Les dépôts Companions, Encounter et RPG Connect sont restés en lecture seule. Aucun déploiement public.

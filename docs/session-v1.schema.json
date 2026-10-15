@@ -109,88 +109,68 @@
       "additionalProperties": true
     },
     "effect": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "damage",
+            "heal",
+            "tempHp"
+          ]
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "dice": {
+          "type": "string",
+          "pattern": "^\\d{1,2}d\\d{1,3}([+-]\\d{1,4})?$"
+        },
+        "damageType": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": true,
       "oneOf": [
         {
-          "type": "object",
-          "properties": {
-            "kind": {
-              "const": "concentration"
-            },
-            "effectId": {
-              "$ref": "#/$defs/id"
-            }
-          },
           "required": [
-            "kind",
-            "effectId"
+            "amount"
           ],
-          "additionalProperties": true
+          "not": {
+            "required": [
+              "dice"
+            ]
+          }
         },
         {
-          "type": "object",
-          "properties": {
-            "kind": {
-              "enum": [
-                "damage",
-                "heal",
-                "tempHp"
-              ]
-            },
-            "amount": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 1000000
-            },
-            "dice": {
-              "type": "string",
-              "pattern": "^\\d{1,2}d\\d{1,3}([+-]\\d{1,4})?$"
-            },
-            "damageType": {
-              "$ref": "#/$defs/id"
+          "required": [
+            "dice"
+          ],
+          "not": {
+            "required": [
+              "amount"
+            ]
+          }
+        }
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "damage"
+              }
             }
           },
-          "required": [
-            "kind"
-          ],
-          "additionalProperties": true,
-          "oneOf": [
-            {
-              "required": [
-                "amount"
-              ],
-              "not": {
-                "required": [
-                  "dice"
-                ]
-              }
-            },
-            {
-              "required": [
-                "dice"
-              ],
-              "not": {
-                "required": [
-                  "amount"
-                ]
-              }
-            }
-          ],
-          "allOf": [
-            {
-              "if": {
-                "properties": {
-                  "kind": {
-                    "const": "damage"
-                  }
-                }
-              },
-              "then": {
-                "required": [
-                  "damageType"
-                ]
-              }
-            }
-          ]
+          "then": {
+            "required": [
+              "damageType"
+            ]
+          }
         }
       ]
     },
@@ -259,6 +239,25 @@
             "amount"
           ],
           "additionalProperties": true
+        },
+        "concentration": {
+          "type": "object",
+          "properties": {
+            "effectId": {
+              "$ref": "#/$defs/id"
+            },
+            "start": {
+              "enum": [
+                "activation",
+                "hit"
+              ]
+            }
+          },
+          "required": [
+            "effectId",
+            "start"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [
@@ -268,7 +267,30 @@
         "maxTargets",
         "effects"
       ],
-      "additionalProperties": true
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "concentration"
+            ],
+            "properties": {
+              "concentration": {
+                "properties": {
+                  "start": {
+                    "const": "hit"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "attack"
+            ]
+          }
+        }
+      ]
     },
     "definition": {
       "type": "object",

@@ -33,3 +33,13 @@ Tous les champs de dés sont des résultats naturels entiers dans les bornes ; l
 En mode connecté, `execute` exige un troisième argument de confiance `{authority: 'encounter'}` ; les commandes d’adjudication exigent en plus `role: 'gm'`. Ne jamais alimenter ce contexte depuis un champ JSON fourni par le joueur. `connect.js` constitue une frontière expérimentale, pas un client fonctionnel. Les changements de mode sont différés ; les fixtures peuvent sélectionner le mode dans le document avant validation.
 
 Les erreurs lèvent une exception et laissent l’entrée intacte. L’application doit les afficher, sans publier ni enregistrer un état partiel. `replayed: true` signale qu’aucune nouvelle transaction n’a eu lieu. Après annulation, rejouer la commande originelle renvoie son ancien reçu et ne réapplique pas ses effets.
+
+La concentration est déclarée à la racine d’une capacité :
+
+```json
+{"concentration":{"effectId":"custom-focus","start":"activation"}}
+```
+
+`start: "activation"` déclenche/remplace la concentration une fois par activation, même sur un raté ; `start: "hit"` exige une attaque et conditionne le démarrage à la touche. Les effets dans `effects` concernent uniquement chaque cible. Un remplacement au démarrage invalide les anciennes sauvegardes avant d’appliquer les effets ; les nouvelles sauvegardes dues aux dégâts restent en attente. Une autre capacité, y compris celle avec `start: "hit"`, doit d’abord résoudre ses demandes. Les conditions non prises en charge sont refusées plutôt qu’inférées.
+
+Les anciens documents V1 avec un effet `concentration` unique sont normalisés à l’import et dans les snapshots historiques. Le schéma décrit la nouvelle forme canonique ; après import, utiliser la définition normalisée pour construire les indices `effectRolls` des nouvelles commandes. Les anciennes commandes déjà reçues restent idempotentes grâce à leurs reçus inchangés.

@@ -16,6 +16,11 @@ export function effectiveDamage(amount, type, definition) {
   return definition.vulnerabilities.includes(type) ? n*2 : n;
 }
 function loseConcentration(a) { a.concentration = null; a.checks = []; }
+function activateConcentration(a, rule, instanceId, hit) {
+  if (!rule || (rule.start === 'hit' && !hit)) return;
+  a.concentration = {effectId:rule.effectId,instanceId};
+  a.checks = [];
+}
 function damage(a, amount, damageId) {
   const absorbed = Math.min(a.hp.temp,amount); a.hp.temp -= absorbed;
   const lost = Math.min(a.hp.current,amount-absorbed); a.hp.current -= lost;
@@ -34,12 +39,14 @@ function useAbility(s,c) {
   const a = actor(s,c.actorId), ability = a.definition.abilities[c.abilityId];
   check(Object.hasOwn(a.definition.abilities,c.abilityId),'Unknown ability');
   check(a.hp.current > 0 && !a.incapacitated,'Actor cannot act');
-  check(!a.checks.length,'Resolve concentration first');
   if (!['reaction','none'].includes(ability.cost)) check(s.activeActorId === c.actorId,'Not actor turn');
   const ids = ability.target === 'self' ? [c.actorId] : c.targetIds;
   check(Array.isArray(ids) && ids.length > 0 && ids.length <= ability.maxTargets && new Set(ids).size === ids.length,'Invalid targets');
   const targets = ids.map(key=>[key,actor(s,key)]);
   check(!ability.attack || ids.length === 1,'One attack target required');
+  // Activation rules are actor-scoped. A hit-gated activation must first settle
+  // pending checks; an unconditional replacement retires its old instance.
+  check(!a.checks.length || ability.concentration?.start === 'activation','Resolve concentration first');
   if (ability.cost === 'action' && ability.attackAction === true) {
     if (!a.economy.attacks) { check(a.economy.action,'Action spent'); a.economy.action = false; a.economy.attacks = a.definition.attacksPerAction; }
     a.economy.attacks--;
@@ -56,15 +63,12 @@ function useAbility(s,c) {
     total = natural+ability.attack.bonus; critical = natural === 20;
     hit = natural !== 1 && (critical || total >= targets[0][1].definition.ac);
   }
+  activateConcentration(a,ability.concentration,c.id,hit);
   const results = [];
   if (hit) for (const [key,target] of targets) {
     // Aggregate typed components before applying resistance and concentration once per hit.
     const components = new Map();
     for (const [i,e] of ability.effects.entries()) {
-      if (e.kind === 'concentration') {
-        check(!a.incapacitated && a.hp.current > 0,'Cannot concentrate');
-        a.concentration = {effectId:e.effectId,instanceId:c.id}; a.checks = []; continue;
-      }
       const n = resolveAmount(e,c.effectRolls?.[i],critical);
       if (e.kind === 'damage') components.set(e.damageType,(components.get(e.damageType)||0)+n);
       if (e.kind === 'heal') target.hp.current = Math.min(target.hp.max,target.hp.current+n);
