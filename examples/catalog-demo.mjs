@@ -5,6 +5,7 @@ import {characterLibrary} from '../src/persistence/library.js';
 import {MemoryStorage} from '../src/persistence/adapters.js';
 import {createCombat,executeCombat} from '../src/character/session.js';
 import {combatRepository} from '../src/persistence/combat-repository.js';
+import {confirmedActionEvent} from '../src/catalog/events.js';
 import {pendingDecisions} from '../src/rules/reactive.js';
 const spell=(...ids)=>ids.map(id=>'srd51:'+id);
 export const bardRequest={id:'lore-bard-10',name:'Reference Bard',classes:[{id:'bard',level:10,subclassId:'srd51:college-of-lore'}],scores:{str:10,dex:14,con:14,int:12,wis:12,cha:16},selections:{
@@ -33,8 +34,23 @@ export async function catalogDemo() {
  run({id:'heal',type:'useAbility',actorId:'bard',abilityId:'bard:srd51:healing-word',targetIds:['fighter'],slotId:'slot1',effectRolls:{0:[4]},facts:{bard:{spellEligibilityValidated:true}}});
  assert.equal(s.engine.actors.fighter.hp.current,s.engine.actors.fighter.hp.max-7);
  assert.equal(s.engine.actors.bard.resources['bard:inspiration'],4);
+ // A narrative spell stays pending until the GM explicitly adjudicates it.
+ run({id:'manual-turn',type:'startTurn',actorId:'bard'});
+ const declaration={id:'teleport',type:'declareManual',actorId:'bard',abilityId:'bard:srd51:dimension-door',targetIds:['bard','fighter'],slotId:'slot4',reason:'GM validates willing passenger, destination and range',facts:{bard:{spellEligibilityValidated:true}}};
+ const slots=s.engine.actors.bard.resources.slot4,beforeManual=s,declared=executeCombat(s,declaration);s=declared.state;
+ assert.equal(confirmedActionEvent(beforeManual,declaration,declared).confirmed,false);
+ assert.equal(s.engine.actors.bard.resources.slot4,slots-1);
+ const manualStore=new MemoryStorage(),manualRepo=combatRepository(manualStore);
+ await manualRepo.importJSON(JSON.stringify(s));s=await combatRepository(manualStore).load(s.id);
+ assert.equal(s.engine.actors.bard.advanced.pendingManual.id,'teleport');
+ assert.throws(()=>executeCombat(s,{id:'premature-rest',type:'rest',actorId:'bard',kind:'short'}));
+ const resolution={id:'teleport-resolved',type:'resolveManual',actorId:'bard',declarationId:'teleport',reason:'GM confirms arrival; positions tracked manually',outcomes:[]};
+ const beforeResolve=s,resolved=executeCombat(s,resolution);s=resolved.state;
+ const fx=confirmedActionEvent(beforeResolve,resolution,resolved);assert.equal(fx.id,'catalog-demo:teleport');assert.equal(fx.confirmed,true);assert.equal(fx.spellId,'srd51:dimension-door');assert.deepEqual(fx.targetIds,['bard','fighter']);
+ assert.equal(s.engine.actors.bard.advanced.pendingManual,null);assert.equal(s.engine.actors.bard.resources.slot4,slots-1);
+ assert.equal(executeCombat(s,resolution).replayed,true);
  run({id:'rest',type:'rest',actorId:'bard',kind:'short'});assert.equal(s.engine.actors.bard.resources['bard:inspiration'],5);
  const final=JSON.parse(JSON.stringify(s));assert.deepEqual(final,s);
- return {catalogEntries:index.size,bardLevel:10,subclass:'College of Lore',reactiveDecisionReloaded:true,damage:16,healing:9,inspirationRecovered:true,finalFighterHp:s.engine.actors.fighter.hp.current};
+ return {catalogEntries:index.size,bardLevel:10,subclass:'College of Lore',reactiveDecisionReloaded:true,manualDeclarationReloaded:true,manualResolved:true,damage:16,healing:9,inspirationRecovered:true,finalFighterHp:s.engine.actors.fighter.hp.current};
 }
 if(process.argv[1]===new URL(import.meta.url).pathname)console.log(JSON.stringify(await catalogDemo(),null,2));

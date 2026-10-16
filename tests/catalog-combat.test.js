@@ -72,3 +72,29 @@ test('FX projection accepts committed results and rejects replay',async()=>{
  const {confirmedActionEvent}=await import('../src/catalog/events.js');const s=fresh('wizard','srd51:fire-bolt');const c=cast('wizard','srd51:fire-bolt',{attackRolls:[15],effectRolls:{0:[2,2]}}),out=executeCombat(s,c);
  const e=confirmedActionEvent(s,c,out);assert.equal(e.id,'catalog-combat:cast');assert.equal(e.confirmed,true);assert.deepEqual(e.damageTypes,['fire']);assert.deepEqual(e.targetIds,['b']);assert.throws(()=>confirmedActionEvent(out.state,c,executeCombat(out.state,c)));
 });
+
+test('FX manual completion preserves declaration identity after reload and undo',async()=>{
+ const {confirmedActionEvent}=await import('../src/catalog/events.js');
+ const s=fresh('wizard','srd51:major-image'),c=cast('wizard','srd51:major-image',{type:'declareManual',slotId:'slot3',reason:'GM validates geometry'}),declared=executeCombat(s,c);
+ const pending=JSON.parse(JSON.stringify(declared.state)),projection=confirmedActionEvent(s,c,declared);
+ assert.equal(projection.confirmed,false);
+ const resolve={id:'resolve-fx',type:'resolveManual',actorId:'a',declarationId:'cast',reason:'Illusion established',outcomes:[]},out=executeCombat(pending,resolve),e=confirmedActionEvent(pending,resolve,out);
+ assert.equal(e.id,projection.id);assert.equal(e.type,'declareManual');assert.equal(e.abilityId,c.abilityId);assert.equal(e.spellId,'srd51:major-image');assert.equal(e.confirmed,true);assert.deepEqual(e.targetIds,['b']);assert.equal(e.result.resolved,'cast');
+ e.targetIds.push('a');assert.deepEqual(pending.engine.actors.a.advanced.pendingManual.targetIds,['b']);
+ assert.throws(()=>confirmedActionEvent(out.state,resolve,executeCombat(out.state,resolve)));
+ const undone=run(out.state,{id:'undo-resolution',type:'undo',actionId:resolve.id});assert.ok(undone.engine.actors.a.advanced.pendingManual);
+ const again={...resolve,id:'resolve-again'},retry=executeCombat(undone,again);assert.equal(confirmedActionEvent(undone,again,retry).id,projection.id);
+});
+test('FX deferred save keeps original spell identity through the decision',async()=>{
+ const {confirmedActionEvent}=await import('../src/catalog/events.js');
+ const {buildCharacter}=await import('../src/catalog/character-builder.js');
+ const {bardRequest,fighterRequest}=await import('../examples/catalog-demo.mjs');
+ let s=createCombat('fx-reactive',[{instanceId:'bard',character:buildCharacter(index,bardRequest).character},{instanceId:'fighter',character:buildCharacter(index,fighterRequest).character}]);
+ s=run(s,{id:'turn',type:'startTurn',actorId:'bard'});
+ s=run(s,{id:'inspire',type:'useAbility',actorId:'bard',abilityId:'srd51:bard:bardic-inspiration',targetIds:['fighter'],facts:{bard:{inspirationTargetEligible:true},fighter:{within60ft:true,canHear:true}}});
+ const c={id:'fire',type:'useAbility',actorId:'bard',abilityId:'bard:srd51:fireball',targetIds:['fighter'],slotId:'slot3',saveRolls:{fighter:[1]},effectRolls:{0:Array(8).fill(2)},facts:{bard:{spellEligibilityValidated:true}}},out=executeCombat(s,c),waiting=confirmedActionEvent(s,c,out);
+ assert.equal(waiting.confirmed,false);
+ s=JSON.parse(JSON.stringify(out.state));const d=pendingDecisions(s.engine)[0],answer={id:'answer',type:'respondDecision',actorId:d.actorId,decisionId:d.id,decisionRevision:d.revision,expectedRevision:s.engine.revision,choice:'accept',optionId:d.options[0].id,rolls:{0:[4]}},done=executeCombat(s,answer),fx=confirmedActionEvent(s,answer,done);
+ assert.equal(fx.id,waiting.id);assert.equal(fx.abilityId,c.abilityId);assert.equal(fx.spellId,'srd51:fireball');assert.equal(fx.confirmed,true);assert.deepEqual(fx.targetIds,['fighter']);assert.deepEqual(fx.damageTypes,['fire']);assert.equal(fx.result.results[0].damage,16);
+ assert.throws(()=>confirmedActionEvent(done.state,answer,executeCombat(done.state,answer)));
+});

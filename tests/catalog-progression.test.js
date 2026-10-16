@@ -79,7 +79,7 @@ test('subclass spell grants are prepared without using preparation allowance; ex
  const noSubclass={...req,classes:[{id:'warlock',level:5,subclassId:null}]};assert.equal(resolveProgression(index,noSubclass).choices.find(c=>c.id==='warlock:known-spells').options.includes('srd51:fireball'),false);
 });
 test('complete automated reference demonstration creates, persists, reloads a reaction and recovers resources',async()=>{
- const {catalogDemo}=await import('../examples/catalog-demo.mjs');assert.deepEqual(await catalogDemo(),{catalogEntries:index.size,bardLevel:10,subclass:'College of Lore',reactiveDecisionReloaded:true,damage:16,healing:9,inspirationRecovered:true,finalFighterHp:97});
+ const {catalogDemo}=await import('../examples/catalog-demo.mjs');assert.deepEqual(await catalogDemo(),{catalogEntries:index.size,bardLevel:10,subclass:'College of Lore',reactiveDecisionReloaded:true,manualDeclarationReloaded:true,manualResolved:true,damage:16,healing:9,inspirationRecovered:true,finalFighterHp:97});
 });
 test('synthetic thirteenth class and campaign-opted private replacement remain inert',()=>{
  const base=structuredClone(index.class('fighter'));base.id='private:inventor';base.name={en:'Synthetic Inventor',fr:'Synthetic Inventor'};base.source={kind:'private',document:'Synthetic extension test, no book content',license:'private-test',url:''};
