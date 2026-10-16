@@ -30,7 +30,8 @@ export function validateProfile(p,{compiled=false}={}) {
   if(p.stance)validateStance(p.stance);
   if(p.roll) {keys(p.roll,['kind','ability','bonus','dc']);check(['check','save'].includes(p.roll.kind) && ABILITIES.includes(p.roll.ability) && integer(p.roll.bonus,-100,100) && integer(p.roll.dc,0,100),'Declared roll');}
   if(p.spell) {
-    keys(p.spell,compiled?['id','classId','level','access','available']:['id','classId','level','access']);
+    keys(p.spell,compiled?['id','classId','level','access','available','slotPolicy']:['id','classId','level','access','slotPolicy'],compiled?['id','classId','level','access','available']:['id','classId','level','access']);
+    if(p.spell.slotPolicy!==undefined)check(['standard','free'].includes(p.spell.slotPolicy),'Spell slot policy');
     check(id(p.spell.id) && id(p.spell.classId) && integer(p.spell.level,0,9) && ['known','prepared','granted'].includes(p.spell.access),'Spell access');
     if(compiled) check(typeof p.spell.available==='boolean','Compiled spell availability');
   }
@@ -56,7 +57,7 @@ export function validateAdvanced(a,state) {
   check(x.lethargyUntil===0 || x.lethargyUntil>=x.turnStarts,'Stale action inhibition');
   check(x.grantUses && typeof x.grantUses==='object' && !Array.isArray(x.grantUses) && Object.entries(x.grantUses).every(([k,n])=>id(k) && integer(n,0,10)),'Grant use ledger');
   check(Array.isArray(x.restrictedUsed) && x.restrictedUsed.every(id) && new Set(x.restrictedUsed).size===x.restrictedUsed.length,'Restricted use ledger');
-  check(Array.isArray(x.casts) && x.casts.every(c=>{keys(c,['level','cost']);return integer(c.level,0,9) && ['action','bonus','reaction'].includes(c.cost);}),'Cast ledger');
+  check(Array.isArray(x.casts) && x.casts.every(c=>{keys(c,['level','cost']);return integer(c.level,0,9) && ['action','bonus','reaction','none'].includes(c.cost);}),'Cast ledger');
   check(Array.isArray(x.effects) && x.effects.length<=100 && new Set(x.effects.map(e=>e.id)).size===x.effects.length,'Active effect instances');
   for(const e of x.effects) {
     keys(e,['id','sourceActorId','concentrationInstanceId','anchorActorId','remaining','rule']);
@@ -195,12 +196,13 @@ export function prepareCast(a,ability,c) {
   check(p.spell.available,'Spell is not available (known/prepared/granted)');
   check(!hasCondition(a,'cannotCast'),'Spellcasting restricted');
   const level=p.spell.level,x=advanced(a);
-  check(['action','bonus','reaction'].includes(ability.cost),'Spell casting time unsupported');
+  check(['action','bonus','reaction'].includes(ability.cost)||(ability.cost==='none'&&p.mode==='manual'&&p.externalRequirements?.includes('castingTimeAdjudicated')),'Spell casting time unsupported');
   const casts=x.casts;
   if(ability.cost==='bonus') check(casts.every(o=>o.level===0 && o.cost==='action'),'Bonus-action spell restriction');
   else if(casts.some(o=>o.cost==='bonus')) check(level===0 && ability.cost==='action','Bonus-action spell restriction');
   let slotLevel=0;
-  if(level>0) {
+  if(p.spell.slotPolicy==='free') {check(c.slotId===undefined,'Slot-free casting cannot consume or upcast a slot');slotLevel=level;}
+  else if(level>0) {
     const slot=a.definition.resources[c.slotId];
     check(slot && integer(slot.slotLevel,1,9) && slot.slotLevel>=level,'Valid spell slot required');
     check(a.resources[c.slotId]>0,'Spell slot depleted');a.resources[c.slotId]--;slotLevel=slot.slotLevel;

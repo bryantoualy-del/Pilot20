@@ -57,7 +57,7 @@ export function validateDefinition(d) {
       requireThat(Object.keys(a).every(k=>['name','cost','target','maxTargets','effects','attackAction','attack','resource','concentration','combat','save','manualPlan'].includes(k)),'Unsupported ability field');
       validateProfile(a.combat,{compiled:true});
       requireThat(!a.concentration || a.combat.mode!=='automatic' || !!a.combat.duration,'Explicit concentration duration required');
-      requireThat(!a.combat.spell || !a.resource,'Spell slot and fixed cost are mutually exclusive');
+      requireThat(!a.combat.spell || !a.resource || a.combat.spell.slotPolicy==='free','Spell slot and fixed cost are mutually exclusive');
       requireThat(!a.combat.grant || (a.cost==='none' && a.target==='self' && !!a.resource),'Resource-backed action grant');
       if(a.combat.upcast && a.combat.mode==='automatic') requireThat(a.effects[a.combat.upcast.effectIndex]?.dice!==undefined,'Dice upcast effect');
       requireThat(!(a.combat.ongoing??[]).some(e=>e.concentration) || a.concentration?.start==='activation','Ongoing concentration activation required');

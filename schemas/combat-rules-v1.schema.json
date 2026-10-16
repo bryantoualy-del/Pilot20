@@ -273,6 +273,12 @@
                 "prepared",
                 "granted"
               ]
+            },
+            "slotPolicy": {
+              "enum": [
+                "standard",
+                "free"
+              ]
             }
           },
           "required": [
@@ -678,6 +684,12 @@
             },
             "available": {
               "type": "boolean"
+            },
+            "slotPolicy": {
+              "enum": [
+                "standard",
+                "free"
+              ]
             }
           },
           "required": [
@@ -1242,7 +1254,8 @@
                 "enum": [
                   "action",
                   "bonus",
-                  "reaction"
+                  "reaction",
+                  "none"
                 ]
               }
             },

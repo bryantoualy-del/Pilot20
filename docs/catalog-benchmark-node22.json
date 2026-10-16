@@ -3,23 +3,23 @@
     "node": "v22.23.3",
     "platform": "linux",
     "arch": "x64",
-    "cpu": "AMD EPYC 9V74 80-Core Processor"
+    "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz"
   },
   "scope": "Warm Node process; JSON module parse excluded. No iPad measurement.",
   "entries": 642,
   "index": {
     "runs": 30,
-    "medianMs": 12.215,
-    "p95Ms": 35.966
+    "medianMs": 13.079,
+    "p95Ms": 16.461
   },
   "resolve": {
     "runs": 100,
-    "medianMs": 12.796,
-    "p95Ms": 25.4
+    "medianMs": 18.002,
+    "p95Ms": 24.322
   },
   "build": {
     "runs": 50,
-    "medianMs": 14.991,
-    "p95Ms": 22.018
+    "medianMs": 26.536,
+    "p95Ms": 37.408
   }
 }

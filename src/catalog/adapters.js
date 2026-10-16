@@ -30,6 +30,7 @@ export function compileSpell(entry,classId,character,{arcanumLevel=null}={}) {
  const a=ability(entry,{id:classId+':'+entry.id,cost,target:'selected',maxTargets:f?(f.maxTargets??1):20,combat:profile({mode:'manual',requirements:['Player/GM resolves effect, components, targets, casting time and duration.'],spell})});
  // Manual concentration starts only on explicit declaration; long durations require GM expiry.
  if(d.concentration)a.concentration={effectId:entry.id,start:'activation'};
+ if(cost==='none')a.combat.externalRequirements=['castingTimeAdjudicated'];
  if(entry.id==='srd51:false-life')a.target='self';
  if(f) {
   const count=f.cantrip?(L>=17?4:L>=11?3:L>=5?2:1):f.count;
@@ -46,8 +47,7 @@ export function compileSpell(entry,classId,character,{arcanumLevel=null}={}) {
   a.combat=profile({spell,externalRequirements:['spellEligibilityValidated'],duration:{unit:'minute',value:1,anchor:'source',boundary:'start'},ongoing:[{id:'haste',stack:{key:'srd51:haste',policy:'priority',priority:1},duration:{unit:'minute',value:1,anchor:'source',boundary:'start'},modifiers:[{stat:'ac',operation:'add',value:2},{stat:'speed',operation:'multiply',value:2},{stat:'save.dex',operation:'advantage',value:1}],conditions:[],concentration:true,actionGrant:{kinds:['weaponAttack','dash','disengage','hide','useObject'],attacks:1},onEnd:'no-actions-until-next-turn-end'}]});
  }
  if(arcanumLevel!==null) {
-  // Arcanum casting is slot-free and once per long rest; manual declaration explicitly confirms level.
-  a.combat=profile({mode:'manual',spell:{id:entry.id,classId,level:0,access:'granted'},externalRequirements:['arcanumCastingValidated'],requirements:['GM resolves Mystic Arcanum spell at fixed level '+arcanumLevel+'. The slot-free engine declaration is recorded at level zero.']});
+  a.combat=profile({mode:'manual',spell:{id:entry.id,classId,level:arcanumLevel,access:'granted',slotPolicy:'free'},externalRequirements:['arcanumCastingValidated',...(cost==='none'?['castingTimeAdjudicated']:[])],requirements:['GM resolves Mystic Arcanum effect at its fixed real spell level.']});
   a.resource={id:'warlock:arcanum-'+arcanumLevel,amount:1};a.effects=[];a.attack=null;a.save=null;
  }
  return a;
@@ -58,14 +58,14 @@ export function attachClassAdapters(character,index) {
  for(const c of d.classes) {
   const L=c.level,prefix=c.id+':';
   if(c.id==='fighter') {
-   push('srd51:fighter:second-wind',{cost:'bonus',resource:{id:prefix+'second-wind',amount:1},effects:[{kind:'heal',dice:{count:1,sides:10,bonus:L}}],combat:profile()});
-   if(L>=2)push('srd51:fighter:action-surge',{resource:{id:prefix+'action-surge',amount:1},combat:profile({grant:{count:1,maxPerTurn:1}})});
+   if(available('srd51:fighter:second-wind'))push('srd51:fighter:second-wind',{cost:'bonus',resource:{id:prefix+'second-wind',amount:1},effects:[{kind:'heal',dice:{count:1,sides:10,bonus:L}}],combat:profile()});
+   if(L>=2&&available('srd51:fighter:action-surge'))push('srd51:fighter:action-surge',{resource:{id:prefix+'action-surge',amount:1},combat:profile({grant:{count:1,maxPerTurn:1}})});
   }
-  if(c.id==='rogue')d.reactiveRules.push(sneakAttack(L),...(L>=5?[uncannyDodge(L)]:[]));
-  if(c.id==='paladin'&&L>=2)d.reactiveRules.push(...smiteRules(stats.resources));
-  if(c.id==='paladin')push('srd51:paladin:lay-on-hands',{cost:'action',target:'selected',resource:{id:prefix+'lay-on-hands',amount:1},effects:[{kind:'heal',amount:1}],combat:profile({externalRequirements:['healingTargetEligible']})});
-  if(c.id==='barbarian')push('srd51:barbarian:rage',{cost:'bonus',resource:L===20?null:{id:prefix+'rage',amount:1},combat:profile({stance:rageStance(L),externalRequirements:['rageEligible']})});
-  if(c.id==='bard')push('srd51:bard:bardic-inspiration',{cost:'bonus',target:'selected',resource:{id:prefix+'inspiration',amount:1},combat:profile({transfer:bardicTransfer(L),externalRequirements:['inspirationTargetEligible']})});
+  if(c.id==='rogue')d.reactiveRules.push(...(available('srd51:rogue:sneak-attack')?[sneakAttack(L)]:[]),...(L>=5&&available('srd51:rogue:uncanny-dodge')?[uncannyDodge(L)]:[]));
+  if(c.id==='paladin'&&L>=2&&available('srd51:paladin:divine-smite'))d.reactiveRules.push(...smiteRules(stats.resources));
+  if(c.id==='paladin'&&available('srd51:paladin:lay-on-hands'))push('srd51:paladin:lay-on-hands',{cost:'action',target:'selected',resource:{id:prefix+'lay-on-hands',amount:1},effects:[{kind:'heal',amount:1}],combat:profile({externalRequirements:['healingTargetEligible']})});
+  if(c.id==='barbarian'&&available('srd51:barbarian:rage'))push('srd51:barbarian:rage',{cost:'bonus',resource:L===20?null:{id:prefix+'rage',amount:1},combat:profile({stance:rageStance(L),externalRequirements:['rageEligible']})});
+  if(c.id==='bard'&&available('srd51:bard:bardic-inspiration'))push('srd51:bard:bardic-inspiration',{cost:'bonus',target:'selected',resource:{id:prefix+'inspiration',amount:1},combat:profile({transfer:bardicTransfer(L),externalRequirements:['inspirationTargetEligible']})});
   if(c.id==='sorcerer') {
    if(available('srd51:sorcerer:quickened-spell'))d.castingModifiers.push(quickenedSpell(prefix+'sorcery-points'));
    if(available('srd51:sorcerer:heightened-spell'))d.castingModifiers.push(heightenedSpell(prefix+'sorcery-points'));

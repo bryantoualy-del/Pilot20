@@ -1058,7 +1058,15 @@
         "reference": "SRD 5.1 / Barbarian",
         "manualRequirements": [
           "Frenzy exhaustion is tracked manually."
-        ]
+        ],
+        "acquisitionPolicy": {
+          "knownReplacementPerClassLevel": 0,
+          "invocationReplacementPerClassLevel": 0,
+          "spellbookLearnedAtFirstLevel": 0,
+          "spellbookLearnedPerClassLevel": 0
+        },
+        "attackFeatureId": "srd51:barbarian:extra-attack",
+        "armorRuleFeatureId": "srd51:barbarian:unarmored-defense"
       }
     },
     {
@@ -1437,7 +1445,17 @@
         "minimumClassLevel": 3,
         "language": "en",
         "reference": "SRD 5.1 / Bard",
-        "description": "Also at 3rd level, you learn how to use your wit to \ndistract, confuse, and otherwise sap the confidence \nand competence of others. When a creature that you \ncan see within 60 feet of you makes an attack roll, an \nability check, or a damage roll, you can use your \nreaction to expend one of your uses of Bardic \nInspiration, rolling a Bardic Inspiration die and \nsubtracting the number rolled from the creature\u2019s \nroll. You can choose to use this feature after the \ncreature makes its roll, but before the GM \ndetermines whether the attack roll or ability check \nsucceeds or fails, or before the creature deals its \ndamage. The creature is immune if it can\u2019t hear you \nor if it\u2019s immune to being charmed."
+        "description": "Also at 3rd level, you learn how to use your wit to \ndistract, confuse, and otherwise sap the confidence \nand competence of others. When a creature that you \ncan see within 60 feet of you makes an attack roll, an \nability check, or a damage roll, you can use your \nreaction to expend one of your uses of Bardic \nInspiration, rolling a Bardic Inspiration die and \nsubtracting the number rolled from the creature\u2019s \nroll. You can choose to use this feature after the \ncreature makes its roll, but before the GM \ndetermines whether the attack roll or ability check \nsucceeds or fails, or before the creature deals its \ndamage. The creature is immune if it can\u2019t hear you \nor if it\u2019s immune to being charmed.",
+        "manualMechanics": {
+          "economy": "reaction",
+          "target": "selected",
+          "maxTargets": 20,
+          "resourceId": "inspiration",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -1497,7 +1515,17 @@
         "minimumClassLevel": 14,
         "language": "en",
         "reference": "SRD 5.1 / Bard",
-        "description": "Starting at 14th level, when you make an ability \ncheck, you can expend one use of Bardic Inspiration."
+        "description": "Starting at 14th level, when you make an ability \ncheck, you can expend one use of Bardic Inspiration.",
+        "manualMechanics": {
+          "economy": "none",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "inspiration",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -2140,7 +2168,13 @@
         "reference": "SRD 5.1 / Bard",
         "manualRequirements": [
           "Background skill proficiencies must be supplied before expertise outside class skills can be selected."
-        ]
+        ],
+        "acquisitionPolicy": {
+          "knownReplacementPerClassLevel": 1,
+          "invocationReplacementPerClassLevel": 0,
+          "spellbookLearnedAtFirstLevel": 0,
+          "spellbookLearnedPerClassLevel": 0
+        }
       }
     },
     {
@@ -2255,7 +2289,17 @@
         "classId": "cleric",
         "minimumClassLevel": 2,
         "language": "en",
-        "reference": "SRD 5.1 / Cleric"
+        "reference": "SRD 5.1 / Cleric",
+        "manualMechanics": {
+          "economy": "action",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "channel",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -2342,7 +2386,50 @@
         "minimumClassLevel": 10,
         "language": "en",
         "reference": "SRD 5.1 / Cleric",
-        "description": "Beginning at 10th level, you can call on your deity to \nintervene on your behalf when your need is great. \n Imploring your deity\u2019s aid requires you to use \nyour action. Describe the assistance you seek, and \nroll percentile dice. If you roll a number equal to or \nlower than your cleric level, your deity intervenes. \nThe GM chooses the nature of the intervention; the \neffect of any cleric spell or cleric domain spell would \nbe appropriate. \n If your deity intervenes, you can\u2019t use this feature \nagain for 7 days. Otherwise, you can use it again \nafter you finish a long rest. \n At 20th level, your call for intervention succeeds \nautomatically, no roll required."
+        "description": "Beginning at 10th level, you can call on your deity to \nintervene on your behalf when your need is great. \n Imploring your deity\u2019s aid requires you to use \nyour action. Describe the assistance you seek, and \nroll percentile dice. If you roll a number equal to or \nlower than your cleric level, your deity intervenes. \nThe GM chooses the nature of the intervention; the \neffect of any cleric spell or cleric domain spell would \nbe appropriate. \n If your deity intervenes, you can\u2019t use this feature \nagain for 7 days. Otherwise, you can use it again \nafter you finish a long rest. \n At 20th level, your call for intervention succeeds \nautomatically, no roll required.",
+        "manualMechanics": {
+          "economy": "action",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "divine-intervention",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        },
+        "resources": [
+          {
+            "id": "divine-intervention",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "recovery": "none",
+            "recharge": {
+              "kind": "adjudicated-calendar",
+              "failure": "long-rest",
+              "successDays": 7
+            }
+          }
+        ]
       }
     },
     {
@@ -2461,7 +2548,17 @@
         "subclassId": "srd51:life-domain",
         "minimumClassLevel": 2,
         "language": "en",
-        "reference": "SRD 5.1 / Cleric"
+        "reference": "SRD 5.1 / Cleric",
+        "manualMechanics": {
+          "economy": "action",
+          "target": "selected",
+          "maxTargets": 20,
+          "resourceId": "channel",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -3083,9 +3180,13 @@
         },
         "language": "en",
         "reference": "SRD 5.1 / Cleric",
-        "manualRequirements": [
-          "Divine Intervention success schedules a seven-day cooldown; a failed attempt resets at long rest. Track success manually."
-        ]
+        "manualRequirements": [],
+        "acquisitionPolicy": {
+          "knownReplacementPerClassLevel": 0,
+          "invocationReplacementPerClassLevel": 0,
+          "spellbookLearnedAtFirstLevel": 0,
+          "spellbookLearnedPerClassLevel": 0
+        }
       }
     },
     {
@@ -3172,7 +3273,17 @@
         "minimumClassLevel": 2,
         "language": "en",
         "reference": "SRD 5.1 / Druid",
-        "description": "Starting at 2nd level, you can use your action to \nmagically assume the shape of a beast that you have \nseen before. You can use this feature twice. You \nregain expended uses when you finish a short or \nlong rest. \n Your druid level determines the beasts you can \ntransform into, as shown in the Beast Shapes table. \nAt 2nd level, for example, you can transform into any \nbeast that has a challenge rating of 1/4 or lower that \ndoesn\u2019t have a flying or swimming speed."
+        "description": "Starting at 2nd level, you can use your action to \nmagically assume the shape of a beast that you have \nseen before. You can use this feature twice. You \nregain expended uses when you finish a short or \nlong rest. \n Your druid level determines the beasts you can \ntransform into, as shown in the Beast Shapes table. \nAt 2nd level, for example, you can transform into any \nbeast that has a challenge rating of 1/4 or lower that \ndoesn\u2019t have a flying or swimming speed.",
+        "manualMechanics": {
+          "economy": "action",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "wild-shape",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -3377,7 +3488,17 @@
         "minimumClassLevel": 2,
         "language": "en",
         "reference": "SRD 5.1 / Druid",
-        "description": "Starting at 2nd level, you can regain some of your \nmagical energy by sitting in meditation and \ncommuning with nature. During a short rest, you \nchoose expended spell slots to recover. The spell \nslots can have a combined level that is equal to or \nless than half your druid level (rounded up), and \nnone of the slots can be 6th level or higher. You can\u2019t \nuse this feature again until you finish a long rest. \n For example, when you are a 4th-\u00ad\u2010\u2011level druid, you \ncan recover up to two levels worth of spell slots. You \ncan recover either a 2nd-\u00ad\u2010\u2011level slot or two 1st-\u00ad\u2010\u2011level \nslots."
+        "description": "Starting at 2nd level, you can regain some of your \nmagical energy by sitting in meditation and \ncommuning with nature. During a short rest, you \nchoose expended spell slots to recover. The spell \nslots can have a combined level that is equal to or \nless than half your druid level (rounded up), and \nnone of the slots can be 6th level or higher. You can\u2019t \nuse this feature again until you finish a long rest. \n For example, when you are a 4th-\u00ad\u2010\u2011level druid, you \ncan recover up to two levels worth of spell slots. You \ncan recover either a 2nd-\u00ad\u2010\u2011level slot or two 1st-\u00ad\u2010\u2011level \nslots.",
+        "manualMechanics": {
+          "economy": "none",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "natural-recovery",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -4068,7 +4189,13 @@
         "reference": "SRD 5.1 / Druid",
         "manualRequirements": [
           "Wild Shape stat block and transformation state remain manual."
-        ]
+        ],
+        "acquisitionPolicy": {
+          "knownReplacementPerClassLevel": 0,
+          "invocationReplacementPerClassLevel": 0,
+          "spellbookLearnedAtFirstLevel": 0,
+          "spellbookLearnedPerClassLevel": 0
+        }
       }
     },
     {
@@ -4271,7 +4398,17 @@
         "minimumClassLevel": 9,
         "language": "en",
         "reference": "SRD 5.1 / Fighter",
-        "description": "Beginning at 9th level, you can reroll a saving throw \nthat you fail. If you do so, you must use the new roll, \nand you can\u2019t use this feature again until you finish a \nlong rest. \n You can use this feature twice between long rests \nstarting at 13th level and three times between long \nrests starting at 17th level."
+        "description": "Beginning at 9th level, you can reroll a saving throw \nthat you fail. If you do so, you must use the new roll, \nand you can\u2019t use this feature again until you finish a \nlong rest. \n You can use this feature twice between long rests \nstarting at 13th level and three times between long \nrests starting at 17th level.",
+        "manualMechanics": {
+          "economy": "none",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "indomitable",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -5057,7 +5194,14 @@
         },
         "language": "en",
         "reference": "SRD 5.1 / Fighter",
-        "manualRequirements": []
+        "manualRequirements": [],
+        "acquisitionPolicy": {
+          "knownReplacementPerClassLevel": 0,
+          "invocationReplacementPerClassLevel": 0,
+          "spellbookLearnedAtFirstLevel": 0,
+          "spellbookLearnedPerClassLevel": 0
+        },
+        "attackFeatureId": "srd51:fighter:extra-attack"
       }
     },
     {
@@ -5347,7 +5491,17 @@
         "minimumClassLevel": 5,
         "language": "en",
         "reference": "SRD 5.1 / Monk",
-        "description": "Starting at 5th level, you can interfere with the flow \nof ki in an opponent\u2019s body. When you hit another \ncreature with a melee weapon attack, you can spend \n1 ki point to attempt a stunning strike. The target \nmust succeed on a Constitution saving throw or be \nstunned until the end of your next turn."
+        "description": "Starting at 5th level, you can interfere with the flow \nof ki in an opponent\u2019s body. When you hit another \ncreature with a melee weapon attack, you can spend \n1 ki point to attempt a stunning strike. The target \nmust succeed on a Constitution saving throw or be \nstunned until the end of your next turn.",
+        "manualMechanics": {
+          "economy": "none",
+          "target": "selected",
+          "maxTargets": 20,
+          "resourceId": "ki",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -5579,7 +5733,18 @@
         "minimumClassLevel": 18,
         "language": "en",
         "reference": "SRD 5.1 / Monk",
-        "description": "Beginning at 18th level, you can use your action to \nspend 4 ki points to become invisible for 1 minute. \nDuring that time, you also have resistance to all \ndamage but force damage. \n Additionally, you can spend 8 ki points to cast the \nastral projection spell, without needing material \ncomponents. When you do so, you can\u2019t take any \nother creatures with you."
+        "description": "Beginning at 18th level, you can use your action to \nspend 4 ki points to become invisible for 1 minute. \nDuring that time, you also have resistance to all \ndamage but force damage. \n Additionally, you can spend 8 ki points to cast the \nastral projection spell, without needing material \ncomponents. When you do so, you can\u2019t take any \nother creatures with you.",
+        "manualMechanics": {
+          "economy": "action",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "ki",
+          "amount": 4,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs.",
+            "The alternative astral effect costs 8 ki; account for the additional 4 ki manually."
+          ]
+        }
       }
     },
     {
@@ -5668,7 +5833,45 @@
         "minimumClassLevel": 6,
         "language": "en",
         "reference": "SRD 5.1 / Monk",
-        "description": "At 6th level, you gain the ability to heal yourself. As \nan action, you can regain hit points equal to three \ntimes your monk level. You must finish a long rest \nbefore you can use this feature again."
+        "description": "At 6th level, you gain the ability to heal yourself. As \nan action, you can regain hit points equal to three \ntimes your monk level. You must finish a long rest \nbefore you can use this feature again.",
+        "manualMechanics": {
+          "economy": "action",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "wholeness",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        },
+        "resources": [
+          {
+            "id": "wholeness",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "recovery": "long"
+          }
+        ]
       }
     },
     {
@@ -5728,7 +5931,17 @@
         "minimumClassLevel": 17,
         "language": "en",
         "reference": "SRD 5.1 / Monk",
-        "description": "At 17th level, you gain the ability to set up lethal \nvibrations in someone\u2019s body. When you hit a \ncreature with an unarmed strike, you can spend 3 ki \npoints to start these imperceptible vibrations, which \nlast for a number of days equal to your monk level."
+        "description": "At 17th level, you gain the ability to set up lethal \nvibrations in someone\u2019s body. When you hit a \ncreature with an unarmed strike, you can spend 3 ki \npoints to start these imperceptible vibrations, which \nlast for a number of days equal to your monk level.",
+        "manualMechanics": {
+          "economy": "none",
+          "target": "selected",
+          "maxTargets": 20,
+          "resourceId": "ki",
+          "amount": 3,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -6167,8 +6380,33 @@
             "level": 1,
             "count": 1,
             "options": [
-              "artisan-tools",
-              "musical-instrument"
+              "alchemist-supplies",
+              "brewer-supplies",
+              "calligrapher-supplies",
+              "carpenter-tools",
+              "cartographer-tools",
+              "cobbler-tools",
+              "cook-utensils",
+              "glassblower-tools",
+              "jeweler-tools",
+              "leatherworker-tools",
+              "mason-tools",
+              "painter-supplies",
+              "potter-tools",
+              "smith-tools",
+              "tinker-tools",
+              "weaver-tools",
+              "woodcarver-tools",
+              "bagpipes",
+              "drum",
+              "dulcimer",
+              "flute",
+              "lute",
+              "lyre",
+              "horn",
+              "pan-flute",
+              "shawm",
+              "viol"
             ],
             "kind": "proficiency"
           }
@@ -6272,9 +6510,15 @@
         },
         "language": "en",
         "reference": "SRD 5.1 / Monk",
-        "manualRequirements": [
-          "Select the precise artisan tool or musical instrument; generic tool category remains manual."
-        ]
+        "manualRequirements": [],
+        "acquisitionPolicy": {
+          "knownReplacementPerClassLevel": 0,
+          "invocationReplacementPerClassLevel": 0,
+          "spellbookLearnedAtFirstLevel": 0,
+          "spellbookLearnedPerClassLevel": 0
+        },
+        "attackFeatureId": "srd51:monk:extra-attack",
+        "armorRuleFeatureId": "srd51:monk:unarmored-defense"
       }
     },
     {
@@ -6303,7 +6547,17 @@
         "minimumClassLevel": 1,
         "language": "en",
         "reference": "SRD 5.1 / Paladin",
-        "description": "The presence of strong evil registers on your senses \nlike a noxious odor, and powerful good rings like \nheavenly music in your ears. As an action, you can \nopen your awareness to detect such forces. Until the \nend of your next turn, you know the location of any \ncelestial, fiend, or undead within 60 feet of you that \nis not behind total cover. You know the type \n(celestial, fiend, or undead) of any being whose \npresence you sense, but not its identity (the vampire \nCount Strahd von Zarovich, for instance). Within the \nsame radius, you also detect the presence of any \nplace or object that has been consecrated or \ndesecrated, as with the hallow spell. \n You can use this feature a number of times equal \nto 1 + your Charisma modifier. When you finish a \nlong rest, you regain all expended uses."
+        "description": "The presence of strong evil registers on your senses \nlike a noxious odor, and powerful good rings like \nheavenly music in your ears. As an action, you can \nopen your awareness to detect such forces. Until the \nend of your next turn, you know the location of any \ncelestial, fiend, or undead within 60 feet of you that \nis not behind total cover. You know the type \n(celestial, fiend, or undead) of any being whose \npresence you sense, but not its identity (the vampire \nCount Strahd von Zarovich, for instance). Within the \nsame radius, you also detect the presence of any \nplace or object that has been consecrated or \ndesecrated, as with the hallow spell. \n You can use this feature a number of times equal \nto 1 + your Charisma modifier. When you finish a \nlong rest, you regain all expended uses.",
+        "manualMechanics": {
+          "economy": "action",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "divine-sense",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -6651,7 +6905,17 @@
         "minimumClassLevel": 14,
         "language": "en",
         "reference": "SRD 5.1 / Paladin",
-        "description": "Beginning at 14th level, you can use your action to \nend one spell on yourself or on one willing creature \nthat you touch. \n You can use this feature a number of times equal \nto your Charisma modifier (a minimum of once). You \nregain expended uses when you finish a long rest."
+        "description": "Beginning at 14th level, you can use your action to \nend one spell on yourself or on one willing creature \nthat you touch. \n You can use this feature a number of times equal \nto your Charisma modifier (a minimum of once). You \nregain expended uses when you finish a long rest.",
+        "manualMechanics": {
+          "economy": "action",
+          "target": "selected",
+          "maxTargets": 20,
+          "resourceId": "cleansing-touch",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -6738,7 +7002,17 @@
         "subclassId": "srd51:oath-of-devotion",
         "minimumClassLevel": 3,
         "language": "en",
-        "reference": "SRD 5.1 / Paladin"
+        "reference": "SRD 5.1 / Paladin",
+        "manualMechanics": {
+          "economy": "action",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "channel",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -6767,7 +7041,17 @@
         "subclassId": "srd51:oath-of-devotion",
         "minimumClassLevel": 3,
         "language": "en",
-        "reference": "SRD 5.1 / Paladin"
+        "reference": "SRD 5.1 / Paladin",
+        "manualMechanics": {
+          "economy": "action",
+          "target": "selected",
+          "maxTargets": 20,
+          "resourceId": "channel",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -6857,7 +7141,45 @@
         "minimumClassLevel": 20,
         "language": "en",
         "reference": "SRD 5.1 / Paladin",
-        "description": "At 20th level, as an action, you can emanate an aura \nof sunlight. For 1 minute, bright light shines from \nyou in a 30-\u00ad\u2010\u2011foot radius, and dim light shines 30 feet \nbeyond that. \n Whenever an enemy creature starts its turn in the \nbright light, the creature takes 10 radiant damage. \n In addition, for the duration, you have advantage \non saving throws against spells cast by fiends or \nundead. \n Once you use this feature, you can\u2019t use it again \nuntil you finish a long rest."
+        "description": "At 20th level, as an action, you can emanate an aura \nof sunlight. For 1 minute, bright light shines from \nyou in a 30-\u00ad\u2010\u2011foot radius, and dim light shines 30 feet \nbeyond that. \n Whenever an enemy creature starts its turn in the \nbright light, the creature takes 10 radiant damage. \n In addition, for the duration, you have advantage \non saving throws against spells cast by fiends or \nundead. \n Once you use this feature, you can\u2019t use it again \nuntil you finish a long rest.",
+        "manualMechanics": {
+          "economy": "action",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "holy-nimbus",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        },
+        "resources": [
+          {
+            "id": "holy-nimbus",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "recovery": "long"
+          }
+        ]
       }
     },
     {
@@ -7583,7 +7905,14 @@
         "reference": "SRD 5.1 / Paladin",
         "manualRequirements": [
           "Aura geometry and affected allies remain manual."
-        ]
+        ],
+        "acquisitionPolicy": {
+          "knownReplacementPerClassLevel": 0,
+          "invocationReplacementPerClassLevel": 0,
+          "spellbookLearnedAtFirstLevel": 0,
+          "spellbookLearnedPerClassLevel": 0
+        },
+        "attackFeatureId": "srd51:paladin:extra-attack"
       }
     },
     {
@@ -8690,6 +9019,201 @@
               "srd51:ranger:underdark"
             ],
             "kind": "feature"
+          },
+          {
+            "key": "favored-humanoids-1",
+            "level": 1,
+            "count": 2,
+            "kind": "proficiency",
+            "options": [
+              "humanoid:bugbear",
+              "humanoid:dragonborn",
+              "humanoid:dwarf",
+              "humanoid:elf",
+              "humanoid:gnoll",
+              "humanoid:gnome",
+              "humanoid:goblin",
+              "humanoid:grimlock",
+              "humanoid:half-elf",
+              "humanoid:half-orc",
+              "humanoid:halfling",
+              "humanoid:hobgoblin",
+              "humanoid:human",
+              "humanoid:kobold",
+              "humanoid:lizardfolk",
+              "humanoid:merfolk",
+              "humanoid:orc",
+              "humanoid:sahuagin",
+              "humanoid:tiefling"
+            ],
+            "requiresChoice": {
+              "key": "favored-enemy-1",
+              "optionId": "srd51:ranger:two-humanoid-races"
+            },
+            "distinctGroup": "favored-humanoids"
+          },
+          {
+            "key": "enemy-language-1",
+            "level": 1,
+            "count": 1,
+            "kind": "proficiency",
+            "options": [
+              "language:abyssal",
+              "language:aquan",
+              "language:auran",
+              "language:celestial",
+              "language:common",
+              "language:deep-speech",
+              "language:draconic",
+              "language:druidic",
+              "language:dwarvish",
+              "language:elvish",
+              "language:giant",
+              "language:gnomish",
+              "language:goblin",
+              "language:gnoll",
+              "language:halfling",
+              "language:ignan",
+              "language:infernal",
+              "language:orc",
+              "language:primordial",
+              "language:sylvan",
+              "language:terran",
+              "language:undercommon",
+              "language:none"
+            ],
+            "distinctGroup": "enemy-languages",
+            "adjudication": "Confirm the selected language is spoken by a favored enemy, or choose none when no language is available."
+          },
+          {
+            "key": "favored-humanoids-6",
+            "level": 6,
+            "count": 2,
+            "kind": "proficiency",
+            "options": [
+              "humanoid:bugbear",
+              "humanoid:dragonborn",
+              "humanoid:dwarf",
+              "humanoid:elf",
+              "humanoid:gnoll",
+              "humanoid:gnome",
+              "humanoid:goblin",
+              "humanoid:grimlock",
+              "humanoid:half-elf",
+              "humanoid:half-orc",
+              "humanoid:halfling",
+              "humanoid:hobgoblin",
+              "humanoid:human",
+              "humanoid:kobold",
+              "humanoid:lizardfolk",
+              "humanoid:merfolk",
+              "humanoid:orc",
+              "humanoid:sahuagin",
+              "humanoid:tiefling"
+            ],
+            "requiresChoice": {
+              "key": "favored-enemy-6",
+              "optionId": "srd51:ranger:two-humanoid-races"
+            },
+            "distinctGroup": "favored-humanoids"
+          },
+          {
+            "key": "enemy-language-6",
+            "level": 6,
+            "count": 1,
+            "kind": "proficiency",
+            "options": [
+              "language:abyssal",
+              "language:aquan",
+              "language:auran",
+              "language:celestial",
+              "language:common",
+              "language:deep-speech",
+              "language:draconic",
+              "language:druidic",
+              "language:dwarvish",
+              "language:elvish",
+              "language:giant",
+              "language:gnomish",
+              "language:goblin",
+              "language:gnoll",
+              "language:halfling",
+              "language:ignan",
+              "language:infernal",
+              "language:orc",
+              "language:primordial",
+              "language:sylvan",
+              "language:terran",
+              "language:undercommon",
+              "language:none"
+            ],
+            "distinctGroup": "enemy-languages",
+            "adjudication": "Confirm the selected language is spoken by a favored enemy, or choose none when no language is available."
+          },
+          {
+            "key": "favored-humanoids-14",
+            "level": 14,
+            "count": 2,
+            "kind": "proficiency",
+            "options": [
+              "humanoid:bugbear",
+              "humanoid:dragonborn",
+              "humanoid:dwarf",
+              "humanoid:elf",
+              "humanoid:gnoll",
+              "humanoid:gnome",
+              "humanoid:goblin",
+              "humanoid:grimlock",
+              "humanoid:half-elf",
+              "humanoid:half-orc",
+              "humanoid:halfling",
+              "humanoid:hobgoblin",
+              "humanoid:human",
+              "humanoid:kobold",
+              "humanoid:lizardfolk",
+              "humanoid:merfolk",
+              "humanoid:orc",
+              "humanoid:sahuagin",
+              "humanoid:tiefling"
+            ],
+            "requiresChoice": {
+              "key": "favored-enemy-14",
+              "optionId": "srd51:ranger:two-humanoid-races"
+            },
+            "distinctGroup": "favored-humanoids"
+          },
+          {
+            "key": "enemy-language-14",
+            "level": 14,
+            "count": 1,
+            "kind": "proficiency",
+            "options": [
+              "language:abyssal",
+              "language:aquan",
+              "language:auran",
+              "language:celestial",
+              "language:common",
+              "language:deep-speech",
+              "language:draconic",
+              "language:druidic",
+              "language:dwarvish",
+              "language:elvish",
+              "language:giant",
+              "language:gnomish",
+              "language:goblin",
+              "language:gnoll",
+              "language:halfling",
+              "language:ignan",
+              "language:infernal",
+              "language:orc",
+              "language:primordial",
+              "language:sylvan",
+              "language:terran",
+              "language:undercommon",
+              "language:none"
+            ],
+            "distinctGroup": "enemy-languages",
+            "adjudication": "Confirm the selected language is spoken by a favored enemy, or choose none when no language is available."
           }
         ],
         "resources": [],
@@ -8720,9 +9244,14 @@
         },
         "language": "en",
         "reference": "SRD 5.1 / Ranger",
-        "manualRequirements": [
-          "For each favored enemy, choose an associated language; if Two Humanoid Races is chosen, record both races."
-        ]
+        "manualRequirements": [],
+        "acquisitionPolicy": {
+          "knownReplacementPerClassLevel": 1,
+          "invocationReplacementPerClassLevel": 0,
+          "spellbookLearnedAtFirstLevel": 0,
+          "spellbookLearnedPerClassLevel": 0
+        },
+        "attackFeatureId": "srd51:ranger:extra-attack"
       }
     },
     {
@@ -9099,7 +9628,17 @@
         "minimumClassLevel": 20,
         "language": "en",
         "reference": "SRD 5.1 / Rogue",
-        "description": "At 20th level, you have an uncanny knack for \nsucceeding when you need to. If your attack misses a \ntarget within range, you can turn the miss into a hit. \nAlternatively, if you fail an ability check, you can treat \nthe d20 roll as a 20. \n Once you use this feature, you can\u2019t use it again \nuntil you finish a short or long rest."
+        "description": "At 20th level, you have an uncanny knack for \nsucceeding when you need to. If your attack misses a \ntarget within range, you can turn the miss into a hit. \nAlternatively, if you fail an ability check, you can treat \nthe d20 roll as a 20. \n Once you use this feature, you can\u2019t use it again \nuntil you finish a short or long rest.",
+        "manualMechanics": {
+          "economy": "none",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "stroke-of-luck",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -9783,7 +10322,13 @@
         },
         "language": "en",
         "reference": "SRD 5.1 / Rogue",
-        "manualRequirements": []
+        "manualRequirements": [],
+        "acquisitionPolicy": {
+          "knownReplacementPerClassLevel": 0,
+          "invocationReplacementPerClassLevel": 0,
+          "spellbookLearnedAtFirstLevel": 0,
+          "spellbookLearnedPerClassLevel": 0
+        }
       }
     },
     {
@@ -10107,7 +10652,18 @@
         "minimumClassLevel": 18,
         "language": "en",
         "reference": "SRD 5.1 / Sorcerer",
-        "description": "Beginning at 18th level, you can channel the dread \npresence of your dragon ancestor, causing those \naround you to become awestruck or frightened. As \nan action, you can spend 5 sorcery points to draw on \nthis power and exude an aura of awe or fear (your \nchoice) to a distance of 60 feet. For 1 minute or until \nyou lose your concentration (as if you were casting a \nconcentration spell), each hostile creature that starts \nits turn in this aura must succeed on a Wisdom \nsaving throw or be charmed (if you chose awe) or \nfrightened (if you chose fear) until the aura ends. A \ncreature that succeeds on this saving throw is \nimmune to your aura for 24 hours."
+        "description": "Beginning at 18th level, you can channel the dread \npresence of your dragon ancestor, causing those \naround you to become awestruck or frightened. As \nan action, you can spend 5 sorcery points to draw on \nthis power and exude an aura of awe or fear (your \nchoice) to a distance of 60 feet. For 1 minute or until \nyou lose your concentration (as if you were casting a \nconcentration spell), each hostile creature that starts \nits turn in this aura must succeed on a Wisdom \nsaving throw or be charmed (if you chose awe) or \nfrightened (if you chose fear) until the aura ends. A \ncreature that succeeds on this saving throw is \nimmune to your aura for 24 hours.",
+        "manualMechanics": {
+          "economy": "action",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "sorcery-points",
+          "amount": 5,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ],
+          "concentration": true
+        }
       }
     },
     {
@@ -10612,7 +11168,13 @@
         "reference": "SRD 5.1 / Sorcerer",
         "manualRequirements": [
           "Flexible Casting conversions and unimplemented Metamagic choices remain manual."
-        ]
+        ],
+        "acquisitionPolicy": {
+          "knownReplacementPerClassLevel": 1,
+          "invocationReplacementPerClassLevel": 0,
+          "spellbookLearnedAtFirstLevel": 0,
+          "spellbookLearnedPerClassLevel": 0
+        }
       }
     },
     {
@@ -10905,7 +11467,45 @@
         "minimumClassLevel": 6,
         "language": "en",
         "reference": "SRD 5.1 / Warlock",
-        "description": "Starting at 6th level, you can call on your patron to \nalter fate in your favor. When you make an ability \ncheck or a saving throw, you can use this feature to \nadd a d10 to your roll. You can do so after seeing the \ninitial roll but before any of the roll\u2019s effects occur. \n Once you use this feature, you can\u2019t use it again \nuntil you finish a short or long rest."
+        "description": "Starting at 6th level, you can call on your patron to \nalter fate in your favor. When you make an ability \ncheck or a saving throw, you can use this feature to \nadd a d10 to your roll. You can do so after seeing the \ninitial roll but before any of the roll\u2019s effects occur. \n Once you use this feature, you can\u2019t use it again \nuntil you finish a short or long rest.",
+        "manualMechanics": {
+          "economy": "none",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "patron-luck",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        },
+        "resources": [
+          {
+            "id": "patron-luck",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "recovery": "short"
+          }
+        ]
       }
     },
     {
@@ -11651,7 +12251,13 @@
         "reference": "SRD 5.1 / Warlock",
         "manualRequirements": [
           "Pact of the Chain familiar form, ritual spell transcription and per-creature invocation limits require manual tracking."
-        ]
+        ],
+        "acquisitionPolicy": {
+          "knownReplacementPerClassLevel": 1,
+          "invocationReplacementPerClassLevel": 1,
+          "spellbookLearnedAtFirstLevel": 0,
+          "spellbookLearnedPerClassLevel": 0
+        }
       }
     },
     {
@@ -11709,7 +12315,17 @@
         "minimumClassLevel": 1,
         "language": "en",
         "reference": "SRD 5.1 / Wizard",
-        "description": "You have learned to regain some of your magical \nenergy by studying your spellbook. Once per day \nwhen you finish a short rest, you can choose \nexpended spell slots to recover. The spell slots can \nhave a combined level that is equal to or less than \nhalf your wizard level (rounded up), and none of the \nslots can be 6th level or higher. \n For example, if you\u2019re a 4th-\u00ad\u2010\u2011level wizard, you can \nrecover up to two levels worth of spell slots. You can \nrecover either a 2nd-\u00ad\u2010\u2011level spell slot or two 1st-\u00ad\u2010\u2011level \nspell slots."
+        "description": "You have learned to regain some of your magical \nenergy by studying your spellbook. Once per day \nwhen you finish a short rest, you can choose \nexpended spell slots to recover. The spell slots can \nhave a combined level that is equal to or less than \nhalf your wizard level (rounded up), and none of the \nslots can be 6th level or higher. \n For example, if you\u2019re a 4th-\u00ad\u2010\u2011level wizard, you can \nrecover up to two levels worth of spell slots. You can \nrecover either a 2nd-\u00ad\u2010\u2011level spell slot or two 1st-\u00ad\u2010\u2011level \nspell slots.",
+        "manualMechanics": {
+          "economy": "none",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "arcane-recovery",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -12525,15 +13141,23 @@
               1,
               1
             ],
-            "recovery": "long"
+            "recovery": "none",
+            "recharge": {
+              "kind": "adjudicated-calendar",
+              "intervalDays": 1
+            }
           }
         ],
         "referenceText": "Wizard\nClass Features\nAs a wizard, you gain the following class features. \nHit Points\nHit Dice: 1d6 per wizard level \nHit Points at 1st Level: 6 + your Constitution \nmodifier \nHit Points at Higher Levels: 1d6 (or 4) + your \nConstitution modifier per wizard level after 1st \nProficiencies\nArmor: None \nWeapons: Daggers, darts, slings, quarterstaffs, light \ncrossbows \nTools: None \nSaving Throws: Intelligence, Wisdom \nSkills: Choose two from Arcana, History, Insight, \nInvestigation, Medicine, and Religion \nEquipment\nYou start with the following equipment, in addition \nto the equipment granted by your background: \n\u2022 (a) a quarterstaff or (b) a dagger\n\u2022 (a) a component pouch or (b) an arcane focus\n\u2022 (a) a scholar\u2019s pack or (b) an explorer\u2019s pack\n\u2022 A spellbook\nThe Wizard \nProficiency Cantrips \u2014Spell Slots per Spell Level\u2014 \nLevel Bonus Features Known 1st 2nd 3rd 4th 5th 6th 7th 8th 9th \n1st +2 Spellcasting, Arcane Recovery 3 2 \u0336 \u0336 \u0336 \u0336 \u0336 \u0336 \u0336 \u0336\n2nd +2 Arcane Tradition 3 3 \u0336 \u0336 \u0336 \u0336 \u0336 \u0336 \u0336 \u0336\n3rd +2 \u0336 3 4 2 \u0336 \u0336 \u0336 \u0336 \u0336 \u0336 \u0336\n4th +2 Ability Score Improvement 4 4 3 \u0336 \u0336 \u0336 \u0336 \u0336 \u0336 \u0336\n5th +3 \u0336 4 4 3 2 \u0336 \u0336 \u0336 \u0336 \u0336 \u0336\n6th +3 Arcane Tradition feature 4 4 3 3 \u0336 \u0336 \u0336 \u0336 \u0336 \u0336\n7th +3 \u0336 4 4 3 3 1 \u0336 \u0336 \u0336 \u0336 \u0336\n8th +3 Ability Score Improvement 4 4 3 3 2 \u0336 \u0336 \u0336 \u0336 \u0336\n9th +4 \u0336 4 4 3 3 3 1 \u0336 \u0336 \u0336 \u0336\n10th +4 Arcane Tradition feature 5 4 3 3 3 2 \u0336 \u0336 \u0336 \u0336\n11th +4 \u0336 5 4 3 3 3 2 1 \u0336 \u0336 \u0336\n12th +4 Ability Score Improvement 5 4 3 3 3 2 1 \u0336 \u0336 \u0336\n13th +5 \u0336 5 4 3 3 3 2 1 1 \u0336 \u0336\n14th +5 Arcane Tradition feature 5 4 3 3 3 2 1 1 \u0336 \u0336\n15th +5 \u0336 5 4 3 3 3 2 1 1 1 \u0336\n16th +5 Ability Score Improvement 5 4 3 3 3 2 1 1 1 \u0336\n17th +6 \u0336 5 4 3 3 3 2 1 1 1 1 \n18th +6 Spell Mastery 5 4 3 3 3 3 1 1 1 1 \n19th +6 Ability Score Improvement 5 4 3 3 3 3 2 1 1 1 \n20th +6 Signature Spell 5 4 3 3 3 3 2 2 1 1 \nSpellcasting\nAs a student of arcane magic, you have a spellbook \ncontaining spells that show the first glimmerings of \nyour true power. \nCantrips\nAt 1st level, you know three cantrips of your choice \nfrom the wizard spell list. You learn additional \nwizard cantrips of your choice at higher levels, as \nshown in the Cantrips Known column of the Wizard \ntable. \nSpellbook\nAt 1st level, you have a spellbook containing six 1st-\u00ad\u2010\u2011\nlevel wizard spells of your choice. Your spellbook is \nthe repository of the wizard spells you know, except \nyour cantrips, which are fixed in your mind. \nPreparing and Casting Spells\nThe Wizard table shows how many spell slots you \nhave to cast your spells of 1st level and higher. To \ncast one of these spells, you must expend a slot of \nthe spell\u2019s level or higher. You regain all expended \nspell slots when you finish a long rest. \n You prepare the list of wizard spells that are \navailable for you to cast. To do so, choose a number \nof wizard spells from your spellbook equal to your \nIntelligence modifier + your wizard level (minimum \nof one spell). The spells must be of a level for which \nyou have spell slots. \n For example, if you\u2019re a 3rd-\u00ad\u2010\u2011level wizard, you have \nfour 1st-\u00ad\u2010\u2011level and two 2nd-\u00ad\u2010\u2011level spell slots. With an \nIntelligence of 16, your list of prepared spells can \ninclude six spells of 1st or 2nd level, in any \ncombination, chosen from your spellbook. If you \nprepare the 1st-\u00ad\u2010\u2011level spell magic missile, you can cast \nit using a 1st-\u00ad\u2010\u2011level or a 2nd-\u00ad\u2010\u2011level slot. Casting the \nspell doesn\u2019t remove it from your list of prepared \nspells. \n You can change your list of prepared spells when \nyou finish a long rest. Preparing a new list of wizard \nspells requires time spent studying your spellbook \nand memorizing the incantations and gestures you \nmust make to cast the spell: at least 1 minute per \nspell level for each spell on your list. \nSpellcasting Ability\nIntelligence is your spellcasting ability for your \nwizard spells, since you learn your spells through \ndedicated study and memorization. You use your \nIntelligence whenever a spell refers to your \nspellcasting ability. In addition, you use your \nIntelligence modifier when setting the saving throw \nDC for a wizard spell you cast and when making an \nattack roll with one. \nSpell save DC = 8 + your proficiency bonus + \nyour Intelligence modifier \nSpell attack modifier = your proficiency bonus + \nyour Intelligence modifier \nRitual Casting\nYou can cast a wizard spell as a ritual if that spell has \nthe ritual tag and you have the spell in your \nspellbook. You don\u2019t need to have the spell prepared. \nSpellcasting Focus\nYou can use an arcane focus as a spellcasting focus \nfor your wizard spells. \nLearning Spells of 1st Level and Higher\nEach time you gain a wizard level, you can add two \nwizard spells of your choice to your spellbook for \nfree. Each of these spells must be of a level for which \nyou have spell slots, as shown on the Wizard table. \nOn your adventures, you might find other spells that \nyou can add to your spellbook (see the \u201cYour \nSpellbook\u201d sidebar). \nArcane Recovery\nYou have learned to regain some of your magical \nenergy by studying your spellbook. Once per day \nwhen you finish a short rest, you can choose \nexpended spell slots to recover. The spell slots can \nhave a combined level that is equal to or less than \nhalf your wizard level (rounded up), and none of the \nslots can be 6th level or higher. \n For example, if you\u2019re a 4th-\u00ad\u2010\u2011level wizard, you can \nrecover up to two levels worth of spell slots. You can \nrecover either a 2nd-\u00ad\u2010\u2011level spell slot or two 1st-\u00ad\u2010\u2011level \nspell slots. \nArcane Tradition\nWhen you reach 2nd level, you choose an arcane \ntradition, shaping your practice of magic through \none of eight schools, such as Evocation. \n Your choice grants you features at 2nd level and \nagain at 6th, 10th, and 14th level. \nAbility Score Improvement\nWhen you reach 4th level, and again at 8th, 12th, \n16th, and 19th level, you can increase one ability \nscore of your choice by 2, or you can increase two \nability scores of your choice by 1. As normal, you \ncan\u2019t increase an ability score above 20 using this \nfeature. \nSpell Mastery\nAt 18th level, you have achieved such mastery over \ncertain spells that you can cast them at will. Choose a \n1st-\u00ad\u2010\u2011level wizard spell and a 2nd-\u00ad\u2010\u2011level wizard spell \nthat are in your spellbook. You can cast those spells \nat their lowest level without expending a spell slot \nwhen you have them prepared. If you want to cast \neither spell at a higher level, you must expend a spell \nslot as normal. \n By spending 8 hours in study, you can exchange \none or both of the spells you chose for different \nspells of the same levels. \nSignature Spells\nWhen you reach 20th level, you gain mastery over \ntwo powerful spells and can cast them with little \neffort. Choose two 3rd-\u00ad\u2010\u2011level wizard spells in your \nspellbook as your signature spells. You always have \nthese spells prepared, they don\u2019t count against the \nnumber of spells you have prepared, and you can \ncast each of them once at 3rd level without \nexpending a spell slot. When you do so, you can\u2019t do \nso again until you finish a short or long rest. \n If you want to cast either spell at a higher level, \nyou must expend a spell slot as normal. \nArcane Traditions\nThe study of wizardry is ancient, stretching back to \nthe earliest mortal discoveries of magic. It is firmly \nestablished in fantasy gaming worlds, with various \ntraditions dedicated to its complex study. \n The most common arcane traditions in the \nmultiverse revolve around the schools of magic. \nWizards through the ages have cataloged thousands \nof spells, grouping them into eight categories called \nschools. In some places, these traditions are literally \nschools. In other institutions, the schools are more \nlike academic departments, with rival faculties \ncompeting for students and funding. Even wizards \nwho train apprentices in the solitude of their own \ntowers use the division of magic into schools as a \nlearning device, since the spells of each school \nrequire mastery of different techniques. \nSchool of Evocation\nYou focus your study on magic that creates powerful \nelemental effects such as bitter cold, searing flame, \nrolling thunder, crackling lightning, and burning acid. \nSome evokers find employment in military forces, \nserving as artillery to blast enemy armies from afar. \nOthers use their spectacular power to protect the \nweak, while some seek their own gain as bandits, \nadventurers, or aspiring tyrants. \nEvocation Savant\nBeginning when you select this school at 2nd level, \nthe gold and time you must spend to copy an \nevocation spell into your spellbook is halved. \nSculpt Spells\nBeginning at 2nd level, you can create pockets of \nrelative safety within the effects of your evocation \nspells. When you cast an evocation spell that affects \nother creatures that you can see, you can choose a \nnumber of them equal to 1 + the spell\u2019s level. The \nchosen creatures automatically succeed on their \nsaving throws against the spell, and they take no \ndamage if they would normally take half damage on \na successful save. \nPotent Cantrip\nStarting at 6th level, your damaging cantrips affect \neven creatures that avoid the brunt of the effect. \nWhen a creature succeeds on a saving throw against \nyour cantrip, the creature takes half the cantrip\u2019s \ndamage (if any) but suffers no additional effect from \nthe cantrip. \nEmpowered Evocation\nBeginning at 10th level, you can add your \nIntelligence modifier to one damage roll of any \nwizard evocation spell you cast. \nOverchannel\nStarting at 14th level, you can increase the power of \nyour simpler spells. When you cast a wizard spell of \n1st through 5th level that deals damage, you can deal \nmaximum damage with that spell. \n The first time you do so, you suffer no adverse \neffect. If you use this feature again before you finish \na long rest, you take 2d12 necrotic damage for each \nlevel of the spell, immediately after you cast it. Each \ntime you use this feature again before finishing a \nlong rest, the necrotic damage per spell level \nincreases by 1d12. This damage ignores resistance \nand immunity. \nYour Spellbook\nThe spells that you add to your spellbook as you gain levels \nreflect the arcane research you conduct on your own, as well \nas intellectual breakthroughs you have had about the nature \nof the multiverse. You might find other spells during your \nadventures. You could discover a spell recorded on a scroll in \nan evil wizard\u2019s chest, for example, or in a dusty tome in an \nancient library. \nCopying a Spell into the Book. When you find a wizard \nspell of 1st level or higher, you can add it to your spellbook if \nit is of a spell level you can prepare and if you can spare the \ntime to decipher and copy it. \nCopying that spell into your spellbook involves reproducing \nthe basic form of the spell, then deciphering the unique \nsystem of notation used by the wizard who wrote it. You \nmust practice the spell until you understand the sounds or \ngestures required, then transcribe it into your spellbook using \nyour own notation. \nFor each level of the spell, the process takes 2 hours and \ncosts 50 gp. The cost represents material components you \nexpend as you experiment with the spell to master it, as well \nas the fine inks you need to record it. Once you have spent \nthis time and money, you can prepare the spell just like your \nother spells. \nReplacing the Book. You can copy a spell from your own \nspellbook into another book\u2014for example, if you want to \nmake a backup copy of your spellbook. This is just like \ncopying a new spell into your spellbook, but faster and easier, \nsince you understand your own notation and already know \nhow to cast the spell. You need spend only 1 hour and 10 gp \nfor each level of the copied spell. \nIf you lose your spellbook, you can use the same \nprocedure to transcribe the spells that you have prepared \ninto a new spellbook. Filling out the remainder of your \nspellbook requires you to find new spells to do so, as normal. \nFor this reason, many wizards keep backup spellbooks in a safe \nplace. \nThe Book\u2019s Appearance. Your spellbook is a unique \ncompilation of spells, with its own decorative flourishes and \nmargin notes. It might be a plain, functional leather volume \nthat you received as a gift from your master, a finely bound \ngilt-\u00ad\u2010edged tome you found in an ancient library, or even a \nloose collection of notes scrounged together after you lost \nyour previous spellbook in a mishap.",
         "language": "en",
         "reference": "SRD 5.1 / Wizard",
-        "manualRequirements": [
-          "Spellbook transcription cost/time and historical spell acquisition/replacement require manual validation."
-        ]
+        "manualRequirements": [],
+        "acquisitionPolicy": {
+          "knownReplacementPerClassLevel": 0,
+          "invocationReplacementPerClassLevel": 0,
+          "spellbookLearnedAtFirstLevel": 6,
+          "spellbookLearnedPerClassLevel": 2
+        }
       }
     },
     {
@@ -15150,7 +15774,17 @@
         },
         "language": "en",
         "reference": "SRD 5.1 / Monk",
-        "description": "Immediately after you take the Attack action on your \nturn, you can spend 1 ki point to make two unarmed \nstrikes as a bonus action."
+        "description": "Immediately after you take the Attack action on your \nturn, you can spend 1 ki point to make two unarmed \nstrikes as a bonus action.",
+        "manualMechanics": {
+          "economy": "bonus",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "ki",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -15179,7 +15813,17 @@
         },
         "language": "en",
         "reference": "SRD 5.1 / Monk",
-        "description": "You can spend 1 ki point to take the Dodge action as \na bonus action on your turn."
+        "description": "You can spend 1 ki point to take the Dodge action as \na bonus action on your turn.",
+        "manualMechanics": {
+          "economy": "bonus",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "ki",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {
@@ -15208,7 +15852,17 @@
         },
         "language": "en",
         "reference": "SRD 5.1 / Monk",
-        "description": "You can spend 1 ki point to take the Disengage or \nDash action as a bonus action on your turn, and your \njump distance is doubled for the turn."
+        "description": "You can spend 1 ki point to take the Disengage or \nDash action as a bonus action on your turn, and your \njump distance is doubled for the turn.",
+        "manualMechanics": {
+          "economy": "bonus",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "ki",
+          "amount": 1,
+          "requirements": [
+            "GM validates eligibility, exact outcomes and any additional costs."
+          ]
+        }
       }
     },
     {

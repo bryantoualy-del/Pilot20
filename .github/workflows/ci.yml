@@ -26,3 +26,5 @@ jobs:
 
       - run: npm run demo:catalog
       - run: npm run coverage:catalog:check
+
+      - run: npm run demo:progression

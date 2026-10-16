@@ -23,7 +23,7 @@ export function validateCatalogV3(c,{distribution='private'}={}) {
    check(id(d.classId)&&[6,8,10,12].includes(d.hitDie),'Class identity');
    list(d.saves,'Class saves');check(d.saves.length===2&&d.saves.every(s=>ABILITIES.includes(s)),'Class saves');
    check(integer(d.skillChoice?.count,1,18),'Skill choice count');list(d.skillChoice.options,'Skill options');check(d.skillChoice.options.every(k=>Object.hasOwn(SKILLS,k))&&d.skillChoice.count<=d.skillChoice.options.length,'Skill options');
-   if(d.casting!==null) {keys(d.casting,['ability','progression']);check(ABILITIES.includes(d.casting.ability)&&['full','half','third','pact'].includes(d.casting.progression),'Class casting');}
+   if(d.casting!==null) {keys(d.casting,['ability','progression','multiclassRounding','startsAtClassLevel'],['ability','progression']);if(d.casting.multiclassRounding!==undefined)check(['floor','ceil'].includes(d.casting.multiclassRounding),'Casting contribution rounding');if(d.casting.startsAtClassLevel!==undefined)check(integer(d.casting.startsAtClassLevel,1,3),'Casting start level');check(ABILITIES.includes(d.casting.ability)&&['full','half','third','pact'].includes(d.casting.progression),'Class casting');}
    check(integer(d.subclassLevel,1,20),'Subclass level');list(d.subclassIds,'Subclass IDs');
    for(const field of ['initialProficiencies','multiclassProficiencies'])list(d[field],'Class proficiencies');
    for(const field of ['cantripsKnown','spellsKnown'])check(d[field]?.length===20&&d[field].every(n=>integer(n,0,100)),'Known progression');
@@ -31,7 +31,7 @@ export function validateCatalogV3(c,{distribution='private'}={}) {
    check(Array.isArray(d.resources)&&Array.isArray(d.choices),'Class resources/choices');
    list(d.resources.map(r=>r.id),'Duplicate resource');list(d.choices.map(r=>r.key),'Duplicate choice');
    for(const r of d.resources){check(['short','long','none'].includes(r.recovery)&&r.maxByLevel?.length===20,'Resource progression');for(const v of r.maxByLevel)check(v===null||integer(v,0,1000)||(v&&ABILITIES.includes(v.ability)&&integer(v.minimum,0,30)&&(v.add===undefined||integer(v.add,0,30))),'Resource maximum');}
-   for(const q of d.choices){check(integer(q.level,1,20)&&integer(q.count,1,100)&&['feature','asi','skill','proficiency','expertise','spell','spell-mastery','signature-spell','ritual-spell'].includes(q.kind),'Choice contract');list(q.options,'Choice options');if(q.countByLevel)check(q.countByLevel.length===20&&q.countByLevel.every(n=>integer(n,0,100)),'Choice progression');}
+   for(const q of d.choices){check(integer(q.level,1,20)&&integer(q.count,1,100)&&['feature','asi','skill','proficiency','expertise','spell','spell-mastery','signature-spell','ritual-spell'].includes(q.kind),'Choice contract');list(q.options,'Choice options');if(q.requiresChoice){keys(q.requiresChoice,['key','optionId']);check(id(q.requiresChoice.key)&&id(q.requiresChoice.optionId),'Conditional choice');}if(q.distinctGroup!==undefined)check(id(q.distinctGroup),'Choice distinct group');if(q.adjudication!==undefined)check(typeof q.adjudication==='string'&&q.adjudication.trim(),'Choice adjudication');if(q.countByLevel)check(q.countByLevel.length===20&&q.countByLevel.every(n=>integer(n,0,100)),'Choice progression');}
    for(const table of Object.values(d.scaling??{}))check(Array.isArray(table)&&table.length===20&&table.every(n=>typeof n==='number'&&Number.isFinite(n)&&n>=0),'Scaling table');
    check(d.grants?.length===20&&d.grants.every((r,i)=>r.level===i+1),'Complete progression');
   }
@@ -47,6 +47,10 @@ export function validateCatalogV3(c,{distribution='private'}={}) {
    for(const f of ['castingTime','range','components','duration','description'])check(typeof d[f]==='string'&&d[f].trim(),'Spell '+f);
    check(typeof d.concentration==='boolean'&&typeof d.ritual==='boolean','Spell flags');
   }
+  if(d.manualMechanics){const m=d.manualMechanics;keys(m,['economy','target','maxTargets','resourceId','amount','requirements','concentration'],['economy','target','maxTargets','resourceId','amount','requirements']);check(['action','bonus','reaction','none'].includes(m.economy)&&['self','selected'].includes(m.target)&&integer(m.maxTargets,1,20)&&id(m.resourceId)&&integer(m.amount,1,100),'Manual mechanics');check(Array.isArray(m.requirements)&&m.requirements.every(v=>typeof v==='string'&&v.trim()),'Manual requirements');if(m.concentration!==undefined)check(typeof m.concentration==='boolean','Manual concentration');}
+  if(d.resources)for(const r of d.resources){check(id(r.id)&&['short','long','none'].includes(r.recovery)&&r.maxByLevel?.length===20,'Resource owner contract');for(const v of r.maxByLevel)check(v===null||integer(v,0,1000)||(v&&ABILITIES.includes(v.ability)&&integer(v.minimum,0,30)&&(v.add===undefined||integer(v.add,0,30))),'Resource maximum');if(r.recharge){keys(r.recharge,['kind','failure','successDays','intervalDays'],['kind']);check(r.recovery==='none'&&r.recharge.kind==='adjudicated-calendar','Calendar recovery must stay explicit');if(r.recharge.failure!==undefined)check(r.recharge.failure==='long-rest','Calendar failure policy');for(const field of ['successDays','intervalDays'])if(r.recharge[field]!==undefined)check(integer(r.recharge[field],1,365),'Calendar interval');}}
+  if(d.optionalClassFeature!==undefined)check(i.type==='feature'&&d.optionalClassFeature===true&&id(d.campaignOption),'Optional feature requires explicit campaign option');
+  for(const k of ['suppressesChoices','suppressesResources'])if(d[k]!==undefined)list(d[k],'Suppression references');
   if(d.requires!==undefined)list(d.requires,'Entry dependencies');
   if(d.replaces!==undefined)list(d.replaces,'Replaced entries');
   if(d.campaignOption!==undefined)check(id(d.campaignOption),'Campaign option');
