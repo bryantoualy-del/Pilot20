@@ -1,6 +1,10 @@
 {
   "ruleset": "dnd5e-2014",
   "denominators": {
+    "racesExpected": 9,
+    "racesPresent": 9,
+    "backgroundsExpected": 1,
+    "backgroundsPresent": 1,
     "classesExpected": 12,
     "classesPresent": 12,
     "classLevelRowsExpected": 240,
@@ -19,7 +23,7 @@
   },
   "automation": {
     "automated": 0,
-    "partial": 27,
+    "partial": 37,
     "manual": 615,
     "unsupported": 0
   },
@@ -14758,6 +14762,236 @@
       },
       "limits": [
         "Full spell effect requires GM adjudication."
+      ]
+    },
+    {
+      "id": "srd51:race:dwarf",
+      "type": "race",
+      "classId": null,
+      "minimumClassLevel": null,
+      "source": "SRD-5.1",
+      "license": "CC-BY-4.0",
+      "availability": "public",
+      "coverage": "partial",
+      "handler": null,
+      "tests": {
+        "structural": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanical": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanicalEvidenceScope": "Catalogue scenarios for simple spells, healing, Haste, fighter, rage and bard demo; remaining handlers reuse primitive regression tests. Not every entry is executed."
+      },
+      "limits": [
+        "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+      ]
+    },
+    {
+      "id": "srd51:race:elf",
+      "type": "race",
+      "classId": null,
+      "minimumClassLevel": null,
+      "source": "SRD-5.1",
+      "license": "CC-BY-4.0",
+      "availability": "public",
+      "coverage": "partial",
+      "handler": null,
+      "tests": {
+        "structural": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanical": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanicalEvidenceScope": "Catalogue scenarios for simple spells, healing, Haste, fighter, rage and bard demo; remaining handlers reuse primitive regression tests. Not every entry is executed."
+      },
+      "limits": [
+        "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+      ]
+    },
+    {
+      "id": "srd51:race:halfling",
+      "type": "race",
+      "classId": null,
+      "minimumClassLevel": null,
+      "source": "SRD-5.1",
+      "license": "CC-BY-4.0",
+      "availability": "public",
+      "coverage": "partial",
+      "handler": null,
+      "tests": {
+        "structural": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanical": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanicalEvidenceScope": "Catalogue scenarios for simple spells, healing, Haste, fighter, rage and bard demo; remaining handlers reuse primitive regression tests. Not every entry is executed."
+      },
+      "limits": [
+        "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+      ]
+    },
+    {
+      "id": "srd51:race:human",
+      "type": "race",
+      "classId": null,
+      "minimumClassLevel": null,
+      "source": "SRD-5.1",
+      "license": "CC-BY-4.0",
+      "availability": "public",
+      "coverage": "partial",
+      "handler": null,
+      "tests": {
+        "structural": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanical": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanicalEvidenceScope": "Catalogue scenarios for simple spells, healing, Haste, fighter, rage and bard demo; remaining handlers reuse primitive regression tests. Not every entry is executed."
+      },
+      "limits": [
+        "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+      ]
+    },
+    {
+      "id": "srd51:race:dragonborn",
+      "type": "race",
+      "classId": null,
+      "minimumClassLevel": null,
+      "source": "SRD-5.1",
+      "license": "CC-BY-4.0",
+      "availability": "public",
+      "coverage": "partial",
+      "handler": null,
+      "tests": {
+        "structural": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanical": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanicalEvidenceScope": "Catalogue scenarios for simple spells, healing, Haste, fighter, rage and bard demo; remaining handlers reuse primitive regression tests. Not every entry is executed."
+      },
+      "limits": [
+        "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+      ]
+    },
+    {
+      "id": "srd51:race:gnome",
+      "type": "race",
+      "classId": null,
+      "minimumClassLevel": null,
+      "source": "SRD-5.1",
+      "license": "CC-BY-4.0",
+      "availability": "public",
+      "coverage": "partial",
+      "handler": null,
+      "tests": {
+        "structural": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanical": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanicalEvidenceScope": "Catalogue scenarios for simple spells, healing, Haste, fighter, rage and bard demo; remaining handlers reuse primitive regression tests. Not every entry is executed."
+      },
+      "limits": [
+        "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+      ]
+    },
+    {
+      "id": "srd51:race:half-elf",
+      "type": "race",
+      "classId": null,
+      "minimumClassLevel": null,
+      "source": "SRD-5.1",
+      "license": "CC-BY-4.0",
+      "availability": "public",
+      "coverage": "partial",
+      "handler": null,
+      "tests": {
+        "structural": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanical": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanicalEvidenceScope": "Catalogue scenarios for simple spells, healing, Haste, fighter, rage and bard demo; remaining handlers reuse primitive regression tests. Not every entry is executed."
+      },
+      "limits": [
+        "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+      ]
+    },
+    {
+      "id": "srd51:race:half-orc",
+      "type": "race",
+      "classId": null,
+      "minimumClassLevel": null,
+      "source": "SRD-5.1",
+      "license": "CC-BY-4.0",
+      "availability": "public",
+      "coverage": "partial",
+      "handler": null,
+      "tests": {
+        "structural": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanical": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanicalEvidenceScope": "Catalogue scenarios for simple spells, healing, Haste, fighter, rage and bard demo; remaining handlers reuse primitive regression tests. Not every entry is executed."
+      },
+      "limits": [
+        "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+      ]
+    },
+    {
+      "id": "srd51:race:tiefling",
+      "type": "race",
+      "classId": null,
+      "minimumClassLevel": null,
+      "source": "SRD-5.1",
+      "license": "CC-BY-4.0",
+      "availability": "public",
+      "coverage": "partial",
+      "handler": null,
+      "tests": {
+        "structural": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanical": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanicalEvidenceScope": "Catalogue scenarios for simple spells, healing, Haste, fighter, rage and bard demo; remaining handlers reuse primitive regression tests. Not every entry is executed."
+      },
+      "limits": [
+        "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+      ]
+    },
+    {
+      "id": "srd51:background:acolyte",
+      "type": "background",
+      "classId": null,
+      "minimumClassLevel": null,
+      "source": "SRD-5.1",
+      "license": "CC-BY-4.0",
+      "availability": "public",
+      "coverage": "partial",
+      "handler": null,
+      "tests": {
+        "structural": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanical": [
+          "tests/builder-v031.test.js"
+        ],
+        "mechanicalEvidenceScope": "Catalogue scenarios for simple spells, healing, Haste, fighter, rage and bard demo; remaining handlers reuse primitive regression tests. Not every entry is executed."
+      },
+      "limits": [
+        "Shelter of the Faithful requires GM adjudication."
       ]
     }
   ]

@@ -1,3 +1,5 @@
+import { localizedName } from "../../src/catalog/localization.js";
+import { stepNames } from "./i18n.js";
 import { openIndexedDB } from "../../src/persistence/adapters.js";
 import { characterLibrary } from "../../src/persistence/library.js";
 import { campaignRepository } from "../../src/campaign/repository.js";
@@ -17,6 +19,7 @@ const state = {
   query: "",
   filter: "",
   archives: false,
+  inProgress: false,
 };
 let storage,
   library,
@@ -27,11 +30,7 @@ let storage,
   saveQueue = Promise.resolve();
 const revisions = new Map();
 const t = (k) => messages[state.locale][k] ?? k;
-const name = (i) =>
-  (state.locale === "fr" ? frNames[i?.id] : null) ??
-  i?.name?.[state.locale] ??
-  i?.name?.en ??
-  "";
+const name = (i) => localizedName(i, state.locale, frNames);
 const cls = (id) =>
   classNames[state.locale][id] ?? name(context?.installed.class(id)) ?? id;
 let noticeTimer;
@@ -86,7 +85,10 @@ async function ask(message, action) {
 }
 function autosave(d) {
   const snapshot = structuredClone(d);
+  snapshot.updatedAt = new Date().toISOString();
+  d.updatedAt = snapshot.updatedAt;
   notice(t("saving"));
+  document.querySelector("#draft-save-state")?.replaceChildren(t("saving"));
   const promise = saveQueue.then(async () => {
     const expected = revisions.has(d.id) ? revisions.get(d.id) : null;
     snapshot.revision = expected === null ? 1 : expected + 1;
@@ -94,6 +96,16 @@ function autosave(d) {
     revisions.set(d.id, snapshot.revision);
     d.revision = snapshot.revision;
     notice(t("saved"));
+    document
+      .querySelector("#draft-save-state")
+      ?.replaceChildren(
+        t("saved") +
+          " · " +
+          new Date(snapshot.updatedAt).toLocaleTimeString(state.locale, {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+      );
   });
   saveQueue = promise.catch(fail);
   return promise;
@@ -238,7 +250,13 @@ async function render() {
         el(
           "div",
           { class: "cards" },
-          all.filter((d) => !d.finalized).map(cardDraft),
+          all
+            .filter((d) => !d.finalized)
+            .sort((a, b) =>
+              (b.updatedAt ?? "").localeCompare(a.updatedAt ?? ""),
+            )
+            .slice(0, 6)
+            .map(cardDraft),
         ),
       ),
       el(
@@ -288,6 +306,15 @@ function cardDraft(d) {
     badge(t("draft")),
     el("h3", {}, d.name || t("create")),
     el("p", {}, d.classes.map((c) => cls(c.id) + " " + c.level).join(" / ")),
+    el(
+      "small",
+      {},
+      t(d.step) +
+        " · " +
+        (d.updatedAt
+          ? new Date(d.updatedAt).toLocaleString(state.locale)
+          : t("draft")),
+    ),
     button(t("resume"), () => nav("creator", d.id)),
     el(
       "details",
@@ -380,6 +407,10 @@ async function libraryScreen(main, all) {
         state.archives = e.target.checked;
         fill();
       }),
+      check(t("inProgress"), state.inProgress, (e) => {
+        state.inProgress = e.target.checked;
+        fill();
+      }),
       field(t("import"), upload),
     ),
   );
@@ -390,6 +421,9 @@ async function libraryScreen(main, all) {
     const filtered = records.filter(
       (r) =>
         (state.archives || !r.archived) &&
+        (!state.inProgress ||
+          (byId.has(r.definition.id) &&
+            !byId.get(r.definition.id).finalized)) &&
         (!state.filter ||
           r.definition.classes.some((c) => c.id === state.filter)) &&
         r.definition.identity.name
@@ -667,7 +701,7 @@ try {
   campaigns = campaignRepository(
     storage,
     await Promise.all(
-      ["classes", "spells"].map(async (n) => {
+      ["classes", "spells", "origins"].map(async (n) => {
         const r = await fetch(
           new URL("../../src/catalog/data/" + n + ".json", import.meta.url),
         );

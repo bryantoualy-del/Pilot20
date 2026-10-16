@@ -1,0 +1,97 @@
+{
+  "version": "0.3.1",
+  "baseCommit": "7839ebc383d87744c9a05ae682aa76ba0af3834b",
+  "node": {
+    "tests": 369,
+    "passed": 369,
+    "failed": 0
+  },
+  "browser": {
+    "inherited": {
+      "passed": 14,
+      "results": [
+        "Three sources preferred on; extension data absent honestly",
+        "Quick fighter 1; mode switching; graphical creation/save/preview",
+        "Real Second Wind engine action consumed resource and healed HP",
+        "IndexedDB reload and character library survive page close/reload",
+        "Edit/revision/finalize persists atomically",
+        "Guided bard 10: subclass, inspiration, expertise and Magical Secrets",
+        "Inert local private pack drives expert subclass choices and compilation (synthetic only)",
+        "Source off/on preserves and restores private selections",
+        "Export includes build plan; archive/restore library",
+        "FR/EN interface and phone layout",
+        "Offline reload, library, create draft and persistence",
+        "Fully offline character creation, final save, edit and real Companion session",
+        "Previously installed private pack remains usable offline, including declared/resolved manual engine action",
+        "Export imported into clean browser with missing-pack warning and preserved plan"
+      ],
+      "browser": "131.0.6778.0",
+      "errors": []
+    },
+    "builder": {
+      "passed": 8,
+      "results": [
+        "A: complete human fighter 1 through all eight steps without template suggestions; acolyte grants, saves, style, scores, armor, save and preview",
+        "B: bard 10, level-specific college and expertise, two ASIs, inspiration and distinct Magical Secrets; real compiler",
+        "C: wizard 10 school, 24 spellbook entries, separate preparation, source filtering and explicit missing French labels",
+        "E: close the actual persistent browser context, reopen and resume exact step, viewed level, source campaign and all choices",
+        "D: level reduction blocks invalid effects, explicit archival permits revalidation at level 1, then all high-level decisions restore without loss",
+        "F: source off/on persisted; private feature/source preservation remains covered by the original browser suite",
+        "In-progress library filter hides finalized characters and retains resumable drafts",
+        "G (emulation only): tablet and desktop widths, 44px step targets, editable field focus and persistent navigation; physical Safari and virtual keyboard remain unverified"
+      ],
+      "errors": [],
+      "browser": "131.0.6778.0",
+      "metrics": [
+        {
+          "step": "Classe",
+          "height": 935,
+          "viewport": 820,
+          "viewportScrolls": 1,
+          "stepCount": 8,
+          "choices": 0,
+          "viewportWidth": 1180,
+          "documentWidth": 1180
+        },
+        {
+          "step": "Guerrier capacités",
+          "height": 820,
+          "viewport": 820,
+          "viewportScrolls": 0,
+          "stepCount": 8,
+          "choices": 1,
+          "viewportWidth": 1180,
+          "documentWidth": 1180
+        },
+        {
+          "step": "Progression",
+          "height": 822,
+          "viewport": 820,
+          "viewportScrolls": 1,
+          "stepCount": 8,
+          "choices": 2,
+          "viewportWidth": 1180,
+          "documentWidth": 1180
+        },
+        {
+          "step": "Sorts",
+          "height": 820,
+          "viewport": 820,
+          "viewportScrolls": 0,
+          "stepCount": 8,
+          "choices": 1,
+          "viewportWidth": 1180,
+          "documentWidth": 1180
+        }
+      ],
+      "physicalSafari": false
+    }
+  },
+  "coverageChecks": [
+    "coverage:check",
+    "coverage:catalog:check"
+  ],
+  "physicalSafariValidated": false,
+  "officialGlamourValidated": false,
+  "publicDeployment": false
+}

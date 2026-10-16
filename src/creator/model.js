@@ -1,10 +1,21 @@
+import {
+  EQUIPMENT,
+  WEAPONS,
+  weaponProfile,
+  SRD_SOURCE,
+} from "../catalog/equipment.js";
+export { EQUIPMENT } from "../catalog/equipment.js";
 import { check, ABILITIES, SKILLS } from "../character/contracts.js";
 import { resolveProgression } from "../catalog/progression.js";
 import {
   buildCampaignCharacter,
   validateSavedPlan,
 } from "../campaign/sources.js";
-import { derive } from "../character/derive.js";
+import {
+  derive,
+  averageHpProgression,
+  hitPointTotal,
+} from "../character/derive.js";
 import { validateCharacter, validateBuild } from "../character/definition.js";
 export const newDraft = (campaignId = "default", id = crypto.randomUUID()) => ({
   kind: "pilot20-creator-draft",
@@ -27,17 +38,14 @@ export const newDraft = (campaignId = "default", id = crypto.randomUUID()) => ({
   shield: false,
   reviewed: false,
   confirmed: false,
-  step: "identity",
+  step: "origin",
+  scoresAreBase: true,
+  scoreMethod: "manual",
+  originSelections: {},
   finalized: false,
   status: "draft",
   advancementHistory: [],
 });
-export const EQUIPMENT = {
-  none: null,
-  leather: { base: 11, dexCap: null, bonus: 0, minStrength: 0, heavy: false },
-  chain: { base: 16, dexCap: 0, bonus: 0, minStrength: 13, heavy: true },
-  scale: { base: 14, dexCap: 2, bonus: 0, minStrength: 0, heavy: false },
-};
 const customSource = {
   kind: "homebrew",
   document: "Player declared origin and equipment; GM reviewed",
@@ -46,6 +54,14 @@ const customSource = {
 };
 export function buildRequest(d) {
   return {
+    raceId: d.raceId ?? null,
+    subraceId: d.subraceId ?? null,
+    backgroundId: d.backgroundId ?? null,
+    originSelections: structuredClone(d.originSelections ?? {}),
+    originAdjustments: structuredClone(d.originAdjustments ?? {}),
+    scoresAreBase: d.scoresAreBase ?? false,
+    scoreMethod: d.scoreMethod ?? "manual",
+    scoreRolls: d.scoreRolls ?? null,
     id: d.id,
     name: d.name,
     sourceReferences: structuredClone(d.sourceReferences ?? []),
@@ -65,14 +81,47 @@ export function draftProgression(context, config, d) {
       ...buildRequest(d),
       classes: d.classes.map((c) => ({
         ...c,
-        subclassId: context.index.get(c.subclassId) ? c.subclassId : null,
+        subclassId:
+          context.index.get(c.subclassId) &&
+          c.level >= (context.index.class(c.id)?.data.subclassLevel ?? 99)
+            ? c.subclassId
+            : null,
       })),
       campaignOptions: config.enabledOptions,
     });
     return {
       ...report,
-      valid: report.valid && unavailable.valid,
-      issues: [...unavailable.issues, ...report.issues],
+      hpPreview:
+        hitPointTotal(
+          averageHpProgression(
+            d.classes.map((c) => ({
+              ...c,
+              hitDie: context.index.class(c.id).data.hitDie,
+            })),
+          ),
+          report.scores,
+        ) +
+        (report.origin?.hpPerLevel ?? 0) *
+          d.classes.reduce((n, c) => n + c.level, 0),
+      valid:
+        report.valid &&
+        unavailable.valid &&
+        !d.classes.some(
+          (c) =>
+            c.subclassId &&
+            c.level < (context.index.class(c.id)?.data.subclassLevel ?? 99),
+        ),
+      issues: [
+        ...unavailable.issues,
+        ...report.issues,
+        ...d.classes
+          .filter(
+            (c) =>
+              c.subclassId &&
+              c.level < (context.index.class(c.id)?.data.subclassLevel ?? 99),
+          )
+          .map((c) => ({ code: "inactive-subclass", id: c.subclassId })),
+      ],
     };
   } catch {
     return {
@@ -88,9 +137,12 @@ export function draftProgression(context, config, d) {
 export function compileDraft(context, config, d) {
   const issues = [];
   if (!d.name.trim()) issues.push({ code: "creator-name" });
-  if (!d.origin.trim() || !d.background.name.trim())
+  if (
+    (!d.raceId && !d.origin.trim()) ||
+    (!d.backgroundId && !d.background.name.trim())
+  )
     issues.push({ code: "creator-origin" });
-  if (d.background.skills.length !== 2)
+  if (!d.backgroundId && d.background.skills.length !== 2)
     issues.push({ code: "creator-background-skills" });
   if (!d.confirmed) issues.push({ code: "creator-confirmation" });
   let r;
@@ -108,18 +160,30 @@ export function compileDraft(context, config, d) {
   if (!r.character || issues.length)
     return { ...r, valid: false, character: null, issues, status: "draft" };
   const c = r.character;
+  if ((d.customOriginRequiresReview || d.background.customized) && !d.reviewed)
+    issues.push({ code: "creator-custom-review" });
+  if (issues.length)
+    return { ...r, valid: false, character: null, issues, status: "draft" };
   c.identity = {
     name: d.name,
     portrait: d.portrait,
-    description: [d.description, d.origin, d.languages, d.traits]
+    description: [
+      d.description,
+      d.origin,
+      d.languages,
+      d.traits,
+      d.equipmentNotes,
+      d.background.feature,
+    ]
       .filter(Boolean)
       .join("\n"),
   };
-  c.ancestry = {
-    id: "user:custom-origin",
-    subraceId: null,
-    source: customSource,
-  };
+  if (!d.raceId)
+    c.ancestry = {
+      id: "user:custom-origin",
+      subraceId: null,
+      source: customSource,
+    };
   if (d.equipment !== "none") {
     check(Object.hasOwn(EQUIPMENT, d.equipment), "Equipment profile");
     c.equipment.push({
@@ -140,6 +204,17 @@ export function compileDraft(context, config, d) {
       weapon: null,
       source: customSource,
     });
+  for (const id of d.weapons ?? []) {
+    check(WEAPONS[id], "Unknown weapon");
+    c.equipment.push({
+      id: "srd51:weapon:" + id,
+      kind: "weapon",
+      equipped: true,
+      armor: null,
+      weapon: weaponProfile(id, c.scores, c.proficiencies),
+      source: SRD_SOURCE,
+    });
+  }
   validateCharacter(c);
   check(validateBuild(c).valid, "Creator modifiers invalid");
   const stats = derive(c);
@@ -256,11 +331,21 @@ export function suggestChoices(context, config, input) {
   }
   for (let pass = 0; pass < 5; pass++) {
     const r = draftProgression(context, config, d),
-      usedSkills = new Set(d.background.skills),
+      usedSkills = new Set(r.origin?.background.skills ?? d.background.skills),
       usedExpertise = new Set(),
       features = new Set(),
       spells = new Map(),
       groups = new Map();
+    for (const q of r.origin?.choices ?? []) {
+      d.originSelections ??= {};
+      if (!d.originSelections[q.id]?.length) {
+        const current =
+          draftProgression(context, config, d).origin?.choices.find(
+            (v) => v.id === q.id,
+          ) ?? q;
+        d.originSelections[q.id] = current.options.slice(0, current.count);
+      }
+    }
     for (const q of r.choices) {
       if (q.kind === "subclass") continue;
       const current = d.selections[q.id] ?? [],
@@ -338,4 +423,44 @@ export function suggestChoices(context, config, input) {
   d.confirmed = false;
   d.reviewed = false;
   return d;
+}
+
+/** Explicit review action: park an invalid decision in the draft, never destroy its values. */
+export function retainDecision(d, kind, choiceId) {
+  const values =
+    kind === "subclass"
+      ? [d.classes.find((c) => c.id === choiceId)?.subclassId].filter(Boolean)
+      : [
+          ...((kind === "origin" ? d.originSelections : d.selections)?.[
+            choiceId
+          ] ?? []),
+        ];
+  if (!values.length) return;
+  d.retainedDecisions ??= [];
+  d.retainedDecisions.push({ kind, choiceId, values });
+  if (kind === "subclass")
+    d.classes.find((c) => c.id === choiceId).subclassId = null;
+  else delete (kind === "origin" ? d.originSelections : d.selections)[choiceId];
+}
+export function restoreDecision(d, position) {
+  const old = d.retainedDecisions?.[position];
+  check(
+    old && ["class", "origin", "subclass"].includes(old.kind),
+    "Retained decision",
+  );
+  if (old.kind === "subclass")
+    check(
+      d.classes.some((c) => c.id === old.choiceId),
+      "Restore the class before its subclass",
+    );
+  d.retainedDecisions.splice(position, 1);
+  retainDecision(d, old.kind, old.choiceId);
+  if (old.kind === "subclass")
+    d.classes.find((c) => c.id === old.choiceId).subclassId = old.values[0];
+  else {
+    const key = old.kind === "origin" ? "originSelections" : "selections";
+    d[key] ??= {};
+    d[key][old.choiceId] = [...old.values];
+  }
+  d.confirmed = d.reviewed = d.finalized = false;
 }

@@ -3,7 +3,7 @@ import { chromium } from "playwright";
 import { spawn } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";
 import { originalPack } from "./fixtures.mjs";
-const port = 4180,
+const port = Number(process.env.PILOT20_E2E_PORT ?? 4180),
   url = `http://127.0.0.1:${port}/web/index.html`,
   server = spawn(process.execPath, ["scripts/serve-web.mjs"], {
     env: { ...process.env, PORT: String(port) },
@@ -26,26 +26,51 @@ const ctx = await browser.newContext({
     viewport: { width: 1440, height: 1000 },
   }),
   p = await ctx.newPage();
+p.setDefaultTimeout(15000);
+const originalPush = results.push.bind(results);
+results.push = (...items) => {
+  console.log(...items);
+  return originalPush(...items);
+};
 p.on("pageerror", (e) => errors.push(e.message));
 const screenshot = async (name) => {
   await p.locator("#notice").waitFor({ state: "hidden" });
-  await mkdir("docs/screenshots", { recursive: true });
+  await mkdir("docs/screenshots/v031", { recursive: true });
   await p.screenshot({
-    path: "docs/screenshots/" + name + ".png",
+    path: "docs/screenshots/v031/" + name + ".png",
     fullPage: true,
   });
 };
-const step = async (name) => {
+const step = async (oldName) => {
+  const name =
+    {
+      Identité: "Race",
+      Origine: "Race",
+      Classe: "Classe & niveau",
+      Niveau: "Classe & niveau",
+      Progression: "Capacités de classe",
+      "Sous-classe": "Capacités de classe",
+      Compétences: "Maîtrises",
+      Sorts: "Sorts & équipement",
+      Équipement: "Sorts & équipement",
+      Récapitulatif: "Finalisation",
+    }[oldName] ?? oldName;
   await p
     .locator(".steps")
     .getByRole("button", { name: new RegExp(name) })
     .click();
   await p.locator(".editor-main h2").filter({ hasText: name }).waitFor();
+  if (oldName === "Classe")
+    await p.getByText("Changer de classe", { exact: true }).click();
+  if (oldName === "Sous-classe") {
+    await p.getByLabel("Niveau consulté", { exact: true }).selectOption("3");
+    await p.getByLabel("Barde · Sous-classe", { exact: true }).waitFor();
+  }
 };
 const blur = async (locator) => {
   await locator.blur();
   await p
-    .getByRole("status")
+    .locator("#notice")
     .filter({ hasText: "Enregistré sur cet appareil" })
     .waitFor();
 };
@@ -60,7 +85,9 @@ async function begin(name, mode = "Rapide") {
   await f.fill(name);
   await blur(f);
   await step("Origine");
-  const o = p.getByLabel("Origine", { exact: true });
+  const o = p.getByLabel("Race · Personnalisée · validation MJ", {
+    exact: true,
+  });
   await o.fill("Origine originale, vérifiée par le MJ");
   await blur(o);
   await step("Historique");
@@ -84,6 +111,17 @@ async function save() {
     .getByRole("button", { name: "Enregistrer la fiche", exact: true })
     .click();
   await p.getByText("Companion Preview", { exact: true }).waitFor();
+}
+async function templateSuggestions() {
+  const panel = p.locator(".template-tools");
+  if ((await panel.getAttribute("open")) === null)
+    await panel.locator("summary").first().click();
+  await panel
+    .getByRole("button", {
+      name: "Appliquer les suggestions du modèle",
+      exact: true,
+    })
+    .click();
 }
 const nav = async (name) => {
   await p
@@ -110,12 +148,7 @@ try {
   await step("Classe");
   assert.equal(await p.locator(".class-card").count(), 12);
   await screenshot("desktop-classes");
-  await p
-    .getByRole("button", {
-      name: "Appliquer les suggestions du modèle",
-      exact: true,
-    })
-    .click();
+  await templateSuggestions();
   await step("Compétences");
   assert.equal(await p.locator(".choice input:checked").count(), 2);
   await p.getByRole("button", { name: "Guidé", exact: true }).click();
@@ -189,14 +222,12 @@ try {
   await step("Niveau");
   await p.getByLabel("Barde · Niveau", { exact: true }).fill("10");
   await p.getByLabel("Barde · Niveau", { exact: true }).blur();
-  await p
-    .getByRole("button", {
-      name: "Appliquer les suggestions du modèle",
-      exact: true,
-    })
-    .click();
+  await templateSuggestions();
   await step("Sorts");
-  await p.getByRole("heading", { name: "Secrets magiques · 10" }).waitFor();
+  await p
+    .getByLabel("Choix à afficher", { exact: true })
+    .selectOption("bard:magical-secrets-10");
+  await p.getByRole("heading", { name: /Secrets magiques · 10/ }).waitFor();
   await screenshot("ipad-spells");
   await step("Sous-classe");
   await screenshot("ipad-subclass");
@@ -230,12 +261,7 @@ try {
   await p
     .getByLabel("Barde · Sous-classe", { exact: true })
     .selectOption("original:college");
-  await p
-    .getByRole("button", {
-      name: "Appliquer les suggestions du modèle",
-      exact: true,
-    })
-    .click();
+  await templateSuggestions();
   await save();
   results.push(
     "Inert local private pack drives expert subclass choices and compilation (synthetic only)",
@@ -322,12 +348,7 @@ try {
   await p.locator("header select").selectOption("fr");
   await nav("Accueil");
   await begin("Création complète hors ligne");
-  await p
-    .getByRole("button", {
-      name: "Appliquer les suggestions du modèle",
-      exact: true,
-    })
-    .click();
+  await templateSuggestions();
   await save();
   await p
     .getByRole("button", {

@@ -1,3 +1,4 @@
+import { EQUIPMENT, WEAPONS } from "../catalog/equipment.js";
 import {
   check,
   json,
@@ -74,10 +75,50 @@ export function validateDraft(d) {
   for (const k of ["reviewed", "confirmed", "finalized", "shield"])
     check(typeof d[k] === "boolean", "Draft flags");
   check(
-    ["none", "leather", "chain", "scale"].includes(d.equipment) &&
+    Object.hasOwn(EQUIPMENT, d.equipment) &&
       ["draft", "review", "ready"].includes(d.status),
     "Draft equipment/status",
   );
+  if (d.weapons !== undefined)
+    check(
+      Array.isArray(d.weapons) &&
+        new Set(d.weapons).size === d.weapons.length &&
+        d.weapons.every((v) => Object.hasOwn(WEAPONS, v)),
+      "Draft weapons",
+    );
+  if (d.retainedDecisions !== undefined)
+    check(
+      Array.isArray(d.retainedDecisions) &&
+        d.retainedDecisions.every(
+          (r) =>
+            ["class", "origin", "subclass"].includes(r.kind) &&
+            id(r.choiceId) &&
+            Array.isArray(r.values) &&
+            r.values.every(id),
+        ),
+      "Retained decisions",
+    );
+  if (d.raceId !== undefined)
+    check(d.raceId === null || id(d.raceId), "Draft race");
+  if (d.backgroundId !== undefined)
+    check(d.backgroundId === null || id(d.backgroundId), "Draft background ID");
+  if (d.subraceId !== undefined)
+    check(d.subraceId === null || id(d.subraceId), "Draft subrace");
+  if (d.scoresAreBase !== undefined)
+    check(typeof d.scoresAreBase === "boolean", "Draft score mode");
+  if (d.scoreMethod !== undefined)
+    check(
+      ["manual", "standard", "point-buy", "rolled"].includes(d.scoreMethod),
+      "Draft score method",
+    );
+  if (d.originSelections !== undefined)
+    check(
+      d.originSelections &&
+        Object.values(d.originSelections).every(
+          (v) => Array.isArray(v) && v.every(id),
+        ),
+      "Draft origin decisions",
+    );
   return d;
 }
 /** Drafts and UI preferences live in the existing meta store; writes retain CAS revision guards. */

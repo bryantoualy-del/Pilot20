@@ -1,13 +1,16 @@
 # Pilot20
 
-Socle universel pour personnages D&D 5e **2014**. V0.1 de développement : moteur local indépendant du dashboard, piloté par des données, sans compte et sans dépendance d’exécution.
+Application locale pour personnages D&D 5e **2014** : moteur universel, catalogue SRD, créateur graphique et bibliothèque. V0.3.1 proposée en revue, avec effets manuels et validation Safari physique encore à réaliser.
 
 ```sh
+npm ci
 npm test
-npm run demo
+npm run dev
 ```
 
-Node.js 22 ou 24. Aucune installation de dépendances nécessaire. La démo est textuelle et fonctionne hors ligne après récupération du dépôt.
+Créateur local : `http://127.0.0.1:4173/web/index.html`. Voir [l’audit V0.3.1](docs/V0.3.1-AUDIT.md), [le benchmark UX](docs/V0.3.1-UX-BENCHMARK.md) et [la validation avec captures et limites](docs/V0.3.1-VALIDATION.md).
+
+Node.js 22 ou 24. La démo du moteur reste disponible avec `npm run demo`. Le créateur dispose d’un cache hors ligne après une première installation complète.
 
 - [Audit des huit références](docs/AUDIT.md)
 - [Architecture et décisions](docs/ARCHITECTURE.md)
