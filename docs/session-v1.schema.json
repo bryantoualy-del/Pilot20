@@ -950,217 +950,12 @@
           ]
         },
         "plan": {
-          "type": "object",
-          "properties": {
-            "command": {
-              "type": "object",
-              "required": [
-                "id",
-                "type",
-                "actorId",
-                "abilityId"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                },
-                "type": {
-                  "const": "useAbility"
-                },
-                "actorId": {
-                  "type": "string",
-                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                },
-                "abilityId": {
-                  "type": "string",
-                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                }
-              }
-            },
-            "ability": {
-              "type": "object"
-            },
-            "targetIds": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-              },
-              "maxItems": 20
-            },
-            "slotLevel": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 9
-            },
-            "natural": {
-              "type": [
-                "integer",
-                "null"
-              ],
-              "minimum": 1,
-              "maximum": 20
-            },
-            "total": {
-              "type": [
-                "integer",
-                "null"
-              ]
-            },
-            "critical": {
-              "type": "boolean"
-            },
-            "hit": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "command",
-            "ability",
-            "targetIds",
-            "slotLevel",
-            "natural",
-            "total",
-            "critical",
-            "hit"
-          ],
-          "additionalProperties": false
+          "$ref": "#/$defs/reactiveContinuation"
         },
         "decisions": {
           "type": "array",
           "items": {
-            "type": "object",
-            "properties": {
-              "version": {
-                "const": 2
-              },
-              "id": {
-                "type": "string",
-                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-              },
-              "eventId": {
-                "type": "string",
-                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-              },
-              "actorId": {
-                "type": "string",
-                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-              },
-              "revision": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 1000000
-              },
-              "status": {
-                "enum": [
-                  "pending",
-                  "resolved",
-                  "declined",
-                  "cancelled"
-                ]
-              },
-              "options": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                    },
-                    "label": {
-                      "type": "string"
-                    },
-                    "costs": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "resourceId": {
-                            "type": "string",
-                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                          },
-                          "amount": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "maximum": 1000000
-                          }
-                        },
-                        "required": [
-                          "resourceId",
-                          "amount"
-                        ],
-                        "additionalProperties": false
-                      },
-                      "maxItems": 30
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "label",
-                    "costs"
-                  ],
-                  "additionalProperties": false
-                },
-                "maxItems": 30
-              },
-              "continuation": {
-                "type": "object",
-                "properties": {
-                  "eventId": {
-                    "type": "string",
-                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                  },
-                  "phase": {
-                    "enum": [
-                      "cast",
-                      "after-roll",
-                      "before-hit",
-                      "after-hit",
-                      "before-damage",
-                      "after-damage"
-                    ]
-                  }
-                },
-                "required": [
-                  "eventId",
-                  "phase"
-                ],
-                "additionalProperties": false
-              },
-              "policy": {
-                "const": "block-dependent-resolution"
-              },
-              "ruleId": {
-                "type": "string",
-                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-              },
-              "phase": {
-                "enum": [
-                  "cast",
-                  "after-roll",
-                  "before-hit",
-                  "after-hit",
-                  "before-damage",
-                  "after-damage"
-                ]
-              }
-            },
-            "required": [
-              "version",
-              "id",
-              "eventId",
-              "actorId",
-              "revision",
-              "status",
-              "options",
-              "continuation",
-              "policy",
-              "ruleId",
-              "phase"
-            ],
-            "additionalProperties": false
+            "$ref": "#/$defs/reactiveDecision"
           },
           "maxItems": 200
         },
@@ -1170,41 +965,7 @@
               "type": "null"
             },
             {
-              "type": "object",
-              "properties": {
-                "version": {
-                  "const": 1
-                },
-                "eventId": {
-                  "type": "string",
-                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                },
-                "phase": {
-                  "enum": [
-                    "cast",
-                    "after-roll",
-                    "before-hit",
-                    "after-hit",
-                    "before-damage",
-                    "after-damage"
-                  ]
-                },
-                "decisionId": {
-                  "type": "string",
-                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                },
-                "status": {
-                  "const": "pending"
-                }
-              },
-              "required": [
-                "version",
-                "eventId",
-                "phase",
-                "decisionId",
-                "status"
-              ],
-              "additionalProperties": false
+              "$ref": "#/$defs/reactiveReactionwindow"
             }
           ]
         },
@@ -1332,419 +1093,7 @@
               "type": "null"
             },
             {
-              "type": "object",
-              "properties": {
-                "version": {
-                  "const": 1
-                },
-                "id": {
-                  "type": "string",
-                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                },
-                "actorId": {
-                  "type": "string",
-                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                },
-                "targetIds": {
-                  "type": "array",
-                  "items": {
-                    "type": "string",
-                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                  },
-                  "maxItems": 20
-                },
-                "phase": {
-                  "enum": [
-                    "cast",
-                    "after-roll",
-                    "before-hit",
-                    "after-hit",
-                    "before-damage",
-                    "after-damage"
-                  ]
-                },
-                "revision": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 1000000
-                },
-                "status": {
-                  "enum": [
-                    "pending",
-                    "completed",
-                    "cancelled"
-                  ]
-                },
-                "plan": {
-                  "type": "object",
-                  "properties": {
-                    "command": {
-                      "type": "object",
-                      "required": [
-                        "id",
-                        "type",
-                        "actorId",
-                        "abilityId"
-                      ],
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                        },
-                        "type": {
-                          "const": "useAbility"
-                        },
-                        "actorId": {
-                          "type": "string",
-                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                        },
-                        "abilityId": {
-                          "type": "string",
-                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                        }
-                      }
-                    },
-                    "ability": {
-                      "type": "object"
-                    },
-                    "targetIds": {
-                      "type": "array",
-                      "items": {
-                        "type": "string",
-                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                      },
-                      "maxItems": 20
-                    },
-                    "slotLevel": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 9
-                    },
-                    "natural": {
-                      "type": [
-                        "integer",
-                        "null"
-                      ],
-                      "minimum": 1,
-                      "maximum": 20
-                    },
-                    "total": {
-                      "type": [
-                        "integer",
-                        "null"
-                      ]
-                    },
-                    "critical": {
-                      "type": "boolean"
-                    },
-                    "hit": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": [
-                    "command",
-                    "ability",
-                    "targetIds",
-                    "slotLevel",
-                    "natural",
-                    "total",
-                    "critical",
-                    "hit"
-                  ],
-                  "additionalProperties": false
-                },
-                "decisions": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "version": {
-                        "const": 2
-                      },
-                      "id": {
-                        "type": "string",
-                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                      },
-                      "eventId": {
-                        "type": "string",
-                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                      },
-                      "actorId": {
-                        "type": "string",
-                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                      },
-                      "revision": {
-                        "type": "integer",
-                        "minimum": 0,
-                        "maximum": 1000000
-                      },
-                      "status": {
-                        "enum": [
-                          "pending",
-                          "resolved",
-                          "declined",
-                          "cancelled"
-                        ]
-                      },
-                      "options": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "string",
-                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                            },
-                            "label": {
-                              "type": "string"
-                            },
-                            "costs": {
-                              "type": "array",
-                              "items": {
-                                "type": "object",
-                                "properties": {
-                                  "resourceId": {
-                                    "type": "string",
-                                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                                  },
-                                  "amount": {
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "maximum": 1000000
-                                  }
-                                },
-                                "required": [
-                                  "resourceId",
-                                  "amount"
-                                ],
-                                "additionalProperties": false
-                              },
-                              "maxItems": 30
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "label",
-                            "costs"
-                          ],
-                          "additionalProperties": false
-                        },
-                        "maxItems": 30
-                      },
-                      "continuation": {
-                        "type": "object",
-                        "properties": {
-                          "eventId": {
-                            "type": "string",
-                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                          },
-                          "phase": {
-                            "enum": [
-                              "cast",
-                              "after-roll",
-                              "before-hit",
-                              "after-hit",
-                              "before-damage",
-                              "after-damage"
-                            ]
-                          }
-                        },
-                        "required": [
-                          "eventId",
-                          "phase"
-                        ],
-                        "additionalProperties": false
-                      },
-                      "policy": {
-                        "const": "block-dependent-resolution"
-                      },
-                      "ruleId": {
-                        "type": "string",
-                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                      },
-                      "phase": {
-                        "enum": [
-                          "cast",
-                          "after-roll",
-                          "before-hit",
-                          "after-hit",
-                          "before-damage",
-                          "after-damage"
-                        ]
-                      }
-                    },
-                    "required": [
-                      "version",
-                      "id",
-                      "eventId",
-                      "actorId",
-                      "revision",
-                      "status",
-                      "options",
-                      "continuation",
-                      "policy",
-                      "ruleId",
-                      "phase"
-                    ],
-                    "additionalProperties": false
-                  },
-                  "maxItems": 200
-                },
-                "window": {
-                  "anyOf": [
-                    {
-                      "type": "null"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "version": {
-                          "const": 1
-                        },
-                        "eventId": {
-                          "type": "string",
-                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                        },
-                        "phase": {
-                          "enum": [
-                            "cast",
-                            "after-roll",
-                            "before-hit",
-                            "after-hit",
-                            "before-damage",
-                            "after-damage"
-                          ]
-                        },
-                        "decisionId": {
-                          "type": "string",
-                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                        },
-                        "status": {
-                          "const": "pending"
-                        }
-                      },
-                      "required": [
-                        "version",
-                        "eventId",
-                        "phase",
-                        "decisionId",
-                        "status"
-                      ],
-                      "additionalProperties": false
-                    }
-                  ]
-                },
-                "processed": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "maxItems": 200
-                },
-                "modifiers": {
-                  "type": "object",
-                  "properties": {
-                    "attackTotal": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 1000000
-                    },
-                    "damageDivisor": {
-                      "type": "integer",
-                      "minimum": 1,
-                      "maximum": 1024
-                    },
-                    "cancelled": {
-                      "type": "boolean"
-                    },
-                    "damage": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "dice": {
-                            "type": "string"
-                          },
-                          "damageType": {
-                            "type": "string",
-                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                          },
-                          "rolls": {
-                            "type": "array",
-                            "items": {
-                              "type": "integer",
-                              "minimum": 0,
-                              "maximum": 1000000
-                            },
-                            "maxItems": 100
-                          }
-                        },
-                        "required": [
-                          "dice",
-                          "damageType",
-                          "rolls"
-                        ],
-                        "additionalProperties": false
-                      },
-                      "maxItems": 200
-                    }
-                  },
-                  "required": [
-                    "attackTotal",
-                    "damageDivisor",
-                    "cancelled",
-                    "damage"
-                  ],
-                  "additionalProperties": false
-                },
-                "lockedActorIds": {
-                  "type": "array",
-                  "items": {
-                    "type": "string",
-                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
-                  },
-                  "maxItems": 100
-                },
-                "outcome": {
-                  "anyOf": [
-                    {
-                      "type": "null"
-                    },
-                    {
-                      "type": "object",
-                      "required": [
-                        "results"
-                      ],
-                      "properties": {
-                        "results": {
-                          "type": "array",
-                          "items": {
-                            "type": "object"
-                          },
-                          "maxItems": 100
-                        }
-                      }
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "version",
-                "id",
-                "actorId",
-                "targetIds",
-                "phase",
-                "revision",
-                "status",
-                "plan",
-                "decisions",
-                "window",
-                "processed",
-                "modifiers",
-                "lockedActorIds",
-                "outcome"
-              ],
-              "additionalProperties": false
+              "$ref": "#/$defs/reactiveEvent"
             }
           ]
         },
@@ -1795,7 +1144,8 @@
                 "ally-attacks",
                 "zone-enter",
                 "spell-cast",
-                "attack-roll"
+                "attack-roll",
+                "ability-targeted"
               ]
             },
             "scope": {
@@ -1854,25 +1204,7 @@
         "conditions": {
           "type": "array",
           "items": {
-            "type": "object",
-            "properties": {
-              "fact": {
-                "type": "string",
-                "pattern": "^[a-zA-Z][a-zA-Z0-9.]{0,79}$"
-              },
-              "equals": {
-                "type": [
-                  "boolean",
-                  "string",
-                  "number"
-                ]
-              }
-            },
-            "required": [
-              "fact",
-              "equals"
-            ],
-            "additionalProperties": false
+            "$ref": "#/$defs/reactiveCondition"
           },
           "maxItems": 20
         },
@@ -2063,6 +1395,65 @@
         "options"
       ],
       "additionalProperties": false
+    },
+    "reactiveCondition": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "fact": {
+              "type": "string",
+              "pattern": "^[a-zA-Z][a-zA-Z0-9.]{0,79}$"
+            },
+            "equals": {
+              "type": [
+                "boolean",
+                "string",
+                "number"
+              ]
+            }
+          },
+          "required": [
+            "fact",
+            "equals"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "any": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/reactiveCondition"
+              },
+              "minItems": 1,
+              "maxItems": 10
+            }
+          },
+          "required": [
+            "any"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "all": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/reactiveCondition"
+              },
+              "minItems": 1,
+              "maxItems": 10
+            }
+          },
+          "required": [
+            "all"
+          ],
+          "additionalProperties": false
+        }
+      ]
     }
   }
 }

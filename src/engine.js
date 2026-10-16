@@ -90,6 +90,7 @@ function finishAbility(s,event) {
   const results=[],lasting=[];
   const amounts=hit?ability.effects.map((e,i)=>resolveAmount(e,c.effectRolls?.[i],critical)):[];
   if(hit) for(const [key,target] of targets) {
+    if(ability.combat?.negatedByEffects?.some(k=>target.advanced?.effects.some(e=>e.rule.stack.key===k))) {results.push({targetId:key,damage:0,tempLost:0,hpLost:0,negated:true});continue;}
     let save=null;
     if(ability.save) {
       const r=ability.save,m=saveModes(target,r.ability);
@@ -111,13 +112,17 @@ function finishAbility(s,event) {
     let detail={targetId:key,hp:copy(target.hp)};
     if(ability.attack) for(const extra of event.modifiers.damage) {const n=resolveAmount({kind:'damage',dice:extra.dice},extra.rolls,critical);components.set(extra.damageType,(components.get(extra.damageType)||0)+n);}
     if(components.size) {
+      const breakdown=[];
       const n=[...components].reduce((sum,[type,n])=>{
+        const raw=n;
         // Saving-throw reduction precedes resistance/vulnerability, once per typed total.
         if(save?.success) n=ability.save.onSuccess==='half'?Math.floor(n/2):ability.save.onSuccess==='none'?0:n;
+        const afterSave=n;
         n=Math.floor(n/event.modifiers.damageDivisor);
-        return sum+effectiveDamage(n,type,target.definition);
+        const final=effectiveDamage(n,type,target.definition);breakdown.push({type,raw,afterSave,afterModifiers:n,afterDefenses:final});
+        return sum+final;
       },0);
-      detail={targetId:key,...damage(target,n,c.id+':'+key)};
+      detail={targetId:key,rawDamage:breakdown.reduce((n,c)=>n+c.raw,0),modifiedDamage:breakdown.reduce((n,c)=>n+c.afterModifiers,0),defendedDamage:n,components:breakdown,...damage(target,n,c.id+':'+key)};
     }
     if(save) detail.save=save;
     results.push(detail);

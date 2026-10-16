@@ -31,7 +31,7 @@ export function validateTransformation(t) {
 }
 export function validateTrigger(t) {
   json(t);keys(t,['version','event','scope','limit','whileEffect']);
-  check(t.version===1 && ['attack-hit','damage-taken','turn-start','turn-end','save-resolved','ally-attacks','zone-enter','spell-cast','attack-roll'].includes(t.event),'Trigger event');
+  check(t.version===1 && ['attack-hit','damage-taken','turn-start','turn-end','save-resolved','ally-attacks','zone-enter','spell-cast','attack-roll','ability-targeted'].includes(t.event),'Trigger event');
   check(['self','ally','target','any'].includes(t.scope) && ['none','turn','round','short-rest','long-rest'].includes(t.limit),'Trigger scope');
   check(t.whileEffect===null || id(t.whileEffect),'Trigger dependency');return t;
 }
