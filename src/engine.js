@@ -1,3 +1,4 @@
+import {modifyCasting,stanceDamage,stanceDefense,activity,tokenRules} from './rules/conditional.js';
 import {PHASES,beginEvent,nextWindow,respond,guardPending} from './rules/reactive.js';
 import {json} from './character/contracts.js';
 import {advanced,profileExecutable,statistic,saveModes,hasCondition,cleanupConcentration,boundary,checkCanAct,payAction,prepareCast,establish,addEffect,removeEffect} from './rules/combat.js';
@@ -25,6 +26,7 @@ function activateConcentration(a, rule, instanceId, hit) {
   a.checks = [];
 }
 function damage(a, amount, damageId) {
+  if(a.advanced && amount>0)activity(a).damaged=true;
   const absorbed = Math.min(a.hp.temp,amount); a.hp.temp -= absorbed;
   const lost = Math.min(a.hp.current,amount-absorbed); a.hp.current -= lost;
   // Damage absorbed by temporary HP still requires concentration.
@@ -41,6 +43,8 @@ function actor(s,key) { check(Object.hasOwn(s.actors,key),'Unknown actor'); retu
 function activation(s,c,manual=false) {
   const a=actor(s,c.actorId);check(Object.hasOwn(a.definition.abilities,c.abilityId),'Unknown ability');
   const ability=copy(a.definition.abilities[c.abilityId]),p=ability.combat;
+  check((p?.externalRequirements??[]).every(k=>c.facts?.[c.actorId]?.[k]===true),'Ability prerequisites require external validation');
+  modifyCasting(a,ability,c);
   checkCanAct(s,a);
   check(!ability.concentration || !hasCondition(a,'cannotConcentrate'),'Concentration restricted');
   if(manual) check(p?.mode==='manual','Explicit manual profile required');
@@ -51,6 +55,7 @@ function activation(s,c,manual=false) {
   const targets=ids.map(key=>[key,actor(s,key)]);
   check(!ability.attack || ids.length===1,'One attack target required');
   check(!a.checks.length || ability.concentration?.start==='activation','Resolve concentration first');
+  if(p?.spell)check(!hasCondition(a,'cannotCast'),'Spellcasting restricted');
   payAction(s,a,ability,c);
   if(ability.resource) {const r=ability.resource;check(a.resources[r.id]>=r.amount,'Resource depleted');a.resources[r.id]-=r.amount;}
   const slotLevel=prepareCast(a,ability,c);
@@ -62,19 +67,28 @@ function activation(s,c,manual=false) {
 }
 function useAbility(s,c) {
   const {a,ability,targets,slotLevel}=activation(s,c);
-  let hit=true,critical=false,total=null;
-  if(ability.attack) {
-    const natural=d20(c.attackRolls,c.advantage===true,c.disadvantage===true);
-    total=natural+statistic(a,'attack',ability.attack.bonus);critical=natural===20;
-    hit=natural!==1 && (critical || total>=statistic(targets[0][1],'ac',targets[0][1].definition.ac));
-  }
-  const plan={command:copy(c),ability,targetIds:targets.map(([key])=>key),slotLevel,natural:ability.attack?d20(c.attackRolls,c.advantage===true,c.disadvantage===true):null,total,critical,hit};
-  if(!Object.values(s.actors).some(a=>a.definition.rules?.length))return finishAbility(s,{plan,modifiers:{damage:[],damageDivisor:1,attackTotal:0}});
-  return advanceEvent(s,beginEvent(s,plan));
+  if(ability.attack && a.advanced?.stance?.rule.sustain)check(typeof c.facts?.[c.actorId]?.hostileTarget==='boolean','Hostility requires external validation');
+  if(ability.attack && c.facts?.[c.actorId]?.hostileTarget===true) {advanced(a);activity(a).attacked=true;}
+  const plan={command:copy(c),ability,targetIds:targets.map(([key])=>key),slotLevel,natural:null,total:null,critical:false,hit:true,saves:{}};
+  if(!Object.values(s.actors).some(a=>a.definition.rules?.length || tokenRules(a).length)) {rollPlan(s,plan);return finishAbility(s,{plan,modifiers:{damage:[],damageDivisor:1,attackTotal:0,saves:{}}});}
+  const event=beginEvent(s,plan);validateContinuation(s,event);return advanceEvent(s,event);
+}
+function rollPlan(s,p) {
+ const a=s.actors[p.command.actorId],ability=p.ability,c=p.command;
+ if(ability.combat?.roll && p.total===null) {const r=ability.combat.roll,m=saveModes(a,r.ability);p.total=d20(c.attackRolls,m.advantage,m.disadvantage)+r.bonus;}
+ if(ability.attack && p.natural===null) {p.natural=d20(c.attackRolls,c.advantage===true,c.disadvantage===true);p.total=p.natural+statistic(a,'attack',ability.attack.bonus);p.critical=p.natural===20;const t=s.actors[p.targetIds[0]];p.hit=p.natural!==1 && (p.critical || p.total>=statistic(t,'ac',t.definition.ac));}
+ if(ability.save && !Object.keys(p.saves).length)for(const key of p.targetIds) {const t=s.actors[key],r=ability.save,m=saveModes(t,r.ability);check(integer(t.definition.saves[r.ability],-100,100),'Target save statistic required');p.saves[key]=d20(c.saveRolls?.[key],m.advantage,m.disadvantage || ability.combat?.castPlan?.firstSaveDisadvantageTarget===key)+statistic(t,'save.'+r.ability,t.definition.saves[r.ability]);}
+}
+/** Validate on an isolated game snapshot before persisting a pause; never apply a preview. */
+function validateContinuation(s,event) {
+ const preview=game(s),e=copy(event);rollPlan(preview,e.plan);
+ if(e.plan.ability.attack) {const t=preview.actors[e.targetIds[0]],p=e.plan;p.hit=p.natural!==1 && (p.critical || p.total+e.modifiers.attackTotal>=statistic(t,'ac',t.definition.ac));}
+ finishAbility(preview,e);
 }
 function advanceEvent(s,e) {
   while(true) {
     const p=e.plan,t=s.actors[e.targetIds[0]];
+    if(e.phase==='after-roll')rollPlan(s,p);
     if(e.phase==='after-damage' && e.outcome===null)e.outcome=finishAbility(s,e);
     if(e.phase==='before-hit' && p.ability.attack) p.hit=p.natural!==1 && (p.critical || p.total+e.modifiers.attackTotal>=statistic(t,'ac',t.definition.ac));
     if(nextWindow(s,e)) return {pending:e.window.decisionId,eventId:e.id,phase:e.phase};
@@ -86,6 +100,7 @@ function advanceEvent(s,e) {
 }
 function finishAbility(s,event) {
   const {command:c,ability,targetIds,slotLevel,hit,critical,total}=event.plan,a=actor(s,c.actorId),targets=targetIds.map(k=>[k,actor(s,k)]);
+  if(ability.combat?.roll) {const r=ability.combat.roll,n=total+event.modifiers.attackTotal;return {total:n,success:n>=r.dc,dc:r.dc,results:[]};}
   activateConcentration(a,ability.concentration,c.id,hit);cleanupConcentration(s);
   const results=[],lasting=[];
   const amounts=hit?ability.effects.map((e,i)=>resolveAmount(e,c.effectRolls?.[i],critical)):[];
@@ -95,7 +110,7 @@ function finishAbility(s,event) {
     if(ability.save) {
       const r=ability.save,m=saveModes(target,r.ability);
       check(integer(target.definition.saves[r.ability],-100,100),'Target save statistic required');
-      const total=d20(c.saveRolls?.[key],m.advantage,m.disadvantage)+statistic(target,'save.'+r.ability,target.definition.saves[r.ability]);
+      const total=(event.plan.saves[key]??(d20(c.saveRolls?.[key],m.advantage,m.disadvantage || ability.combat?.castPlan?.firstSaveDisadvantageTarget===key)+statistic(target,'save.'+r.ability,target.definition.saves[r.ability])))+(event.modifiers.saves[key]??0);
       save={ability:r.ability,dc:r.dc,total,success:total>=r.dc};
     }
     const components=new Map();let damageBonusUsed=false;
@@ -103,7 +118,7 @@ function finishAbility(s,event) {
       if(e.when==='success' && !save?.success || e.when==='failure' && save?.success) continue;
       let n=amounts[i];
       if(e.kind==='damage') {
-        if(!damageBonusUsed) {n=Math.max(0,statistic(a,'damage',n));damageBonusUsed=true;}
+        if(!damageBonusUsed) {n=Math.max(0,statistic(a,'damage',n)+stanceDamage(a,ability));damageBonusUsed=true;}
         components.set(e.damageType,(components.get(e.damageType)||0)+n);
       }
       if(e.kind==='heal') target.hp.current=Math.min(target.hp.max,target.hp.current+n);
@@ -119,7 +134,7 @@ function finishAbility(s,event) {
         if(save?.success) n=ability.save.onSuccess==='half'?Math.floor(n/2):ability.save.onSuccess==='none'?0:n;
         const afterSave=n;
         n=Math.floor(n/event.modifiers.damageDivisor);
-        const final=effectiveDamage(n,type,target.definition);breakdown.push({type,raw,afterSave,afterModifiers:n,afterDefenses:final});
+        const final=effectiveDamage(n,type,{...target.definition,resistances:stanceDefense(target)});breakdown.push({type,raw,afterSave,afterModifiers:n,afterDefenses:final});
         return sum+final;
       },0);
       detail={targetId:key,rawDamage:breakdown.reduce((n,c)=>n+c.raw,0),modifiedDamage:breakdown.reduce((n,c)=>n+c.afterModifiers,0),defendedDamage:n,components:breakdown,...damage(target,n,c.id+':'+key)};
@@ -130,7 +145,7 @@ function finishAbility(s,event) {
     lasting.push(key);
   }
   establish(s,a,ability,c,lasting,Object.fromEntries(results.filter(r=>r.save).map(r=>[r.targetId,r.save.success])));cleanupConcentration(s);
-  return {hit,critical,total,results,...(ability.combat?.spell?{slotLevel}: {})};
+  return {hit,critical,total:total===null?null:total+event.modifiers.attackTotal,results,...(ability.combat?.spell?{slotLevel}: {})};
 }
 function declareManual(s,c) {
   check(typeof c.reason==='string' && c.reason.trim(),'Manual declaration reason required');
@@ -162,7 +177,9 @@ function resolveManual(s,c) {
   x.pendingManual=null;cleanupConcentration(s);return {resolved:pending.id,reason:c.reason,results};
 }
 function apply(s,c) {
-  if (c.type === 'respondDecision') return advanceEvent(s,respond(s,c));
+  if(c.type==='setUnconscious') {const a=actor(s,c.actorId);check(typeof c.value==='boolean','Boolean unconsciousness');advanced(a).unconscious=c.value;return {unconscious:c.value};}
+  if(c.type==='endStance') {const a=actor(s,c.actorId),x=advanced(a);check(x.stance && s.activeActorId===c.actorId && x.turnOpen!==false && a.economy.bonus,'Voluntary stance end requires bonus action');a.economy.bonus=false;x.stance=null;return {ended:true};}
+  if (c.type === 'respondDecision') {const e=respond(s,c);validateContinuation(s,e);return advanceEvent(s,e);}
   if (c.type === 'resumeDecision') throw Error('Continuation resumes atomically with its decision; double resume refused');
   if (c.type === 'useAbility') return useAbility(s,c);
   if (c.type === 'declareManual') return declareManual(s,c);
@@ -185,7 +202,7 @@ function apply(s,c) {
     boundary(s,c.actorId,'start');
     for(const a of Object.values(s.actors)) if(a.advanced) a.advanced.casts=[];
     const a = actor(s,c.actorId); s.activeActorId = c.actorId; s.turnId++;
-    a.economy = {action:true,bonus:true,reaction:true,attacks:0}; return {turnId:s.turnId,...(s.reactive?{reactive:s.reactive}:{})};
+    a.economy = {action:true,bonus:true,reaction:true,attacks:0}; return {turnId:s.turnId};
   }
   if (c.type === 'concentrationSave') {
     const a = actor(s,c.actorId), q = a.checks.find(q=>q.id === c.checkId);
@@ -197,7 +214,7 @@ function apply(s,c) {
     if (!success) loseConcentration(a); return {total,dc:q.dc,success};
   }
   if (c.type === 'damage') {
-    const a = actor(s,c.actorId); return damage(a,effectiveDamage(c.amount,c.damageType,a.definition),c.id);
+    const a = actor(s,c.actorId); return damage(a,effectiveDamage(c.amount,c.damageType,{...a.definition,resistances:stanceDefense(a)}),c.id);
   }
   if (c.type === 'setIncapacitated') {
     const a = actor(s,c.actorId); check(typeof c.value === 'boolean','Boolean required');
@@ -215,7 +232,7 @@ function apply(s,c) {
   }
   if (c.type === 'rest') {
     check(['short','long'].includes(c.kind),'Rest kind');
-    check(!Object.values(s.actors).some(a=>a.advanced?.effects.length),'Resolve timed effects before rest'); const a=actor(s,c.actorId);
+    check(!Object.values(s.actors).some(a=>a.advanced?.effects.length || a.advanced?.stance || a.advanced?.tokens?.some(t=>t.status==='available')),'Resolve timed effects before rest'); const a=actor(s,c.actorId);
     for (const [k,r] of Object.entries(a.definition.resources)) if (r.recovery === c.kind || (c.kind === 'long' && r.recovery === 'short')) a.resources[k]=r.max;
     if (c.kind === 'long') {a.hp.current=a.hp.max; a.hp.temp=0; loseConcentration(a);}
     return {rest:c.kind};
@@ -230,7 +247,7 @@ export function execute(input, command, context = {}) {
   if (input.mode === 'encounter') check(context.authority === 'encounter','Encounter authority required');
   const fingerprint = JSON.stringify(command), prior=input.receipts[command.id];
   if (prior) { check(prior.fingerprint === fingerprint,'Command ID collision'); return {state:copy(input),result:copy(prior.result),replayed:true}; }
-  if (['correct','damage','setIncapacitated','startTurn','endTurn','rest','undo','removeEffect','declareManual','resolveManual'].includes(command.type)) check(context.role === 'gm' || input.mode !== 'encounter','GM command required');
+  if (['correct','damage','setIncapacitated','setUnconscious','startTurn','endTurn','rest','undo','removeEffect','declareManual','resolveManual'].includes(command.type)) check(context.role === 'gm' || input.mode !== 'encounter','GM command required');
   if(command.expectedRevision!==undefined) check(command.expectedRevision===input.revision,'Revision conflict');
   if(Object.values(input.actors).some(a=>a.advanced?.pendingManual)) check(['resolveManual','undo'].includes(command.type),'Resolve pending manual decision first');
   guardPending(input,command);

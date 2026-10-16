@@ -1,5 +1,7 @@
 # Generic rules contracts, v1
 
+Current V0.2b.3 status: see [generated coverage](coverage-report.json) and [validation/limits](V0.2b.3-VALIDATION.md). Sections below preserve the earlier audit baseline; they are not a claim that newly delivered bounded reaction primitives remain unavailable.
+
 V0.2b.1 adds `src/rules/contracts.js` as a JSON-only boundary. Character Definition, Runtime, Combat Session, Catalog and Dashboard remain separate. Existing V0.2 envelopes retain version 2; the additive rules-catalog and decision/trigger/transformation contracts have their own version 1. There is no automatic migration of descriptive abilities into executable ones. Existing receipts remain unchanged.
 
 `coverage({version:1, mode, primitives, requirements})` computes a status using the executor's primitive registry. A partial plan is rejected wholesale by automatic execution. Declaring a primitive available is not enough: content compilation and all referenced prerequisites still need validation. Runtime guards are authoritative; the report is descriptive.

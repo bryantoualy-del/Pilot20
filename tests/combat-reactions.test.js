@@ -30,8 +30,8 @@ test('Counterspell success cancels original spell with both costs, failure resum
  const c={...cast(),slotId:'pact'};s=run(s,c);const out=execute(s,answer(s,'accept',{optionId:'slot3',checkRolls:[roll]}));assert.equal(out.state.actors.b.resources.slot3,1);assert.equal(out.state.actors.a.resources.pact,1);assert.equal(out.state.actors.b.hp.current,roll===20?100:88);assert.equal(out.result.cancelled===true,roll===20);}
  let s=setup([],[counterspell(resources,2)]);s.actors.a.definition.abilities.spell=spell();s=run(s,cast());s=run(s,answer(s,'accept',{optionId:'slot3'}));assert.equal(s.actors.b.hp.current,100);
 });
-test('counterspell without spatial verification never opens; nested reactions and bonus spell conflicts refuse',()=>{
- let s=setup([],[counterspell(resources,2)]);s.actors.a.definition.abilities.spell=spell();assert.equal(pendingDecisions(run(s,{...cast(),facts:{}})).length,0);
+test('counterspell asks for spatial verification; nested reactions and bonus spell conflicts refuse',()=>{
+ let s=setup([],[counterspell(resources,2)]);s.actors.a.definition.abilities.spell=spell();const pending=run(s,{...cast(),facts:{}});assert.ok(pendingDecisions(pending)[0].validationRequired.length);assert.throws(()=>run(pending,answer(pending,'accept',{optionId:'slot3'})),/validation/);
  s=run(s,{...cast(),facts:{b:{hostileSpell:true,casterVisibleWithin60ft:true,canCastCounterspell:true}}});assert.throws(()=>run(s,answer(s,'accept',{optionId:'slot3'})),/Nested/);s=run(s,answer(s,'decline'));assert.equal(s.actors.b.hp.current,88);
 });
 test('Sneak Attack is once per turn, refreshes on enemy turn, critical doubles dice, decline does not spend',()=>{
@@ -42,7 +42,7 @@ test('Sneak Attack is once per turn, refreshes on enemy turn, critical doubles d
  s=run(s,attack('off-turn',{abilityId:'opportunity',advantage:true,attackRolls:[15,16]}));assert.equal(pendingDecisions(s)[0].ruleId,'sneak-attack');s=run(s,answer(s,'accept',{rolls:{0:[1,1,1]}}));assert.equal(s.reactive.usage['a:sneak-attack'],1);
 });
 test('Sneak Attack requires finesse/ranged and advantage or validated adjacent enemy, no disadvantage',()=>{
- for(const extra of [{},{disadvantage:true,attackRolls:[15,16],facts:{a:{adjacentEnemyEligible:true}}}])assert.equal(pendingDecisions(run(setup([sneakAttack(5)]),hit(extra))).length,0);
+ for(const extra of [{facts:{a:{adjacentEnemyEligible:false}}},{disadvantage:true,attackRolls:[15,16],facts:{a:{adjacentEnemyEligible:true}}}])assert.equal(pendingDecisions(run(setup([sneakAttack(5)]),hit(extra))).length,0);
  let s=setup([sneakAttack(5)]);s.actors.a.definition.abilities.blade.combat.traits={melee:true};assert.equal(pendingDecisions(run(s,hit({advantage:true,attackRolls:[15,16]}))).length,0);
  s=run(setup([sneakAttack(5)]),hit({facts:{a:{adjacentEnemyEligible:true}}}));assert.equal(pendingDecisions(s).length,1);
 });

@@ -68,5 +68,5 @@ export function derive(d) {
   const slots=spellSlots(d.classes),resources=resourceDefinitions(d,stats);
   for(const [k,r] of Object.entries(slots.resources)) {check(!Object.hasOwn(resources,k),'Reserved spell resource');resources[k]=r;}
   const compiled=compileAbilities(d,stats,resources);
-  return {level,proficiency:pb,modifiers:Object.fromEntries(ABILITIES.map(k=>[k,stats['mod.'+k]])),skills,saves,casting,weapons,ac:stats.ac,maxHp:stats.maxHp,speed:stats.speed,initiative:stats.initiative,attacksPerAction:stats.attacksPerAction,acOptions,resources,slotMetadata:{casterLevel:slots.casterLevel,pactLevels:slots.pactLevels},...compiled,trace};
+  return {reactiveRules:structuredClone(d.reactiveRules??[]),castingModifiers:structuredClone(d.castingModifiers??[]),level,proficiency:pb,modifiers:Object.fromEntries(ABILITIES.map(k=>[k,stats['mod.'+k]])),skills,saves,casting,weapons,ac:stats.ac,maxHp:stats.maxHp,speed:stats.speed,initiative:stats.initiative,attacksPerAction:stats.attacksPerAction,acOptions,resources,slotMetadata:{casterLevel:slots.casterLevel,pactLevels:slots.pactLevels},...compiled,trace};
 }

@@ -13,7 +13,9 @@
     "demo:characters": "node examples/character-demo.mjs",
     "coverage": "node scripts/coverage-report.mjs",
     "coverage:check": "node scripts/coverage-report.mjs --check",
-    "demo:combat": "node examples/advanced-combat-demo.mjs"
+    "demo:combat": "node examples/advanced-combat-demo.mjs",
+    "demo:reactive": "node examples/reactive-combat-demo.mjs",
+    "demo:reactive:check": "node examples/reactive-combat-demo.mjs --check"
   },
   "devDependencies": {
     "fake-indexeddb": "6.2.4",

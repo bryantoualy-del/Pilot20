@@ -1,9 +1,10 @@
+import {validateConditional,validateTransfer,validateStance,conditionalBoundary,conditionalCleanup,transfer} from './conditional.js';
 /** Reusable P0 mechanics. No class, subclass or character identifiers. */
 import {check,keys,integer,id,json} from '../character/contracts.js';
 const ABILITIES=['str','dex','con','int','wis','cha'];
 export const ACTION_KINDS=['weaponAttack','dash','disengage','hide','useObject'];
 const STATS=['ac','speed','attack','damage',...ABILITIES.map(k=>'save.'+k)];
-const CONDITIONS=['incapacitated','cannotAct','cannotMove','cannotCast','cannotConcentrate'];
+const CONDITIONS=['incapacitated','cannotAct','cannotMove','cannotCast','cannotConcentrate','unconscious'];
 export function validateEffectRule(r) {
   keys(r,['id','stack','duration','modifiers','conditions','concentration','actionGrant','onEnd','when'],['id','stack','duration','modifiers','conditions','concentration']);
   check(id(r.id) && typeof r.concentration==='boolean','Effect identity');
@@ -21,9 +22,13 @@ export function validateEffectRule(r) {
   if(r.onEnd!==undefined) check(r.onEnd==='no-actions-until-next-turn-end','Effect end consequence');return r;
 }
 export function validateProfile(p,{compiled=false}={}) {
-  json(p);keys(p,['version','mode','requirements','spell','upcast','ongoing','grant','actionKind','weapon','deferred','duration','traits','tags','negatedByEffects'],['version','mode','requirements']);
+  json(p);keys(p,['version','mode','requirements','spell','upcast','ongoing','grant','actionKind','weapon','deferred','duration','traits','tags','negatedByEffects','transfer','stance','roll','externalRequirements'],['version','mode','requirements']);
   check(p.version===1 && ['automatic','manual','referenced'].includes(p.mode) && Array.isArray(p.requirements) && p.requirements.every(v=>typeof v==='string' && v.trim()),'Combat profile');
   if(p.deferred!==undefined) check(Array.isArray(p.deferred) && p.deferred.every(k=>['reactionWindow','triggeredEffect','decision','transformation','summon','zone','aura'].includes(k)),'Deferred primitives');
+  if(p.externalRequirements!==undefined)check(Array.isArray(p.externalRequirements) && p.externalRequirements.length<=20 && p.externalRequirements.every(id),'External prerequisites');
+  if(p.transfer)validateTransfer(p.transfer);
+  if(p.stance)validateStance(p.stance);
+  if(p.roll) {keys(p.roll,['kind','ability','bonus','dc']);check(['check','save'].includes(p.roll.kind) && ABILITIES.includes(p.roll.ability) && integer(p.roll.bonus,-100,100) && integer(p.roll.dc,0,100),'Declared roll');}
   if(p.spell) {
     keys(p.spell,compiled?['id','classId','level','access','available']:['id','classId','level','access']);
     check(id(p.spell.id) && id(p.spell.classId) && integer(p.spell.level,0,9) && ['known','prepared','granted'].includes(p.spell.access),'Spell access');
@@ -45,7 +50,8 @@ export function advanced(a) {
 export function validateAdvanced(a,state) {
   if(a.advanced===undefined) return;
   const x=a.advanced;
-  keys(x,['version','effects','extraActions','extraAttacks','grantUses','restrictedUsed','casts','turnStarts','turnOpen','lethargyUntil','movementSpent','dashCount','pendingManual','concentrationClock']);
+  validateConditional(a,state);
+  keys(x,['version','effects','extraActions','extraAttacks','grantUses','restrictedUsed','casts','turnStarts','turnOpen','lethargyUntil','movementSpent','dashCount','pendingManual','concentrationClock','tokens','stance','activity','unconscious'],['version','effects','extraActions','extraAttacks','grantUses','restrictedUsed','casts','turnStarts','turnOpen','lethargyUntil','movementSpent','dashCount','pendingManual','concentrationClock']);
   check(x.version===1 && integer(x.extraActions,0,10) && integer(x.extraAttacks,0,10) && integer(x.turnStarts) && integer(x.lethargyUntil) && typeof x.turnOpen==='boolean' && integer(x.movementSpent) && integer(x.dashCount),'Advanced runtime');
   check(x.lethargyUntil===0 || x.lethargyUntil>=x.turnStarts,'Stale action inhibition');
   check(x.grantUses && typeof x.grantUses==='object' && !Array.isArray(x.grantUses) && Object.entries(x.grantUses).every(([k,n])=>id(k) && integer(n,0,10)),'Grant use ledger');
@@ -84,6 +90,9 @@ export function activeEffects(a) {
   return selected;
 }
 export function hasCondition(a,k) {
+  if(k==='unconscious' && a.advanced?.unconscious)return true;
+  if(k==='incapacitated' && (a.advanced?.unconscious || activeEffects(a).some(e=>e.rule.conditions.includes('unconscious'))))return true;
+  if(a.advanced?.stance?.rule.blocks.includes(k))return true;
   if(k==='incapacitated' && a.incapacitated) return true;
   if(['cannotAct','cannotMove'].includes(k) && (a.advanced?.lethargyUntil??0)>0) return true;
   return activeEffects(a).some(e=>e.rule.conditions.includes(k));
@@ -98,7 +107,7 @@ export function statistic(a,stat,base=0) {
 }
 export function saveModes(a,ability) {
   const mods=activeEffects(a).flatMap(e=>e.rule.modifiers).filter(m=>m.stat==='save.'+ability);
-  return {advantage:mods.some(m=>m.operation==='advantage'),disadvantage:mods.some(m=>m.operation==='disadvantage')};
+  return {advantage:a.advanced?.stance?.rule.advantageAbilities.includes(ability) || mods.some(m=>m.operation==='advantage'),disadvantage:mods.some(m=>m.operation==='disadvantage')};
 }
 export function removeEffect(a,effectId) {
   const x=advanced(a),e=x.effects.find(e=>e.id===effectId);check(e,'Unknown effect instance');
@@ -119,6 +128,7 @@ export function addEffect(s,targetId,sourceId,rule,effectId) {
   for(const stat of STATS) statistic(a,stat);
 }
 export function cleanupConcentration(s) {
+  conditionalCleanup(s,a=>hasCondition(a,'unconscious'));
   let changed=true;
   while(changed) {
     changed=false;
@@ -130,6 +140,7 @@ export function cleanupConcentration(s) {
   }
 }
 export function boundary(s,actorId,phase) {
+  conditionalBoundary(s,actorId,phase);
   const a=s.actors[actorId],clock=a.advanced?.concentrationClock;
   if(clock?.boundary===phase && --clock.remaining===0) {a.concentration=null;a.checks=[];a.advanced.concentrationClock=null;}
   for(const target of Object.values(s.actors)) for(const e of [...(target.advanced?.effects??[])]) if(e.anchorActorId===actorId && e.rule.duration.boundary===phase) {
@@ -198,6 +209,8 @@ export function prepareCast(a,ability,c) {
 }
 export function establish(s,a,ability,c,targetIds,saveResults={}) {
   const p=ability.combat;if(!p)return;
+  if(p.transfer)for(const targetId of targetIds) {advanced(s.actors[targetId]);transfer(s,a,targetId,p.transfer,c);}
+  if(p.stance) {check(p.stance.requirements.every(k=>c.facts?.[c.actorId]?.[k]===true),'Stance eligibility requires external validation');const x=advanced(a);check(!x.stance,'Stance already active');x.stance={rule:structuredClone(p.stance),remaining:p.stance.duration};}
   if(p.duration && a.concentration?.instanceId===c.id) advanced(a).concentrationClock={instanceId:c.id,remaining:p.duration.value*(p.duration.unit==='minute'?10:1),boundary:p.duration.boundary};
   if(p.grant) {
     check(ability.cost==='none' && ability.target==='self' && s.activeActorId===c.actorId,'Extra action activation profile');

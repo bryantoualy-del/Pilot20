@@ -1,3 +1,4 @@
+import {validateCastingModifier} from './rules/conditional.js';
 import {validateReactive,validateReactiveRule} from './rules/reactive.js';
 import {validateProfile,validateAdvanced} from './rules/combat.js';
 /** Portable, JSON-only domain model. All external data crosses this validator. */
@@ -73,6 +74,7 @@ export function validateDefinition(d) {
     }
   }
   for (const list of ['resistances','immunities','vulnerabilities']) requireThat(Array.isArray(d[list]) && d[list].every(id), 'Damage defenses');
+  if(d.castingModifiers!==undefined) {requireThat(Array.isArray(d.castingModifiers) && d.castingModifiers.length<=20 && new Set(d.castingModifiers.map(m=>m.id)).size===d.castingModifiers.length,'Casting modifiers');d.castingModifiers.forEach(validateCastingModifier);}
   if(d.rules!==undefined) {requireThat(Array.isArray(d.rules),'Reactive rules');d.rules.forEach(validateReactiveRule);}
   return d;
 }
@@ -134,6 +136,11 @@ export function migrate(input) {
   function normalizeActors(actors) {
     if (object(actors)) for (const a of Object.values(actors)) if (object(a) && a.definition) a.definition = normalizeDefinition(a.definition);
   }
+  function upgradeReactive(game) {
+    const x=game?.reactive;if(!x || x.version!==1)return;x.version=2;
+    if(x.event) {x.event.version=2;x.event.validations??={};x.event.modifiers.saves??={};x.event.plan.saves??={};}
+  }
+  upgradeReactive(d);if(Array.isArray(d?.history))for(const h of d.history)upgradeReactive(h.before);
   normalizeActors(d?.actors);
   if (Array.isArray(d?.history)) for (const entry of d.history) normalizeActors(entry?.before?.actors);
   return validate(d);

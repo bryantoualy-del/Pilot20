@@ -1372,6 +1372,71 @@
               }
             }
           }
+        },
+        "reactiveRules": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "$ref": "https://pilot20.invalid/schemas/session-v1.schema.json#/$defs/reactiveRule"
+          }
+        },
+        "castingModifiers": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+              },
+              "costs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "resourceId": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+                    },
+                    "amount": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "required": [
+                    "resourceId",
+                    "amount"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 100
+              },
+              "operation": {
+                "enum": [
+                  "castingTime",
+                  "firstSaveDisadvantage"
+                ]
+              },
+              "from": {
+                "const": "action"
+              },
+              "to": {
+                "const": "bonus"
+              },
+              "exclusiveGroup": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+              }
+            },
+            "required": [
+              "id",
+              "costs",
+              "operation",
+              "exclusiveGroup"
+            ],
+            "additionalProperties": false
+          }
         }
       },
       "required": [

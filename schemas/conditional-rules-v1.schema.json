@@ -1,0 +1,321 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pilot20.local/schemas/conditional-rules-v1.schema.json",
+  "title": "Conditional rule data v1",
+  "$defs": {
+    "stance": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+        },
+        "duration": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "damageBonus": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "requiredTraits": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "melee",
+              "strength",
+              "ranged",
+              "finesse"
+            ]
+          },
+          "maxItems": 100
+        },
+        "resistances": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+          },
+          "maxItems": 100
+        },
+        "advantageAbilities": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ]
+          },
+          "maxItems": 100
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "cannotCast",
+              "cannotConcentrate"
+            ]
+          },
+          "maxItems": 100
+        },
+        "sustain": {
+          "type": "boolean"
+        },
+        "endOnUnconscious": {
+          "const": true
+        },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+          },
+          "maxItems": 100
+        },
+        "voluntaryCost": {
+          "const": "bonus"
+        }
+      },
+      "required": [
+        "id",
+        "duration",
+        "damageBonus",
+        "requiredTraits",
+        "resistances",
+        "advantageAbilities",
+        "blocks",
+        "sustain",
+        "endOnUnconscious",
+        "requirements",
+        "voluntaryCost"
+      ],
+      "additionalProperties": false
+    },
+    "transfer": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+        },
+        "sides": {
+          "enum": [
+            6,
+            8,
+            10,
+            12
+          ]
+        },
+        "duration": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+          },
+          "maxItems": 100
+        },
+        "excludeSelf": {
+          "const": true
+        },
+        "rollKinds": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "attack",
+              "check",
+              "save"
+            ]
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "key",
+        "sides",
+        "duration",
+        "requirements",
+        "excludeSelf",
+        "rollKinds"
+      ],
+      "additionalProperties": false
+    },
+    "token": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+        },
+        "key": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+        },
+        "sourceActorId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+        },
+        "remaining": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "sides": {
+          "enum": [
+            6,
+            8,
+            10,
+            12
+          ]
+        },
+        "status": {
+          "enum": [
+            "available",
+            "spent",
+            "expired"
+          ]
+        },
+        "rollKinds": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "attack",
+              "check",
+              "save"
+            ]
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "id",
+        "key",
+        "sourceActorId",
+        "remaining",
+        "sides",
+        "status",
+        "rollKinds"
+      ],
+      "additionalProperties": false
+    },
+    "castingModifier": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+        },
+        "costs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "resourceId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+              },
+              "amount": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": [
+              "resourceId",
+              "amount"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 100
+        },
+        "operation": {
+          "enum": [
+            "castingTime",
+            "firstSaveDisadvantage"
+          ]
+        },
+        "from": {
+          "const": "action"
+        },
+        "to": {
+          "const": "bonus"
+        },
+        "exclusiveGroup": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+        }
+      },
+      "required": [
+        "id",
+        "costs",
+        "operation",
+        "exclusiveGroup"
+      ],
+      "additionalProperties": false
+    },
+    "roll": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "check",
+            "save"
+          ]
+        },
+        "ability": {
+          "enum": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ]
+        },
+        "bonus": {
+          "type": "integer",
+          "minimum": -100,
+          "maximum": 100
+        },
+        "dc": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "kind",
+        "ability",
+        "bonus",
+        "dc"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "anyOf": [
+    {
+      "$ref": "#/$defs/stance"
+    },
+    {
+      "$ref": "#/$defs/transfer"
+    },
+    {
+      "$ref": "#/$defs/token"
+    },
+    {
+      "$ref": "#/$defs/castingModifier"
+    },
+    {
+      "$ref": "#/$defs/roll"
+    }
+  ]
+}

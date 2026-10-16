@@ -20,4 +20,5 @@ jobs:
       - run: npm run demo:characters
 
       - run: npm run demo:combat
+      # npm test asserts the five-round reactive transcript; no redundant second replay.
       - run: npm run coverage:check
