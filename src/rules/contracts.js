@@ -2,9 +2,9 @@
 import {check,keys,integer,id,json,source,text} from '../character/contracts.js';
 export const PRIMITIVES = Object.freeze({
   damage:'automated', healing:'automated', temporaryHP:'automated', resourceChange:'manual',
-  savingThrow:'unsupported', spellCast:'unsupported', modifier:'unsupported', condition:'unsupported',
-  duration:'unsupported', concentration:'automated', extraAction:'unsupported', movement:'unsupported',
-  removeEffect:'unsupported', transformation:'unsupported', summon:'unsupported', reactionWindow:'unsupported',
+  savingThrow:'automated', spellCast:'automated', modifier:'automated', condition:'automated',
+  duration:'automated', concentration:'automated', extraAction:'automated', movement:'automated',
+  removeEffect:'automated', transformation:'unsupported', summon:'unsupported', reactionWindow:'unsupported',
   triggeredEffect:'unsupported', decision:'unsupported', choice:'unsupported', zone:'unsupported', aura:'unsupported'
 });
 export function validateDecision(d) {

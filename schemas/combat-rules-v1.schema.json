@@ -1,0 +1,1256 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pilot20.invalid/schemas/combat-rules-v1.schema.json",
+  "title": "Pilot20 P0 profiles and structural deferred contracts",
+  "description": "Structure only. Runtime validators additionally check references, availability, stacking, temporal and resource invariants.",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/profile"
+    },
+    {
+      "$ref": "#/$defs/advancedRuntime"
+    },
+    {
+      "$ref": "#/$defs/coverageRule"
+    },
+    {
+      "$ref": "#/$defs/decision"
+    },
+    {
+      "$ref": "#/$defs/trigger"
+    },
+    {
+      "$ref": "#/$defs/transformation"
+    }
+  ],
+  "$defs": {
+    "modifier": {
+      "type": "object",
+      "properties": {
+        "stat": {
+          "enum": [
+            "ac",
+            "speed",
+            "attack",
+            "damage",
+            "save.str",
+            "save.dex",
+            "save.con",
+            "save.int",
+            "save.wis",
+            "save.cha"
+          ]
+        },
+        "operation": {
+          "enum": [
+            "add",
+            "multiply",
+            "set",
+            "advantage",
+            "disadvantage"
+          ]
+        },
+        "value": {
+          "type": "integer",
+          "minimum": -1000,
+          "maximum": 1000
+        }
+      },
+      "required": [
+        "stat",
+        "operation",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "effectRule": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "stack": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+              "not": {
+                "enum": [
+                  "__proto__",
+                  "constructor",
+                  "prototype"
+                ]
+              }
+            },
+            "policy": {
+              "enum": [
+                "independent",
+                "priority",
+                "replace"
+              ]
+            },
+            "priority": {
+              "type": "integer",
+              "minimum": -1000,
+              "maximum": 1000
+            }
+          },
+          "required": [
+            "key",
+            "policy",
+            "priority"
+          ],
+          "additionalProperties": false
+        },
+        "duration": {
+          "type": "object",
+          "properties": {
+            "unit": {
+              "enum": [
+                "turn",
+                "round",
+                "minute"
+              ]
+            },
+            "value": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "anchor": {
+              "enum": [
+                "source",
+                "target"
+              ]
+            },
+            "boundary": {
+              "enum": [
+                "start",
+                "end"
+              ]
+            }
+          },
+          "required": [
+            "unit",
+            "value",
+            "anchor",
+            "boundary"
+          ],
+          "additionalProperties": false
+        },
+        "modifiers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/modifier"
+          }
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "incapacitated",
+              "cannotAct",
+              "cannotMove",
+              "cannotCast",
+              "cannotConcentrate"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "concentration": {
+          "type": "boolean"
+        },
+        "actionGrant": {
+          "type": "object",
+          "properties": {
+            "kinds": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "weaponAttack",
+                  "dash",
+                  "disengage",
+                  "hide",
+                  "useObject"
+                ]
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            },
+            "attacks": {
+              "const": 1
+            }
+          },
+          "required": [
+            "kinds",
+            "attacks"
+          ],
+          "additionalProperties": false
+        },
+        "onEnd": {
+          "const": "no-actions-until-next-turn-end"
+        },
+        "when": {
+          "enum": [
+            "always",
+            "success",
+            "failure"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "stack",
+        "duration",
+        "modifiers",
+        "conditions",
+        "concentration"
+      ],
+      "additionalProperties": false
+    },
+    "profile": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "mode": {
+          "enum": [
+            "automatic",
+            "manual",
+            "referenced"
+          ]
+        },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "spell": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+              "not": {
+                "enum": [
+                  "__proto__",
+                  "constructor",
+                  "prototype"
+                ]
+              }
+            },
+            "classId": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+              "not": {
+                "enum": [
+                  "__proto__",
+                  "constructor",
+                  "prototype"
+                ]
+              }
+            },
+            "level": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9
+            },
+            "access": {
+              "enum": [
+                "known",
+                "prepared",
+                "granted"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "classId",
+            "level",
+            "access"
+          ],
+          "additionalProperties": false
+        },
+        "upcast": {
+          "type": "object",
+          "properties": {
+            "effectIndex": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 19
+            },
+            "dicePerLevel": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            }
+          },
+          "required": [
+            "effectIndex",
+            "dicePerLevel"
+          ],
+          "additionalProperties": false
+        },
+        "ongoing": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/effectRule"
+          }
+        },
+        "grant": {
+          "type": "object",
+          "properties": {
+            "count": {
+              "const": 1
+            },
+            "maxPerTurn": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10
+            }
+          },
+          "required": [
+            "count",
+            "maxPerTurn"
+          ],
+          "additionalProperties": false
+        },
+        "actionKind": {
+          "enum": [
+            "weaponAttack",
+            "dash",
+            "disengage",
+            "hide",
+            "useObject"
+          ]
+        },
+        "weapon": {
+          "type": "boolean"
+        },
+        "duration": {
+          "type": "object",
+          "properties": {
+            "unit": {
+              "enum": [
+                "turn",
+                "round",
+                "minute"
+              ]
+            },
+            "value": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "anchor": {
+              "const": "source"
+            },
+            "boundary": {
+              "enum": [
+                "start",
+                "end"
+              ]
+            }
+          },
+          "required": [
+            "unit",
+            "value",
+            "anchor",
+            "boundary"
+          ],
+          "additionalProperties": false
+        },
+        "deferred": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "reactionWindow",
+              "triggeredEffect",
+              "decision",
+              "transformation",
+              "summon",
+              "zone",
+              "aura"
+            ]
+          }
+        }
+      },
+      "required": [
+        "version",
+        "mode",
+        "requirements"
+      ],
+      "additionalProperties": false
+    },
+    "compiledProfile": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "mode": {
+          "enum": [
+            "automatic",
+            "manual",
+            "referenced"
+          ]
+        },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "spell": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+              "not": {
+                "enum": [
+                  "__proto__",
+                  "constructor",
+                  "prototype"
+                ]
+              }
+            },
+            "classId": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+              "not": {
+                "enum": [
+                  "__proto__",
+                  "constructor",
+                  "prototype"
+                ]
+              }
+            },
+            "level": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9
+            },
+            "access": {
+              "enum": [
+                "known",
+                "prepared",
+                "granted"
+              ]
+            },
+            "available": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "id",
+            "classId",
+            "level",
+            "access",
+            "available"
+          ],
+          "additionalProperties": false
+        },
+        "upcast": {
+          "type": "object",
+          "properties": {
+            "effectIndex": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 19
+            },
+            "dicePerLevel": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            }
+          },
+          "required": [
+            "effectIndex",
+            "dicePerLevel"
+          ],
+          "additionalProperties": false
+        },
+        "ongoing": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/effectRule"
+          }
+        },
+        "grant": {
+          "type": "object",
+          "properties": {
+            "count": {
+              "const": 1
+            },
+            "maxPerTurn": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10
+            }
+          },
+          "required": [
+            "count",
+            "maxPerTurn"
+          ],
+          "additionalProperties": false
+        },
+        "actionKind": {
+          "enum": [
+            "weaponAttack",
+            "dash",
+            "disengage",
+            "hide",
+            "useObject"
+          ]
+        },
+        "weapon": {
+          "type": "boolean"
+        },
+        "duration": {
+          "type": "object",
+          "properties": {
+            "unit": {
+              "enum": [
+                "turn",
+                "round",
+                "minute"
+              ]
+            },
+            "value": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "anchor": {
+              "const": "source"
+            },
+            "boundary": {
+              "enum": [
+                "start",
+                "end"
+              ]
+            }
+          },
+          "required": [
+            "unit",
+            "value",
+            "anchor",
+            "boundary"
+          ],
+          "additionalProperties": false
+        },
+        "deferred": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "reactionWindow",
+              "triggeredEffect",
+              "decision",
+              "transformation",
+              "summon",
+              "zone",
+              "aura"
+            ]
+          }
+        }
+      },
+      "required": [
+        "version",
+        "mode",
+        "requirements"
+      ],
+      "additionalProperties": false
+    },
+    "activeEffect": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "sourceActorId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "concentrationInstanceId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+              "not": {
+                "enum": [
+                  "__proto__",
+                  "constructor",
+                  "prototype"
+                ]
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "anchorActorId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "remaining": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "rule": {
+          "$ref": "#/$defs/effectRule"
+        }
+      },
+      "required": [
+        "id",
+        "sourceActorId",
+        "concentrationInstanceId",
+        "anchorActorId",
+        "remaining",
+        "rule"
+      ],
+      "additionalProperties": false
+    },
+    "manualPending": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "abilityId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "actorId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "targetIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+            "not": {
+              "enum": [
+                "__proto__",
+                "constructor",
+                "prototype"
+              ]
+            }
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "declaration": {
+          "type": "string",
+          "minLength": 1
+        },
+        "slotLevel": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9
+        }
+      },
+      "required": [
+        "id",
+        "abilityId",
+        "actorId",
+        "targetIds",
+        "declaration",
+        "slotLevel"
+      ],
+      "additionalProperties": false
+    },
+    "advancedRuntime": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/activeEffect"
+          },
+          "maxItems": 100
+        },
+        "extraActions": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "extraAttacks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "grantUses": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+            "not": {
+              "enum": [
+                "__proto__",
+                "constructor",
+                "prototype"
+              ]
+            }
+          },
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10
+          }
+        },
+        "restrictedUsed": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+            "not": {
+              "enum": [
+                "__proto__",
+                "constructor",
+                "prototype"
+              ]
+            }
+          },
+          "uniqueItems": true
+        },
+        "casts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "level": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9
+              },
+              "cost": {
+                "enum": [
+                  "action",
+                  "bonus",
+                  "reaction"
+                ]
+              }
+            },
+            "required": [
+              "level",
+              "cost"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "turnStarts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "turnOpen": {
+          "type": "boolean"
+        },
+        "lethargyUntil": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "movementSpent": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "dashCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "concentrationClock": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "instanceId": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                  "not": {
+                    "enum": [
+                      "__proto__",
+                      "constructor",
+                      "prototype"
+                    ]
+                  }
+                },
+                "remaining": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10000
+                },
+                "boundary": {
+                  "enum": [
+                    "start",
+                    "end"
+                  ]
+                }
+              },
+              "required": [
+                "instanceId",
+                "remaining",
+                "boundary"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "pendingManual": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/manualPending"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "version",
+        "effects",
+        "extraActions",
+        "extraAttacks",
+        "grantUses",
+        "restrictedUsed",
+        "casts",
+        "turnStarts",
+        "turnOpen",
+        "lethargyUntil",
+        "movementSpent",
+        "dashCount",
+        "concentrationClock",
+        "pendingManual"
+      ],
+      "additionalProperties": false
+    },
+    "coverageRule": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "mode": {
+          "enum": [
+            "referenced",
+            "manual",
+            "automatic"
+          ]
+        },
+        "primitives": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "damage",
+              "healing",
+              "temporaryHP",
+              "resourceChange",
+              "savingThrow",
+              "spellCast",
+              "modifier",
+              "condition",
+              "duration",
+              "concentration",
+              "extraAction",
+              "movement",
+              "removeEffect",
+              "transformation",
+              "summon",
+              "reactionWindow",
+              "triggeredEffect",
+              "decision",
+              "choice",
+              "zone",
+              "aura"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "version",
+        "mode",
+        "primitives",
+        "requirements"
+      ],
+      "additionalProperties": false
+    },
+    "decision": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "eventId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "actorId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "resolved",
+            "declined",
+            "cancelled"
+          ]
+        },
+        "options": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                "not": {
+                  "enum": [
+                    "__proto__",
+                    "constructor",
+                    "prototype"
+                  ]
+                }
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "costs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "resourceId": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+                      "not": {
+                        "enum": [
+                          "__proto__",
+                          "constructor",
+                          "prototype"
+                        ]
+                      }
+                    },
+                    "amount": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 1000000
+                    }
+                  },
+                  "required": [
+                    "resourceId",
+                    "amount"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "id",
+              "label",
+              "costs"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "continuation": {
+          "type": "object",
+          "properties": {
+            "eventId": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+              "not": {
+                "enum": [
+                  "__proto__",
+                  "constructor",
+                  "prototype"
+                ]
+              }
+            },
+            "phase": {
+              "enum": [
+                "before-hit",
+                "after-hit",
+                "after-save",
+                "after-damage",
+                "cast"
+              ]
+            }
+          },
+          "required": [
+            "eventId",
+            "phase"
+          ],
+          "additionalProperties": false
+        },
+        "policy": {
+          "const": "block-dependent-resolution"
+        }
+      },
+      "required": [
+        "version",
+        "id",
+        "eventId",
+        "actorId",
+        "revision",
+        "status",
+        "options",
+        "continuation",
+        "policy"
+      ],
+      "additionalProperties": false
+    },
+    "trigger": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "event": {
+          "enum": [
+            "attack-hit",
+            "damage-taken",
+            "turn-start",
+            "turn-end",
+            "save-resolved",
+            "ally-attacks",
+            "zone-enter",
+            "spell-cast"
+          ]
+        },
+        "scope": {
+          "enum": [
+            "self",
+            "ally",
+            "target",
+            "any"
+          ]
+        },
+        "limit": {
+          "enum": [
+            "none",
+            "turn",
+            "round",
+            "short-rest",
+            "long-rest"
+          ]
+        },
+        "whileEffect": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+              "not": {
+                "enum": [
+                  "__proto__",
+                  "constructor",
+                  "prototype"
+                ]
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "version",
+        "event",
+        "scope",
+        "limit",
+        "whileEffect"
+      ],
+      "additionalProperties": false
+    },
+    "transformation": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "profileId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+          "not": {
+            "enum": [
+              "__proto__",
+              "constructor",
+              "prototype"
+            ]
+          }
+        },
+        "retained": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "int",
+              "wis",
+              "cha",
+              "proficiencies",
+              "features"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "hpPolicy": {
+          "const": "separate-pool"
+        },
+        "overflow": {
+          "const": "original-form"
+        },
+        "casting": {
+          "enum": [
+            "blocked",
+            "profile-defined"
+          ]
+        },
+        "concentration": {
+          "const": "retain-existing"
+        },
+        "reversion": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "enum": [
+              "zero-hp",
+              "duration",
+              "voluntary",
+              "unconscious",
+              "death"
+            ]
+          }
+        },
+        "execution": {
+          "const": "unsupported"
+        }
+      },
+      "required": [
+        "version",
+        "id",
+        "profileId",
+        "retained",
+        "hpPolicy",
+        "overflow",
+        "casting",
+        "concentration",
+        "reversion",
+        "execution"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

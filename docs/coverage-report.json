@@ -2,28 +2,34 @@
   "scope": "Synthetic level-5 fixture abilities only; not full class or SRD automation",
   "classesRepresented": 12,
   "classesValidatedByReport": 12,
+  "classesWithStructuralTests": 12,
+  "classesWithDeepCombatScenarios": [
+    "fighter",
+    "sorcerer",
+    "warlock"
+  ],
   "fixtureTestSuite": "tests/universal-rules.test.js (12 classes; no full class-completeness claim)",
   "totals": {
     "referenced": 0,
     "manual": 0,
-    "partial": 8,
-    "automated": 15,
-    "unsupported": 13
+    "partial": 3,
+    "automated": 23,
+    "unsupported": 10
   },
   "primitives": {
     "damage": "automated",
     "healing": "automated",
     "temporaryHP": "automated",
     "resourceChange": "manual",
-    "savingThrow": "unsupported",
-    "spellCast": "unsupported",
-    "modifier": "unsupported",
-    "condition": "unsupported",
-    "duration": "unsupported",
+    "savingThrow": "automated",
+    "spellCast": "automated",
+    "modifier": "automated",
+    "condition": "automated",
+    "duration": "automated",
     "concentration": "automated",
-    "extraAction": "unsupported",
-    "movement": "unsupported",
-    "removeEffect": "unsupported",
+    "extraAction": "automated",
+    "movement": "automated",
+    "removeEffect": "automated",
     "transformation": "unsupported",
     "summon": "unsupported",
     "reactionWindow": "unsupported",
@@ -34,14 +40,6 @@
     "aura": "unsupported"
   },
   "missingPrimitives": [
-    "savingThrow",
-    "spellCast",
-    "modifier",
-    "condition",
-    "duration",
-    "extraAction",
-    "movement",
-    "removeEffect",
     "transformation",
     "summon",
     "reactionWindow",
@@ -51,7 +49,218 @@
     "zone",
     "aura"
   ],
-  "testedSpellFamilies": [],
+  "advancedCaseTotals": {
+    "referenced": 0,
+    "manual": 2,
+    "partial": 0,
+    "automated": 24,
+    "unsupported": 0
+  },
+  "testedSpellFamilies": [
+    "selected-target spell attacks",
+    "selected-target saving throws",
+    "typed multi-target damage",
+    "concentration buffs with explicit duration",
+    "pact/upcast selection",
+    "manual adjudication"
+  ],
+  "fullOfficialSpellsAutomated": 0,
+  "advancedCases": [
+    {
+      "name": "fighter",
+      "level": 11,
+      "abilities": [
+        {
+          "id": "blade",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false
+        },
+        {
+          "id": "action-surge",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false
+        },
+        {
+          "id": "dash",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false
+        },
+        {
+          "id": "disengage",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false
+        },
+        {
+          "id": "hide",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false
+        },
+        {
+          "id": "useObject",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false
+        }
+      ]
+    },
+    {
+      "name": "sorcerer",
+      "level": 11,
+      "abilities": [
+        {
+          "id": "blade",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false
+        },
+        {
+          "id": "spell-attack",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false,
+          "wholeOfficialSpellStatus": "partial",
+          "scope": "Selected declared targets only; components, spatial eligibility and environmental consequences require adjudication"
+        },
+        {
+          "id": "dash",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false
+        },
+        {
+          "id": "disengage",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false
+        },
+        {
+          "id": "hide",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false
+        },
+        {
+          "id": "useObject",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false
+        },
+        {
+          "id": "fireball",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false,
+          "wholeOfficialSpellStatus": "partial",
+          "scope": "Selected declared targets only; components, spatial eligibility and environmental consequences require adjudication"
+        },
+        {
+          "id": "haste",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false,
+          "wholeOfficialSpellStatus": "partial",
+          "scope": "Selected declared targets only; components, spatial eligibility and environmental consequences require adjudication"
+        },
+        {
+          "id": "cantrip",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false,
+          "wholeOfficialSpellStatus": "partial",
+          "scope": "Selected declared targets only; components, spatial eligibility and environmental consequences require adjudication"
+        },
+        {
+          "id": "manual-illusion",
+          "status": "manual",
+          "automaticResolutionEnabled": false,
+          "manualDeclarationEnabled": true,
+          "wholeOfficialSpellStatus": "partial",
+          "scope": "Selected declared targets only; components, spatial eligibility and environmental consequences require adjudication"
+        }
+      ]
+    },
+    {
+      "name": "warlock",
+      "level": 11,
+      "abilities": [
+        {
+          "id": "blade",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false
+        },
+        {
+          "id": "spell-attack",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false,
+          "wholeOfficialSpellStatus": "partial",
+          "scope": "Selected declared targets only; components, spatial eligibility and environmental consequences require adjudication"
+        },
+        {
+          "id": "dash",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false
+        },
+        {
+          "id": "disengage",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false
+        },
+        {
+          "id": "hide",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false
+        },
+        {
+          "id": "useObject",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false
+        },
+        {
+          "id": "fireball",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false,
+          "wholeOfficialSpellStatus": "partial",
+          "scope": "Selected declared targets only; components, spatial eligibility and environmental consequences require adjudication"
+        },
+        {
+          "id": "haste",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false,
+          "wholeOfficialSpellStatus": "partial",
+          "scope": "Selected declared targets only; components, spatial eligibility and environmental consequences require adjudication"
+        },
+        {
+          "id": "cantrip",
+          "status": "automated",
+          "automaticResolutionEnabled": true,
+          "manualDeclarationEnabled": false,
+          "wholeOfficialSpellStatus": "partial",
+          "scope": "Selected declared targets only; components, spatial eligibility and environmental consequences require adjudication"
+        },
+        {
+          "id": "manual-illusion",
+          "status": "manual",
+          "automaticResolutionEnabled": false,
+          "manualDeclarationEnabled": true,
+          "wholeOfficialSpellStatus": "partial",
+          "scope": "Selected declared targets only; components, spatial eligibility and environmental consequences require adjudication"
+        }
+      ]
+    }
+  ],
   "classes": [
     {
       "name": "bard",
@@ -66,9 +275,9 @@
         },
         {
           "id": "spell-attack",
-          "status": "partial",
+          "status": "automated",
           "primitiveExecutable": true,
-          "automatedExecutable": false,
+          "automatedExecutable": true,
           "missing": []
         },
         {
@@ -95,9 +304,9 @@
         },
         {
           "id": "spell-attack",
-          "status": "partial",
+          "status": "automated",
           "primitiveExecutable": true,
-          "automatedExecutable": false,
+          "automatedExecutable": true,
           "missing": []
         },
         {
@@ -124,9 +333,9 @@
         },
         {
           "id": "spell-attack",
-          "status": "partial",
+          "status": "automated",
           "primitiveExecutable": true,
-          "automatedExecutable": false,
+          "automatedExecutable": true,
           "missing": []
         },
         {
@@ -153,9 +362,9 @@
         },
         {
           "id": "spell-attack",
-          "status": "partial",
+          "status": "automated",
           "primitiveExecutable": true,
-          "automatedExecutable": false,
+          "automatedExecutable": true,
           "missing": []
         },
         {
@@ -204,9 +413,9 @@
         },
         {
           "id": "spell-attack",
-          "status": "partial",
+          "status": "automated",
           "primitiveExecutable": true,
-          "automatedExecutable": false,
+          "automatedExecutable": true,
           "missing": []
         },
         {
@@ -272,9 +481,9 @@
         },
         {
           "id": "spell-attack",
-          "status": "partial",
+          "status": "automated",
           "primitiveExecutable": true,
-          "automatedExecutable": false,
+          "automatedExecutable": true,
           "missing": []
         },
         {
@@ -302,17 +511,18 @@
         },
         {
           "id": "spell-attack",
-          "status": "partial",
+          "status": "automated",
           "primitiveExecutable": true,
-          "automatedExecutable": false,
+          "automatedExecutable": true,
           "missing": []
         },
         {
           "id": "pact-cast",
-          "status": "unsupported",
+          "status": "partial",
           "primitiveExecutable": false,
           "automatedExecutable": false,
           "missing": [
+            "spell-cast-profile",
             "conditions"
           ]
         }
@@ -331,7 +541,7 @@
         },
         {
           "id": "sneak-case",
-          "status": "unsupported",
+          "status": "partial",
           "primitiveExecutable": false,
           "automatedExecutable": false,
           "missing": [
@@ -385,9 +595,9 @@
         },
         {
           "id": "spell-attack",
-          "status": "partial",
+          "status": "automated",
           "primitiveExecutable": true,
-          "automatedExecutable": false,
+          "automatedExecutable": true,
           "missing": []
         },
         {
@@ -399,7 +609,7 @@
         },
         {
           "id": "smite-case",
-          "status": "unsupported",
+          "status": "partial",
           "primitiveExecutable": false,
           "automatedExecutable": false,
           "missing": [

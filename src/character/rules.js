@@ -1,3 +1,4 @@
+import {validateProfile,profileExecutable} from '../rules/combat.js';
 import {check,keys,integer,id,source,ABILITIES,SKILLS,text} from './contracts.js';
 import {diceSpec,validateDefinition} from '../model.js';
 export function expression(e, stats, depth=0) {
@@ -20,7 +21,7 @@ export function resourceDefinitions(d,stats) {
 }
 /** Fail closed: descriptive mechanics never become executable through silent field removal. */
 export function abilityCoverage(a) {
-  keys(a,['id','name','kind','cost','target','maxTargets','attackAction','attack','resource','effects','concentration','conditions','save','duration','triggers','source']);
+  keys(a,['id','name','kind','cost','target','maxTargets','attackAction','attack','resource','effects','concentration','conditions','save','duration','triggers','source','combat'],['id','name','kind','cost','target','maxTargets','attackAction','attack','resource','effects','concentration','conditions','save','duration','triggers','source']);
   source(a.source);
   check(id(a.id) && text(a.name) && a.name.length>0 && ['weapon','spell','class','racial','feat','item','custom','passive'].includes(a.kind),'Ability identity');
   check(['action','bonus','reaction','none'].includes(a.cost) && ['self','selected'].includes(a.target) && integer(a.maxTargets,1,20) && typeof a.attackAction==='boolean','Ability activation');
@@ -30,15 +31,20 @@ export function abilityCoverage(a) {
   if(a.attack!==null) {keys(a.attack,['bonus']);}
   if(a.resource!==null) {keys(a.resource,['id','amount']);check(id(a.resource.id) && integer(a.resource.amount,1),'Ability cost');}
   if(a.concentration!==null) {keys(a.concentration,['effectId','start']);check(id(a.concentration.effectId) && ['activation','hit'].includes(a.concentration.start),'Concentration');}
-  const reasons=[];
+  if(a.combat!==undefined) validateProfile(a.combat);
+  const p=a.combat,reasons=[];
+  if(a.kind==='spell' && !p?.spell) reasons.push('spell-cast-profile');
+  if(p && !profileExecutable(p)) reasons.push(...p.requirements,...(p.deferred??[]));
+  if(p && p.mode!=='automatic') reasons.push('mode:'+p.mode);
   if(a.kind==='passive') reasons.push('passive');
   for(const k of ['conditions','triggers']) if(a[k].length) reasons.push(k);
-  if(a.save!==null) reasons.push('saving-throw');
+  if(a.save!==null && !p) reasons.push('saving-throw');
   if(a.duration!==null) reasons.push('timed-effects');
   for(const e of a.effects) {
     check(e && ['damage','heal','tempHp','condition','modifier','grantAction','move','summon'].includes(e.kind),'Unknown effect primitive');
     if(['damage','heal','tempHp'].includes(e.kind)) {
-      keys(e,['kind','amount','dice','damageType'],['kind']);
+      keys(e,['kind','amount','dice','damageType','when'],['kind']);
+      if(e.when!==undefined) check(['always','success','failure'].includes(e.when) && a.save!==null,'Conditional save effect');
       check((e.amount===undefined)!==(e.dice===undefined),'Effect value');
       if(e.dice!==undefined) {if(typeof e.dice==='string') diceSpec(e.dice);else {keys(e.dice,['count','sides','bonus']);check(integer(e.dice.count,1,50) && integer(e.dice.sides,2,100),'Dice template');}}
       if(e.kind==='damage') check(id(e.damageType),'Damage type');
@@ -47,7 +53,8 @@ export function abilityCoverage(a) {
       keys(e,['kind','parameters']);check(e.parameters && typeof e.parameters==='object' && !Array.isArray(e.parameters),'Effect parameters');reasons.push('effect:'+e.kind);
     }
   }
-  return {status:reasons.length?'represented':'executable',reasons:[...new Set(reasons)]};
+  const hasSupportedEffects=a.effects.some(e=>['damage','heal','tempHp'].includes(e.kind)) || !!p?.ongoing?.length || !!p?.grant;
+  return {status:reasons.length?'represented':'executable',coverageStatus:p?.mode==='manual'?'manual':p?.mode==='referenced'?'referenced':reasons.length?(hasSupportedEffects && !p?.requirements.length?'partial':'unsupported'):'automated',reasons:[...new Set(reasons)]};
 }
 export function compileAbilities(d,stats,resources) {
   const abilities={},coverage={};
@@ -64,8 +71,22 @@ export function compileAbilities(d,stats,resources) {
       if(e.dice && typeof e.dice==='object') {const n=expression(e.dice.bonus,stats);check(integer(n,-9999,9999),'Dice bonus');out.dice=e.dice.count+'d'+e.dice.sides+(n<0?'':'+')+n;}
       return out;
     });
-    if(c.status!=='executable') continue;
-    const out={name:a.name,cost:a.cost,target:a.target,maxTargets:a.maxTargets,effects};
+    if(c.status!=='executable' && a.combat?.mode!=='manual') continue;
+    const manual=a.combat?.mode==='manual';
+    const out={name:a.name,cost:a.cost,target:a.target,maxTargets:a.maxTargets,effects:manual?[]:effects};
+    if(manual) out.manualPlan=structuredClone({effects:a.effects,conditions:a.conditions,triggers:a.triggers,save:a.save,duration:a.duration});
+    if(a.combat) {
+      out.combat=structuredClone(a.combat);
+      if(out.combat.spell) {
+        const r=out.combat.spell;
+        check(d.classes.some(c=>c.id===r.classId && c.casting),'Spellcasting source');
+        const castingClass=d.classes.find(c=>c.id===r.classId),progression=castingClass.casting.progression,level=castingClass.level;
+        const cap=progression==='pact'?Math.min(5,Math.ceil(level/2)):progression==='full'?Math.ceil(level/2):progression==='half'?(level<2?0:Math.ceil(level/4)):(level<3?0:Math.ceil(level/6));
+        r.available=(r.access==='granted' || r.level<=cap) && (r.access==='granted'?d.features:r.access==='prepared'?d.spells.prepared:d.spells.known).includes(r.id);
+        if(!r.available) {coverage[a.id]={status:'represented',coverageStatus:'unsupported',reasons:['spell-unavailable']};continue;}
+      }
+    }
+    if(a.save!==null && !manual) out.save={...a.save,dc:expression(a.save.dc,stats)};
     if(a.attackAction) out.attackAction=true;
     if(attack) out.attack=attack;
     if(a.resource!==null) out.resource=structuredClone(a.resource);

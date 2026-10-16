@@ -95,3 +95,7 @@ Stratégie V0.2 proposée :
 5. Tester reprise après interruption de compactage, migration, annulation, rejeux anciens et collisions avant d’activer une politique de rétention. Une suppression fondée uniquement sur l’âge ou le nombre de reçus est exclue.
 
 Aucun compactage n’est implémenté ici. En V0.1, un échec de quota est remonté à l’appelant ; l’état proposé ne doit pas être publié. La dernière sauvegarde validée reste lisible. Le seuil d’import/export de 10 000 000 est un nombre de caractères JavaScript, pas une garantie de quota navigateur. Les mesures incluent le coût des deux copies de stockage ; cette limite doit être traitée avant de proposer de longues campagnes en navigateur.
+
+## V0.2b extension
+
+The existing transaction executor delegates P0 validation/runtime helpers to `src/rules/combat.js`. Permanent abilities opt in with versioned declarative profiles; runtime `advanced` holds temporary effects, independent action pools, movement/cast ledgers, source concentration clocks and manual declarations. Snapshots/receipts/CAS remain shared with V0.1/V0.2. See [P0 contracts and authority](V0.2b-P0.md), [twelve-class audit](CLASS-COVERAGE.md) and [deferred rule contracts](RULE-CONTRACTS.md). Decisions after hits, reactions, transformations and summons are contract-only and cannot auto-execute. Full spell legality and consequences must be certified by catalogue compilation rather than inferred from a content reference.

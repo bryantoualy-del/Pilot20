@@ -16,9 +16,9 @@ export function spellSlots(classes) {
     if(c.level<(p==='half'?2:3)) return n;
     return n+(multi?Math.floor:Math.ceil)(c.level/(p==='half'?2:3));
   },0);
-  const slots=Object.fromEntries((SLOTS[casterLevel-1]||[]).map((n,i)=>['slot'+(i+1),{max:n,recovery:'long'}]));
+  const slots=Object.fromEntries((SLOTS[casterLevel-1]||[]).map((n,i)=>['slot'+(i+1),{max:n,recovery:'long',slotLevel:i+1,pool:'standard'}]));
   for(const c of classes.filter(c=>c.casting?.progression==='pact')) {
-    slots['pact:'+c.id]={max:c.level===1?1:c.level<11?2:c.level<17?3:4,recovery:'short'};
+    slots['pact:'+c.id]={max:c.level===1?1:c.level<11?2:c.level<17?3:4,recovery:'short',slotLevel:Math.min(5,Math.ceil(c.level/2)),pool:'pact'};
   }
   return {resources:slots,casterLevel,pactLevels:Object.fromEntries(classes.filter(c=>c.casting?.progression==='pact').map(c=>[c.id,Math.min(5,Math.ceil(c.level/2))]))};
 }

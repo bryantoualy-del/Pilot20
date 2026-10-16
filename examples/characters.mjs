@@ -37,7 +37,8 @@ export function characterFixture(classId,{id=classId+'-fixture',level=5,name=cla
       ability('maneuver-case',{kind:'class',triggers:['weapon-hit'],resource:{id:'maneuver-pool',amount:1},effects:[{kind:'modifier',parameters:{target:'damage'}}]}));
   }
   if(p.casting) {
-    d.abilities.push(ability('spell-attack',{kind:'spell',attack:{bonus:ref('spellAttack.'+classId)},effects:[{kind:'damage',damageType:'fire',dice:'2d10'}],source:HOMEBREW}));
+    d.spells.known.push('spell-attack');
+    d.abilities.push(ability('spell-attack',{kind:'spell',combat:{version:1,mode:'automatic',requirements:[],spell:{id:'spell-attack',classId,level:0,access:'known'}},attack:{bonus:ref('spellAttack.'+classId)},effects:[{kind:'damage',damageType:'fire',dice:'2d10'}],source:HOMEBREW}));
   }
   if(classId==='sorcerer') {
     d.resources.push(resource('sorcery-points',ref('class.sorcerer')));
@@ -61,14 +62,14 @@ export function characterFixture(classId,{id=classId+'-fixture',level=5,name=cla
   }
   const extra={
     bard:{resource:'inspiration',max:4,recovery:level>=5?'short':'long',trigger:'ally-attacks'},
-    cleric:{resource:'channel',max:level>=18?3:level>=6?2:1,recovery:'short',trigger:'turn-start'},
-    druid:{resource:'wild-shape',max:2,recovery:'short',trigger:'turn-start'},
+    cleric:{resource:'channel',max:level<2?0:level>=18?3:level>=6?2:1,recovery:'short',trigger:'turn-start'},
+    druid:{resource:'wild-shape',max:level<2?0:2,recovery:'short',trigger:'turn-start'},
     wizard:{resource:'arcane-recovery',max:1,recovery:'long',trigger:'spell-cast'},
     monk:{resource:'ki',max:level>=2?level:0,recovery:'short',trigger:'attack-hit'},
     ranger:{resource:'custom-feature',max:1,recovery:'long',trigger:'attack-hit'}
   }[classId];
   if(extra) {
-    d.resources.push({...resource(extra.resource,extra.max,extra.recovery),source:classId==='ranger'?HOMEBREW:SRD});
+    d.resources.push({...resource(extra.resource,extra.max,extra.recovery),source:['ranger','wizard'].includes(classId)?HOMEBREW:SRD});
     d.abilities.push(ability('class-reference',{kind:'class',cost:'none',target:'self',triggers:[extra.trigger],effects:[],source:SRD}));
   }
   if(classId==='monk') d.armorRules.push({id:'unarmored-defense',base:10,abilities:['dex','wis'],shieldAllowed:false,source:SRD});

@@ -47,3 +47,7 @@ Le repos est une primitive de récupération à appeler après adjudication : du
 
 
 Correctif pré-merge : concentration déplacée à l’activation avec conditions explicites et compatibilité de lecture des sauvegardes V1 antérieures. Les frontières bibliothèque / définition / runtime / participant / préférences et la stratégie de checkpoint sont détaillées dans `ARCHITECTURE.md`. Les limites de volume et les mesures sur 500 transactions sont dans `HISTORY-MEASUREMENTS.md` ; IndexedDB et l’archivage non destructif restent prioritaires pour V0.2 avant longues sessions en navigateur.
+
+## Updated V0.2b sequence
+
+V0.2b.1 covers the twelve-class/spell-family audits, structural contracts, fixtures and generated coverage. V0.2b.2 adds P0 selected-target resolution, effects/action budgets and explicit manual adjudication. V0.2b.3 remains a separate reaction/decision/conditional-mechanics lot and must not be advertised as enabled before complete tests. The authoritative next catalogue plan is [V0.2c-PLAN.md](V0.2c-PLAN.md). V0.3 is the creator UI and V0.4 the playable universal Companion; neither is implemented in these PRs.

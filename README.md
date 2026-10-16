@@ -34,3 +34,12 @@ bibliothèque locale multipersonnage et persistance transactionnelle IndexedDB.
 
 `npm ci --ignore-scripts`, puis `npm test` et `npm run demo:characters`.
 Pas de créateur visuel, dashboard ou automatisation exhaustive des classes à ce stade.
+
+## Universal rules, V0.2b
+
+- [Twelve-class audit](docs/CLASS-COVERAGE.md) and [spell families](docs/SPELL-COVERAGE.md).
+- [Generic contracts](docs/RULE-CONTRACTS.md), [executable P0 scope/limits](docs/V0.2b-P0.md) and [V0.2c plan](docs/V0.2c-PLAN.md).
+- `npm run coverage` / `npm run coverage:check`: reproducible fixture coverage, with selected-effect execution separated from whole official spells.
+- `npm run demo:combat`: three deterministic rounds, three classes, five opponents and a mid-combat reload.
+
+Twelve represented classes do not mean twelve fully automated classes. Reactions, post-hit decisions and transformations remain blocked pending their complete executors.
