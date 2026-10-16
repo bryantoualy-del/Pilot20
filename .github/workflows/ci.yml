@@ -5,6 +5,7 @@ permissions:
 jobs:
   core:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     strategy:
       matrix:
         node: [22, 24]
@@ -20,4 +21,5 @@ jobs:
       - run: npm run demo:characters
 
       - run: npm run demo:combat
+      # npm test asserts the five-round reactive transcript; no redundant second replay.
       - run: npm run coverage:check

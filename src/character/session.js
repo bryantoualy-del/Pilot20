@@ -10,7 +10,7 @@ export function createCombat(sessionId,participants,{authority='local'}={}) {
     check(id(p.instanceId),'Participant ID');
     const d=p.character,s=derive(d);
     refs[p.instanceId]={characterId:d.id,definitionRevision:d.revision};
-    return validateDefinition({id:p.instanceId,name:d.identity.name,level:s.level,maxHp:s.maxHp,ac:s.ac,speed:s.speed,attacksPerAction:s.attacksPerAction,saves:s.saves,resources:s.resources,abilities:s.abilities,...structuredClone(d.defenses)});
+    return validateDefinition({id:p.instanceId,name:d.identity.name,level:s.level,maxHp:s.maxHp,ac:s.ac,speed:s.speed,attacksPerAction:s.attacksPerAction,saves:s.saves,resources:s.resources,abilities:s.abilities,...(s.reactiveRules.length?{rules:s.reactiveRules}:{}),...(s.castingModifiers.length?{castingModifiers:s.castingModifiers}:{}),...structuredClone(d.defenses)});
   });
   const engine=createSession(defs);engine.mode=authority;
   return validateCombat({kind:'combat',schemaVersion:2,id:sessionId,participants:refs,engine,initiative:[],targets:[]});

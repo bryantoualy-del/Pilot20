@@ -1,5 +1,7 @@
 # Twelve-class architecture audit — D&D 2014
 
+Current V0.2b.3 status: see [generated coverage](coverage-report.json) and [validation/limits](V0.2b.3-VALIDATION.md). Sections below preserve the earlier audit baseline; they are not a claim that newly delivered bounded reaction primitives remain unavailable.
+
 Scope: SRD 5.1, levels 1–20, its twelve base classes and one open subclass each. This is an architectural inventory, not a complete class implementation or progression catalogue. Synthetic fixtures pin level choices; the engine does not infer features from a class name. Reference: [official SRD 5.1, CC BY 4.0](https://www.dndbeyond.com/attachments/39j2li89/SRD5.1-CCBY4.0License.pdf), Classes, Multiclassing and Spellcasting sections. No 2024 rules are enabled.
 
 All classes require proficiency/ASI progression, level-ordered HP, feature grants, equipment legality, resources, rest and optional multiclass validation. V0.2 calculates supplied progressions, spell-slot tables, saves, attacks and AC. It does **not** resolve the full official feature tables or subclass choices. A valid structural fixture is not proof of a fully legal official build.

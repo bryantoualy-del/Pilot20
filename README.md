@@ -43,3 +43,15 @@ Pas de créateur visuel, dashboard ou automatisation exhaustive des classes à c
 - `npm run demo:combat`: three deterministic rounds, three classes, five opponents and a mid-combat reload.
 
 Twelve represented classes do not mean twelve fully automated classes. Reactions, post-hit decisions and transformations remain blocked pending their complete executors.
+
+## V0.2b.3 — réactions et règles conditionnelles
+
+Décisions JSON persistantes, fenêtres ordonnées, réactions défensives, dépenses après touche, ressources transférées, Rage et modifications du plan de lancement. Le moteur transactionnel existant reste l'autorité locale ; les faits externes manquants demandent une validation explicite.
+
+- [API, ordre et continuations](docs/V0.2b.3-REACTIVE.md)
+- [Correctif pré-fusion : vue joueur, dégâts mixtes et garde-fous](docs/V0.2b.3-PREMERGE.md)
+- [Validation, couverture réelle, limites et risques](docs/V0.2b.3-VALIDATION.md)
+- [Démonstration déterministe : sept classes, cinq adversaires, cinq rounds](docs/V0.2b.3-DEMO.txt)
+- [Matrice générée et contrôlée en CI](docs/coverage-report.json)
+
+`npm run demo:reactive`. Aucun déploiement ; aucune affirmation de douze classes ou de sorts officiels entièrement automatisés. Les limites restantes empêchent de déclarer tous les critères V0.2b.3 clos sans réserve.

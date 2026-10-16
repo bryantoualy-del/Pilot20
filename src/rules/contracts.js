@@ -4,17 +4,18 @@ export const PRIMITIVES = Object.freeze({
   damage:'automated', healing:'automated', temporaryHP:'automated', resourceChange:'manual',
   savingThrow:'automated', spellCast:'automated', modifier:'automated', condition:'automated',
   duration:'automated', concentration:'automated', extraAction:'automated', movement:'automated',
-  removeEffect:'automated', transformation:'unsupported', summon:'unsupported', reactionWindow:'unsupported',
-  triggeredEffect:'unsupported', decision:'unsupported', choice:'unsupported', zone:'unsupported', aura:'unsupported'
+  removeEffect:'automated', transformation:'unsupported', summon:'unsupported', reactionWindow:'automated',
+  triggeredEffect:'partial', decision:'automated', choice:'automated', zone:'unsupported', aura:'unsupported', postHitResource:'automated', oncePerTurn:'automated', damageInterception:'automated', transferredResource:'automated', conditionalModifier:'automated', castingModifier:'automated'
 });
 export function validateDecision(d) {
-  json(d);keys(d,d.version===2?['version','id','eventId','actorId','revision','status','options','continuation','policy','ruleId','phase']:['version','id','eventId','actorId','revision','status','options','continuation','policy']);
+  json(d);keys(d,d.version===2?['version','id','eventId','actorId','revision','status','options','continuation','policy','ruleId','phase','validationRequired']:['version','id','eventId','actorId','revision','status','options','continuation','policy'],d.version===2?['version','id','eventId','actorId','revision','status','options','continuation','policy','ruleId','phase']:['version','id','eventId','actorId','revision','status','options','continuation','policy']);
   check([1,2].includes(d.version) && id(d.id) && id(d.eventId) && id(d.actorId) && integer(d.revision),'Decision header');
   check(['pending','resolved','declined','cancelled'].includes(d.status),'Decision status');
   check(d.policy==='block-dependent-resolution','Deferred decision policy');
   check(Array.isArray(d.options) && d.options.length>0 && new Set(d.options.map(o=>o.id)).size===d.options.length,'Decision options');
   for(const o of d.options) {keys(o,['id','label','costs']);check(id(o.id) && text(o.label) && o.label.trim(),'Decision option');costs(o.costs);}
   keys(d.continuation,['eventId','phase']);check(d.continuation.eventId===d.eventId && ['before-hit','after-hit','after-save','after-damage','cast','after-roll','before-damage'].includes(d.continuation.phase),'Decision continuation');
+  if(d.validationRequired!==undefined)check(Array.isArray(d.validationRequired) && d.validationRequired.every(k=>typeof k==='string' && k.startsWith('external.')),'External decision requirements');
   if(d.version===2) check(id(d.ruleId) && d.phase===d.continuation.phase,'Decision v2 rule/phase');
   return d;
 }
@@ -31,7 +32,7 @@ export function validateTransformation(t) {
 }
 export function validateTrigger(t) {
   json(t);keys(t,['version','event','scope','limit','whileEffect']);
-  check(t.version===1 && ['attack-hit','damage-taken','turn-start','turn-end','save-resolved','ally-attacks','zone-enter','spell-cast','attack-roll','ability-targeted'].includes(t.event),'Trigger event');
+  check(t.version===1 && ['attack-hit','damage-taken','turn-start','turn-end','save-resolved','ally-attacks','zone-enter','spell-cast','attack-roll','ability-targeted','roll-made'].includes(t.event),'Trigger event');
   check(['self','ally','target','any'].includes(t.scope) && ['none','turn','round','short-rest','long-rest'].includes(t.limit),'Trigger scope');
   check(t.whileEffect===null || id(t.whileEffect),'Trigger dependency');return t;
 }

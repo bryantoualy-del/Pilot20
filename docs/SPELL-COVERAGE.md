@@ -1,5 +1,7 @@
 # Spell families and coverage
 
+Current V0.2b.3 status: see [generated coverage](coverage-report.json) and [validation/limits](V0.2b.3-VALIDATION.md). Sections below preserve the earlier audit baseline; they are not a claim that newly delivered bounded reaction primitives remain unavailable.
+
 Reference: [SRD 5.1 CC BY 4.0](https://www.dndbeyond.com/attachments/39j2li89/SRD5.1-CCBY4.0License.pdf), Spellcasting and Spells. Examples identify mechanical families; they are not a distributed complete spell catalogue. All statuses refer to the **whole declared behavior**. No spell is automated merely because its damage component works.
 
 | Family | SRD example | Required primitives | V0.2 baseline / gap | Automation priority |

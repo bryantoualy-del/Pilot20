@@ -433,6 +433,64 @@
           "items": {
             "$ref": "#/$defs/reactiveRule"
           }
+        },
+        "castingModifiers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+              },
+              "costs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "resourceId": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+                    },
+                    "amount": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "required": [
+                    "resourceId",
+                    "amount"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 100
+              },
+              "operation": {
+                "enum": [
+                  "castingTime",
+                  "firstSaveDisadvantage"
+                ]
+              },
+              "from": {
+                "const": "action"
+              },
+              "to": {
+                "const": "bonus"
+              },
+              "exclusiveGroup": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+              }
+            },
+            "required": [
+              "id",
+              "costs",
+              "operation",
+              "exclusiveGroup"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 20
         }
       },
       "required": [
@@ -773,6 +831,13 @@
             "before-damage",
             "after-damage"
           ]
+        },
+        "validationRequired": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^external\\."
+          }
         }
       },
       "required": [
@@ -891,6 +956,16 @@
         },
         "hit": {
           "type": "boolean"
+        },
+        "saves": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+          },
+          "additionalProperties": {
+            "type": "integer"
+          }
         }
       },
       "required": [
@@ -901,7 +976,8 @@
         "natural",
         "total",
         "critical",
-        "hit"
+        "hit",
+        "saves"
       ],
       "additionalProperties": false
     },
@@ -909,7 +985,7 @@
       "type": "object",
       "properties": {
         "version": {
-          "const": 1
+          "const": 2
         },
         "id": {
           "type": "string",
@@ -1022,13 +1098,26 @@
                 "additionalProperties": false
               },
               "maxItems": 200
+            },
+            "saves": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
+              },
+              "additionalProperties": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              }
             }
           },
           "required": [
             "attackTotal",
             "damageDivisor",
             "cancelled",
-            "damage"
+            "damage",
+            "saves"
           ],
           "additionalProperties": false
         },
@@ -1061,6 +1150,19 @@
               }
             }
           ]
+        },
+        "validations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": [
+                "boolean",
+                "number",
+                "string"
+              ]
+            }
+          }
         }
       },
       "required": [
@@ -1077,7 +1179,8 @@
         "processed",
         "modifiers",
         "lockedActorIds",
-        "outcome"
+        "outcome",
+        "validations"
       ],
       "additionalProperties": false
     },
@@ -1085,7 +1188,7 @@
       "type": "object",
       "properties": {
         "version": {
-          "const": 1
+          "const": 2
         },
         "event": {
           "anyOf": [
@@ -1145,7 +1248,8 @@
                 "zone-enter",
                 "spell-cast",
                 "attack-roll",
-                "ability-targeted"
+                "ability-targeted",
+                "roll-made"
               ]
             },
             "scope": {
@@ -1367,10 +1471,35 @@
                         "bonus"
                       ],
                       "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "const": "rollAdjustment"
+                        },
+                        "sides": {
+                          "enum": [
+                            6,
+                            8,
+                            10,
+                            12
+                          ]
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "sides"
+                      ],
+                      "additionalProperties": false
                     }
                   ]
                 },
                 "maxItems": 10
+              },
+              "tokenId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$"
               }
             },
             "required": [

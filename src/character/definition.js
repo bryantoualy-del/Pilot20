@@ -1,9 +1,13 @@
+import {validateReactiveRule} from '../rules/reactive.js';
+import {validateCastingModifier} from '../rules/conditional.js';
 import {validateRuleData} from './rules.js';
 import {check,id,integer,keys,json,text,ids,source,ABILITIES,SKILLS} from './contracts.js';
 export const SCHEMA_VERSION=2;
 export function validateCharacter(d) {
   json(d);
-  keys(d,['kind','schemaVersion','ruleset','id','revision','identity','ancestry','classes','background','alignment','scores','skills','saveProficiencies','proficiencies','features','equipment','spells','progression','choices','choiceRules','resources','abilities','modifiers','defenses','movement','armorRules','buildRules']);
+  keys(d,['kind','schemaVersion','ruleset','id','revision','identity','ancestry','classes','background','alignment','scores','skills','saveProficiencies','proficiencies','features','equipment','spells','progression','choices','choiceRules','resources','abilities','modifiers','defenses','movement','armorRules','buildRules','reactiveRules','castingModifiers'],['kind','schemaVersion','ruleset','id','revision','identity','ancestry','classes','background','alignment','scores','skills','saveProficiencies','proficiencies','features','equipment','spells','progression','choices','choiceRules','resources','abilities','modifiers','defenses','movement','armorRules','buildRules']);
+  if(d.reactiveRules!==undefined) {check(Array.isArray(d.reactiveRules) && d.reactiveRules.length<=50,'Reactive character rules');ids(d.reactiveRules.map(r=>r.id));d.reactiveRules.forEach(validateReactiveRule);}
+  if(d.castingModifiers!==undefined) {check(Array.isArray(d.castingModifiers) && d.castingModifiers.length<=20,'Character casting modifiers');ids(d.castingModifiers.map(r=>r.id));d.castingModifiers.forEach(validateCastingModifier);}
   check(d.kind==='character' && d.schemaVersion===2 && d.ruleset==='dnd5e-2014' && id(d.id) && integer(d.revision,1),'Character header');
   keys(d.identity,['name','portrait','description']); check(text(d.identity.name) && d.identity.name.trim() && text(d.identity.portrait) && text(d.identity.description),'Identity');
   keys(d.ancestry,['id','subraceId','source']); check(id(d.ancestry.id) && (d.ancestry.subraceId===null || id(d.ancestry.subraceId)),'Ancestry');source(d.ancestry.source);

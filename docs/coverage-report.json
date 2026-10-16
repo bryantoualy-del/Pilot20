@@ -5,9 +5,176 @@
   "classesWithStructuralTests": 12,
   "classesWithDeepCombatScenarios": [
     "fighter",
+    "rogue",
+    "paladin",
+    "barbarian",
     "sorcerer",
-    "warlock"
+    "warlock",
+    "bard"
   ],
+  "reactiveCases": [
+    {
+      "name": "fighter",
+      "level": 10,
+      "rules": [],
+      "castingModifiers": [],
+      "wholeClassStatus": "partial",
+      "testEvidence": [
+        "tests/reactive-e2e.test.js",
+        "tests/combat-reactions.test.js",
+        "tests/conditional-rules.test.js"
+      ],
+      "externalRequirements": true
+    },
+    {
+      "name": "rogue",
+      "level": 10,
+      "rules": [
+        "sneak-attack",
+        "uncanny-dodge"
+      ],
+      "castingModifiers": [],
+      "wholeClassStatus": "partial",
+      "testEvidence": [
+        "tests/reactive-e2e.test.js",
+        "tests/combat-reactions.test.js",
+        "tests/conditional-rules.test.js"
+      ],
+      "externalRequirements": true
+    },
+    {
+      "name": "paladin",
+      "level": 10,
+      "rules": [
+        "divine-smite",
+        "divine-smite-exalted"
+      ],
+      "castingModifiers": [],
+      "wholeClassStatus": "partial",
+      "testEvidence": [
+        "tests/reactive-e2e.test.js",
+        "tests/combat-reactions.test.js",
+        "tests/conditional-rules.test.js"
+      ],
+      "externalRequirements": true
+    },
+    {
+      "name": "barbarian",
+      "level": 10,
+      "rules": [],
+      "castingModifiers": [],
+      "wholeClassStatus": "partial",
+      "testEvidence": [
+        "tests/reactive-e2e.test.js",
+        "tests/combat-reactions.test.js",
+        "tests/conditional-rules.test.js"
+      ],
+      "externalRequirements": true
+    },
+    {
+      "name": "sorcerer",
+      "level": 10,
+      "rules": [
+        "shield",
+        "counterspell"
+      ],
+      "castingModifiers": [
+        "quickened",
+        "heightened"
+      ],
+      "wholeClassStatus": "partial",
+      "testEvidence": [
+        "tests/reactive-e2e.test.js",
+        "tests/combat-reactions.test.js",
+        "tests/conditional-rules.test.js"
+      ],
+      "externalRequirements": true
+    },
+    {
+      "name": "warlock",
+      "level": 10,
+      "rules": [
+        "shield",
+        "counterspell"
+      ],
+      "castingModifiers": [],
+      "wholeClassStatus": "partial",
+      "testEvidence": [
+        "tests/reactive-e2e.test.js",
+        "tests/combat-reactions.test.js",
+        "tests/conditional-rules.test.js"
+      ],
+      "externalRequirements": true
+    },
+    {
+      "name": "bard",
+      "level": 10,
+      "rules": [],
+      "castingModifiers": [],
+      "wholeClassStatus": "partial",
+      "testEvidence": [
+        "tests/reactive-e2e.test.js",
+        "tests/combat-reactions.test.js",
+        "tests/conditional-rules.test.js"
+      ],
+      "externalRequirements": true
+    }
+  ],
+  "reactivePrimitives": {
+    "reactionWindow": {
+      "status": "automated",
+      "scope": "one ordered window at a time; nested spell reactions blocked"
+    },
+    "triggeredEffect": {
+      "status": "partial",
+      "scope": "ability cast/roll/hit/damage events; standalone movement/start/end windows deferred"
+    },
+    "decision": {
+      "status": "automated",
+      "scope": "persistent v2 choices, atomic response/resume, undo, current revision"
+    },
+    "postHitResource": {
+      "status": "automated",
+      "scope": "optional typed damage, chosen standard/pact resource"
+    },
+    "oncePerTurn": {
+      "status": "automated",
+      "scope": "session turnId, not round"
+    },
+    "damageInterception": {
+      "status": "automated",
+      "scope": "per-attack pre-defense divisor; typed rounding policy documented"
+    },
+    "transferredResource": {
+      "status": "automated",
+      "scope": "single die token, attack/save/declared check, logical expiry"
+    },
+    "conditionalModifier": {
+      "status": "automated",
+      "scope": "weapon-trait gated stance bonus, defenses, advantage and sustain"
+    },
+    "castingModifier": {
+      "status": "automated",
+      "scope": "action-to-bonus conversion and one-target first-save disadvantage"
+    },
+    "transformation": {
+      "status": "unsupported",
+      "scope": "contract only"
+    },
+    "summon": {
+      "status": "unsupported",
+      "scope": "manual"
+    },
+    "zone": {
+      "status": "unsupported",
+      "scope": "manual"
+    },
+    "aura": {
+      "status": "unsupported",
+      "scope": "manual"
+    }
+  },
+  "reactiveDemo": "examples/reactive-combat-demo.mjs (five rounds, seven class fixtures, five adversaries; transcript asserted by CI tests)",
   "fixtureTestSuite": "tests/universal-rules.test.js (12 classes; no full class-completeness claim)",
   "totals": {
     "referenced": 0,
@@ -32,20 +199,24 @@
     "removeEffect": "automated",
     "transformation": "unsupported",
     "summon": "unsupported",
-    "reactionWindow": "unsupported",
-    "triggeredEffect": "unsupported",
-    "decision": "unsupported",
-    "choice": "unsupported",
+    "reactionWindow": "automated",
+    "triggeredEffect": "partial",
+    "decision": "automated",
+    "choice": "automated",
     "zone": "unsupported",
-    "aura": "unsupported"
+    "aura": "unsupported",
+    "postHitResource": "automated",
+    "oncePerTurn": "automated",
+    "damageInterception": "automated",
+    "transferredResource": "automated",
+    "conditionalModifier": "automated",
+    "castingModifier": "automated"
   },
   "missingPrimitives": [
+    "resourceChange",
     "transformation",
     "summon",
-    "reactionWindow",
     "triggeredEffect",
-    "decision",
-    "choice",
     "zone",
     "aura"
   ],
