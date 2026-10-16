@@ -55,3 +55,10 @@ Décisions JSON persistantes, fenêtres ordonnées, réactions défensives, dép
 - [Matrice générée et contrôlée en CI](docs/coverage-report.json)
 
 `npm run demo:reactive`. Aucun déploiement ; aucune affirmation de douze classes ou de sorts officiels entièrement automatisés. Les limites restantes empêchent de déclarer tous les critères V0.2b.3 clos sans réserve.
+
+## V0.3 — paramètres de sources
+
+[Sources de campagne, packs privés et contrat du créateur](docs/V0.3-SOURCES.md).
+Écran local : `web/sources.html` via un serveur HTTP depuis la racine du dépôt.
+SRD, Xanathar et Tasha sont sélectionnables ; seul le SRD est livré. Les packs
+privés s'importent localement et ne sont jamais publiés avec l'application.

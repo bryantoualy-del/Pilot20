@@ -59,7 +59,7 @@ export function buildCharacter(index,{id,name,classes,scores,selections={},hpMod
  for(const r of report.resources)if(!r.unlimited)d.resources.push({id:r.id,max:r.max,recovery:r.recovery,source:index.class(r.classId).source});
  for(const [cls,spells] of spellClasses)for(const record of spells.values()) {
   const {entry,arcanumLevel,ritualOnly,normal,prepared,mastery,signature}=record;
-  const requiresPreparation=['cleric','druid','paladin','wizard'].includes(cls),available=!requiresPreparation||prepared||entry.data.level===0;
+  const requiresPreparation=['cleric','druid','paladin','wizard'].includes(cls)||definitions.find(c=>c.id===cls).casting?.preparation,available=!requiresPreparation||prepared||entry.data.level===0;
   if(arcanumLevel!==null&&arcanumLevel!==undefined)d.abilities.push(compileSpell(entry,cls,d,{arcanumLevel}));
   else if(normal&&available)d.abilities.push(compileSpell(entry,cls,d));
   if((mastery||signature)&&available){

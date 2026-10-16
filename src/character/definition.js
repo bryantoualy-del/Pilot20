@@ -19,7 +19,7 @@ export function validateCharacter(d) {
     keys(c,['id','level','subclassId','hitDie','casting','source']);
     check(id(c.id) && integer(c.level,1,20) && [6,8,10,12].includes(c.hitDie) && (c.subclassId===null || id(c.subclassId)),'Class');
     source(c.source);
-    if(c.casting!==null) {keys(c.casting,['ability','progression','multiclassRounding','startsAtClassLevel'],['ability','progression']);if(c.casting.multiclassRounding!==undefined)check(['floor','ceil'].includes(c.casting.multiclassRounding),'Casting contribution rounding');if(c.casting.startsAtClassLevel!==undefined)check(integer(c.casting.startsAtClassLevel,1,3),'Casting start level');check(ABILITIES.includes(c.casting.ability) && ['full','half','third','pact'].includes(c.casting.progression),'Casting');}
+    if(c.casting!==null) {keys(c.casting,['ability','progression','multiclassRounding','startsAtClassLevel','preparation'],['ability','progression']);if(c.casting.preparation!==undefined)check(['ability-plus-level','ability-plus-half-level'].includes(c.casting.preparation),'Preparation policy');if(c.casting.multiclassRounding!==undefined)check(['floor','ceil'].includes(c.casting.multiclassRounding),'Casting contribution rounding');if(c.casting.startsAtClassLevel!==undefined)check(integer(c.casting.startsAtClassLevel,1,3),'Casting start level');check(ABILITIES.includes(c.casting.ability) && ['full','half','third','pact'].includes(c.casting.progression),'Casting');}
   }
   const level=d.classes.reduce((n,c)=>n+c.level,0);check(level<=20,'Total level');
   check(Object.keys(d.skills).every(k=>Object.hasOwn(SKILLS,k)) && Object.values(d.skills).every(v=>[0,1,2].includes(v)),'Skill ranks');

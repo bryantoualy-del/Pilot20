@@ -24,7 +24,7 @@ export const SPELL_FAMILY_IDS=Object.keys(spellFamilies);
 export function compileSpell(entry,classId,character,{arcanumLevel=null}={}) {
  const d=entry.data,L=character.classes.reduce((n,c)=>n+c.level,0),f=spellFamilies[entry.id];
  const casting=character.classes.find(c=>c.id===classId).casting;
- const access=['cleric','druid','paladin','wizard'].includes(classId)?'prepared':'known';
+ const access=['cleric','druid','paladin','wizard'].includes(classId)||casting.preparation?'prepared':'known';
  const spell={id:entry.id,classId,level:d.level,access};
  const cost=d.castingTime.startsWith('1 bonus action')?'bonus':d.castingTime.startsWith('1 reaction')?'reaction':d.castingTime==='1 action'?'action':'none';
  const a=ability(entry,{id:classId+':'+entry.id,cost,target:'selected',maxTargets:f?(f.maxTargets??1):20,combat:profile({mode:'manual',requirements:['Player/GM resolves effect, components, targets, casting time and duration.'],spell})});
