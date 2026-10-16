@@ -62,3 +62,11 @@ Décisions JSON persistantes, fenêtres ordonnées, réactions défensives, dép
 Écran local : `web/sources.html` via un serveur HTTP depuis la racine du dépôt.
 SRD, Xanathar et Tasha sont sélectionnables ; seul le SRD est livré. Les packs
 privés s'importent localement et ne sont jamais publiés avec l'application.
+
+## V0.3 local character application (review candidate)
+
+Run `npm ci` then `npm run dev` and open the printed local URL. The graphical application includes a bilingual library, campaign sources, quick/guided/expert creation and a local Companion Preview. Build static files with `npm run build:web`; `dist/` contains every runtime asset and the service worker. Wait for “Disponible hors ligne” before disconnecting.
+
+No accounts, external CDN, RPG Connect or public deployment are required. Back up characters with the library export action. Private packs are installed on this browser only. The public app does not ship protected extension books.
+
+The V0.3 release gate is still open: see [validation](docs/V0.3-VALIDATION.md), [architecture](docs/V0.3-ARCHITECTURE.md), [UX](docs/V0.3-UX.md), [source coverage](docs/V0.3-SOURCES-COVERAGE.md) and [limitations](docs/V0.3-LIMITATIONS.md). No complete official extension or physical iPad validation is claimed.
