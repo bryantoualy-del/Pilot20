@@ -27,7 +27,7 @@ async function render(){await refresh();document.documentElement.lang=state.loca
  if(state.route==='home')main.append(el('section',{class:'hero'},el('div',{class:'hero-copy'},badge('V0.3 · '+t('local')),el('h1',{},t('hero')),el('p',{},t('intro')),el('div',{class:'row'},button(t('create'),()=>start(),'primary'),button(t('library'),()=>nav('library'))),el('small',{},t('noJson'))),el('div',{class:'hero-art','aria-hidden':'true'},el('div',{class:'orbit orbit-one'}),el('div',{class:'orbit orbit-two'}),el('div',{class:'die'},'20'),el('span',{class:'art-label'},'ROLL YOUR STORY'))),el('section',{},el('div',{class:'section-head'},el('h2',{},t('resume')),badge(String(all.filter(d=>!d.finalized).length))),el('div',{class:'cards'},all.filter(d=>!d.finalized).map(cardDraft))),el('section',{class:'source-strip'},el('h2',{},t('sources')),el('p',{},t('sourceHelp')),el('div',{class:'row'},context.statuses.map(s=>badge(s.name+' · '+s.installedEntries,s.installedEntries?'':'warning'))),button(t('checkSources'),()=>nav('sources'))));
  if(state.route==='library')await libraryScreen(main,all);
  if(state.route==='sources')await sourcesScreen(main);
- if(state.route==='creator'){const d=await drafts.get(state.id);if(d){if(!revisions.has(d.id))revisions.set(d.id,d.revision);await renderEditor(main,d,api());}else await nav('library');}
+ if(state.route==='creator'){const d=await drafts.get(state.id);if(d){revisions.set(d.id,d.revision);await renderEditor(main,d,api());}else await nav('library');}
  if(state.route==='companion')await renderCompanion(main,state.id,api());
  updateOffline();
 }
