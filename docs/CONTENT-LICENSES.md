@@ -22,3 +22,7 @@ Chaque élément porte kind (srd/homebrew/private), document, license et url. Un
 Les fixtures utilisent des scénarios synthétiques écrits pour Pilot20 ; les cas de manœuvre et d'attaque de sort génériques ne sont pas des reproductions du texte d'un supplément. Aucun texte de Kobold, Collège du Glamour, don, invocation ou objet propriétaire n'a été copié des Companions.
 
 Le contenu fourni par l'utilisateur reste une extension distincte. Le champ private ne rend pas privée une branche GitHub publique : aucun contenu privé non autorisé ne doit y être poussé.
+
+## V0.2c additions
+
+The English class reference text and 319 spell descriptions are extracted from the official **SRD 5.1 CC BY 4.0** PDF linked above. The source PDF SHA-256 and independently extracted spell lists are recorded in `src/catalog/data/srd51-manifest.json`. Mechanical progressions and options are transcribed into declarative data. PDF page headers and line breaks are removed, spell apostrophes/hyphens are normalized; no 2024 source is substituted. The attribution above applies to this material. `name.fr` is an English fallback in the expanded catalogue, not a reproduction of commercial French translations. No Xanathar/Tasha text, illustration, or full protected Artificer/subclass definition is distributed.
