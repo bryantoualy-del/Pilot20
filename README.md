@@ -49,6 +49,7 @@ Twelve represented classes do not mean twelve fully automated classes. Reactions
 Décisions JSON persistantes, fenêtres ordonnées, réactions défensives, dépenses après touche, ressources transférées, Rage et modifications du plan de lancement. Le moteur transactionnel existant reste l'autorité locale ; les faits externes manquants demandent une validation explicite.
 
 - [API, ordre et continuations](docs/V0.2b.3-REACTIVE.md)
+- [Correctif pré-fusion : vue joueur, dégâts mixtes et garde-fous](docs/V0.2b.3-PREMERGE.md)
 - [Validation, couverture réelle, limites et risques](docs/V0.2b.3-VALIDATION.md)
 - [Démonstration déterministe : sept classes, cinq adversaires, cinq rounds](docs/V0.2b.3-DEMO.txt)
 - [Matrice générée et contrôlée en CI](docs/coverage-report.json)

@@ -122,6 +122,7 @@ export function nextWindow(s,e) {
   }
   return false;
 }
+/** Trusted controller accessor. Player-facing callers must use combatView with an audience. */
 export function pendingDecisions(s) {return structuredClone(s.reactive?.event?.decisions.filter(d=>d.status==='pending')??[]);}
 export function respond(s,c) {
   const e=s.reactive?.event,d=e?.decisions.find(d=>d.id===c.decisionId);

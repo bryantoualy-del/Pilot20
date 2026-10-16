@@ -1,4 +1,5 @@
 import {modifyCasting,stanceDamage,stanceDefense,activity,tokenRules} from './rules/conditional.js';
+import {guardWorkload} from './workload.js';
 import {PHASES,beginEvent,nextWindow,respond,guardPending} from './rules/reactive.js';
 import {json} from './character/contracts.js';
 import {advanced,profileExecutable,statistic,saveModes,hasCondition,cleanupConcentration,boundary,checkCanAct,payAction,prepareCast,establish,addEffect,removeEffect} from './rules/combat.js';
@@ -239,8 +240,11 @@ function apply(s,c) {
   }
   throw Error('Unsupported command');
 }
-/** Pure transaction: invalid commands leave input untouched; caller persists before publication. */
+/** INTERNAL transaction: result/state contain privileged resolution data. Persist internally;
+ * use public-view.js for display/transport to a player, never publish this return value directly.
+ * Invalid commands leave input untouched. */
 export function execute(input, command, context = {}) {
+  guardWorkload(input,command);
   validate(input);
   check(command && Object.getPrototypeOf(command)===Object.prototype,'Plain command required');
   command=Object.fromEntries(Object.entries(command).filter(([,v])=>v!==undefined));json(command); check(command && id(command.id) && typeof command.type === 'string','Command identity');
