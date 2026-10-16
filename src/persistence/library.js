@@ -15,14 +15,15 @@ export function characterLibrary(storage,{newId=()=>globalThis.crypto.randomUUID
     return {raw,prefs};
   }
   async function get(characterId) {const r=await read(characterId);return r?{...clone(r.raw),preferences:clone(r.prefs)}:null;}
-  async function save(d,{expectedRevision=null,prefs,initialArchived=false}={}) {
+  async function save(d,{expectedRevision=null,prefs,initialArchived=false,linkedMeta=[]}={}) {
     validateCharacter(d);check(typeof initialArchived==='boolean','Archive flag');
     const old=await read(d.id);
     check(old===null?expectedRevision===null && d.revision===1:expectedRevision===old.raw.definition.revision && d.revision===expectedRevision+1,'Revision conflict');
     const p=prefs??old?.prefs??defaultPreferences(d.id);preferences(p);check(p.characterId===d.id,'Preferences mismatch');
+    check(Array.isArray(linkedMeta)&&linkedMeta.length<=10,'Linked metadata');for(const m of linkedMeta){check(typeof m.key==='string'&&m.key.length<=500&&m.value!==undefined,'Linked metadata address');json(m.value);if(m.expectedValue!==undefined)json(m.expectedValue);}
     const raw={definition:clone(d),archived:old?.raw.archived??initialArchived};
-    await storage.batch([{store:'characters',key:d.id,value:old?.raw},{store:'preferences',key:d.id,value:old?.prefs}],
-      [{store:'characters',key:d.id,value:raw},{store:'preferences',key:d.id,value:clone(p)}]);
+    await storage.batch([{store:'characters',key:d.id,value:old?.raw},{store:'preferences',key:d.id,value:old?.prefs},...linkedMeta.map(m=>({store:'meta',key:m.key,value:m.expectedValue}))],
+      [{store:'characters',key:d.id,value:raw},{store:'preferences',key:d.id,value:clone(p)},...linkedMeta.map(m=>({store:'meta',key:m.key,value:m.value}))]);
     return {...clone(raw),preferences:clone(p)};
   }
   return {
