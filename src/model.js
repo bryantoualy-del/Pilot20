@@ -1,3 +1,4 @@
+import {validateReactive,validateReactiveRule} from './rules/reactive.js';
 import {validateProfile,validateAdvanced} from './rules/combat.js';
 /** Portable, JSON-only domain model. All external data crosses this validator. */
 export const VERSION = 1;
@@ -72,6 +73,7 @@ export function validateDefinition(d) {
     }
   }
   for (const list of ['resistances','immunities','vulnerabilities']) requireThat(Array.isArray(d[list]) && d[list].every(id), 'Damage defenses');
+  if(d.rules!==undefined) {requireThat(Array.isArray(d.rules),'Reactive rules');d.rules.forEach(validateReactiveRule);}
   return d;
 }
 function jsonOnly(value, depth = 0) {
@@ -89,7 +91,7 @@ export function validate(state, {history = true} = {}) {
   requireThat(object(state.layout) && Array.isArray(state.history) && object(state.receipts), 'Document envelope');
   for (const [key,r] of Object.entries(state.receipts)) requireThat(id(key) && object(r) && typeof r.fingerprint === 'string' && object(r.result), 'Receipt');
   if (history) for (const h of state.history) {
-    requireThat(object(h) && id(h.id) && object(h.before) && Object.keys(h.before).every(k=>['actors','activeActorId','turnId'].includes(k)), 'History entry');
+    requireThat(object(h) && id(h.id) && object(h.before) && Object.keys(h.before).every(k=>['actors','activeActorId','turnId','reactive'].includes(k)), 'History entry');
     validateGame(h.before);
   }
   return state;
@@ -112,6 +114,7 @@ function validateGame(state) {
     requireThat(!(a.hp.current === 0 || a.incapacitated) || a.concentration === null, 'Concentration while incapacitated');
     requireThat(!a.economy.attacks || !a.economy.action, 'Attack budget without action consumption');
   }
+  validateReactive(state);
 }
 export function createSession(definitions) {
   requireThat(Array.isArray(definitions) && definitions.length && new Set(definitions.map(d=>d.id)).size === definitions.length, 'Unique character definitions required');
