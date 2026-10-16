@@ -47,7 +47,7 @@ export function resolveProgression(index,{classes,scores,selections={},campaignO
   }
   const skillCount=position===0?d.skillChoice.count:['bard','ranger','rogue'].includes(c.id)?1:0;
   if(skillCount)addChoice(c.id,'skills',1,skillCount,d.skillChoice.options,'skill');
-  for(const spec of d.choices??[]) {
+  for(const spec of [...(d.choices??[]),...(sub?.data.choices??[]),...optional.filter(f=>f.data.classId===c.id).flatMap(f=>f.data.choices??[])]) {
    if(suppressedChoices.has(c.id+':'+spec.key))continue;
    if(spec.requiresChoice&&!(selections[c.id+':'+spec.requiresChoice.key]??[]).includes(spec.requiresChoice.optionId))continue;
    if(spec.level>L||(spec.subclassId&&spec.subclassId!==c.subclassId)||(spec.requiresSelected&&!selected.has(spec.requiresSelected)))continue;
