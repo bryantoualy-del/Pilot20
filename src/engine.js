@@ -1,7 +1,8 @@
+import {PHASES,beginEvent,nextWindow,respond,guardPending} from './rules/reactive.js';
 import {json} from './character/contracts.js';
 import {advanced,profileExecutable,statistic,saveModes,hasCondition,cleanupConcentration,boundary,checkCanAct,payAction,prepareCast,establish,addEffect,removeEffect} from './rules/combat.js';
 import {copy, validate, requireThat as check, integer, id, diceSpec} from './model.js';
-const game = s => copy({actors:s.actors,activeActorId:s.activeActorId,turnId:s.turnId});
+const game = s => copy({actors:s.actors,activeActorId:s.activeActorId,turnId:s.turnId,...(s.reactive?{reactive:s.reactive}:{})});
 function dieRoll(rolls, sides, count) {
   check(Array.isArray(rolls) && rolls.length === count && rolls.every(n=>integer(n,1,sides)), 'Invalid dice results');
   return rolls;
@@ -67,6 +68,24 @@ function useAbility(s,c) {
     total=natural+statistic(a,'attack',ability.attack.bonus);critical=natural===20;
     hit=natural!==1 && (critical || total>=statistic(targets[0][1],'ac',targets[0][1].definition.ac));
   }
+  const plan={command:copy(c),ability,targetIds:targets.map(([key])=>key),slotLevel,natural:ability.attack?d20(c.attackRolls,c.advantage===true,c.disadvantage===true):null,total,critical,hit};
+  if(!Object.values(s.actors).some(a=>a.definition.rules?.length))return finishAbility(s,{plan,modifiers:{damage:[],damageDivisor:1,attackTotal:0}});
+  return advanceEvent(s,beginEvent(s,plan));
+}
+function advanceEvent(s,e) {
+  while(true) {
+    const p=e.plan,t=s.actors[e.targetIds[0]];
+    if(e.phase==='after-damage' && e.outcome===null)e.outcome=finishAbility(s,e);
+    if(e.phase==='before-hit' && p.ability.attack) p.hit=p.natural!==1 && (p.critical || p.total+e.modifiers.attackTotal>=statistic(t,'ac',t.definition.ac));
+    if(nextWindow(s,e)) return {pending:e.window.decisionId,eventId:e.id,phase:e.phase};
+    if(e.modifiers.cancelled) {e.status='cancelled';return {cancelled:true,eventId:e.id,results:[]};}
+    const i=PHASES.indexOf(e.phase);
+    if(i===PHASES.length-1) {e.status='completed';return e.outcome;}
+    e.phase=PHASES[i+1];
+  }
+}
+function finishAbility(s,event) {
+  const {command:c,ability,targetIds,slotLevel,hit,critical,total}=event.plan,a=actor(s,c.actorId),targets=targetIds.map(k=>[k,actor(s,k)]);
   activateConcentration(a,ability.concentration,c.id,hit);cleanupConcentration(s);
   const results=[],lasting=[];
   const amounts=hit?ability.effects.map((e,i)=>resolveAmount(e,c.effectRolls?.[i],critical)):[];
@@ -90,10 +109,12 @@ function useAbility(s,c) {
       if(e.kind==='tempHp') target.hp.temp=Math.max(target.hp.temp,n);
     }
     let detail={targetId:key,hp:copy(target.hp)};
+    if(ability.attack) for(const extra of event.modifiers.damage) {const n=resolveAmount({kind:'damage',dice:extra.dice},extra.rolls,critical);components.set(extra.damageType,(components.get(extra.damageType)||0)+n);}
     if(components.size) {
       const n=[...components].reduce((sum,[type,n])=>{
         // Saving-throw reduction precedes resistance/vulnerability, once per typed total.
         if(save?.success) n=ability.save.onSuccess==='half'?Math.floor(n/2):ability.save.onSuccess==='none'?0:n;
+        n=Math.floor(n/event.modifiers.damageDivisor);
         return sum+effectiveDamage(n,type,target.definition);
       },0);
       detail={targetId:key,...damage(target,n,c.id+':'+key)};
@@ -136,6 +157,8 @@ function resolveManual(s,c) {
   x.pendingManual=null;cleanupConcentration(s);return {resolved:pending.id,reason:c.reason,results};
 }
 function apply(s,c) {
+  if (c.type === 'respondDecision') return advanceEvent(s,respond(s,c));
+  if (c.type === 'resumeDecision') throw Error('Continuation resumes atomically with its decision; double resume refused');
   if (c.type === 'useAbility') return useAbility(s,c);
   if (c.type === 'declareManual') return declareManual(s,c);
   if (c.type === 'resolveManual') return resolveManual(s,c);
@@ -157,7 +180,7 @@ function apply(s,c) {
     boundary(s,c.actorId,'start');
     for(const a of Object.values(s.actors)) if(a.advanced) a.advanced.casts=[];
     const a = actor(s,c.actorId); s.activeActorId = c.actorId; s.turnId++;
-    a.economy = {action:true,bonus:true,reaction:true,attacks:0}; return {turnId:s.turnId};
+    a.economy = {action:true,bonus:true,reaction:true,attacks:0}; return {turnId:s.turnId,...(s.reactive?{reactive:s.reactive}:{})};
   }
   if (c.type === 'concentrationSave') {
     const a = actor(s,c.actorId), q = a.checks.find(q=>q.id === c.checkId);
@@ -205,10 +228,13 @@ export function execute(input, command, context = {}) {
   if (['correct','damage','setIncapacitated','startTurn','endTurn','rest','undo','removeEffect','declareManual','resolveManual'].includes(command.type)) check(context.role === 'gm' || input.mode !== 'encounter','GM command required');
   if(command.expectedRevision!==undefined) check(command.expectedRevision===input.revision,'Revision conflict');
   if(Object.values(input.actors).some(a=>a.advanced?.pendingManual)) check(['resolveManual','undo'].includes(command.type),'Resolve pending manual decision first');
+  guardPending(input,command);
   const state=copy(input), before=game(input); let result;
   if (command.type === 'undo') {
     const latest=state.history.at(-1); check(latest && latest.id === command.actionId,'Only latest transaction can be undone');
-    Object.assign(state,copy(latest.before)); state.history.pop(); result={undone:latest.id};
+    delete state.reactive; Object.assign(state,copy(latest.before));
+    if(state.reactive?.event?.status==='pending') for(const d of state.reactive.event.decisions) if(d.status==='pending')d.revision=input.revision+1;
+    state.history.pop(); result={undone:latest.id};
   } else { result=apply(state,command); cleanupConcentration(state); state.history.push({id:command.id,command:JSON.parse(JSON.stringify(command)),result:copy(result),before}); }
   state.revision++; state.receipts[command.id]={fingerprint,result:copy(result)};
   validate(state); return {state,result,replayed:false};
