@@ -610,6 +610,12 @@
                   "type": "integer",
                   "minimum": 1,
                   "maximum": 3
+                },
+                "preparation": {
+                  "enum": [
+                    "ability-plus-level",
+                    "ability-plus-half-level"
+                  ]
                 }
               },
               "required": [

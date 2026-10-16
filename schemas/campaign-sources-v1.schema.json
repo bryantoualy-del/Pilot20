@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "schemaVersion",
+    "ruleset",
+    "id",
+    "revision",
+    "enabledSourceIds",
+    "enabledOptions"
+  ],
+  "properties": {
+    "kind": {
+      "const": "pilot20-campaign-sources"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "ruleset": {
+      "const": "dnd5e-2014"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+      "not": {
+        "enum": [
+          "__proto__",
+          "constructor",
+          "prototype"
+        ]
+      }
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "enabledSourceIds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "srd51",
+          "xge",
+          "tce"
+        ]
+      }
+    },
+    "enabledOptions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 120,
+        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,119}$",
+        "not": {
+          "enum": [
+            "__proto__",
+            "constructor",
+            "prototype"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -69,8 +69,8 @@ export function resolveProgression(index,{classes,scores,selections={},campaignO
    addChoice(c.id,'known-spells',d.casting.progression==='half'?2:1,count,allowedSpells(),'spell');
   }
   if(c.id==='wizard'){const extras=spellbookTranscriptions.filter(t=>t.classId===c.id&&t.characterLevel<=classes.reduce((n,c)=>n+c.level,0));addChoice(c.id,'spellbook',1,6+2*(L-1)+extras.length,allowedSpells(),'spellbook');}
-  if(['cleric','druid','paladin','wizard'].includes(c.id)&&maxSpell) {
-   const count=Math.max(1,modifier(adjustedScores[d.casting.ability])+(d.casting.progression==='half'?Math.floor(L/2):L));
+  if((['cleric','druid','paladin','wizard'].includes(c.id)||d.casting?.preparation)&&maxSpell) {
+   const count=Math.max(1,modifier(adjustedScores[d.casting.ability])+(d.casting.preparation==='ability-plus-half-level'||(!d.casting.preparation&&d.casting.progression==='half')?Math.floor(L/2):L));
    const options=c.id==='wizard'?(selections[c.id+':spellbook']??[]).filter(id=>!(selections[c.id+':signature-spells']??[]).includes(id)):allowedSpells().filter(id=>!grantedSpells.some(s=>s.classId===c.id&&s.id===id));
    addChoice(c.id,'prepared',1,count,options,'prepared');
   }
