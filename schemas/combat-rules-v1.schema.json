@@ -384,6 +384,40 @@
               "aura"
             ]
           }
+        },
+        "traits": {
+          "type": "object",
+          "properties": {
+            "melee": {
+              "type": "boolean"
+            },
+            "ranged": {
+              "type": "boolean"
+            },
+            "finesse": {
+              "type": "boolean"
+            },
+            "strength": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "tags": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "negatedByEffects": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [
@@ -563,6 +597,40 @@
               "zone",
               "aura"
             ]
+          }
+        },
+        "traits": {
+          "type": "object",
+          "properties": {
+            "melee": {
+              "type": "boolean"
+            },
+            "ranged": {
+              "type": "boolean"
+            },
+            "finesse": {
+              "type": "boolean"
+            },
+            "strength": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "tags": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "negatedByEffects": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
           }
         }
       },

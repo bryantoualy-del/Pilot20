@@ -8,7 +8,7 @@ export function validateReactiveRule(r) {
   json(r);keys(r,['version','id','trigger','phase','priority','conditions','options']);
   check(r.version===1 && id(r.id) && PHASES.includes(r.phase) && integer(r.priority,-1000,1000),'Reactive rule header');validateTrigger(r.trigger);
   check(Array.isArray(r.conditions) && r.conditions.length<=20,'Rule conditions');
-  for(const c of r.conditions) {keys(c,['fact','equals']);check(typeof c.fact==='string' && /^[a-zA-Z][a-zA-Z0-9.]{0,79}$/.test(c.fact) && ['boolean','string','number'].includes(typeof c.equals),'Explicit rule fact');}
+  r.conditions.forEach(c=>validateCondition(c));
   check(Array.isArray(r.options) && r.options.length>0 && r.options.length<=30 && new Set(r.options.map(o=>o.id)).size===r.options.length,'Rule options');
   for(const o of r.options) {
     keys(o,['id','label','costs','reaction','spell','effects'],['id','label','costs','reaction','effects']);
@@ -19,6 +19,12 @@ export function validateReactiveRule(r) {
   }
   return r;
 }
+function validateCondition(c,depth=0) {
+  check(depth<4,'Condition nesting');
+  if(c.any || c.all) {const key=c.any?'any':'all';keys(c,[key]);check(Array.isArray(c[key]) && c[key].length>0 && c[key].length<=10,'Condition alternatives');c[key].forEach(v=>validateCondition(v,depth+1));}
+  else {keys(c,['fact','equals']);check(typeof c.fact==='string' && /^[a-zA-Z][a-zA-Z0-9.]{0,79}$/.test(c.fact) && ['boolean','string','number'].includes(typeof c.equals),'Explicit rule fact');}
+}
+const matchesCondition=(f,c)=>c.any?c.any.some(v=>matchesCondition(f,v)):c.all?c.all.every(v=>matchesCondition(f,v)):f[c.fact]===c.equals;
 function validateOperation(e) {
   if(e.kind==='adjust') {keys(e,['kind','field','amount']);check(FIELDS.includes(e.field) && integer(e.amount,1,100),'Event adjustment');}
   else if(e.kind==='cancel') keys(e,['kind']);
@@ -60,8 +66,9 @@ export function validateReactive(s) {
 function facts(s,e,actorId) {
   const c=e.plan.command,a=s.actors[actorId],source=s.actors[e.actorId],target=s.actors[e.targetIds[0]],ability=e.plan.ability;
   return {self:actorId===e.actorId,target:e.targetIds.includes(actorId),other:actorId!==e.actorId,
-    attack:!!ability.attack,hit:e.plan.hit,critical:e.plan.critical,spell:!!ability.combat?.spell,
+    attack:!!ability.attack,weapon:ability.combat?.weapon===true,hit:e.plan.hit,critical:e.plan.critical,spell:!!ability.combat?.spell,
     spellLevel:e.plan.slotLevel,advantage:c.advantage===true && c.disadvantage!==true,disadvantage:c.disadvantage===true && c.advantage!==true,
+    ...Object.fromEntries((ability.combat?.tags??[]).map(k=>['tag.'+k,true])),
     ...(Object.fromEntries(Object.entries(ability.combat?.traits??{}).map(([k,v])=>['weapon.'+k,v]))),
     ...Object.fromEntries(Object.entries(c.facts?.[actorId]??{}).map(([k,v])=>['external.'+k,v])),
     conscious:a.hp.current>0 && !hasCondition(a,'incapacitated'),sourceAlive:source.hp.current>0,targetAlive:target.hp.current>0};
@@ -85,8 +92,8 @@ export function nextWindow(s,e) {
     const f=facts(s,e,actorId),scope=r.trigger.scope;
     if(scope==='self' && actorId!==e.actorId || scope==='target' && !e.targetIds.includes(actorId) || scope==='ally')continue; // no inferred allegiance
     if(r.trigger.whileEffect && !a.advanced?.effects.some(v=>v.rule.id===r.trigger.whileEffect))continue;
-    const matches={'spell-cast':!!e.plan.ability.combat?.spell,'attack-hit':!!e.plan.ability.attack && e.plan.hit,'attack-roll':!!e.plan.ability.attack,'damage-taken':e.outcome?.results.some(r=>r.targetId===actorId && r.damage>0)===true};
-    if(!matches[r.trigger.event] || !f.conscious || !r.conditions.every(c=>f[c.fact]===c.equals))continue;
+    const matches={'ability-targeted':true,'spell-cast':!!e.plan.ability.combat?.spell,'attack-hit':!!e.plan.ability.attack && e.plan.hit,'attack-roll':!!e.plan.ability.attack,'damage-taken':e.outcome?.results.some(r=>r.targetId===actorId && r.damage>0)===true};
+    if(!matches[r.trigger.event] || !f.conscious || !r.conditions.every(c=>matchesCondition(f,c)))continue;
     if(r.trigger.limit==='turn' && reactive(s).usage[key]===s.turnId)continue;
     check(['none','turn'].includes(r.trigger.limit),'Unsupported reactive entitlement');
     const allowed=options(a,r);if(!allowed.length)continue;
@@ -106,7 +113,7 @@ export function respond(s,c) {
   else {
     const a=s.actors[d.actorId],r=a.definition.rules.find(r=>r.id===d.ruleId),o=options(a,r).find(o=>o.id===c.optionId);
     check(d.options.some(o=>o.id===c.optionId) && o,'Option unavailable');
-    const f=facts(s,e,d.actorId);check(f.conscious && r.conditions.every(c=>f[c.fact]===c.equals),'Decision conditions changed');
+    const f=facts(s,e,d.actorId);check(f.conscious && r.conditions.every(c=>matchesCondition(f,c)),'Decision conditions changed');
     if(o.spell) {
       check(e.plan.command.facts?.[d.actorId]?.reactionSpellUnopposed===true,'Nested reaction spells require manual adjudication');
       prepareCast(a,{cost:'reaction',combat:{spell:{available:true,level:o.spell.level}}},{slotId:o.spell.slotId});
@@ -117,7 +124,7 @@ export function respond(s,c) {
       if(op.kind==='adjust') {if(op.field==='damageDivisor')e.modifiers.damageDivisor*=op.amount;else e.modifiers.attackTotal+=op.amount;}
       else if(op.kind==='cancel')e.modifiers.cancelled=true;
       else if(op.kind==='effect')addEffect(s,d.actorId,d.actorId,op.rule,c.id+':e'+i);
-      else if(op.kind==='damage') {const rolls=c.rolls?.[i];check(Array.isArray(rolls),'Additional damage rolls required');e.modifiers.damage.push({dice:op.dice,damageType:op.damageType,rolls});}
+      else if(op.kind==='damage') {const rolls=c.rolls?.[i];check(Array.isArray(rolls),'Additional damage rolls required');e.modifiers.damage.push({dice:op.dice,damageType:op.damageType==='attack'?e.plan.ability.effects.find(v=>v.kind==='damage')?.damageType:op.damageType,rolls});}
       else if(op.kind==='counter') {
         const level=e.plan.slotLevel;if(op.slotLevel>=level)e.modifiers.cancelled=true;
         else {check(Array.isArray(c.checkRolls) && c.checkRolls.length===1 && integer(c.checkRolls[0],1,20),'Counter ability roll');e.modifiers.cancelled=c.checkRolls[0]+op.bonus>=10+level;}

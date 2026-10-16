@@ -21,7 +21,7 @@ export function validateEffectRule(r) {
   if(r.onEnd!==undefined) check(r.onEnd==='no-actions-until-next-turn-end','Effect end consequence');return r;
 }
 export function validateProfile(p,{compiled=false}={}) {
-  json(p);keys(p,['version','mode','requirements','spell','upcast','ongoing','grant','actionKind','weapon','deferred','duration'],['version','mode','requirements']);
+  json(p);keys(p,['version','mode','requirements','spell','upcast','ongoing','grant','actionKind','weapon','deferred','duration','traits','tags','negatedByEffects'],['version','mode','requirements']);
   check(p.version===1 && ['automatic','manual','referenced'].includes(p.mode) && Array.isArray(p.requirements) && p.requirements.every(v=>typeof v==='string' && v.trim()),'Combat profile');
   if(p.deferred!==undefined) check(Array.isArray(p.deferred) && p.deferred.every(k=>['reactionWindow','triggeredEffect','decision','transformation','summon','zone','aura'].includes(k)),'Deferred primitives');
   if(p.spell) {
@@ -34,6 +34,8 @@ export function validateProfile(p,{compiled=false}={}) {
   if(p.ongoing) {check(Array.isArray(p.ongoing) && p.ongoing.length<=20 && new Set(p.ongoing.map(r=>r.id)).size===p.ongoing.length,'Ongoing effects');p.ongoing.forEach(validateEffectRule);}
   if(p.grant) {keys(p.grant,['count','maxPerTurn']);check(p.grant.count===1 && integer(p.grant.maxPerTurn,1,10),'Extra action grant');}
   if(p.actionKind!==undefined) check(ACTION_KINDS.includes(p.actionKind),'Action kind');
+  for(const k of ['tags','negatedByEffects'])if(p[k]!==undefined)check(Array.isArray(p[k]) && p[k].length<=20 && p[k].every(id) && new Set(p[k]).size===p[k].length,'Unique semantic tags');
+  if(p.traits!==undefined) {keys(p.traits,['melee','ranged','finesse','strength'],[]);check(Object.values(p.traits).every(v=>typeof v==='boolean'),'Weapon traits');check(p.weapon===true,'Traits require weapon');}
   if(p.weapon!==undefined) check(typeof p.weapon==='boolean','Weapon flag');return p;
 }
 export const profileExecutable=p=>p.mode==='automatic' && !p.requirements.length && !p.deferred?.length;
