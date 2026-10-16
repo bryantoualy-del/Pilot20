@@ -855,7 +855,7 @@ export async function renderEditor(main, d, a) {
               report.features.length +
               " · " +
               report.choices.filter(
-                (q) => !(d.selections[q.id]?.length === q.count),
+                (q) => report.issues.some(i=>i.choiceId===q.id),
               ).length +
               " " +
               t("remaining"),

@@ -345,6 +345,7 @@ try {
   }
   const restored = (await snapshots()).find((d) => d.id === before.id);
   assert.deepEqual(restored.selections, before.selections);
+  await p.locator('.editor-main').getByText(/Capacités de classe : \d+ · 0 choix/).waitFor();
   record(
     "D: level reduction blocks invalid effects, explicit archival permits revalidation at level 1, then all high-level decisions restore without loss",
   );
