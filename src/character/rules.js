@@ -81,7 +81,7 @@ export function compileAbilities(d,stats,resources) {
         const r=out.combat.spell;
         check(d.classes.some(c=>c.id===r.classId && c.casting),'Spellcasting source');
         const castingClass=d.classes.find(c=>c.id===r.classId),progression=castingClass.casting.progression,level=castingClass.level;
-        const cap=progression==='pact'?Math.min(5,Math.ceil(level/2)):progression==='full'?Math.ceil(level/2):progression==='half'?(level<2?0:Math.ceil(level/4)):(level<3?0:Math.ceil(level/6));
+        const cap=progression==='pact'?Math.min(5,Math.ceil(level/2)):progression==='full'?Math.ceil(level/2):progression==='half'?(level<(castingClass.casting.startsAtClassLevel??2)?0:Math.ceil(level/4)):(level<(castingClass.casting.startsAtClassLevel??3)?0:Math.ceil(level/6));
         r.available=(r.access==='granted' || r.level<=cap) && (r.access==='granted'?d.features:r.access==='prepared'?d.spells.prepared:d.spells.known).includes(r.id);
         if(!r.available) {coverage[a.id]={status:'represented',coverageStatus:'unsupported',reasons:['spell-unavailable']};continue;}
       }

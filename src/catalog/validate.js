@@ -1,5 +1,7 @@
+import {validateCatalogV3} from './catalog-v3.js';
 import {check,keys,id,json,source,text} from '../character/contracts.js';
 export function validateCatalog(c,{distribution='private'}={}) {
+  if(c?.schemaVersion===3)return validateCatalogV3(c,{distribution});
   json(c);keys(c,['kind','schemaVersion','ruleset','id','items']);
   check(c.kind==='catalog' && c.schemaVersion===2 && c.ruleset==='dnd5e-2014' && id(c.id) && Array.isArray(c.items),'Catalog header');
   check(new Set(c.items.map(i=>i.id)).size===c.items.length,'Duplicate content');

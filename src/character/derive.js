@@ -13,8 +13,8 @@ export function spellSlots(classes) {
   const casterLevel=cs.reduce((n,c)=>{
     const p=c.casting.progression;
     if(p==='full') return n+c.level;
-    if(c.level<(p==='half'?2:3)) return n;
-    return n+(multi?Math.floor:Math.ceil)(c.level/(p==='half'?2:3));
+    if(c.level<(c.casting.startsAtClassLevel??(p==='half'?2:3))) return n;
+    return n+(multi?Math[c.casting.multiclassRounding??'floor']:Math.ceil)(c.level/(p==='half'?2:3));
   },0);
   const slots=Object.fromEntries((SLOTS[casterLevel-1]||[]).map((n,i)=>['slot'+(i+1),{max:n,recovery:'long',slotLevel:i+1,pool:'standard'}]));
   for(const c of classes.filter(c=>c.casting?.progression==='pact')) {

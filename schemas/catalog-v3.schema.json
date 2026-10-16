@@ -1,0 +1,156 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "const": "catalog"
+    },
+    "schemaVersion": {
+      "const": 3
+    },
+    "ruleset": {
+      "const": "dnd5e-2014"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "items": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "enum": [
+              "class",
+              "subclass",
+              "feature",
+              "spell",
+              "resource",
+              "choice",
+              "prerequisite",
+              "progression",
+              "effect",
+              "source",
+              "feat"
+            ]
+          },
+          "name": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "fr": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "required": [
+              "en",
+              "fr"
+            ]
+          },
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": {
+                "enum": [
+                  "srd",
+                  "private",
+                  "homebrew"
+                ]
+              },
+              "document": {
+                "type": "string"
+              },
+              "license": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "document",
+              "license",
+              "url"
+            ]
+          },
+          "data": {
+            "type": "object",
+            "required": [
+              "ruleset",
+              "automation"
+            ],
+            "properties": {
+              "ruleset": {
+                "const": "dnd5e-2014"
+              },
+              "automation": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "status": {
+                    "enum": [
+                      "automated",
+                      "partial",
+                      "manual",
+                      "unsupported"
+                    ]
+                  },
+                  "handler": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "limits": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "status",
+                  "handler",
+                  "limits"
+                ]
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "name",
+          "source",
+          "data"
+        ]
+      }
+    }
+  },
+  "required": [
+    "kind",
+    "schemaVersion",
+    "ruleset",
+    "id",
+    "items"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pilot20.invalid/schemas/catalog-v3.schema.json",
+  "title": "Inert catalogue v3; linked runtime validation remains mandatory"
+}
