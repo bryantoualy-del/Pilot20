@@ -40,6 +40,7 @@ export function validateCatalogV3(c,{distribution='private'}={}) {
    for(const r of d.grants) {keys(r,['level','featureIds']);check(integer(r.level,1,20),'Grant level');list(r.featureIds,'Grant features');}
    check(new Set(d.grants.map(r=>r.level)).size===d.grants.length,'Duplicate progression level');
   }
+  if(i.type!=='class'&&d.choices!==undefined){check(Array.isArray(d.choices),'Extension choices');list(d.choices.map(q=>q.key),'Duplicate extension choice');for(const q of d.choices){check(integer(q.level,1,20)&&integer(q.count,1,100)&&['feature','asi','skill','proficiency','expertise','spell','spell-mastery','signature-spell','ritual-spell'].includes(q.kind),'Extension choice contract');list(q.options,'Extension choice options');}}
   if(i.type==='feature')check(id(d.classId)&&integer(d.minimumClassLevel,1,20),'Feature availability');
   if(i.type==='spell') {
    check(integer(d.level,0,9)&&['abjuration','conjuration','divination','enchantment','evocation','illusion','necromancy','transmutation'].includes(d.school),'Spell level/school');
