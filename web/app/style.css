@@ -1073,3 +1073,9 @@ main:has(.creator-shell) {
   display: block;
   margin: 8px 0;
 }
+/* Prevent step controls from shrinking in tablet layouts across browser/font metrics. */
+.creator-shell .steps button {
+  min-height: 46px;
+  min-block-size: 46px;
+  flex: 0 0 auto;
+}

@@ -393,6 +393,7 @@ try {
     { width: 1440, height: 1000 },
   ]) {
     await p.setViewportSize(viewport);
+    await p.evaluate(()=>new Promise(requestAnimationFrame));
     assert.ok(
       await p.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
@@ -404,7 +405,7 @@ try {
       .evaluateAll((nodes) =>
         nodes.map((n) => n.getBoundingClientRect().height),
       );
-    assert.ok(controls.every((h) => h >= 44));
+    assert.ok(controls.every((h) => h >= 44),JSON.stringify({viewport,heights:controls}));
     await p.getByLabel("Barde · Niveau", { exact: true }).focus();
     assert.equal(
       await p
