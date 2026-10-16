@@ -4,7 +4,12 @@ Pilot20 V0.2 utilise exclusivement les règles D&D 5e 2014. Le catalogue minimal
 
 ## Attribution SRD 5.1
 
-Certaines données mécaniques sont adaptées du **System Reference Document 5.1**, de **Wizards of the Coast LLC**, disponible sur https://www.dndbeyond.com/srd, sous **Creative Commons Attribution 4.0 International** : https://creativecommons.org/licenses/by/4.0/.
+This work includes material taken from the System Reference Document 5.1 (“SRD 5.1”) by Wizards of
+the Coast LLC and available at https://dnd.wizards.com/resources/systems-reference-document. The
+SRD 5.1 is licensed under the Creative Commons Attribution 4.0 International License available at
+https://creativecommons.org/licenses/by/4.0/legalcode.
+
+Official 2014 CC BY source: https://www.dndbeyond.com/attachments/39j2li89/SRD5.1-CCBY4.0License.pdf
 
 Modifications : sélection de données mécaniques, traduction de libellés et structuration en JSON ; aucun soutien ou parrainage de Wizards of the Coast n'est suggéré. Les tables de calcul 2014 et les profils explicitement marqués SRD reposent sur cette fondation. Cette attribution porte sur le contenu concerné et n'accorde pas une licence générale sur tous les fichiers logiciels du projet.
 

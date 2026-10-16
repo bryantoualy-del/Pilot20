@@ -1,0 +1,412 @@
+{
+  "scope": "Synthetic level-5 fixture abilities only; not full class or SRD automation",
+  "classesRepresented": 12,
+  "classesValidatedByReport": 12,
+  "fixtureTestSuite": "tests/universal-rules.test.js (12 classes; no full class-completeness claim)",
+  "totals": {
+    "referenced": 0,
+    "manual": 0,
+    "partial": 8,
+    "automated": 15,
+    "unsupported": 13
+  },
+  "primitives": {
+    "damage": "automated",
+    "healing": "automated",
+    "temporaryHP": "automated",
+    "resourceChange": "manual",
+    "savingThrow": "unsupported",
+    "spellCast": "unsupported",
+    "modifier": "unsupported",
+    "condition": "unsupported",
+    "duration": "unsupported",
+    "concentration": "automated",
+    "extraAction": "unsupported",
+    "movement": "unsupported",
+    "removeEffect": "unsupported",
+    "transformation": "unsupported",
+    "summon": "unsupported",
+    "reactionWindow": "unsupported",
+    "triggeredEffect": "unsupported",
+    "decision": "unsupported",
+    "choice": "unsupported",
+    "zone": "unsupported",
+    "aura": "unsupported"
+  },
+  "missingPrimitives": [
+    "savingThrow",
+    "spellCast",
+    "modifier",
+    "condition",
+    "duration",
+    "extraAction",
+    "movement",
+    "removeEffect",
+    "transformation",
+    "summon",
+    "reactionWindow",
+    "triggeredEffect",
+    "decision",
+    "choice",
+    "zone",
+    "aura"
+  ],
+  "testedSpellFamilies": [],
+  "classes": [
+    {
+      "name": "bard",
+      "validated": true,
+      "abilities": [
+        {
+          "id": "blade",
+          "status": "automated",
+          "primitiveExecutable": true,
+          "automatedExecutable": true,
+          "missing": []
+        },
+        {
+          "id": "spell-attack",
+          "status": "partial",
+          "primitiveExecutable": true,
+          "automatedExecutable": false,
+          "missing": []
+        },
+        {
+          "id": "class-reference",
+          "status": "unsupported",
+          "primitiveExecutable": false,
+          "automatedExecutable": false,
+          "missing": [
+            "triggers"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cleric",
+      "validated": true,
+      "abilities": [
+        {
+          "id": "blade",
+          "status": "automated",
+          "primitiveExecutable": true,
+          "automatedExecutable": true,
+          "missing": []
+        },
+        {
+          "id": "spell-attack",
+          "status": "partial",
+          "primitiveExecutable": true,
+          "automatedExecutable": false,
+          "missing": []
+        },
+        {
+          "id": "class-reference",
+          "status": "unsupported",
+          "primitiveExecutable": false,
+          "automatedExecutable": false,
+          "missing": [
+            "triggers"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "druid",
+      "validated": true,
+      "abilities": [
+        {
+          "id": "blade",
+          "status": "automated",
+          "primitiveExecutable": true,
+          "automatedExecutable": true,
+          "missing": []
+        },
+        {
+          "id": "spell-attack",
+          "status": "partial",
+          "primitiveExecutable": true,
+          "automatedExecutable": false,
+          "missing": []
+        },
+        {
+          "id": "class-reference",
+          "status": "unsupported",
+          "primitiveExecutable": false,
+          "automatedExecutable": false,
+          "missing": [
+            "triggers"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "wizard",
+      "validated": true,
+      "abilities": [
+        {
+          "id": "blade",
+          "status": "automated",
+          "primitiveExecutable": true,
+          "automatedExecutable": true,
+          "missing": []
+        },
+        {
+          "id": "spell-attack",
+          "status": "partial",
+          "primitiveExecutable": true,
+          "automatedExecutable": false,
+          "missing": []
+        },
+        {
+          "id": "class-reference",
+          "status": "unsupported",
+          "primitiveExecutable": false,
+          "automatedExecutable": false,
+          "missing": [
+            "triggers"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "monk",
+      "validated": true,
+      "abilities": [
+        {
+          "id": "blade",
+          "status": "automated",
+          "primitiveExecutable": true,
+          "automatedExecutable": true,
+          "missing": []
+        },
+        {
+          "id": "class-reference",
+          "status": "unsupported",
+          "primitiveExecutable": false,
+          "automatedExecutable": false,
+          "missing": [
+            "triggers"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ranger",
+      "validated": true,
+      "abilities": [
+        {
+          "id": "blade",
+          "status": "automated",
+          "primitiveExecutable": true,
+          "automatedExecutable": true,
+          "missing": []
+        },
+        {
+          "id": "spell-attack",
+          "status": "partial",
+          "primitiveExecutable": true,
+          "automatedExecutable": false,
+          "missing": []
+        },
+        {
+          "id": "class-reference",
+          "status": "unsupported",
+          "primitiveExecutable": false,
+          "automatedExecutable": false,
+          "missing": [
+            "triggers"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "fighter",
+      "validated": true,
+      "abilities": [
+        {
+          "id": "blade",
+          "status": "automated",
+          "primitiveExecutable": true,
+          "automatedExecutable": true,
+          "missing": []
+        },
+        {
+          "id": "second-wind",
+          "status": "automated",
+          "primitiveExecutable": true,
+          "automatedExecutable": true,
+          "missing": []
+        },
+        {
+          "id": "action-surge",
+          "status": "unsupported",
+          "primitiveExecutable": false,
+          "automatedExecutable": false,
+          "missing": [
+            "effect:grantAction"
+          ]
+        },
+        {
+          "id": "maneuver-case",
+          "status": "unsupported",
+          "primitiveExecutable": false,
+          "automatedExecutable": false,
+          "missing": [
+            "triggers",
+            "effect:modifier"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sorcerer",
+      "validated": true,
+      "abilities": [
+        {
+          "id": "blade",
+          "status": "automated",
+          "primitiveExecutable": true,
+          "automatedExecutable": true,
+          "missing": []
+        },
+        {
+          "id": "spell-attack",
+          "status": "partial",
+          "primitiveExecutable": true,
+          "automatedExecutable": false,
+          "missing": []
+        },
+        {
+          "id": "metamagic-case",
+          "status": "unsupported",
+          "primitiveExecutable": false,
+          "automatedExecutable": false,
+          "missing": [
+            "triggers",
+            "effect:modifier"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "warlock",
+      "validated": true,
+      "abilities": [
+        {
+          "id": "blade",
+          "status": "automated",
+          "primitiveExecutable": true,
+          "automatedExecutable": true,
+          "missing": []
+        },
+        {
+          "id": "spell-attack",
+          "status": "partial",
+          "primitiveExecutable": true,
+          "automatedExecutable": false,
+          "missing": []
+        },
+        {
+          "id": "pact-cast",
+          "status": "unsupported",
+          "primitiveExecutable": false,
+          "automatedExecutable": false,
+          "missing": [
+            "conditions"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rogue",
+      "validated": true,
+      "abilities": [
+        {
+          "id": "blade",
+          "status": "automated",
+          "primitiveExecutable": true,
+          "automatedExecutable": true,
+          "missing": []
+        },
+        {
+          "id": "sneak-case",
+          "status": "unsupported",
+          "primitiveExecutable": false,
+          "automatedExecutable": false,
+          "missing": [
+            "conditions",
+            "triggers"
+          ]
+        },
+        {
+          "id": "reaction-case",
+          "status": "automated",
+          "primitiveExecutable": true,
+          "automatedExecutable": true,
+          "missing": []
+        }
+      ]
+    },
+    {
+      "name": "barbarian",
+      "validated": true,
+      "abilities": [
+        {
+          "id": "blade",
+          "status": "automated",
+          "primitiveExecutable": true,
+          "automatedExecutable": true,
+          "missing": []
+        },
+        {
+          "id": "rage",
+          "status": "unsupported",
+          "primitiveExecutable": false,
+          "automatedExecutable": false,
+          "missing": [
+            "timed-effects",
+            "effect:modifier",
+            "effect:condition"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "paladin",
+      "validated": true,
+      "abilities": [
+        {
+          "id": "blade",
+          "status": "automated",
+          "primitiveExecutable": true,
+          "automatedExecutable": true,
+          "missing": []
+        },
+        {
+          "id": "spell-attack",
+          "status": "partial",
+          "primitiveExecutable": true,
+          "automatedExecutable": false,
+          "missing": []
+        },
+        {
+          "id": "lay-on-hands-one",
+          "status": "automated",
+          "primitiveExecutable": true,
+          "automatedExecutable": true,
+          "missing": []
+        },
+        {
+          "id": "smite-case",
+          "status": "unsupported",
+          "primitiveExecutable": false,
+          "automatedExecutable": false,
+          "missing": [
+            "triggers"
+          ]
+        }
+      ]
+    }
+  ]
+}
