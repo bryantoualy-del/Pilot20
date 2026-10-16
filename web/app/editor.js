@@ -1,0 +1,2 @@
+export const newDraft=campaignId=>({kind:'pilot20-creator-draft',schemaVersion:1,id:crypto.randomUUID(),campaignId,revision:1,mode:'quick',name:'',portrait:'',classes:[{id:'fighter',level:1,subclassId:null}],scores:{str:15,dex:13,con:14,int:10,wis:12,cha:8},selections:{},background:{name:'',skills:[],proficiencies:[]},origin:'',languages:'',traits:'',description:'',equipment:'none',shield:false,reviewed:false,confirmed:false,step:'identity',finalized:false,status:'draft'});
+export async function renderEditor(main,d,api){main.append(document.createTextNode(api.t('title')));}
