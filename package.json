@@ -15,7 +15,11 @@
     "coverage:check": "node scripts/coverage-report.mjs --check",
     "demo:combat": "node examples/advanced-combat-demo.mjs",
     "demo:reactive": "node examples/reactive-combat-demo.mjs",
-    "demo:reactive:check": "node examples/reactive-combat-demo.mjs --check"
+    "demo:reactive:check": "node examples/reactive-combat-demo.mjs --check",
+    "demo:catalog": "node examples/catalog-demo.mjs",
+    "coverage:catalog": "node scripts/catalog-coverage.mjs",
+    "coverage:catalog:check": "node scripts/catalog-coverage.mjs --check",
+    "benchmark:catalog": "node scripts/benchmark-catalog.mjs"
   },
   "devDependencies": {
     "fake-indexeddb": "6.2.4",
