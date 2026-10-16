@@ -104,6 +104,7 @@ export function resolveProgression(index,{classes,scores,selections={},campaignO
  // Optional feats are never silently enabled. Future packs may add feat choices.
  // Only enabled, source-authorized feats are offered; protected feats require a private pack.
  for(const f of optional)if((f.data.requires??[]).some(id=>!features.has(id)))issues.push({code:'optional-feature-prerequisite',featureId:f.id});
+ for(const fid of features)for(const other of index.get(fid)?.data.incompatible??[])if(features.has(other))issues.push({code:'optional-feature-incompatible',featureId:fid,otherFeatureId:other});
  for(const fid of [...features])for(const replaced of index.get(fid)?.data.replaces??[])features.delete(replaced);
  for(const fid of features)for(const r of index.get(fid)?.data.resources??[]){const entry=index.get(fid),c=classes.find(c=>c.id===entry.data.classId);if(suppressedResources.has(c.id+':'+r.id))continue;let n=r.maxByLevel[c.level-1];if(n&&typeof n==='object')n=Math.max(n.minimum,modifier(adjustedScores[n.ability]))+(n.add??0);if(n!==0)resources.push({id:c.id+':'+r.id,max:n,recovery:r.recovery,unlimited:n===null,classId:c.id,...(r.recharge?{recharge:r.recharge}:{})});}
  check(new Set(resources.map(r=>r.id)).size===resources.length,'Duplicate resolved resource');

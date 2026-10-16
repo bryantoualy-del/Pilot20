@@ -69,6 +69,7 @@ export function validateSavedPlan(context,request) {
  const {index,installed}=context,issues=[];
  for(const c of request.classes){if(!index.class(c.id))issues.push({code:'unavailable-class',id:c.id});if(c.subclassId&&!index.get(c.subclassId))issues.push({code:'unavailable-subclass',id:c.subclassId});}
  for(const [choiceId,values] of Object.entries(request.selections??{}))for(const value of values)if(installed.get(value)&&!index.get(value))issues.push({code:'unavailable-selection',choiceId,id:value});
+ for(const ref of request.sourceReferences??[])if(!index.get(ref))issues.push({code:'unavailable-selection',id:ref});
  for(const t of request.spellbookTranscriptions??[])if(!index.get(t.spellId))issues.push({code:'unavailable-transcription',id:t.spellId});
  return {valid:issues.length===0,issues};
 }

@@ -1,19 +1,185 @@
-import {test} from 'node:test';
-import assert from 'node:assert/strict';
-import {classCatalog,spellCatalog} from '../src/catalog/srd51-catalog.js';
-import {campaignCatalog,defaultCampaign} from '../src/campaign/sources.js';
-import {newDraft,suggestChoices,compileDraft,draftProgression} from '../src/creator/model.js';
-import {MemoryStorage} from '../src/persistence/adapters.js';
-import {characterLibrary} from '../src/persistence/library.js';
-import {creatorRepository} from '../src/creator/repository.js';
-const c=defaultCampaign(),ctx=campaignCatalog([classCatalog,spellCatalog],[],c);
-const complete=(classId='fighter',level=1)=>{const d=newDraft();Object.assign(d,{name:'Original test hero',origin:'Custom origin reviewed by GM',background:{name:'Original background',skills:['religion','medicine'],proficiencies:[]},classes:[{id:classId,level,subclassId:null}],reviewed:true,confirmed:true});const r=suggestChoices(ctx,c,d);r.confirmed=true;r.reviewed=true;return r;};
-test('all 12 SRD classes can be constructed by explicit template suggestions at level 1',()=>{for(const entry of ctx.index.list('class')){const d=complete(entry.data.classId);const r=compileDraft(ctx,c,d);assert.equal(r.valid,true,entry.id+' '+JSON.stringify(r.issues));assert.equal(r.status,'ready');assert.equal(r.character.classes[0].level,1);}});
-test('fighter 1 has no premature subclass, actual HP/AC and Second Wind',()=>{const d=complete(),r=compileDraft(ctx,c,d);assert.ok(!draftProgression(ctx,c,d).choices.some(q=>q.kind==='subclass'));assert.ok(r.character.abilities.some(a=>a.id==='srd51:fighter:second-wind'));assert.equal(r.stats.maxHp,12);assert.equal(r.stats.ac,11);d.equipment='chain';d.shield=true;assert.equal(compileDraft(ctx,c,d).stats.ac,18);});
-test('bard 10 exposes expertise, subclass, spells and distinct magical secrets',()=>{const d=complete('bard',10),r=compileDraft(ctx,c,d);assert.equal(r.valid,true,JSON.stringify(r.issues));assert.ok(r.choices.some(q=>q.id==='bard:magical-secrets-10'));assert.ok(r.character.resources.some(r=>r.id==='bard:inspiration'));});
-test('wizard 10 separates spellbook from preparation and compiles valid selected spells',()=>{const d=complete('wizard',10),r=compileDraft(ctx,c,d);assert.equal(r.valid,true,JSON.stringify(r.issues));assert.equal(r.choices.find(q=>q.kind==='spellbook').count,24);assert.ok(r.character.spells.known.length>r.character.spells.prepared.length);});
-test('draft/manual review states do not claim complete characters',()=>{const d=complete();d.confirmed=false;assert.equal(compileDraft(ctx,c,d).status,'draft');d.confirmed=true;d.reviewed=false;assert.equal(compileDraft(ctx,c,d).status,'review');d.selections['fighter:skills']=[];assert.equal(compileDraft(ctx,c,d).character,null);});
-test('suggestions preserve existing choices and mode switching is lossless',()=>{const d=complete();const selected=structuredClone(d.selections);for(const mode of ['quick','guided','expert']){d.mode=mode;assert.deepEqual(suggestChoices(ctx,c,d).selections,selected);}});
-test('missing source does not discard selections or the saved class',()=>{const d=complete(),saved=structuredClone(d);const off={...c,enabledSourceIds:['xge']},filtered=campaignCatalog([classCatalog,spellCatalog],[],off);assert.equal(compileDraft(filtered,off,d).character,null);assert.deepEqual(d,saved);assert.equal(compileDraft(ctx,c,d).valid,true);});
-test('draft persistence, revision conflicts, duplicate, export/import round trip',async()=>{const s=new MemoryStorage(),l=characterLibrary(s),r=creatorRepository(s,l),d=complete();await r.save(d);const reload=creatorRepository(s,l);assert.deepEqual(await reload.get(d.id),d);await assert.rejects(r.save({...d,name:'stale',revision:2},{expectedRevision:0}));const char=compileDraft(ctx,c,d).character;await l.save(char);const copy=await r.duplicate(d.id);assert.notEqual(copy.id,d.id);const raw=await r.export(d.id);const second=new MemoryStorage(),r2=creatorRepository(second,characterLibrary(second));await r2.import(raw);assert.deepEqual((await r2.get(d.id)).selections,d.selections);assert.equal((await characterLibrary(second).get(d.id)).definition.identity.name,d.name);});
-test('malformed or executable imports reject before character writes',async()=>{const s=new MemoryStorage(),l=characterLibrary(s),r=creatorRepository(s,l);await assert.rejects(r.import('{"kind":"pilot20-creator-export","schemaVersion":1,"draft":{"__proto__":{}}}'));assert.equal((await l.list()).length,0);});
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { classCatalog, spellCatalog } from "../src/catalog/srd51-catalog.js";
+import { campaignCatalog, defaultCampaign } from "../src/campaign/sources.js";
+import {
+  newDraft,
+  suggestChoices,
+  compileDraft,
+  draftProgression,
+} from "../src/creator/model.js";
+import { MemoryStorage } from "../src/persistence/adapters.js";
+import { characterLibrary } from "../src/persistence/library.js";
+import { creatorRepository } from "../src/creator/repository.js";
+const c = defaultCampaign(),
+  ctx = campaignCatalog([classCatalog, spellCatalog], [], c);
+const complete = (classId = "fighter", level = 1) => {
+  const d = newDraft();
+  Object.assign(d, {
+    name: "Original test hero",
+    origin: "Custom origin reviewed by GM",
+    background: {
+      name: "Original background",
+      skills: ["religion", "medicine"],
+      proficiencies: [],
+    },
+    classes: [{ id: classId, level, subclassId: null }],
+    reviewed: true,
+    confirmed: true,
+  });
+  const r = suggestChoices(ctx, c, d);
+  r.confirmed = true;
+  r.reviewed = true;
+  return r;
+};
+test("all 12 SRD classes can be constructed by explicit template suggestions at level 1", () => {
+  for (const entry of ctx.index.list("class")) {
+    const d = complete(entry.data.classId);
+    const r = compileDraft(ctx, c, d);
+    assert.equal(r.valid, true, entry.id + " " + JSON.stringify(r.issues));
+    assert.equal(r.status, "ready");
+    assert.equal(r.character.classes[0].level, 1);
+  }
+});
+test("fighter 1 has no premature subclass, actual HP/AC and Second Wind", () => {
+  const d = complete(),
+    r = compileDraft(ctx, c, d);
+  assert.ok(
+    !draftProgression(ctx, c, d).choices.some((q) => q.kind === "subclass"),
+  );
+  assert.ok(
+    r.character.abilities.some((a) => a.id === "srd51:fighter:second-wind"),
+  );
+  assert.equal(r.stats.maxHp, 12);
+  assert.equal(r.stats.ac, 11);
+  d.equipment = "chain";
+  d.shield = true;
+  assert.equal(compileDraft(ctx, c, d).stats.ac, 18);
+});
+test("bard 10 exposes expertise, subclass, spells and distinct magical secrets", () => {
+  const d = complete("bard", 10),
+    r = compileDraft(ctx, c, d);
+  assert.equal(r.valid, true, JSON.stringify(r.issues));
+  assert.ok(r.choices.some((q) => q.id === "bard:magical-secrets-10"));
+  assert.ok(r.character.resources.some((r) => r.id === "bard:inspiration"));
+});
+test("wizard 10 separates spellbook from preparation and compiles valid selected spells", () => {
+  const d = complete("wizard", 10),
+    r = compileDraft(ctx, c, d);
+  assert.equal(r.valid, true, JSON.stringify(r.issues));
+  assert.equal(r.choices.find((q) => q.kind === "spellbook").count, 24);
+  assert.ok(
+    r.character.spells.known.length > r.character.spells.prepared.length,
+  );
+});
+test("draft/manual review states do not claim complete characters", () => {
+  const d = complete();
+  d.confirmed = false;
+  assert.equal(compileDraft(ctx, c, d).status, "draft");
+  d.confirmed = true;
+  d.reviewed = false;
+  assert.equal(compileDraft(ctx, c, d).status, "review");
+  d.selections["fighter:skills"] = [];
+  assert.equal(compileDraft(ctx, c, d).character, null);
+});
+test("suggestions preserve existing choices and mode switching is lossless", () => {
+  const d = complete();
+  const selected = structuredClone(d.selections);
+  for (const mode of ["quick", "guided", "expert"]) {
+    d.mode = mode;
+    assert.deepEqual(suggestChoices(ctx, c, d).selections, selected);
+  }
+});
+test("missing source does not discard selections or the saved class", () => {
+  const d = complete(),
+    saved = structuredClone(d);
+  const off = { ...c, enabledSourceIds: ["xge"] },
+    filtered = campaignCatalog([classCatalog, spellCatalog], [], off);
+  assert.equal(compileDraft(filtered, off, d).character, null);
+  assert.deepEqual(d, saved);
+  assert.equal(compileDraft(ctx, c, d).valid, true);
+});
+test("draft persistence, revision conflicts, duplicate, export/import round trip", async () => {
+  const s = new MemoryStorage(),
+    l = characterLibrary(s),
+    r = creatorRepository(s, l),
+    d = complete();
+  await r.save(d);
+  const reload = creatorRepository(s, l);
+  assert.deepEqual(await reload.get(d.id), d);
+  await assert.rejects(
+    r.save({ ...d, name: "stale", revision: 2 }, { expectedRevision: 0 }),
+  );
+  const char = compileDraft(ctx, c, d).character;
+  await l.save(char);
+  const copy = await r.duplicate(d.id);
+  assert.notEqual(copy.id, d.id);
+  const raw = await r.export(d.id);
+  const second = new MemoryStorage(),
+    r2 = creatorRepository(second, characterLibrary(second));
+  await r2.import(raw);
+  assert.deepEqual((await r2.get(d.id)).selections, d.selections);
+  assert.equal(
+    (await characterLibrary(second).get(d.id)).definition.identity.name,
+    d.name,
+  );
+});
+test("malformed or executable imports reject before character writes", async () => {
+  const s = new MemoryStorage(),
+    l = characterLibrary(s),
+    r = creatorRepository(s, l);
+  await assert.rejects(
+    r.import(
+      '{"kind":"pilot20-creator-export","schemaVersion":1,"draft":{"__proto__":{}}}',
+    ),
+  );
+  assert.equal((await l.list()).length, 0);
+});
+test("failed finalize cannot save a character without its draft or lose the old revision", async () => {
+  const s = new MemoryStorage(),
+    l = characterLibrary(s),
+    r = creatorRepository(s, l),
+    d = complete();
+  await r.save(d);
+  s.failNext("quota");
+  await assert.rejects(
+    r.finalize(d, compileDraft(ctx, c, d).character, {
+      expectedDraftRevision: 1,
+    }),
+  );
+  assert.equal(await l.get(d.id), null);
+  assert.equal((await r.get(d.id)).revision, 1);
+  const saved = await r.finalize(d, compileDraft(ctx, c, d).character, {
+    expectedDraftRevision: 1,
+  });
+  assert.equal(saved.draft.revision, 2);
+  assert.equal(saved.draft.finalized, true);
+  await assert.rejects(
+    r.finalize(d, compileDraft(ctx, c, d).character, {
+      expectedDraftRevision: 1,
+    }),
+  );
+});
+test("missing imported acquired reference is flagged even when its pack is absent", () => {
+  const d = complete();
+  d.sourceReferences = ["original:missing-spell"];
+  assert.equal(compileDraft(ctx, c, d).character, null);
+  assert.equal(d.sourceReferences[0], "original:missing-spell");
+});
+test("multiclass prerequisites, levels and resources use the same production compiler", () => {
+  const config = { ...c, enabledOptions: ["multiclass"] },
+    context = campaignCatalog([classCatalog, spellCatalog], [], config);
+  let d = complete();
+  d.classes = [
+    { id: "fighter", level: 1, subclassId: null },
+    { id: "wizard", level: 1, subclassId: null },
+  ];
+  d.scores = { str: 13, dex: 13, con: 12, int: 13, wis: 12, cha: 10 };
+  d = suggestChoices(context, config, d);
+  d.confirmed = d.reviewed = true;
+  let r = compileDraft(context, config, d);
+  assert.equal(r.valid, true, JSON.stringify(r.issues));
+  assert.equal(r.stats.slotMetadata.casterLevel, 1);
+  d.scores.int = 8;
+  assert.equal(compileDraft(context, config, d).valid, false);
+});

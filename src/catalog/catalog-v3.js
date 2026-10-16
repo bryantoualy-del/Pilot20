@@ -19,6 +19,8 @@ export function validateCatalogV3(c,{distribution='private'}={}) {
   check(a.status!=='automated'||(a.handler!==null&&a.limits.length===0),'Automated entry needs executable handler');
   check(a.status!=='unsupported'||a.limits.length>0,'Unsupported reason');
   const d=i.data;
+  for(const field of ['aliases','reviewNotes'])if(d[field]!==undefined)check(Array.isArray(d[field])&&d[field].length<=100&&d[field].every(v=>typeof v==='string'&&v.length<=2000),'Safe display metadata');
+  if(d.incompatible!==undefined)list(d.incompatible,'Incompatible entries');
   if(i.type==='class') {
    check(id(d.classId)&&[6,8,10,12].includes(d.hitDie),'Class identity');
    list(d.saves,'Class saves');check(d.saves.length===2&&d.saves.every(s=>ABILITIES.includes(s)),'Class saves');
@@ -74,6 +76,8 @@ export function createCatalogIndex(packs,{distribution='private',enabledPackIds=
  check(classes.size===[...entries.values()].filter(i=>i.type==='class').length,'Duplicate class key');
  for(const i of entries.values()) {
   const d=i.data;
+  for(const field of ['aliases','reviewNotes'])if(d[field]!==undefined)check(Array.isArray(d[field])&&d[field].length<=100&&d[field].every(v=>typeof v==='string'&&v.length<=2000),'Safe display metadata');
+  if(d.incompatible!==undefined)list(d.incompatible,'Incompatible entries');
   if(['feature','subclass'].includes(i.type))check(classes.has(d.classId),'Missing class: '+d.classId);
   for(const cls of d.classIds??[])check(classes.has(cls),'Missing spell class: '+cls);
   for(const sid of d.subclassIds??[])check(entries.get(sid)?.type==='subclass'&&entries.get(sid).data.classId===d.classId,'Subclass reference');
@@ -85,7 +89,7 @@ export function createCatalogIndex(packs,{distribution='private',enabledPackIds=
    if(['spell','spell-mastery','signature-spell','ritual-spell'].includes(q.kind))for(const ref of q.options)check(entries.get(ref)?.type==='spell','Choice spell reference');
   }
   for(const row of d.extraSpells??[]) {check(integer(row.classLevel,1,20)&&['prepared','expanded'].includes(row.mode),'Extra spell grant');list(row.spellIds,'Extra spells');for(const ref of row.spellIds)check(entries.get(ref)?.type==='spell','Extra spell reference');}
-  for(const ref of [...(d.requires??[]),...(d.replaces??[])])check(entries.has(ref),'Missing reference: '+ref);
+  for(const ref of [...(d.requires??[]),...(d.replaces??[]),...(d.incompatible??[])])check(entries.has(ref),'Missing reference: '+ref);
  }
  const visiting=new Set(),visited=new Set();
  function visit(key,depth=0) {
