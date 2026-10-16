@@ -1,0 +1,42 @@
+[
+  {
+    "step": "Classe",
+    "height": 935,
+    "viewport": 820,
+    "viewportScrolls": 1,
+    "stepCount": 8,
+    "choices": 0,
+    "viewportWidth": 1180,
+    "documentWidth": 1180
+  },
+  {
+    "step": "Guerrier capacités",
+    "height": 820,
+    "viewport": 820,
+    "viewportScrolls": 0,
+    "stepCount": 8,
+    "choices": 1,
+    "viewportWidth": 1180,
+    "documentWidth": 1180
+  },
+  {
+    "step": "Progression",
+    "height": 822,
+    "viewport": 820,
+    "viewportScrolls": 1,
+    "stepCount": 8,
+    "choices": 2,
+    "viewportWidth": 1180,
+    "documentWidth": 1180
+  },
+  {
+    "step": "Sorts",
+    "height": 820,
+    "viewport": 820,
+    "viewportScrolls": 0,
+    "stepCount": 8,
+    "choices": 1,
+    "viewportWidth": 1180,
+    "documentWidth": 1180
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "step": "Classe",
+    "height": 1173,
+    "viewport": 820,
+    "viewportScrolls": 1,
+    "stepCount": 10,
+    "choices": 0
+  },
+  {
+    "step": "Progression",
+    "height": 2158,
+    "viewport": 820,
+    "viewportScrolls": 2,
+    "stepCount": 12,
+    "choices": 3
+  },
+  {
+    "step": "Sorts",
+    "height": 2114,
+    "viewport": 820,
+    "viewportScrolls": 2,
+    "stepCount": 12,
+    "choices": 3
+  }
+]

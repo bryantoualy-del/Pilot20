@@ -1,0 +1,897 @@
+{
+  "kind": "catalog",
+  "schemaVersion": 3,
+  "ruleset": "dnd5e-2014",
+  "id": "srd51:origins",
+  "items": [
+    {
+      "id": "srd51:race:dwarf",
+      "type": "race",
+      "name": {
+        "fr": "Nain",
+        "en": "Dwarf"
+      },
+      "source": {
+        "kind": "srd",
+        "document": "SRD-5.1",
+        "license": "CC-BY-4.0",
+        "url": "https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1.pdf"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+          ]
+        },
+        "bonuses": {
+          "con": 2
+        },
+        "languages": [
+          "common",
+          "dwarvish"
+        ],
+        "speed": 25,
+        "size": "medium",
+        "skills": [],
+        "proficiencies": [
+          "battleaxes",
+          "handaxes",
+          "light-hammers",
+          "warhammers"
+        ],
+        "traits": [
+          {
+            "id": "darkvision",
+            "name": {
+              "fr": "Vision dans le noir (18 m)",
+              "en": "Darkvision (60 ft.)"
+            },
+            "automation": "manual"
+          },
+          {
+            "id": "dwarven-resilience",
+            "name": {
+              "fr": "Résistance naine : avantage contre le poison",
+              "en": "Dwarven Resilience: advantage against poison"
+            },
+            "automation": "manual"
+          },
+          {
+            "id": "stonecunning",
+            "name": {
+              "fr": "Connaissance de la pierre : Histoire doublée pour la maçonnerie",
+              "en": "Stonecunning: double proficiency for stonework History"
+            },
+            "automation": "manual"
+          }
+        ],
+        "choices": [
+          {
+            "key": "artisan-tool",
+            "kind": "proficiency",
+            "count": 1,
+            "options": [
+              "smith-tools",
+              "brewer-supplies",
+              "mason-tools"
+            ]
+          }
+        ],
+        "subraces": [
+          {
+            "id": "srd51:race:hill-dwarf",
+            "name": {
+              "fr": "Nain des collines",
+              "en": "Hill Dwarf"
+            },
+            "bonuses": {
+              "wis": 1
+            },
+            "hpPerLevel": 1,
+            "traits": [
+              {
+                "id": "dwarven-toughness",
+                "name": {
+                  "fr": "Robustesse naine : +1 PV par niveau",
+                  "en": "Dwarven Toughness: +1 HP per level"
+                },
+                "automation": "manual"
+              }
+            ],
+            "proficiencies": []
+          }
+        ],
+        "ignoreHeavyPenalty": true,
+        "resistances": [
+          "poison"
+        ]
+      }
+    },
+    {
+      "id": "srd51:race:elf",
+      "type": "race",
+      "name": {
+        "fr": "Elfe",
+        "en": "Elf"
+      },
+      "source": {
+        "kind": "srd",
+        "document": "SRD-5.1",
+        "license": "CC-BY-4.0",
+        "url": "https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1.pdf"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+          ]
+        },
+        "bonuses": {
+          "dex": 2
+        },
+        "languages": [
+          "common",
+          "elvish"
+        ],
+        "speed": 30,
+        "size": "medium",
+        "skills": [
+          "perception"
+        ],
+        "proficiencies": [],
+        "traits": [
+          {
+            "id": "darkvision",
+            "name": {
+              "fr": "Vision dans le noir (18 m)",
+              "en": "Darkvision (60 ft.)"
+            },
+            "automation": "manual"
+          },
+          {
+            "id": "fey-ancestry",
+            "name": {
+              "fr": "Ascendance féerique : avantage contre le charme, immunité au sommeil magique",
+              "en": "Fey Ancestry: advantage against charm, magic cannot put you to sleep"
+            },
+            "automation": "manual"
+          },
+          {
+            "id": "trance",
+            "name": {
+              "fr": "Transe : méditation de 4 heures",
+              "en": "Trance: four hours of meditation"
+            },
+            "automation": "manual"
+          }
+        ],
+        "choices": [],
+        "subraces": [
+          {
+            "id": "srd51:race:high-elf",
+            "name": {
+              "fr": "Haut-elfe",
+              "en": "High Elf"
+            },
+            "bonuses": {
+              "int": 1
+            },
+            "proficiencies": [
+              "longswords",
+              "shortswords",
+              "shortbows",
+              "longbows"
+            ],
+            "choices": [
+              {
+                "key": "cantrip",
+                "kind": "racial-spell",
+                "count": 1,
+                "options": [],
+                "classId": "wizard",
+                "ability": "int"
+              },
+              {
+                "key": "language",
+                "kind": "language",
+                "count": 1,
+                "options": [
+                  "common",
+                  "dwarvish",
+                  "elvish",
+                  "giant",
+                  "gnomish",
+                  "goblin",
+                  "halfling",
+                  "orc",
+                  "abyssal",
+                  "celestial",
+                  "draconic",
+                  "deep-speech",
+                  "infernal",
+                  "primordial",
+                  "sylvan",
+                  "undercommon"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "srd51:race:halfling",
+      "type": "race",
+      "name": {
+        "fr": "Halfelin",
+        "en": "Halfling"
+      },
+      "source": {
+        "kind": "srd",
+        "document": "SRD-5.1",
+        "license": "CC-BY-4.0",
+        "url": "https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1.pdf"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+          ]
+        },
+        "bonuses": {
+          "dex": 2
+        },
+        "languages": [
+          "common",
+          "halfling"
+        ],
+        "speed": 25,
+        "size": "small",
+        "skills": [],
+        "proficiencies": [],
+        "traits": [
+          {
+            "id": "lucky",
+            "name": {
+              "fr": "Chanceux : relancer un 1 naturel, garder le nouveau résultat",
+              "en": "Lucky: reroll a natural 1 and use the new roll"
+            },
+            "automation": "manual"
+          },
+          {
+            "id": "brave",
+            "name": {
+              "fr": "Vaillant : avantage contre la terreur",
+              "en": "Brave: advantage against being frightened"
+            },
+            "automation": "manual"
+          },
+          {
+            "id": "nimbleness",
+            "name": {
+              "fr": "Agilité halfeline : traverser une créature plus grande",
+              "en": "Halfling Nimbleness: move through larger creatures"
+            },
+            "automation": "manual"
+          }
+        ],
+        "choices": [],
+        "subraces": [
+          {
+            "id": "srd51:race:lightfoot",
+            "name": {
+              "fr": "Halfelin pied-léger",
+              "en": "Lightfoot"
+            },
+            "bonuses": {
+              "cha": 1
+            },
+            "traits": [
+              {
+                "id": "naturally-stealthy",
+                "name": {
+                  "fr": "Discrétion naturelle : se cacher derrière une créature plus grande",
+                  "en": "Naturally Stealthy: hide behind larger creatures"
+                },
+                "automation": "manual"
+              }
+            ],
+            "proficiencies": []
+          }
+        ]
+      }
+    },
+    {
+      "id": "srd51:race:human",
+      "type": "race",
+      "name": {
+        "fr": "Humain",
+        "en": "Human"
+      },
+      "source": {
+        "kind": "srd",
+        "document": "SRD-5.1",
+        "license": "CC-BY-4.0",
+        "url": "https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1.pdf"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+          ]
+        },
+        "bonuses": {
+          "str": 1,
+          "dex": 1,
+          "con": 1,
+          "int": 1,
+          "wis": 1,
+          "cha": 1
+        },
+        "languages": [
+          "common"
+        ],
+        "speed": 30,
+        "size": "medium",
+        "skills": [],
+        "proficiencies": [],
+        "traits": [],
+        "choices": [
+          {
+            "key": "language",
+            "kind": "language",
+            "count": 1,
+            "options": [
+              "common",
+              "dwarvish",
+              "elvish",
+              "giant",
+              "gnomish",
+              "goblin",
+              "halfling",
+              "orc",
+              "abyssal",
+              "celestial",
+              "draconic",
+              "deep-speech",
+              "infernal",
+              "primordial",
+              "sylvan",
+              "undercommon"
+            ]
+          }
+        ],
+        "subraces": []
+      }
+    },
+    {
+      "id": "srd51:race:dragonborn",
+      "type": "race",
+      "name": {
+        "fr": "Drakéide",
+        "en": "Dragonborn"
+      },
+      "source": {
+        "kind": "srd",
+        "document": "SRD-5.1",
+        "license": "CC-BY-4.0",
+        "url": "https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1.pdf"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+          ]
+        },
+        "bonuses": {
+          "str": 2,
+          "cha": 1
+        },
+        "languages": [
+          "common",
+          "draconic"
+        ],
+        "speed": 30,
+        "size": "medium",
+        "skills": [],
+        "proficiencies": [],
+        "traits": [
+          {
+            "id": "breath",
+            "name": {
+              "fr": "Souffle : action, DD 8 + Constitution + maîtrise, repos court ou long ; résolution manuelle",
+              "en": "Breath Weapon: action, DC 8 + Constitution + proficiency, short or long rest; manual resolution"
+            },
+            "automation": "manual"
+          }
+        ],
+        "choices": [
+          {
+            "key": "draconic-ancestry",
+            "kind": "draconic",
+            "count": 1,
+            "options": [
+              "black",
+              "blue",
+              "brass",
+              "bronze",
+              "copper",
+              "gold",
+              "green",
+              "red",
+              "silver",
+              "white"
+            ]
+          }
+        ],
+        "subraces": []
+      }
+    },
+    {
+      "id": "srd51:race:gnome",
+      "type": "race",
+      "name": {
+        "fr": "Gnome",
+        "en": "Gnome"
+      },
+      "source": {
+        "kind": "srd",
+        "document": "SRD-5.1",
+        "license": "CC-BY-4.0",
+        "url": "https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1.pdf"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+          ]
+        },
+        "bonuses": {
+          "int": 2
+        },
+        "languages": [
+          "common",
+          "gnomish"
+        ],
+        "speed": 25,
+        "size": "small",
+        "skills": [],
+        "proficiencies": [],
+        "traits": [
+          {
+            "id": "darkvision",
+            "name": {
+              "fr": "Vision dans le noir (18 m)",
+              "en": "Darkvision (60 ft.)"
+            },
+            "automation": "manual"
+          },
+          {
+            "id": "gnome-cunning",
+            "name": {
+              "fr": "Ruse gnome : avantage aux sauvegardes Int, Sag et Cha contre la magie",
+              "en": "Gnome Cunning: advantage on Int, Wis and Cha saves against magic"
+            },
+            "automation": "manual"
+          }
+        ],
+        "choices": [],
+        "subraces": [
+          {
+            "id": "srd51:race:rock-gnome",
+            "name": {
+              "fr": "Gnome des roches",
+              "en": "Rock Gnome"
+            },
+            "bonuses": {
+              "con": 1
+            },
+            "proficiencies": [
+              "tinker-tools"
+            ],
+            "traits": [
+              {
+                "id": "artificer-lore",
+                "name": {
+                  "fr": "Connaissances artificières : Histoire doublée pour objets magiques, alchimiques et technologiques",
+                  "en": "Artificer’s Lore: double History proficiency for magic, alchemical and technological objects"
+                },
+                "automation": "manual"
+              },
+              {
+                "id": "tinker",
+                "name": {
+                  "fr": "Bricoleur : dispositifs mécaniques, résolution manuelle",
+                  "en": "Tinker: clockwork devices, manual adjudication"
+                },
+                "automation": "manual"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "srd51:race:half-elf",
+      "type": "race",
+      "name": {
+        "fr": "Demi-elfe",
+        "en": "Half-Elf"
+      },
+      "source": {
+        "kind": "srd",
+        "document": "SRD-5.1",
+        "license": "CC-BY-4.0",
+        "url": "https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1.pdf"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+          ]
+        },
+        "bonuses": {
+          "cha": 2
+        },
+        "languages": [
+          "common",
+          "elvish"
+        ],
+        "speed": 30,
+        "size": "medium",
+        "skills": [],
+        "proficiencies": [],
+        "traits": [
+          {
+            "id": "darkvision",
+            "name": {
+              "fr": "Vision dans le noir (18 m)",
+              "en": "Darkvision (60 ft.)"
+            },
+            "automation": "manual"
+          },
+          {
+            "id": "fey-ancestry",
+            "name": {
+              "fr": "Ascendance féerique : avantage contre le charme, immunité au sommeil magique",
+              "en": "Fey Ancestry: advantage against charm, magic cannot put you to sleep"
+            },
+            "automation": "manual"
+          }
+        ],
+        "choices": [
+          {
+            "key": "abilities",
+            "kind": "score",
+            "count": 2,
+            "options": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis"
+            ],
+            "amount": 1
+          },
+          {
+            "key": "skills",
+            "kind": "skill",
+            "count": 2,
+            "options": [
+              "acrobatics",
+              "animalHandling",
+              "arcana",
+              "athletics",
+              "deception",
+              "history",
+              "insight",
+              "intimidation",
+              "investigation",
+              "medicine",
+              "nature",
+              "perception",
+              "performance",
+              "persuasion",
+              "religion",
+              "sleightOfHand",
+              "stealth",
+              "survival"
+            ]
+          },
+          {
+            "key": "language",
+            "kind": "language",
+            "count": 1,
+            "options": [
+              "common",
+              "dwarvish",
+              "elvish",
+              "giant",
+              "gnomish",
+              "goblin",
+              "halfling",
+              "orc",
+              "abyssal",
+              "celestial",
+              "draconic",
+              "deep-speech",
+              "infernal",
+              "primordial",
+              "sylvan",
+              "undercommon"
+            ]
+          }
+        ],
+        "subraces": []
+      }
+    },
+    {
+      "id": "srd51:race:half-orc",
+      "type": "race",
+      "name": {
+        "fr": "Demi-orc",
+        "en": "Half-Orc"
+      },
+      "source": {
+        "kind": "srd",
+        "document": "SRD-5.1",
+        "license": "CC-BY-4.0",
+        "url": "https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1.pdf"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+          ]
+        },
+        "bonuses": {
+          "str": 2,
+          "con": 1
+        },
+        "languages": [
+          "common",
+          "orc"
+        ],
+        "speed": 30,
+        "size": "medium",
+        "skills": [
+          "intimidation"
+        ],
+        "proficiencies": [],
+        "traits": [
+          {
+            "id": "darkvision",
+            "name": {
+              "fr": "Vision dans le noir (18 m)",
+              "en": "Darkvision (60 ft.)"
+            },
+            "automation": "manual"
+          },
+          {
+            "id": "relentless-endurance",
+            "name": {
+              "fr": "Acharnement : rester à 1 PV au lieu de 0, une fois par repos long",
+              "en": "Relentless Endurance: drop to 1 HP instead of 0, once per long rest"
+            },
+            "automation": "manual"
+          },
+          {
+            "id": "savage-attacks",
+            "name": {
+              "fr": "Attaques sauvages : un dé d’arme supplémentaire sur un critique de mêlée",
+              "en": "Savage Attacks: one extra weapon die on a melee critical hit"
+            },
+            "automation": "manual"
+          }
+        ],
+        "choices": [],
+        "subraces": []
+      }
+    },
+    {
+      "id": "srd51:race:tiefling",
+      "type": "race",
+      "name": {
+        "fr": "Tieffelin",
+        "en": "Tiefling"
+      },
+      "source": {
+        "kind": "srd",
+        "document": "SRD-5.1",
+        "license": "CC-BY-4.0",
+        "url": "https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1.pdf"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Statistics and proficiencies applied; situational racial traits require manual adjudication."
+          ]
+        },
+        "bonuses": {
+          "int": 1,
+          "cha": 2
+        },
+        "languages": [
+          "common",
+          "infernal"
+        ],
+        "speed": 30,
+        "size": "medium",
+        "skills": [],
+        "proficiencies": [],
+        "traits": [
+          {
+            "id": "darkvision",
+            "name": {
+              "fr": "Vision dans le noir (18 m)",
+              "en": "Darkvision (60 ft.)"
+            },
+            "automation": "manual"
+          }
+        ],
+        "choices": [],
+        "subraces": [],
+        "resistances": [
+          "fire"
+        ],
+        "spells": [
+          {
+            "id": "srd51:thaumaturgy",
+            "level": 1,
+            "ability": "cha"
+          },
+          {
+            "id": "srd51:hellish-rebuke",
+            "level": 3,
+            "ability": "cha",
+            "slotLevel": 2
+          },
+          {
+            "id": "srd51:darkness",
+            "level": 5,
+            "ability": "cha",
+            "slotLevel": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "srd51:background:acolyte",
+      "type": "background",
+      "name": {
+        "fr": "Acolyte",
+        "en": "Acolyte"
+      },
+      "source": {
+        "kind": "srd",
+        "document": "SRD-5.1",
+        "license": "CC-BY-4.0",
+        "url": "https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1.pdf"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Shelter of the Faithful requires GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Service d’un temple ou d’une communauté religieuse.",
+          "en": "Service to a temple or religious community."
+        },
+        "skills": [
+          "insight",
+          "religion"
+        ],
+        "proficiencies": [],
+        "languages": [],
+        "choices": [
+          {
+            "key": "languages",
+            "kind": "language",
+            "count": 2,
+            "options": [
+              "common",
+              "dwarvish",
+              "elvish",
+              "giant",
+              "gnomish",
+              "goblin",
+              "halfling",
+              "orc",
+              "abyssal",
+              "celestial",
+              "draconic",
+              "deep-speech",
+              "infernal",
+              "primordial",
+              "sylvan",
+              "undercommon"
+            ]
+          }
+        ],
+        "equipment": [
+          {
+            "id": "holy-symbol",
+            "name": {
+              "fr": "Symbole sacré",
+              "en": "Holy symbol"
+            }
+          },
+          {
+            "id": "prayer-book-or-wheel",
+            "name": {
+              "fr": "Livre de prières ou moulin à prières",
+              "en": "Prayer book or prayer wheel"
+            }
+          },
+          {
+            "id": "incense-5",
+            "name": {
+              "fr": "5 bâtons d’encens",
+              "en": "5 sticks of incense"
+            }
+          },
+          {
+            "id": "vestments",
+            "name": {
+              "fr": "Vêtements liturgiques",
+              "en": "Vestments"
+            }
+          },
+          {
+            "id": "common-clothes",
+            "name": {
+              "fr": "Vêtements ordinaires",
+              "en": "Common clothes"
+            }
+          },
+          {
+            "id": "pouch-15gp",
+            "name": {
+              "fr": "Bourse contenant 15 po",
+              "en": "Pouch containing 15 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "shelter-of-the-faithful",
+          "name": {
+            "fr": "Abri du fidèle : soutien de votre communauté religieuse, sous arbitrage du MJ",
+            "en": "Shelter of the Faithful: support from your religious community, GM adjudicated"
+          },
+          "automation": "manual"
+        }
+      }
+    }
+  ]
+}

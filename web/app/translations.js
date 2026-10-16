@@ -1,5 +1,11 @@
 /** Short SRD labels; protected extension descriptions are never translated into public data. */
 export const frNames = {
+  "srd51:fighter:defense": "Défense",
+  "srd51:fighter:archery": "Archerie",
+  "srd51:fighter:dueling": "Duel",
+  "srd51:fighter:great-weapon-fighting": "Combat à deux mains",
+  "srd51:fighter:protection": "Protection",
+  "srd51:fighter:two-weapon-fighting": "Combat à deux armes",
   "srd51:fighter:second-wind": "Second souffle",
   "srd51:fighter:action-surge": "Fougue",
   "srd51:bard:bardic-inspiration": "Inspiration bardique",

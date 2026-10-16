@@ -1,0 +1,36 @@
+[
+  {
+    "version": "V0.3",
+    "semanticInteractions": 23,
+    "stepTransitions": 9,
+    "screens": [
+      "Origine",
+      "Historique",
+      "Classe",
+      "Niveau",
+      "Caractéristiques",
+      "Compétences",
+      "Progression",
+      "Équipement",
+      "Récapitulatif"
+    ],
+    "reference": "Fighter 1, same declared custom origin/background, two background skills, two class skills, Defense style, chain mail and shield; unchanged manual scores; no suggestions",
+    "measurement": "Fill/select/check/button click each counts as one semantic interaction; blur, waits and screenshots excluded. Not human timing."
+  },
+  {
+    "version": "V0.3.1",
+    "semanticInteractions": 21,
+    "stepTransitions": 7,
+    "screens": [
+      "Classe & niveau",
+      "Capacités de classe",
+      "Historique",
+      "Caractéristiques",
+      "Maîtrises",
+      "Sorts & équipement",
+      "Finalisation"
+    ],
+    "reference": "Fighter 1, same declared custom origin/background, two background skills, two class skills, Defense style, chain mail and shield; unchanged manual scores; no suggestions",
+    "measurement": "Fill/select/check/button click each counts as one semantic interaction; blur, waits and screenshots excluded. Not human timing."
+  }
+]
