@@ -134,11 +134,9 @@ try {
     })
     .click();
   await p.getByText(/Démonstration : vous commencez/).waitFor();
-  const second = p
-    .locator(".ability")
-    .filter({
-      has: p.getByRole("heading", { name: "Second souffle", exact: true }),
-    });
+  const second = p.locator(".ability").filter({
+    has: p.getByRole("heading", { name: "Second souffle", exact: true }),
+  });
   assert.equal(await second.count(), 1);
   await second
     .getByRole("button", { name: "Exécuter en local", exact: true })
@@ -215,13 +213,11 @@ try {
       { exact: true },
     )
     .check();
-  await p
-    .getByLabel("Installer un pack privé", { exact: true })
-    .setInputFiles({
-      name: "original.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(originalPack)),
-    });
+  await p.getByLabel("Installer un pack privé", { exact: true }).setInputFiles({
+    name: "original.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(originalPack)),
+  });
   await p.getByText("2 définitions installées", { exact: true }).waitFor();
   await nav("Accueil");
   await begin("Contrat privé original", "Expert");
@@ -247,14 +243,12 @@ try {
   await nav("Sources de campagne");
   await p.getByLabel("Guide complet de Xanathar", { exact: true }).uncheck();
   await nav("Bibliothèque");
-  const privateCard = p
-    .locator(".card")
-    .filter({
-      has: p.getByRole("heading", {
-        name: "Contrat privé original",
-        exact: true,
-      }),
-    });
+  const privateCard = p.locator(".card").filter({
+    has: p.getByRole("heading", {
+      name: "Contrat privé original",
+      exact: true,
+    }),
+  });
   await privateCard.getByText("À vérifier", { exact: true }).waitFor();
   await nav("Sources de campagne");
   await p.getByLabel("Guide complet de Xanathar", { exact: true }).check();
@@ -269,14 +263,12 @@ try {
   );
   results.push("Source off/on preserves and restores private selections");
   await nav("Bibliothèque");
-  const card = p
-    .locator(".card")
-    .filter({
-      has: p.getByRole("heading", {
-        name: "Contrat privé original",
-        exact: true,
-      }),
-    });
+  const card = p.locator(".card").filter({
+    has: p.getByRole("heading", {
+      name: "Contrat privé original",
+      exact: true,
+    }),
+  });
   await card.getByText("Voir les détails", { exact: true }).click();
   const dl = p.waitForEvent("download");
   await card.getByRole("button", { name: "Exporter", exact: true }).click();
@@ -316,7 +308,7 @@ try {
   await p.getByRole("heading", { name: "Library", exact: true }).waitFor();
   results.push("FR/EN interface and phone layout");
   await ctx.setOffline(true);
-  await p.reload();
+  await p.goto(`http://127.0.0.1:${port}/`);
   await p.getByRole("button", { name: "Library", exact: true }).first().click();
   await p.getByRole("heading", { name: "Aster révisé", exact: true }).waitFor();
   await p.getByRole("button", { name: /Create character/ }).click();
@@ -382,11 +374,9 @@ try {
     })
     .click();
   await p.getByText(/Démonstration : vous commencez/).waitFor();
-  const echo = p
-    .locator(".ability")
-    .filter({
-      has: p.getByRole("heading", { name: "Écho original", exact: true }),
-    });
+  const echo = p.locator(".ability").filter({
+    has: p.getByRole("heading", { name: "Écho original", exact: true }),
+  });
   await echo
     .getByRole("button", { name: "Résolution manuelle", exact: true })
     .click();

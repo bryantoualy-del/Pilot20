@@ -58,13 +58,22 @@ export function buildRequest(d) {
 }
 export function draftProgression(context, config, d) {
   const unavailable = validateSavedPlan(context, d);
-  if (!unavailable.valid)
+  if (unavailable.issues.some((i) => i.code === "unavailable-class"))
     return { ...unavailable, choices: [], features: [], resources: [] };
   try {
-    return resolveProgression(context.index, {
+    const report = resolveProgression(context.index, {
       ...buildRequest(d),
+      classes: d.classes.map((c) => ({
+        ...c,
+        subclassId: context.index.get(c.subclassId) ? c.subclassId : null,
+      })),
       campaignOptions: config.enabledOptions,
     });
+    return {
+      ...report,
+      valid: report.valid && unavailable.valid,
+      issues: [...unavailable.issues, ...report.issues],
+    };
   } catch {
     return {
       valid: false,

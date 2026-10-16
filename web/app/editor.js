@@ -659,8 +659,8 @@ export async function renderEditor(main, d, a) {
             ),
           ),
         );
-        const obsolete = report.issues.filter(
-          (i) => i.code === "obsolete-choice",
+        const obsolete = report.issues.filter((i) =>
+          ["obsolete-choice", "unavailable-selection"].includes(i.code),
         );
         if (obsolete.length)
           body.append(
@@ -671,7 +671,18 @@ export async function renderEditor(main, d, a) {
             ),
             button(t("clear"), () =>
               update((x) => {
-                for (const i of obsolete) delete x.selections[i.choiceId];
+                for (const i of obsolete) {
+                  if (i.choiceId) delete x.selections[i.choiceId];
+                  else if (i.id) {
+                    x.sourceReferences = (x.sourceReferences ?? []).filter(
+                      (id) => id !== i.id,
+                    );
+                    for (const key of Object.keys(x.selections))
+                      x.selections[key] = x.selections[key].filter(
+                        (id) => id !== i.id,
+                      );
+                  }
+                }
               }),
             ),
           );

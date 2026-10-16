@@ -183,3 +183,12 @@ test("multiclass prerequisites, levels and resources use the same production com
   d.scores.int = 8;
   assert.equal(compileDraft(context, config, d).valid, false);
 });
+test("unavailable retained references still expose graphical replacement choices without mutating the saved plan", () => {
+  const d = complete("bard", 10);
+  d.sourceReferences = ["original:missing-subclass-feature"];
+  const before = structuredClone(d);
+  const r = draftProgression(ctx, c, d);
+  assert.equal(r.valid, false);
+  assert.ok(r.choices.some((q) => q.kind === "subclass"));
+  assert.deepEqual(d, before);
+});
