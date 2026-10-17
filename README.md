@@ -73,3 +73,9 @@ Run `npm ci` then `npm run dev` and open the printed local URL. The graphical ap
 No accounts, external CDN, RPG Connect or public deployment are required. Back up characters with the library export action. Private packs are installed on this browser only. The public app does not ship protected extension books.
 
 The V0.3 release gate is still open: see [validation](docs/V0.3-VALIDATION.md), [architecture](docs/V0.3-ARCHITECTURE.md), [UX](docs/V0.3-UX.md), [source coverage](docs/V0.3-SOURCES-COVERAGE.md) and [limitations](docs/V0.3-LIMITATIONS.md). No complete official extension or physical iPad validation is claimed.
+
+### V0.3.2 — Creation experience (review)
+
+Native responsive class discovery, source-filtered class/subclass comparisons, non-destructive score/class simulation, level timeline and actionable diagnostics. Local RPG Connect icons are included in the offline package under the owner's authorization. Existing draft/character schemas and the rules engine remain unchanged.
+
+See [UX architecture](docs/V0.3.2-UX-ARCHITECTURE.md), [open-source audit](docs/V0.3.2-OPEN-SOURCE-AUDIT.md), [responsive protocol](docs/V0.3.2-RESPONSIVE.md), [assets](docs/V0.3.2-ASSETS.md) and [validation](docs/V0.3.2-VALIDATION.md). Physical Safari/iPhone/iPad validation remains a manual review gate. No protected XGE/Tasha content is distributed.

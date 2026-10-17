@@ -1,6 +1,6 @@
 {
   "name": "pilot20",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": true,
   "type": "module",
   "engines": {
@@ -23,7 +23,8 @@
     "demo:progression": "node examples/catalog-progression-demo.mjs",
     "build:web": "node scripts/package-web.mjs",
     "dev": "npm run build:web && node scripts/serve-web.mjs",
-    "test:e2e": "node e2e/run.mjs && node e2e/builder-v031.mjs"
+    "test:e2e": "node e2e/run.mjs && node e2e/builder-v031.mjs && node e2e/builder-v032.mjs",
+    "benchmark:ux": "node e2e/benchmark-v032.mjs v032"
   },
   "devDependencies": {
     "ajv": "8.17.1",

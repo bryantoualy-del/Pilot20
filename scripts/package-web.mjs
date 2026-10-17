@@ -19,7 +19,7 @@ async function copy(dir) {
   })) {
     const relative = path.join(dir, entry.name);
     if (entry.isDirectory()) await copy(relative);
-    else if (/\.(js|json|html|css|svg|webmanifest)$/.test(entry.name)) {
+    else if (/\.(js|json|html|css|svg|webp|png|webmanifest)$/.test(entry.name)) {
       await mkdir(path.dirname(path.join(out, relative)), { recursive: true });
       await copyFile(path.join(root, relative), path.join(out, relative));
       assets.push(relative);

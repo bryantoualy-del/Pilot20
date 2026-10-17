@@ -35,9 +35,9 @@ results.push = (...items) => {
 p.on("pageerror", (e) => errors.push(e.message));
 const screenshot = async (name) => {
   await p.locator("#notice").waitFor({ state: "hidden" });
-  await mkdir("docs/screenshots/v031", { recursive: true });
+  await mkdir("docs/screenshots/v032/regression", { recursive: true });
   await p.screenshot({
-    path: "docs/screenshots/v031/" + name + ".png",
+    path: "docs/screenshots/v032/regression/" + name + ".png",
     fullPage: true,
   });
 };
@@ -55,6 +55,8 @@ const step = async (oldName) => {
       Équipement: "Sorts & équipement",
       Récapitulatif: "Finalisation",
     }[oldName] ?? oldName;
+  await p.locator('.steps').waitFor({state:'attached'});
+  if (!(await p.locator('.steps').isVisible())) await p.getByRole('button',{name:'Étapes',exact:true}).click();
   await p
     .locator(".steps")
     .getByRole("button", { name: new RegExp(name) })

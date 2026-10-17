@@ -1,3 +1,17 @@
+import {
+  discoveryGallery,
+  subclassComparison,
+  previewView,
+  openSimulation,
+  helpPanel,
+  words,
+} from "./experience.js";
+import {
+  previewDraft,
+  issueStep,
+  diagnosticKind,
+} from "../../src/creator/experience.js";
+import { assetImage } from "./asset-registry.js";
 import { ARMORS, WEAPONS } from "../../src/catalog/equipment.js";
 import { classInfo } from "./class-info.js";
 import { modifier, proficiencyBonus } from "../../src/character/derive.js";
@@ -175,7 +189,12 @@ export function inspectEntry(entry, a) {
       "section",
       {},
       badge(a.t(d.automation.status)),
-      el("h2", {}, a.name(entry)),
+      el(
+        "h2",
+        {},
+        entry.type === "spell" ? assetImage("school", entry.data.school) : null,
+        a.name(entry),
+      ),
       el("p", {}, entry.source.document),
       entry.type === "spell"
         ? el(
@@ -248,6 +267,9 @@ export async function renderEditor(main, d, a) {
   };
   const shell = el("div", { class: "creator-shell" });
   const uiFilters = new Map();
+  const discoveryUI = {};
+  let stepsExpanded = false;
+  let focusIssue = null;
   const legacySteps = {
     identity: "origin",
     level: "class",
@@ -326,7 +348,7 @@ export async function renderEditor(main, d, a) {
       el(
         "div",
         {},
-        badge("V0.3.1 · " + t("title")),
+        badge("V0.3.2 · " + t("title")),
         el("h1", {}, d.name || t("create")),
       ),
       el(
@@ -393,12 +415,73 @@ export async function renderEditor(main, d, a) {
       el("h2", { tabindex: -1 }, t(d.step)),
     );
     const aside = el("aside", { class: "editor-aside" });
+    const w = words(a);
+    const currentPreview = previewDraft(
+      a.context,
+      a.config,
+      d,
+      undefined,
+      report,
+    );
+    const previewPanel = el(
+      "div",
+      { class: "panel live-preview" },
+      previewView(a, currentPreview),
+    );
+    aside.append(previewPanel);
+    nav.id = "creation-steps";
+    nav.classList.toggle("expanded", stepsExpanded);
+    const mobileTools = el(
+      "div",
+      { class: "mobile-tools" },
+      el(
+        "button",
+        {
+          type: "button",
+          "aria-controls": "creation-steps",
+          "aria-expanded": String(stepsExpanded),
+          onclick: (e) => {
+            stepsExpanded = !stepsExpanded;
+            nav.classList.toggle("expanded", stepsExpanded);
+            e.currentTarget.setAttribute(
+              "aria-expanded",
+              String(stepsExpanded),
+            );
+          },
+        },
+        w("Étapes", "Steps"),
+      ),
+      button(w("Aperçu", "Preview"), () =>
+        a.modal(previewView(a, currentPreview)),
+      ),
+    );
+    saveState.append(
+      el(
+        "small",
+        { class: "creation-progress" },
+        d.classes.map((c) => a.cls(c.id) + " " + c.level).join(" / ") +
+          " · " +
+          (steps.indexOf(d.step) + 1) +
+          " / " +
+          steps.length,
+      ),
+      mobileTools,
+    );
+    const stepIssues = report.issues;
+    [...nav.querySelectorAll("button")].forEach((b, n) => {
+      const count = stepIssues.filter(
+        (i) => issueStep(i, report) === steps[n],
+      ).length;
+      if (count) b.append(badge(String(count), "warning"));
+    });
     const center = el("div", { class: "editor-main" }, body);
     shell.replaceChildren(
       title,
       saveState,
       el("div", { class: "editor-layout" }, nav, center, aside),
     );
+    nav.append(helpPanel(a, d.mode === "expert"));
+    if (d.step === "features") body.append(subclassComparison(a, d, update));
     if (d.step === "origin") {
       body.append(
         field(
@@ -468,7 +551,7 @@ export async function renderEditor(main, d, a) {
       const values = d.originSelections?.[q.id] ?? [];
       return el(
         "section",
-        { class: "choice" },
+        { class: "choice", "data-choice-id": q.id },
         el(
           "details",
           {
@@ -536,6 +619,38 @@ export async function renderEditor(main, d, a) {
                   a.context.index.get(x.raceId)?.name[a.state.locale] ??
                   x.origin;
               }),
+          ),
+        ),
+      );
+      body.append(
+        el(
+          "details",
+          { class: "race-gallery" },
+          el("summary", {}, w("Explorer les races", "Explore races")),
+          el(
+            "div",
+            { class: "class-grid" },
+            a.context.index.list("race").map((entry) =>
+              button(
+                [
+                  el("strong", {}, a.name(entry)),
+                  el(
+                    "small",
+                    {},
+                    t("speed") + " · " + entry.data.speed + " ft",
+                  ),
+                  badge(entry.source.document),
+                ],
+                () =>
+                  update((x) => {
+                    x.raceId = entry.id;
+                    x.subraceId = null;
+                    x.customOriginRequiresReview = false;
+                    x.origin = a.name(entry);
+                  }),
+                d.raceId === entry.id ? "active" : "",
+              ),
+            ),
           ),
         ),
       );
@@ -854,8 +969,8 @@ export async function renderEditor(main, d, a) {
               " : " +
               report.features.length +
               " · " +
-              report.choices.filter(
-                (q) => report.issues.some(i=>i.choiceId===q.id),
+              report.choices.filter((q) =>
+                report.issues.some((i) => i.choiceId === q.id),
               ).length +
               " " +
               t("remaining"),
@@ -899,59 +1014,7 @@ export async function renderEditor(main, d, a) {
         el("summary", {}, t("classList")),
       );
       body.append(cards);
-      cards.append(
-        el(
-          "div",
-          { class: "class-grid" },
-          a.context.index.list("class").map((entry) =>
-            button(
-              [
-                el(
-                  "span",
-                  { class: "sigil", "aria-hidden": true },
-                  classIcon(entry.data.classId),
-                ),
-                el("strong", {}, a.cls(entry.data.classId)),
-                el(
-                  "small",
-                  {},
-                  classInfo(entry.data.classId, a.state.locale)?.role ?? "",
-                ),
-                el("small", {}, t("hitDie") + " : d" + entry.data.hitDie),
-                el(
-                  "small",
-                  {},
-                  t("primary") +
-                    " : " +
-                    a.label(
-                      entry.data.casting?.ability ??
-                        { rogue: "dex", monk: "dex", ranger: "dex" }[
-                          entry.data.classId
-                        ] ??
-                        "str",
-                    ),
-                ),
-              ],
-              () =>
-                update((x) => {
-                  x.classes[0] = {
-                    id: entry.data.classId,
-                    level: x.classes[0].level,
-                    subclassId: null,
-                  };
-                }),
-              d.classes[0].id === entry.data.classId
-                ? "class-card active"
-                : "class-card",
-            ),
-          ),
-        ),
-      );
-      for (const [i, b] of [...body.querySelectorAll(".class-card")].entries())
-        b.style.setProperty(
-          "--class-color",
-          colors[a.context.index.list("class")[i].data.classId] ?? "#c59865",
-        );
+      cards.append(discoveryGallery(a, d, update, discoveryUI));
       if (d.mode === "expert") {
         body.append(el("h3", {}, t("added")), el("p", {}, t("historyHelp")));
         for (const [n, c] of d.classes.entries())
@@ -1176,6 +1239,48 @@ export async function renderEditor(main, d, a) {
         ),
       );
       body.append(el("div", { class: "score-table" }, table));
+      const simAbility = select(
+        ABILITIES.map((k) => [k, a.label(k)]),
+        "str",
+        () => {},
+      );
+      const simScore = el("input", {
+        type: "number",
+        min: 1,
+        max: 30,
+        value: d.scores.str,
+        "aria-label": w("Score simulé", "Simulated score"),
+      });
+      body.append(
+        el(
+          "details",
+          {},
+          el(
+            "summary",
+            {},
+            w("Simuler une caractéristique", "Simulate an ability score"),
+          ),
+          field(w("Caractéristique simulée", "Simulated ability"), simAbility),
+          field(w("Score simulé", "Simulated score"), simScore),
+          button(w("Voir les conséquences", "See consequences"), () => {
+            const k = simAbility.value,
+              v = Number(simScore.value);
+            if (!Number.isInteger(v) || v < 1 || v > 30) return;
+            openSimulation(
+              a,
+              d,
+              (x) => {
+                x.scores[k] = v;
+              },
+              () =>
+                update((x) => {
+                  x.scores[k] = v;
+                }),
+            );
+          }),
+        ),
+      );
+
       if (report.origin?.issues.some((i) => i.code === "score-method"))
         body.append(el("p", { class: "warning-text" }, t("scoreInvalid")));
       for (const q of report.choices.filter((q) => q.kind === "asi"))
@@ -1231,8 +1336,13 @@ export async function renderEditor(main, d, a) {
               c.subclassId ?? "",
               (e) =>
                 update((x) => {
-                  x.classes.find((k) => k.id === c.id).subclassId =
-                    e.target.value || null;
+                  const current = x.classes.find((k) => k.id === c.id);
+                  if (
+                    current.subclassId &&
+                    current.subclassId !== e.target.value
+                  )
+                    retainDecision(x, "subclass", c.id);
+                  current.subclassId = e.target.value || null;
                 }),
             ),
           ),
@@ -1270,7 +1380,10 @@ export async function renderEditor(main, d, a) {
             value,
             name:
               q.ownerId && a.context.index.get(q.ownerId)?.type !== "class"
-                ? {...a.context.index.get(q.ownerId)?.name,[a.state.locale]:a.name(a.context.index.get(q.ownerId))}
+                ? {
+                    ...a.context.index.get(q.ownerId)?.name,
+                    [a.state.locale]: a.name(a.context.index.get(q.ownerId)),
+                  }
                 : {
                     ...a.context.index.class(q.classId)?.name,
                     [a.state.locale]: a.cls(q.classId),
@@ -1374,6 +1487,42 @@ export async function renderEditor(main, d, a) {
           d.uiLevel ?? allFeatureChoices.find(pending)?.level ?? 1,
         );
         if (!levels.includes(focus)) d.uiLevel = 1;
+        const timeline = el(
+          "div",
+          {
+            class: "level-timeline",
+            "aria-label": w("Progression par niveau", "Level timeline"),
+          },
+          levels.map((l) => {
+            const needs = allFeatureChoices.filter(
+              (q) => q.level === l && pending(q),
+            ).length;
+            const b = button(
+              String(l) + (needs ? " · " + needs : " ✓"),
+              () =>
+                viewUpdate((x) => {
+                  x.uiLevel = l;
+                }),
+              l === Number(d.uiLevel ?? focus) ? "active" : "",
+            );
+            b.setAttribute(
+              "aria-label",
+              t("level") +
+                " " +
+                l +
+                " · " +
+                (needs
+                  ? w("À choisir", "To choose")
+                  : w("Automatique ou terminé", "Automatic or complete")),
+            );
+            b.setAttribute(
+              "aria-pressed",
+              String(l === Number(d.uiLevel ?? focus)),
+            );
+            return b;
+          }),
+        );
+        body.append(timeline);
         body.append(
           el(
             "div",
@@ -1625,7 +1774,7 @@ export async function renderEditor(main, d, a) {
       ].sort((a, b) => a - b);
       return el(
         "section",
-        { class: "choice" },
+        { class: "choice", "data-choice-id": q.id },
         el(
           "details",
           { open: report.issues.some((i) => i.choiceId === q.id) },
@@ -1775,6 +1924,44 @@ export async function renderEditor(main, d, a) {
           ),
         );
     }
+    function issueControl(i) {
+      const target = issueStep(i, report),
+        kind = diagnosticKind(i);
+      const names = {
+        required: w("Choix requis", "Required choice"),
+        review: w("Revue MJ", "GM review"),
+        content: w("Contenu indisponible", "Unavailable content"),
+        automation: w("Automatisation partielle", "Partial automation"),
+        info: w("Information", "Information"),
+        error: w("Erreur bloquante", "Blocking error"),
+      };
+      return el(
+        "li",
+        { class: "diagnostic " + kind },
+        badge(names[kind], "warning"),
+        button(issueMessage(i, report, a), async () => {
+          d.step = target;
+          const q = report.choices.find((q) => q.id === i.choiceId);
+          if (q) {
+            d.uiLevel = q.level;
+            d.uiSpellChoice = q.id;
+            focusIssue = q.id;
+          }
+          await a.autosave(d);
+          await draw();
+          const control =
+            focusIssue &&
+            [...shell.querySelectorAll("[data-choice-id]")].find(
+              (e) => e.dataset.choiceId === focusIssue,
+            );
+          control?.querySelector("details")?.setAttribute("open", "");
+          (
+            control?.querySelector("input,select,button") ??
+            shell.querySelector(".editor-main h2")
+          )?.focus();
+        }),
+      );
+    }
     if (d.step === "summary") {
       const r = compileDraft(a.context, a.config, d);
       body.append(
@@ -1815,14 +2002,66 @@ export async function renderEditor(main, d, a) {
         }),
         badge(t(r.status), r.status === "ready" ? "" : "warning"),
       );
-      if (r.issues.length)
-        body.append(
+      body.append(
+        el(
+          "details",
+          { class: "final-details" },
+          el("summary", {}, w("Détail du personnage", "Character details")),
           el(
-            "ul",
-            { class: "issues" },
-            r.issues.map((i) => el("li", {}, issueMessage(i, report, a))),
+            "p",
+            {},
+            w("Sources activées : ", "Enabled sources: ") +
+              (a.config.enabledSourceIds ?? []).join(" · "),
           ),
-        );
+          el(
+            "p",
+            {},
+            d.classes
+              .map((c) =>
+                c.subclassId ? a.name(a.context.index.get(c.subclassId)) : "",
+              )
+              .filter(Boolean)
+              .join(" · "),
+          ),
+          el("h3", {}, t("features")),
+          report.features.map((id) =>
+            el("p", {}, a.name(a.context.index.get(id))),
+          ),
+          el("h3", {}, t("proficiencies")),
+          el(
+            "p",
+            {},
+            Object.entries(d.selections)
+              .filter(([k]) => /skill|expertise/.test(k))
+              .map(([, v]) => v.map((id) => optionName(id, a)).join(" · "))
+              .join(" · "),
+          ),
+          el("h3", {}, t("spells")),
+          el(
+            "p",
+            {},
+            r.character?.spells.known
+              .map((id) => a.name(a.context.index.get(id)))
+              .join(" · ") ??
+              w(
+                "Complétez les décisions pour obtenir la liste validée.",
+                "Complete decisions for a validated spell list.",
+              ),
+          ),
+          el("h3", {}, t("equipment")),
+          el(
+            "p",
+            {},
+            d.equipment +
+              " · " +
+              (d.weapons ?? [])
+                .map((id) => localized(WEAPONS[id]?.name))
+                .join(" · "),
+          ),
+        ),
+      );
+      if (r.issues.length)
+        body.append(el("ul", { class: "issues" }, r.issues.map(issueControl)));
       if (r.valid)
         body.append(
           el("p", {}, t("reviewHelp")),
@@ -1888,11 +2127,9 @@ export async function renderEditor(main, d, a) {
       aside.append(
         el(
           "details",
-          {},
+          { open: true },
           el("summary", {}, t("review") + " · " + reviewIssues.length),
-          reviewIssues.map((i) =>
-            el("p", { class: "warning-text" }, issueMessage(i, report, a)),
-          ),
+          el("ul", { class: "issues" }, reviewIssues.map(issueControl)),
         ),
       );
     const invalidChoices = [
@@ -1972,8 +2209,10 @@ export async function renderEditor(main, d, a) {
     const allChoices = [...report.choices, ...(report.origin?.choices ?? [])];
     const selected = allChoices.filter(
       (q) =>
-        ((!report.choices.includes(q) ? d.originSelections?.[q.id] : d.selections[q.id])
-          ?.length ??
+        ((!report.choices.includes(q)
+          ? d.originSelections?.[q.id]
+          : d.selections[q.id]
+        )?.length ??
           (q.kind === "subclass" &&
           d.classes.find((c) => c.id === q.classId)?.subclassId
             ? 1
@@ -1982,7 +2221,7 @@ export async function renderEditor(main, d, a) {
     aside.append(
       el(
         "section",
-        { class: "panel" },
+        { class: "panel draft-tools" },
         badge(t(d.status === "ready" && d.finalized ? "ready" : "draft")),
         el("h3", {}, d.name || t("create")),
         el(

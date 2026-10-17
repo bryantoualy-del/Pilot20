@@ -9,6 +9,8 @@ const root = path.resolve(process.env.PILOT20_WEB_ROOT ?? "dist"),
     ".json": "application/json",
     ".css": "text/css",
     ".svg": "image/svg+xml",
+    ".webp":"image/webp",
+    ".png":"image/png",
     ".webmanifest": "application/manifest+json",
   };
 http

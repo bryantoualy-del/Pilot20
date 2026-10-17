@@ -1,0 +1,477 @@
+{
+  "schemaVersion": 1,
+  "source": "https://github.com/bryantoualy-del/RPG-Connect",
+  "commit": "204f044860ef18ef6268494236a682fa201c5202",
+  "authorization": "Project owner expressly authorizes reuse of these ChatGPT-generated class, magic school, inventory and condition icons in Pilot20 (2026-10-17). No creature or third-party assets included.",
+  "assets": [
+    {
+      "key": "magic-schools/necromancy",
+      "path": "./assets/shared/magic-schools/necromancy.webp",
+      "bytes": 1848,
+      "sha256": "23bfa32756c1e93fe55c97460195f210327c6bf7680ca2e686d5a0ed17c72e2e",
+      "sourceFile": "assets/icon-data/icon-data-05.json"
+    },
+    {
+      "key": "magic-schools/transmutation",
+      "path": "./assets/shared/magic-schools/transmutation.webp",
+      "bytes": 1814,
+      "sha256": "2c108d0e722736659ab921f4943b3df4265b25eb20d0dc12e241c9a438d05019",
+      "sourceFile": "assets/icon-data/icon-data-05.json"
+    },
+    {
+      "key": "inventory/arme_de_guerre_a_distance",
+      "path": "./assets/shared/inventory/arme_de_guerre_a_distance.webp",
+      "bytes": 2462,
+      "sha256": "a0af37261625b3aa8b01aa0a08658a5ae288931cf767e0db3488e3a2335e4a4d",
+      "sourceFile": "assets/icon-data/icon-data-02.json"
+    },
+    {
+      "key": "inventory/arme_de_guerre_a_distance_magique",
+      "path": "./assets/shared/inventory/arme_de_guerre_a_distance_magique.webp",
+      "bytes": 2526,
+      "sha256": "79e3793d88c6648f78fc7f9b88100b26274f9be49b2203f01d956d8f97443939",
+      "sourceFile": "assets/icon-data/icon-data-02.json"
+    },
+    {
+      "key": "inventory/arme_de_guerre_corps_a_corps",
+      "path": "./assets/shared/inventory/arme_de_guerre_corps_a_corps.webp",
+      "bytes": 1930,
+      "sha256": "188e6550269a8ca56e4aed1f2d9bad501736d6853a7fbce4a722f031727297a4",
+      "sourceFile": "assets/icon-data/icon-data-02.json"
+    },
+    {
+      "key": "inventory/arme_de_guerre_corps_a_corps_magique",
+      "path": "./assets/shared/inventory/arme_de_guerre_corps_a_corps_magique.webp",
+      "bytes": 1704,
+      "sha256": "2928e8e5930f27c26e38ff7f07f9fc83ef9bc60ac4a581a675d6e5af53dab4dc",
+      "sourceFile": "assets/icon-data/icon-data-02.json"
+    },
+    {
+      "key": "inventory/armure_intermediaire",
+      "path": "./assets/shared/inventory/armure_intermediaire.webp",
+      "bytes": 1780,
+      "sha256": "77b707ac581be41cd687fd2aab1eb6568a244eb5278ebcdd247d37351338763b",
+      "sourceFile": "assets/icon-data/icon-data-02.json"
+    },
+    {
+      "key": "inventory/armure_intermediaire_magique",
+      "path": "./assets/shared/inventory/armure_intermediaire_magique.webp",
+      "bytes": 2280,
+      "sha256": "8ed4bcc0743948e048a0e6c65a7be89434aa15d64578a1ab83be009516e953af",
+      "sourceFile": "assets/icon-data/icon-data-02.json"
+    },
+    {
+      "key": "inventory/armure_legere",
+      "path": "./assets/shared/inventory/armure_legere.webp",
+      "bytes": 2070,
+      "sha256": "b72f1c51a4721d482544a3b520338400c11b7df09693fd33e8289e8ee8dc96b0",
+      "sourceFile": "assets/icon-data/icon-data-02.json"
+    },
+    {
+      "key": "inventory/armure_legere_magique",
+      "path": "./assets/shared/inventory/armure_legere_magique.webp",
+      "bytes": 1720,
+      "sha256": "e740e29c98441986783b0fca1dcb4e7acc1925539797959a5142ff984f1dd7ac",
+      "sourceFile": "assets/icon-data/icon-data-02.json"
+    },
+    {
+      "key": "inventory/armure_lourde",
+      "path": "./assets/shared/inventory/armure_lourde.webp",
+      "bytes": 2308,
+      "sha256": "049fd3d27ac1de95d843213a8ae4137147baa4c762cc88c8656b30fa2daaa8b7",
+      "sourceFile": "assets/icon-data/icon-data-02.json"
+    },
+    {
+      "key": "inventory/armure_lourde_magique",
+      "path": "./assets/shared/inventory/armure_lourde_magique.webp",
+      "bytes": 2470,
+      "sha256": "e8a53c4146999ecd2cc2657d3ff20c483da128309a39cb39ab16f94c3e1d849f",
+      "sourceFile": "assets/icon-data/icon-data-02.json"
+    },
+    {
+      "key": "inventory/objet_merveilleux",
+      "path": "./assets/shared/inventory/objet_merveilleux.webp",
+      "bytes": 1884,
+      "sha256": "44c8c980eff2b7df63e20bf14acbdc379c12ffd1fe66083a7203a8a73a1fd0c5",
+      "sourceFile": "assets/icon-data/icon-data-04.json"
+    },
+    {
+      "key": "inventory/parchemin",
+      "path": "./assets/shared/inventory/parchemin.webp",
+      "bytes": 1558,
+      "sha256": "2925f9af6a24cdf3068dce805e8c16d7a74477bf69f8666f8b78b82fdbda6bf6",
+      "sourceFile": "assets/icon-data/icon-data-04.json"
+    },
+    {
+      "key": "inventory/potion",
+      "path": "./assets/shared/inventory/potion.webp",
+      "bytes": 1894,
+      "sha256": "a91eb4ab5c855c2a285f3f0557de76aee4a9949f1ef28c9a48d6220dc07ade37",
+      "sourceFile": "assets/icon-data/icon-data-04.json"
+    },
+    {
+      "key": "inventory/sceptre_magique",
+      "path": "./assets/shared/inventory/sceptre_magique.webp",
+      "bytes": 1350,
+      "sha256": "a0c4d0ad7efb0a92864a77094066826ff4189f3d8465b48efd810dd9b2a49a7d",
+      "sourceFile": "assets/icon-data/icon-data-04.json"
+    },
+    {
+      "key": "magic-schools/abjuration",
+      "path": "./assets/shared/magic-schools/abjuration.webp",
+      "bytes": 1836,
+      "sha256": "1889f72c74dea45f6670d69d3d14e280c3b129f6908601bd1b86acbe490040a6",
+      "sourceFile": "assets/icon-data/icon-data-04.json"
+    },
+    {
+      "key": "magic-schools/conjuration",
+      "path": "./assets/shared/magic-schools/conjuration.webp",
+      "bytes": 2708,
+      "sha256": "86e8a89da25053c2a81a8e16de61075df246648583f350bac1d7ed7e7ae467c7",
+      "sourceFile": "assets/icon-data/icon-data-04.json"
+    },
+    {
+      "key": "magic-schools/divination",
+      "path": "./assets/shared/magic-schools/divination.webp",
+      "bytes": 2244,
+      "sha256": "755e03b9222a6dd25ce92ba81e3675e830e02a1b4378626c37554181940d1fd2",
+      "sourceFile": "assets/icon-data/icon-data-04.json"
+    },
+    {
+      "key": "magic-schools/enchantment",
+      "path": "./assets/shared/magic-schools/enchantment.webp",
+      "bytes": 2032,
+      "sha256": "5969377fce6d303dfb406000c696cf417bd13a91d6da6291f58b1581d749048a",
+      "sourceFile": "assets/icon-data/icon-data-04.json"
+    },
+    {
+      "key": "magic-schools/evocation",
+      "path": "./assets/shared/magic-schools/evocation.webp",
+      "bytes": 2386,
+      "sha256": "779a61c8f2edbaa609ec9db453b4462016d262a50a75ac76daf03bfec33be899",
+      "sourceFile": "assets/icon-data/icon-data-04.json"
+    },
+    {
+      "key": "magic-schools/illusion",
+      "path": "./assets/shared/magic-schools/illusion.webp",
+      "bytes": 2334,
+      "sha256": "a9c27c918d75789277252d4143eb1389bd02f2971c9b9718c7029408b80acc00",
+      "sourceFile": "assets/icon-data/icon-data-04.json"
+    },
+    {
+      "key": "classes/sorcerer",
+      "path": "./assets/shared/classes/sorcerer.webp",
+      "bytes": 1162,
+      "sha256": "2d2ad40200d33194894824af15c49bb4c9da28082cacb2b5ce7ca2b20a639570",
+      "sourceFile": "assets/icon-data/icon-data-01.json"
+    },
+    {
+      "key": "classes/warlock",
+      "path": "./assets/shared/classes/warlock.webp",
+      "bytes": 2198,
+      "sha256": "4ab3df9a347a8c0f8dda38b4b928ef86bd8f8c56edc646295699c12e73c236df",
+      "sourceFile": "assets/icon-data/icon-data-01.json"
+    },
+    {
+      "key": "classes/wizard",
+      "path": "./assets/shared/classes/wizard.webp",
+      "bytes": 1050,
+      "sha256": "784c2b5c32d191418b57a532d2a6046e2ab8f0d65754866e61d6236776ce65a9",
+      "sourceFile": "assets/icon-data/icon-data-01.json"
+    },
+    {
+      "key": "inventory/anneau",
+      "path": "./assets/shared/inventory/anneau.webp",
+      "bytes": 1878,
+      "sha256": "e59c33be199c4dc0c6d8f91cb0932fd92e417b6836d32321153a817da6821025",
+      "sourceFile": "assets/icon-data/icon-data-01.json"
+    },
+    {
+      "key": "inventory/arme_a_feu",
+      "path": "./assets/shared/inventory/arme_a_feu.webp",
+      "bytes": 1704,
+      "sha256": "7d3235a33600e3df7335e292fccc533d349e83a776a3f94b38dae35f7b239477",
+      "sourceFile": "assets/icon-data/icon-data-01.json"
+    },
+    {
+      "key": "inventory/arme_a_feu_magique",
+      "path": "./assets/shared/inventory/arme_a_feu_magique.webp",
+      "bytes": 1626,
+      "sha256": "2fb5558145436713a973027b5f1aca2aad40a271fb007db19acb1486cfcb3d31",
+      "sourceFile": "assets/icon-data/icon-data-01.json"
+    },
+    {
+      "key": "inventory/arme_courante_a_distance",
+      "path": "./assets/shared/inventory/arme_courante_a_distance.webp",
+      "bytes": 2352,
+      "sha256": "34df70278f0915479c226f32a4eb80aa63a9cf120656bd18815e0d75f827281a",
+      "sourceFile": "assets/icon-data/icon-data-01.json"
+    },
+    {
+      "key": "inventory/arme_courante_a_distance_magique",
+      "path": "./assets/shared/inventory/arme_courante_a_distance_magique.webp",
+      "bytes": 1760,
+      "sha256": "ff818b477651d814ed624e7f51c1df09b45681025d580a0003429179a7e58780",
+      "sourceFile": "assets/icon-data/icon-data-01.json"
+    },
+    {
+      "key": "inventory/arme_courante_corps_a_corps",
+      "path": "./assets/shared/inventory/arme_courante_corps_a_corps.webp",
+      "bytes": 1650,
+      "sha256": "bdba1a258285352378f3b7821051a88ad6fb7ed6c4b3b0706ac84aeb1668f3eb",
+      "sourceFile": "assets/icon-data/icon-data-01.json"
+    },
+    {
+      "key": "inventory/arme_courante_corps_a_corps_magique",
+      "path": "./assets/shared/inventory/arme_courante_corps_a_corps_magique.webp",
+      "bytes": 1718,
+      "sha256": "51471f143172bc11e7504987e4a27b1032d73e35e79aa6eb2070a76a79fe3a7c",
+      "sourceFile": "assets/icon-data/icon-data-01.json"
+    },
+    {
+      "key": "classes/artificer",
+      "path": "./assets/shared/classes/artificer.webp",
+      "bytes": 2116,
+      "sha256": "09467f1b14f56c016e197062a2064f748edee124eb38924b35e3e5696ad087b7",
+      "sourceFile": "assets/icon-data/icon-data-00.json"
+    },
+    {
+      "key": "classes/barbarian",
+      "path": "./assets/shared/classes/barbarian.webp",
+      "bytes": 2618,
+      "sha256": "fcea049f206f2c6bad98ba5f79732fee14f4be7dd622689c5adaa039bb475540",
+      "sourceFile": "assets/icon-data/icon-data-00.json"
+    },
+    {
+      "key": "classes/bard",
+      "path": "./assets/shared/classes/bard.webp",
+      "bytes": 3010,
+      "sha256": "cb5552b6501ae02a252516117f2838279b8b553fae8fca66d21968bbc10aa01b",
+      "sourceFile": "assets/icon-data/icon-data-00.json"
+    },
+    {
+      "key": "classes/cleric",
+      "path": "./assets/shared/classes/cleric.webp",
+      "bytes": 2176,
+      "sha256": "5ce18df9a7b7422c3847dffa94bb325c70ae3cb36b7010d5679fd8dbcb8759f2",
+      "sourceFile": "assets/icon-data/icon-data-00.json"
+    },
+    {
+      "key": "classes/druid",
+      "path": "./assets/shared/classes/druid.webp",
+      "bytes": 2812,
+      "sha256": "c2521f190cb7cdcf862c589f6886b71d8a8eb957b72976c3182cb9b72aaf7535",
+      "sourceFile": "assets/icon-data/icon-data-00.json"
+    },
+    {
+      "key": "classes/fighter",
+      "path": "./assets/shared/classes/fighter.webp",
+      "bytes": 1676,
+      "sha256": "754359e7f022292318595d8bcf28dc9e9c0da43c2804632af82e1af59b09a05b",
+      "sourceFile": "assets/icon-data/icon-data-00.json"
+    },
+    {
+      "key": "classes/monk",
+      "path": "./assets/shared/classes/monk.webp",
+      "bytes": 2954,
+      "sha256": "e33c80acc4bd9f57cf2f83af9bc2d3621fe0117a35bf34102efc513814aedad2",
+      "sourceFile": "assets/icon-data/icon-data-00.json"
+    },
+    {
+      "key": "classes/paladin",
+      "path": "./assets/shared/classes/paladin.webp",
+      "bytes": 2380,
+      "sha256": "c874ee27e9138fa9341b7c0ab6cf2f6805e1844146bace1d0d73971806a3096a",
+      "sourceFile": "assets/icon-data/icon-data-00.json"
+    },
+    {
+      "key": "classes/ranger",
+      "path": "./assets/shared/classes/ranger.webp",
+      "bytes": 2608,
+      "sha256": "4933eb87561e363be23360eecc0016da0cd7992810bb61e995c85bc6c875daa1",
+      "sourceFile": "assets/icon-data/icon-data-00.json"
+    },
+    {
+      "key": "classes/rogue",
+      "path": "./assets/shared/classes/rogue.webp",
+      "bytes": 2058,
+      "sha256": "e587a7348b914600f1d1bce5821a41caa8981e131752c3ea09c45264454cb04d",
+      "sourceFile": "assets/icon-data/icon-data-00.json"
+    },
+    {
+      "key": "conditions/aveugle",
+      "path": "./assets/shared/conditions/aveugle.webp",
+      "bytes": 4102,
+      "sha256": "672e2afabf64efd53fc126182e24ad1540b33c3e5aa886dc132593a5aadff42e",
+      "sourceFile": "assets/icon-data/condition-icons.json"
+    },
+    {
+      "key": "conditions/charme",
+      "path": "./assets/shared/conditions/charme.webp",
+      "bytes": 3958,
+      "sha256": "695661f144627ecfc6b2b5d864ad7f4f389df625dc1c9ea1a1c012facac5b670",
+      "sourceFile": "assets/icon-data/condition-icons.json"
+    },
+    {
+      "key": "conditions/assourdi",
+      "path": "./assets/shared/conditions/assourdi.webp",
+      "bytes": 4256,
+      "sha256": "f93e505ad01fa0e17cf6c673f4f6ec169ee91e9e1d279a214b36fae79da1f71d",
+      "sourceFile": "assets/icon-data/condition-icons.json"
+    },
+    {
+      "key": "conditions/epuisement",
+      "path": "./assets/shared/conditions/epuisement.webp",
+      "bytes": 3568,
+      "sha256": "cd96ef1972783751a309bf78b37183a295fdac505e90ba96a4b607b60e29ffa7",
+      "sourceFile": "assets/icon-data/condition-icons.json"
+    },
+    {
+      "key": "conditions/effraye",
+      "path": "./assets/shared/conditions/effraye.webp",
+      "bytes": 4250,
+      "sha256": "40e380520b418855f4c3c67a4b53b375016d8f003de3b985beb83271679c2ba1",
+      "sourceFile": "assets/icon-data/condition-icons.json"
+    },
+    {
+      "key": "conditions/agrippe",
+      "path": "./assets/shared/conditions/agrippe.webp",
+      "bytes": 4340,
+      "sha256": "1f5b15cafdb05b238bf48d0865b90ab31af75bc99035e38f2cd6564e608e6e52",
+      "sourceFile": "assets/icon-data/condition-icons.json"
+    },
+    {
+      "key": "conditions/incapacite",
+      "path": "./assets/shared/conditions/incapacite.webp",
+      "bytes": 3744,
+      "sha256": "6d383573f855e3f279302a593d702cf026ad7749a3fcb0fe220e5a0c26b3c637",
+      "sourceFile": "assets/icon-data/condition-icons.json"
+    },
+    {
+      "key": "conditions/invisible",
+      "path": "./assets/shared/conditions/invisible.webp",
+      "bytes": 4148,
+      "sha256": "4623dbe209b03ea9198042ce8267d3e5c62d452c3758f20780823af8b2233dc0",
+      "sourceFile": "assets/icon-data/condition-icons.json"
+    },
+    {
+      "key": "conditions/paralyse",
+      "path": "./assets/shared/conditions/paralyse.webp",
+      "bytes": 4490,
+      "sha256": "f33f2d8512f619350c483de31bed10e80b978b8f5cb7c559567dd95efbfdfefd",
+      "sourceFile": "assets/icon-data/condition-icons.json"
+    },
+    {
+      "key": "conditions/petrifie",
+      "path": "./assets/shared/conditions/petrifie.webp",
+      "bytes": 3750,
+      "sha256": "bb0b80de225007bd771bdf93c2ae299494b369aa4f2fbc761a910776703037aa",
+      "sourceFile": "assets/icon-data/condition-icons.json"
+    },
+    {
+      "key": "conditions/empoisonne",
+      "path": "./assets/shared/conditions/empoisonne.webp",
+      "bytes": 4450,
+      "sha256": "d7f69d59c0bac9ffc51022fba24949ea469611f4d747bab87abb4c002fde33f3",
+      "sourceFile": "assets/icon-data/condition-icons.json"
+    },
+    {
+      "key": "conditions/a_terre",
+      "path": "./assets/shared/conditions/a_terre.webp",
+      "bytes": 4072,
+      "sha256": "4dd58da4283c1a86da69869691191f375c617946ff1defd63f2fe9e5a8b9765d",
+      "sourceFile": "assets/icon-data/condition-icons.json"
+    },
+    {
+      "key": "conditions/entrave",
+      "path": "./assets/shared/conditions/entrave.webp",
+      "bytes": 4580,
+      "sha256": "13e35198b7a57ca9ffa1a2234497b79a6beab857177ba9216668bf643c80244b",
+      "sourceFile": "assets/icon-data/condition-icons.json"
+    },
+    {
+      "key": "conditions/etourdi",
+      "path": "./assets/shared/conditions/etourdi.webp",
+      "bytes": 4344,
+      "sha256": "a50641056ebf3c9ecd0d140902a6d703f27de5e6cb29570c137a929398b61a90",
+      "sourceFile": "assets/icon-data/condition-icons.json"
+    },
+    {
+      "key": "conditions/inconscient",
+      "path": "./assets/shared/conditions/inconscient.webp",
+      "bytes": 4376,
+      "sha256": "db1fb26b8614727a3bc4aa6c05bec98bafa04047d17516617323435e3e89fdce",
+      "sourceFile": "assets/icon-data/condition-icons.json"
+    },
+    {
+      "key": "inventory/baguette_magique",
+      "path": "./assets/shared/inventory/baguette_magique.webp",
+      "bytes": 1364,
+      "sha256": "7ca6213a147155e5660f00ac001f80fca1795d20b6c2c091da5f55680b3e870b",
+      "sourceFile": "assets/icon-data/icon-data-03.json"
+    },
+    {
+      "key": "inventory/baton_magique",
+      "path": "./assets/shared/inventory/baton_magique.webp",
+      "bytes": 1540,
+      "sha256": "037243996df67031d25d72b62f28552c2be472f4106c2fcf84681166f14d1931",
+      "sourceFile": "assets/icon-data/icon-data-03.json"
+    },
+    {
+      "key": "inventory/bouclier",
+      "path": "./assets/shared/inventory/bouclier.webp",
+      "bytes": 1646,
+      "sha256": "8094649e4993f07498b0edbdd4f095e92ab05408542bef8532d28bce9e406b06",
+      "sourceFile": "assets/icon-data/icon-data-03.json"
+    },
+    {
+      "key": "inventory/bouclier_magique",
+      "path": "./assets/shared/inventory/bouclier_magique.webp",
+      "bytes": 1996,
+      "sha256": "1536bff467306ecdbb9e13f7cc64b013ed105a3fad1365f52b57b841c0f41f51",
+      "sourceFile": "assets/icon-data/icon-data-03.json"
+    },
+    {
+      "key": "inventory/consommable",
+      "path": "./assets/shared/inventory/consommable.webp",
+      "bytes": 1560,
+      "sha256": "8d9ace6da50d8071f870b0c36607b6ef1ac5284b622f76ea4de641a2b880a45d",
+      "sourceFile": "assets/icon-data/icon-data-03.json"
+    },
+    {
+      "key": "inventory/divers",
+      "path": "./assets/shared/inventory/divers.webp",
+      "bytes": 1678,
+      "sha256": "ec4bf5af2e07f9f44d04d4c138ca855800a3cb7535a192b34e61594726ec784f",
+      "sourceFile": "assets/icon-data/icon-data-03.json"
+    },
+    {
+      "key": "inventory/generic_shield",
+      "path": "./assets/shared/inventory/generic_shield.webp",
+      "bytes": 1472,
+      "sha256": "a3bbf7a25620575ec8f73a5167eac9f53617a00acfed264255abd42843f53a55",
+      "sourceFile": "assets/icon-data/icon-data-03.json"
+    },
+    {
+      "key": "inventory/generic_sword",
+      "path": "./assets/shared/inventory/generic_sword.webp",
+      "bytes": 1560,
+      "sha256": "88f51329969a445b22205bf9880953a4a2c99486c6a49a028431d09e010cbe6c",
+      "sourceFile": "assets/icon-data/icon-data-03.json"
+    },
+    {
+      "key": "inventory/munitions",
+      "path": "./assets/shared/inventory/munitions.webp",
+      "bytes": 2150,
+      "sha256": "3004a1f27db3815bc603a9717cae273befbcbf935fb0fd42d27a0e8b4c06642b",
+      "sourceFile": "assets/icon-data/icon-data-03.json"
+    },
+    {
+      "key": "inventory/munitions_magiques",
+      "path": "./assets/shared/inventory/munitions_magiques.webp",
+      "bytes": 2610,
+      "sha256": "b64e10be0e2fcfc1c97ac01583d8f522e0544bd6f07a0746dbae407faf5af7e5",
+      "sourceFile": "assets/icon-data/icon-data-03.json"
+    }
+  ]
+}

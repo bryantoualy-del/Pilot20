@@ -39,6 +39,8 @@ async function launch() {
     .waitFor();
 }
 const step = async (name) => {
+  await p.locator('.steps').waitFor({state:'attached'});
+  if (!(await p.locator('.steps').isVisible())) await p.getByRole('button',{name:'Étapes',exact:true}).click();
   await p
     .locator(".steps")
     .getByRole("button", { name: new RegExp(name) })
@@ -65,7 +67,7 @@ const record = (message) => {
 async function capture(name) {
   await p.locator("#notice").waitFor({ state: "hidden" });
   await p.screenshot({
-    path: "docs/screenshots/v031/" + name + ".png",
+    path: "docs/screenshots/v032/regression/" + name + ".png",
     fullPage: true,
   });
 }
@@ -152,7 +154,7 @@ async function snapshots() {
   });
 }
 try {
-  await mkdir("docs/screenshots/v031", { recursive: true });
+  await mkdir("docs/screenshots/v032/regression", { recursive: true });
   await mkdir("artifacts", { recursive: true });
   await launch();
   await begin("A — Humain guerrier 1");
@@ -425,7 +427,7 @@ try {
   );
   assert.deepEqual(errors, []);
   await writeFile(
-    "docs/screenshots/v031/after-metrics.json",
+    "docs/screenshots/v032/regression/after-metrics.json",
     JSON.stringify(metrics, null, 2),
   );
   await writeFile(
@@ -447,7 +449,7 @@ try {
   console.error("BODY", await p?.locator("body").innerText());
   console.error("ERRORS", errors);
   await p?.screenshot({
-    path: "docs/screenshots/v031/failure-new.png",
+    path: "docs/screenshots/v032/regression/failure-new.png",
     fullPage: true,
   });
   throw e;

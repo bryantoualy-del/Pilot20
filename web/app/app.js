@@ -50,9 +50,24 @@ function fail(e) {
   );
 }
 function modal(content) {
+  dialog.classList.remove("wide-dialog");
   dialog.replaceChildren(
-    button("×", () => dialog.close(), "close"),
+    el(
+      "button",
+      {
+        type: "button",
+        class: "close",
+        "aria-label": state.locale === "fr" ? "Fermer" : "Close",
+        onclick: () => dialog.close(),
+      },
+      "×",
+    ),
     content,
+  );
+  dialog.setAttribute(
+    "aria-label",
+    content.querySelector("h2,h3")?.textContent ??
+      (state.locale === "fr" ? "Détails" : "Details"),
   );
   dialog.showModal();
 }
@@ -96,16 +111,14 @@ function autosave(d) {
     revisions.set(d.id, snapshot.revision);
     d.revision = snapshot.revision;
     notice(t("saved"));
-    document
-      .querySelector("#draft-save-state")
-      ?.replaceChildren(
-        t("saved") +
-          " · " +
-          new Date(snapshot.updatedAt).toLocaleTimeString(state.locale, {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-      );
+    document.querySelector("#draft-save-state")?.replaceChildren(
+      t("saved") +
+        " · " +
+        new Date(snapshot.updatedAt).toLocaleTimeString(state.locale, {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+    );
   });
   saveQueue = promise.catch(fail);
   return promise;
@@ -732,5 +745,23 @@ try {
   fail(e);
   root.replaceChildren(
     el("main", {}, el("h1", {}, "Pilot20"), el("p", {}, t("error"))),
+  );
+}
+
+// Visual viewport shrinks with the iOS keyboard; release sticky actions while editing.
+if (window.visualViewport) {
+  const syncViewport = () => {
+    const editing = /INPUT|TEXTAREA|SELECT/.test(
+      document.activeElement?.tagName ?? "",
+    );
+    document.body.classList.toggle(
+      "keyboard-open",
+      editing && visualViewport.height < innerHeight * 0.8,
+    );
+  };
+  visualViewport.addEventListener("resize", syncViewport);
+  document.addEventListener("focusin", syncViewport);
+  document.addEventListener("focusout", () =>
+    requestAnimationFrame(syncViewport),
   );
 }
