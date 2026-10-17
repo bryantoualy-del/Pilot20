@@ -169,6 +169,8 @@ export function compileDraft(context, config, d) {
     portrait: d.portrait,
     description: [
       d.description,
+      context.index.get(d.raceId)?.data.homebrewDefinition?.description,
+      context.index.get(d.raceId)?.data.homebrewDefinition?.appearance,
       d.origin,
       d.languages,
       d.traits,
@@ -319,16 +321,13 @@ const modelPreferences = {
     "srd51:haste",
   ],
 };
-export function suggestChoices(context, config, input) {
+export function suggestChoices(
+  context,
+  config,
+  input,
+  { preserveIdentity = false } = {},
+) {
   const d = structuredClone(input);
-  for (const c of d.classes) {
-    const entry = context.index.class(c.id);
-    if (!entry) continue;
-    if (!c.subclassId && c.level >= entry.data.subclassLevel)
-      c.subclassId =
-        context.index.list("subclass").find((i) => i.data.classId === c.id)
-          ?.id ?? null;
-  }
   for (let pass = 0; pass < 5; pass++) {
     const r = draftProgression(context, config, d),
       usedSkills = new Set(r.origin?.background.skills ?? d.background.skills),
@@ -347,7 +346,20 @@ export function suggestChoices(context, config, input) {
       }
     }
     for (const q of r.choices) {
-      if (q.kind === "subclass") continue;
+      if (
+        q.kind === "subclass" ||
+        (preserveIdentity &&
+          [
+            "spell",
+            "spellbook",
+            "prepared",
+            "asi",
+            "feature",
+            "metamagic",
+            "invocation",
+          ].includes(q.kind))
+      )
+        continue;
       const current = d.selections[q.id] ?? [],
         spellSet = spells.get(q.classId) ?? new Set(),
         group = groups.get(q.distinctGroup) ?? new Set();

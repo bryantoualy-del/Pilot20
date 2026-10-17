@@ -39,8 +39,9 @@ async function launch() {
     .waitFor();
 }
 const step = async (name) => {
-  await p.locator('.steps').waitFor({state:'attached'});
-  if (!(await p.locator('.steps').isVisible())) await p.getByRole('button',{name:'Étapes',exact:true}).click();
+  await p.locator(".steps").waitFor({ state: "attached" });
+  if (!(await p.locator(".steps").isVisible()))
+    await p.getByRole("button", { name: "Étapes", exact: true }).click();
   await p
     .locator(".steps")
     .getByRole("button", { name: new RegExp(name) })
@@ -50,8 +51,8 @@ const step = async (name) => {
 const changed = async (field) => {
   await field.blur();
   await p
-    .locator("#notice")
-    .filter({ hasText: "Enregistré sur cet appareil" })
+    .locator("#draft-save-state")
+    .filter({ hasText: /Sauvegardé|Enregistré sur cet appareil/ })
     .waitFor();
 };
 const nav = async (name) => {
@@ -92,6 +93,8 @@ async function begin(name, cls = "fighter", level = 1) {
     .getByRole("button", { name: "Créer un personnage", exact: true })
     .first()
     .click();
+  await p.getByRole("button", { name: "Expert", exact: true }).click();
+  await p.locator(".creator-shell").waitFor();
   const f = p.getByLabel("Nom du personnage", { exact: true });
   await f.fill(name);
   await changed(f);
@@ -113,6 +116,28 @@ async function begin(name, cls = "fighter", level = 1) {
   await changed(lev);
 }
 async function suggest() {
+  await step("Capacités de classe");
+  const focus = p.getByLabel("Niveau consulté", { exact: true });
+  if (await focus.count()) {
+    for (const l of ["1", "2", "3"])
+      if (await focus.locator('option[value="' + l + '"]').count()) {
+        const oldHeading = await p.locator(".editor-main h2").elementHandle();
+        await focus.selectOption(l);
+        await p.waitForFunction((e) => !e.isConnected, oldHeading);
+        await oldHeading.dispose();
+        for (const id of [
+          "srd51:college-of-lore",
+          "srd51:school-of-evocation",
+        ]) {
+          const sub = p
+            .locator("select")
+            .filter({ has: p.locator('option[value="' + id + '"]') });
+          if ((await sub.count()) && !(await sub.inputValue()))
+            await sub.selectOption(id);
+        }
+      }
+  }
+
   const tools = p.locator(".template-tools");
   if ((await tools.getAttribute("open")) === null)
     await tools.locator("summary").first().click();
@@ -134,7 +159,11 @@ async function finalize() {
     .getByLabel("Le MJ a vérifié ces règles et ajustements.", { exact: true })
     .check();
   assert.equal(await p.locator(".issues li").count(), 0);
-  const progress=(await p.locator('.editor-aside').innerText()).match(/Choix obligatoires · (\d+) \/ (\d+)/);assert.ok(progress);assert.equal(progress[1],progress[2]);
+  const progress = (await p.locator(".editor-aside").innerText()).match(
+    /Choix obligatoires · (\d+) \/ (\d+)/,
+  );
+  assert.ok(progress);
+  assert.equal(progress[1], progress[2]);
   await p
     .getByRole("button", { name: "Enregistrer la fiche", exact: true })
     .click();
@@ -288,7 +317,11 @@ try {
   const lev = p.getByLabel("Barde · Niveau", { exact: true });
   await lev.fill("1");
   await changed(lev);
-  await p.locator(".editor-aside details summary").first().click();
+  if (
+    (await p.locator(".editor-aside details").first().getAttribute("open")) ===
+    null
+  )
+    await p.locator(".editor-aside details summary").first().click();
   await p.getByText(/Sous-classe conservée mais inaccessible/).waitFor();
   await step("Finalisation");
   await p
@@ -341,13 +374,16 @@ try {
       .first()
       .click();
     await p
-      .locator("#notice")
-      .filter({ hasText: "Enregistré sur cet appareil" })
+      .locator("#draft-save-state")
+      .filter({ hasText: /Sauvegardé|Enregistré sur cet appareil/ })
       .waitFor();
   }
   const restored = (await snapshots()).find((d) => d.id === before.id);
   assert.deepEqual(restored.selections, before.selections);
-  await p.locator('.editor-main').getByText(/Capacités de classe : \d+ · 0 choix/).waitFor();
+  await p
+    .locator(".editor-main")
+    .getByText(/Capacités de classe : \d+ · 0 choix/)
+    .waitFor();
   record(
     "D: level reduction blocks invalid effects, explicit archival permits revalidation at level 1, then all high-level decisions restore without loss",
   );
@@ -396,7 +432,7 @@ try {
     { width: 1440, height: 1000 },
   ]) {
     await p.setViewportSize(viewport);
-    await p.evaluate(()=>new Promise(requestAnimationFrame));
+    await p.evaluate(() => new Promise(requestAnimationFrame));
     assert.ok(
       await p.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
@@ -408,7 +444,10 @@ try {
       .evaluateAll((nodes) =>
         nodes.map((n) => n.getBoundingClientRect().height),
       );
-    assert.ok(controls.every((h) => h >= 44),JSON.stringify({viewport,heights:controls}));
+    assert.ok(
+      controls.every((h) => h >= 44),
+      JSON.stringify({ viewport, heights: controls }),
+    );
     await p.getByLabel("Barde · Niveau", { exact: true }).focus();
     assert.equal(
       await p

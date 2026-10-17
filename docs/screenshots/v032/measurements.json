@@ -11,15 +11,15 @@
   "metrics": [
     {
       "operation": "class comparison open",
-      "milliseconds": 73.50745800000004
+      "milliseconds": 113.9221950000001
     },
     {
       "operation": "bard subclass comparison open",
-      "milliseconds": 122.51128999999946
+      "milliseconds": 101.31077800000003
     },
     {
       "operation": "score simulation open",
-      "milliseconds": 217.840099
+      "milliseconds": 197.06180499999937
     },
     {
       "viewport": {
@@ -28,7 +28,7 @@
       },
       "document": {
         "width": 375,
-        "height": 1810
+        "height": 2112
       }
     },
     {
@@ -38,7 +38,7 @@
       },
       "document": {
         "width": 390,
-        "height": 1810
+        "height": 2054
       }
     },
     {
@@ -48,7 +48,7 @@
       },
       "document": {
         "width": 430,
-        "height": 1770
+        "height": 2004
       }
     },
     {
@@ -58,7 +58,7 @@
       },
       "document": {
         "width": 844,
-        "height": 1154
+        "height": 1352
       }
     },
     {
@@ -68,7 +68,7 @@
       },
       "document": {
         "width": 820,
-        "height": 1180
+        "height": 1399
       }
     },
     {
@@ -78,7 +78,7 @@
       },
       "document": {
         "width": 1024,
-        "height": 1154
+        "height": 1352
       }
     },
     {
@@ -88,10 +88,10 @@
       },
       "document": {
         "width": 1180,
-        "height": 968
+        "height": 1327
       }
     }
   ],
-  "browser": "131.0.6778.33",
+  "browser": "131.0.6778.0",
   "physicalSafari": false
 }

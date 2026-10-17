@@ -1,0 +1,22 @@
+{
+  "interactions": 11,
+  "screens": 3,
+  "heights": [
+    {
+      "title": "Donnez-lui votre style",
+      "height": 820,
+      "viewport": 820
+    },
+    {
+      "title": "Prêt à jouer",
+      "height": 980,
+      "viewport": 820
+    },
+    {
+      "stage": "confirmed-summary",
+      "height": 1135,
+      "viewport": 820
+    }
+  ],
+  "milliseconds": 3763.9483870000004
+}

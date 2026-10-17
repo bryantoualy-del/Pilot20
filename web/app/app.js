@@ -102,7 +102,6 @@ function autosave(d) {
   const snapshot = structuredClone(d);
   snapshot.updatedAt = new Date().toISOString();
   d.updatedAt = snapshot.updatedAt;
-  notice(t("saving"));
   document.querySelector("#draft-save-state")?.replaceChildren(t("saving"));
   const promise = saveQueue.then(async () => {
     const expected = revisions.has(d.id) ? revisions.get(d.id) : null;
@@ -110,7 +109,6 @@ function autosave(d) {
     await drafts.save(snapshot, { expectedRevision: expected });
     revisions.set(d.id, snapshot.revision);
     d.revision = snapshot.revision;
-    notice(t("saved"));
     document.querySelector("#draft-save-state")?.replaceChildren(
       t("saved") +
         " · " +
@@ -120,7 +118,14 @@ function autosave(d) {
         }),
     );
   });
-  saveQueue = promise.catch(fail);
+  saveQueue = promise.catch((e) => {
+    document
+      .querySelector("#draft-save-state")
+      ?.replaceChildren(
+        state.locale === "fr" ? "Erreur de sauvegarde" : "Save failed",
+      );
+    fail(e);
+  });
   return promise;
 }
 async function nav(route, id = null) {
@@ -404,7 +409,6 @@ async function libraryScreen(main, all) {
         if (f.size > 4000000) throw Error("size");
         await drafts.import(await f.text());
         await render();
-        notice(t("saved"));
       } catch (e) {
         fail(e);
       }
@@ -687,7 +691,6 @@ async function sourcesScreen(main) {
           authorized: auth.checked,
         });
         await render();
-        notice(t("saved"));
       } catch (e) {
         fail(e);
       }

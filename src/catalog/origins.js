@@ -136,7 +136,8 @@ export function resolveOrigins(index, request) {
     ledger = [],
     bonuses = Object.fromEntries(ABILITIES.map((k) => [k, 0])),
     traits = [],
-    spells = [];
+    spells = [],
+    featIds = [];
   const race = originEntry(index, raceId, "race"),
     bg = originEntry(index, backgroundId, "background");
   if (raceId && !race) issues.push({ code: "unavailable-origin", id: raceId });
@@ -208,6 +209,39 @@ export function resolveOrigins(index, request) {
       issues.push({ code: "origin-option-disabled", option: flag });
 
   for (const { entry, data: d } of data) {
+    if (d.homebrewDefinition && !d.homebrewDefinition.gmApproved)
+      issues.push({ code: "homebrew-gm-review" });
+    if (d.customLineage) {
+      const c = d.customLineage,
+        f = index.get(d.originFeatId);
+      const base = { ...scores, [c.ability]: scores[c.ability] + 2 };
+      if (
+        !scoresAreBase ||
+        (c.variable === "darkvision" &&
+          ((d.skills ?? []).length !== 0 ||
+            !(d.traits ?? []).some((t) => t.id === "darkvision"))) ||
+        (c.variable === "skill" &&
+          ((d.skills ?? []).length !== 1 ||
+            (d.traits ?? []).some((t) => t.id === "darkvision"))) ||
+        !["small", "medium"].includes(c.size) ||
+        d.creatureType !== "humanoid" ||
+        !["darkvision", "skill"].includes(c.variable) ||
+        !(d.languages ?? []).includes("common") ||
+        !(d.languages ?? []).includes(c.language) ||
+        (d.languages ?? []).length !== 2 ||
+        !request.campaignOptions?.includes("tce-custom-lineage") ||
+        d.size !== c.size ||
+        d.speed !== 30 ||
+        Object.entries(d.bonuses ?? {}).length !== 1 ||
+        d.bonuses[c.ability] !== 2 ||
+        !f ||
+        f.type !== "feat" ||
+        (f.data.requiresScores ?? []).some((p) => base[p.score] < p.minimum) ||
+        (f.data.requires ?? []).length
+      )
+        issues.push({ code: "invalid-custom-lineage" });
+      else featIds.push(f.id);
+    }
     for (const [k, n] of Object.entries(d.bonuses ?? {})) {
       if (
         entry.type !== "background" &&
@@ -388,6 +422,7 @@ export function resolveOrigins(index, request) {
     subrace: sub ?? null,
     traits,
     spells,
+    featIds,
     languages: [...languages],
     size: race?.data.size ?? "medium",
     speed: race?.data.speed ?? 30,

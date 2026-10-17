@@ -41,7 +41,11 @@ export function resolveProgression(index, request) {
     background = { skills: [], proficiencies: [] },
     spellbookTranscriptions = [],
   } = request;
-  const origin = resolveOrigins(index, { ...request, background });
+  const origin = resolveOrigins(index, {
+    ...request,
+    campaignOptions,
+    background,
+  });
   scores = origin.scores;
   background = origin.background;
   json({
@@ -85,7 +89,7 @@ export function resolveProgression(index, request) {
             adjustedScores[a]++;
             adjustedScores[b]++;
           }
-  const features = new Set(),
+  const features = new Set(origin.featIds ?? []),
     resources = [],
     choices = [],
     issues = [...origin.issues],
@@ -290,10 +294,12 @@ export function resolveProgression(index, request) {
         options,
         spec.kind,
         {
-          ownerId: spec.subclassId ?? (sub?.data.choices?.includes(spec)
-            ? sub.id
-            : (optional.find((f) => f.data.choices?.includes(spec))?.id ??
-              entry.id)),
+          ownerId:
+            spec.subclassId ??
+            (sub?.data.choices?.includes(spec)
+              ? sub.id
+              : (optional.find((f) => f.data.choices?.includes(spec))?.id ??
+                entry.id)),
           ...(spec.distinctGroup ? { distinctGroup: spec.distinctGroup } : {}),
           ...(spec.adjudication ? { adjudication: spec.adjudication } : {}),
         },

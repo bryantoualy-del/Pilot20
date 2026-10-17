@@ -35,18 +35,21 @@ async function step(name) {
   await p.locator(".steps").waitFor({ state: "attached" });
   if (!(await p.locator(".steps").isVisible()))
     await p.getByRole("button", { name: "Étapes", exact: true }).click();
-  const previous = await p.locator('.editor-main h2').elementHandle();
+  const previous = await p.locator(".editor-main h2").elementHandle();
   await p
     .locator(".steps")
     .getByRole("button", { name: new RegExp(name) })
     .click();
   // A repeated active step has the same heading text: wait for its actual replacement.
-  await p.waitForFunction(element=>!element.isConnected, previous);
+  await p.waitForFunction((element) => !element.isConnected, previous);
   await previous.dispose();
   await p.locator(".editor-main h2").filter({ hasText: name }).waitFor();
 }
 async function capture(name, focus = null) {
-  if (focus) await p.locator(focus).evaluate(e=>e.scrollIntoView({block:'start'}));
+  if (focus)
+    await p
+      .locator(focus)
+      .evaluate((e) => e.scrollIntoView({ block: "start" }));
   else await p.evaluate(() => window.scrollTo(0, 0));
   await p.locator("#notice").waitFor({ state: "hidden" });
   await p.screenshot({
@@ -67,13 +70,11 @@ async function seed(id, cls = "bard", level = 10) {
     async ({ id, cls, level }) => {
       const { openIndexedDB } = await import("/src/persistence/adapters.js");
       const s = await openIndexedDB();
-      const { classCatalog, spellCatalog } = await import(
-        "/src/catalog/srd51-catalog.js"
-      );
+      const { classCatalog, spellCatalog } =
+        await import("/src/catalog/srd51-catalog.js");
       const { originCatalog } = await import("/src/catalog/origins.js");
-      const { campaignRepository } = await import(
-        "/src/campaign/repository.js"
-      );
+      const { campaignRepository } =
+        await import("/src/campaign/repository.js");
       const campaigns = campaignRepository(s, [
         classCatalog,
         spellCatalog,
@@ -81,16 +82,15 @@ async function seed(id, cls = "bard", level = 10) {
       ]);
       const config = await campaigns.get(),
         context = await campaigns.context(config);
-      const { newDraft, suggestChoices } = await import(
-        "/src/creator/model.js"
-      );
+      const { newDraft, suggestChoices } =
+        await import("/src/creator/model.js");
       const { characterLibrary } = await import("/src/persistence/library.js");
       const { creatorRepository } = await import("/src/creator/repository.js");
       const repo = creatorRepository(s, characterLibrary(s));
       let d = newDraft("default", id);
       Object.assign(d, {
         name: id,
-        mode: "guided",
+        mode: "expert",
         origin: "Original synthetic origin",
         background: {
           name: "Original synthetic background",
@@ -102,6 +102,11 @@ async function seed(id, cls = "bard", level = 10) {
         confirmed: true,
         step: "features",
       });
+      for (const cl of d.classes)
+        if (cl.level >= context.index.class(cl.id).data.subclassLevel)
+          cl.subclassId =
+            context.index.list("subclass").find((s) => s.data.classId === cl.id)
+              ?.id ?? null;
       d = suggestChoices(context, config, d);
       d.reviewed = true;
       d.confirmed = true;
@@ -130,6 +135,11 @@ try {
     .getByRole("button", { name: "Créer un personnage", exact: true })
     .first()
     .click();
+  await p.locator(".quick-creator").waitFor();
+  await p.getByRole("button", { name: "Expert", exact: true }).click();
+  await p.locator(".creator-shell").waitFor();
+  if (await p.locator(".quick-creator").count())
+    await p.getByRole("button", { name: "Expert", exact: true }).click();
   await step("Classe & niveau");
   await p.getByText("Changer de classe", { exact: true }).click();
   assert.equal(await p.locator(".class-card").count(), 12);
@@ -154,7 +164,7 @@ try {
   await p.setViewportSize({ width: 390, height: 844 });
   await capture("iphone-gallery", ".discovery");
   assert.equal(await p.locator(".steps").isVisible(), false);
-  await p.getByRole("button", { name: "Aperçu", exact: true }).click();
+  await p.getByRole("button", { name: "Mon personnage", exact: true }).click();
   await p.locator("dialog .character-preview").waitFor();
   await capture("iphone-preview");
   await p.getByRole("button", { name: "Fermer", exact: true }).click();
@@ -286,6 +296,9 @@ try {
     .getByRole("button", { name: "Créer un personnage", exact: true })
     .first()
     .click();
+  await p.locator(".quick-creator").waitFor();
+  await p.getByRole("button", { name: "Expert", exact: true }).click();
+  await p.locator(".creator-shell").waitFor();
   await step("Finalisation");
   await capture("errors");
   await p
@@ -307,6 +320,8 @@ try {
     { width: 1180, height: 820 },
   ]) {
     await p.setViewportSize(v);
+    if (await p.locator(".quick-creator").count())
+      await p.getByRole("button", { name: "Expert", exact: true }).click();
     await step("Classe & niveau");
     await p.evaluate(() => new Promise(requestAnimationFrame));
     assert.ok(
@@ -321,7 +336,10 @@ try {
         h: n.getBoundingClientRect().height,
       })),
     );
-    assert.ok(sizes.every((s) => s.w >= 44 && s.h >= 44),JSON.stringify({viewport:v,sizes}));
+    assert.ok(
+      sizes.every((s) => s.w >= 44 && s.h >= 44),
+      JSON.stringify({ viewport: v, sizes }),
+    );
     metrics.push({
       viewport: v,
       document: await p.evaluate(() => ({
@@ -335,7 +353,7 @@ try {
   );
   await p.setViewportSize({ width: 390, height: 844 });
   await p.emulateMedia({ reducedMotion: "reduce" });
-  await p.getByRole("button", { name: "Aperçu", exact: true }).click();
+  await p.getByRole("button", { name: "Mon personnage", exact: true }).click();
   await p.keyboard.press("Tab");
   assert.ok(
     await p.evaluate(() =>
@@ -375,6 +393,11 @@ try {
     .getByRole("button", { name: "Créer un personnage", exact: true })
     .first()
     .click();
+  await p.locator(".quick-creator").waitFor();
+  await p.getByRole("button", { name: "Expert", exact: true }).click();
+  await p.locator(".creator-shell").waitFor();
+  if (await p.locator(".quick-creator").count())
+    await p.getByRole("button", { name: "Expert", exact: true }).click();
   await step("Classe & niveau");
   await p.getByText("Changer de classe", { exact: true }).click();
   await p.locator(".asset-icon img").first().waitFor();

@@ -27,6 +27,12 @@ const complete = (classId = "fighter", level = 1) => {
     reviewed: true,
     confirmed: true,
   });
+  // Identity is explicitly chosen by the fixture, never by recommendations.
+  for (const cl of d.classes)
+    if (cl.level >= ctx.index.class(cl.id).data.subclassLevel)
+      cl.subclassId =
+        ctx.index.list("subclass").find((s) => s.data.classId === cl.id)?.id ??
+        null;
   const r = suggestChoices(ctx, c, d);
   r.confirmed = true;
   r.reviewed = true;

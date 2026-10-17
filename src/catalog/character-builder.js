@@ -455,6 +455,18 @@ export function buildCharacter(
             mode: "manual",
             requirements: [
               "Apply the described racial or background trait with GM adjudication.",
+              ...(trait.description ? [trait.description] : []),
+              ...(trait.charges
+                ? [
+                    "Manual charges: " +
+                      trait.charges +
+                      "; recovery: " +
+                      (trait.rest ?? "GM adjudication"),
+                  ]
+                : []),
+              ...(trait.prerequisites
+                ? ["GM prerequisite: " + trait.prerequisites]
+                : []),
             ],
           },
         },

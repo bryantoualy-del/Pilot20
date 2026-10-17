@@ -32,24 +32,24 @@ const fill = async (l, v) => {
   await l.fill(v);
   await l.blur();
   await p
-    .locator("#notice")
-    .filter({ hasText: "Enregistré sur cet appareil" })
+    .locator("#draft-save-state")
+    .filter({ hasText: /Sauvegardé|Enregistré sur cet appareil/ })
     .waitFor();
   interactions++;
 };
 const choose = async (l, v) => {
   await l.selectOption(v);
   await p
-    .locator("#notice")
-    .filter({ hasText: "Enregistré sur cet appareil" })
+    .locator("#draft-save-state")
+    .filter({ hasText: /Sauvegardé|Enregistré sur cet appareil/ })
     .waitFor();
   interactions++;
 };
 const check = async (l) => {
   await l.check();
   await p
-    .locator("#notice")
-    .filter({ hasText: "Enregistré sur cet appareil" })
+    .locator("#draft-save-state")
+    .filter({ hasText: /Sauvegardé|Enregistré sur cet appareil/ })
     .waitFor();
   interactions++;
 };
@@ -77,6 +77,7 @@ try {
   );
   screenChanges++;
   await click(p.getByRole("button", { name: "Guidé", exact: true }));
+  await p.locator(".creator-shell").waitFor();
   await fill(
     p.getByLabel("Nom du personnage", { exact: true }),
     "Benchmark fighter",

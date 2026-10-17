@@ -1,0 +1,752 @@
+{
+  "project": "Pilot20",
+  "ruleset": "5e-2014",
+  "as_of": "2026-10-17",
+  "unique_icon_families": 59,
+  "optional_variant_icons": 30,
+  "families": [
+    {
+      "slug": "humain",
+      "nom_fr": "Humain",
+      "name_en": "Human",
+      "group": "A — Races fondamentales (PHB 2014)",
+      "source": "PHB 2014",
+      "priority": "P0",
+      "visual_guide": "Humain aventurier fantasy, portrait neutre."
+    },
+    {
+      "slug": "nain",
+      "nom_fr": "Nain",
+      "name_en": "Dwarf",
+      "group": "A — Races fondamentales (PHB 2014)",
+      "source": "PHB 2014",
+      "priority": "P0",
+      "visual_guide": "Petite stature, barbe ou tresses, robuste."
+    },
+    {
+      "slug": "elfe",
+      "nom_fr": "Elfe",
+      "name_en": "Elf",
+      "group": "A — Races fondamentales (PHB 2014)",
+      "source": "PHB 2014",
+      "priority": "P0",
+      "visual_guide": "Visage élancé, longues oreilles pointues."
+    },
+    {
+      "slug": "halfelin",
+      "nom_fr": "Halfelin",
+      "name_en": "Halfling",
+      "group": "A — Races fondamentales (PHB 2014)",
+      "source": "PHB 2014",
+      "priority": "P0",
+      "visual_guide": "Petit humanoïde chaleureux, traits souples."
+    },
+    {
+      "slug": "gnome",
+      "nom_fr": "Gnome",
+      "name_en": "Gnome",
+      "group": "A — Races fondamentales (PHB 2014)",
+      "source": "PHB 2014",
+      "priority": "P0",
+      "visual_guide": "Petit visage expressif, esprit inventif."
+    },
+    {
+      "slug": "demi-elfe",
+      "nom_fr": "Demi-elfe",
+      "name_en": "Half-Elf",
+      "group": "A — Races fondamentales (PHB 2014)",
+      "source": "PHB 2014",
+      "priority": "P0",
+      "visual_guide": "Métissage visuel humain/elfe."
+    },
+    {
+      "slug": "demi-orc",
+      "nom_fr": "Demi-orc",
+      "name_en": "Half-Orc",
+      "group": "A — Races fondamentales (PHB 2014)",
+      "source": "PHB 2014",
+      "priority": "P0",
+      "visual_guide": "Mâchoire robuste, petits crocs visibles."
+    },
+    {
+      "slug": "drakeide",
+      "nom_fr": "Drakéide",
+      "name_en": "Dragonborn",
+      "group": "A — Races fondamentales (PHB 2014)",
+      "source": "PHB 2014, Fizban",
+      "priority": "P0",
+      "visual_guide": "Humanoïde draconique à écailles, museau."
+    },
+    {
+      "slug": "tieffelin",
+      "nom_fr": "Tieffelin",
+      "name_en": "Tiefling",
+      "group": "A — Races fondamentales (PHB 2014)",
+      "source": "PHB 2014, SCAG, MToF",
+      "priority": "P0",
+      "visual_guide": "Cornes et traits infernaux, expression nuancée."
+    },
+    {
+      "slug": "aarakocra",
+      "nom_fr": "Aarakocra",
+      "name_en": "Aarakocra",
+      "group": "B — Peuples courants des extensions",
+      "source": "EEPC, MotM",
+      "priority": "P1",
+      "visual_guide": "Humanoïde aviaire ailé, bec de rapace."
+    },
+    {
+      "slug": "aasimar",
+      "nom_fr": "Aasimar",
+      "name_en": "Aasimar",
+      "group": "B — Peuples courants des extensions",
+      "source": "Volo, MotM",
+      "priority": "P1",
+      "visual_guide": "Humanoïde à ascendance céleste, halo discret."
+    },
+    {
+      "slug": "gobelours",
+      "nom_fr": "Gobelours",
+      "name_en": "Bugbear",
+      "group": "B — Peuples courants des extensions",
+      "source": "Volo, MotM",
+      "priority": "P1",
+      "visual_guide": "Grand gobelinoïde velu, oreilles et bras longs."
+    },
+    {
+      "slug": "firbolg",
+      "nom_fr": "Firbolg",
+      "name_en": "Firbolg",
+      "group": "B — Peuples courants des extensions",
+      "source": "Volo, MotM",
+      "priority": "P1",
+      "visual_guide": "Géant doux des forêts, traits bovins parfois stylisés."
+    },
+    {
+      "slug": "genasi",
+      "nom_fr": "Génasi",
+      "name_en": "Genasi",
+      "group": "B — Peuples courants des extensions",
+      "source": "EEPC, MotM",
+      "priority": "P1",
+      "visual_guide": "Famille élémentaire; quatre variantes visuelles détaillées plus bas."
+    },
+    {
+      "slug": "gobelin",
+      "nom_fr": "Gobelin",
+      "name_en": "Goblin",
+      "group": "B — Peuples courants des extensions",
+      "source": "Volo, MotM",
+      "priority": "P1",
+      "visual_guide": "Petite silhouette, oreilles longues, grand nez."
+    },
+    {
+      "slug": "goliath",
+      "nom_fr": "Goliath",
+      "name_en": "Goliath",
+      "group": "B — Peuples courants des extensions",
+      "source": "EEPC, MotM",
+      "priority": "P1",
+      "visual_guide": "Grand humanoïde musclé, marques de peau."
+    },
+    {
+      "slug": "hobgobelin",
+      "nom_fr": "Hobgobelin",
+      "name_en": "Hobgoblin",
+      "group": "B — Peuples courants des extensions",
+      "source": "Volo, MotM",
+      "priority": "P1",
+      "visual_guide": "Gobelinoïde martial, visage rouge-orangé."
+    },
+    {
+      "slug": "kenku",
+      "nom_fr": "Kenku",
+      "name_en": "Kenku",
+      "group": "B — Peuples courants des extensions",
+      "source": "Volo, MotM",
+      "priority": "P1",
+      "visual_guide": "Homme-corbeau sans ailes fonctionnelles."
+    },
+    {
+      "slug": "kobold",
+      "nom_fr": "Kobold",
+      "name_en": "Kobold",
+      "group": "B — Peuples courants des extensions",
+      "source": "Volo, MotM",
+      "priority": "P0",
+      "visual_guide": "Petit humanoïde draconique écailleux, SANS ailes pour le kobold personnel."
+    },
+    {
+      "slug": "homme-lezard",
+      "nom_fr": "Homme-lézard",
+      "name_en": "Lizardfolk",
+      "group": "B — Peuples courants des extensions",
+      "source": "Volo, MotM",
+      "priority": "P1",
+      "visual_guide": "Reptilien anthropomorphe aux écailles épaisses."
+    },
+    {
+      "slug": "orc",
+      "nom_fr": "Orc",
+      "name_en": "Orc",
+      "group": "B — Peuples courants des extensions",
+      "source": "Volo, Eberron, MotM",
+      "priority": "P1",
+      "visual_guide": "Grand humanoïde aux défenses marquées."
+    },
+    {
+      "slug": "tabaxi",
+      "nom_fr": "Tabaxi",
+      "name_en": "Tabaxi",
+      "group": "B — Peuples courants des extensions",
+      "source": "Volo, MotM",
+      "priority": "P1",
+      "visual_guide": "Félin humanoïde, moustaches et pelage."
+    },
+    {
+      "slug": "triton",
+      "nom_fr": "Triton",
+      "name_en": "Triton",
+      "group": "B — Peuples courants des extensions",
+      "source": "Volo, MotM",
+      "priority": "P1",
+      "visual_guide": "Humanoïde marin, teints et ornements aquatiques."
+    },
+    {
+      "slug": "yuan-ti",
+      "nom_fr": "Yuan-ti",
+      "name_en": "Yuan-ti / Pureblood",
+      "group": "B — Peuples courants des extensions",
+      "source": "Volo, MotM",
+      "priority": "P1",
+      "visual_guide": "Silhouette humanoïde avec signes serpentins."
+    },
+    {
+      "slug": "duergar",
+      "nom_fr": "Duergar",
+      "name_en": "Duergar",
+      "group": "C — Variantes culturelles et autres peuples du multivers",
+      "source": "SCAG, MotM",
+      "priority": "P1",
+      "visual_guide": "Nain des profondeurs, tonalité de roche et métal."
+    },
+    {
+      "slug": "gnome-des-profondeurs",
+      "nom_fr": "Gnome des profondeurs",
+      "name_en": "Deep Gnome / Svirfneblin",
+      "group": "C — Variantes culturelles et autres peuples du multivers",
+      "source": "SCAG, MotM",
+      "priority": "P1",
+      "visual_guide": "Gnome souterrain aux traits minéraux."
+    },
+    {
+      "slug": "eladrin",
+      "nom_fr": "Éladrin",
+      "name_en": "Eladrin",
+      "group": "C — Variantes culturelles et autres peuples du multivers",
+      "source": "MToF, MotM",
+      "priority": "P1",
+      "visual_guide": "Elfe féerique, saison suggérée par les couleurs."
+    },
+    {
+      "slug": "elfe-aquatique",
+      "nom_fr": "Elfe aquatique",
+      "name_en": "Sea Elf",
+      "group": "C — Variantes culturelles et autres peuples du multivers",
+      "source": "MToF, MotM",
+      "priority": "P1",
+      "visual_guide": "Elfe aux signes aquatiques, peau et cheveux marins."
+    },
+    {
+      "slug": "shadar-kai",
+      "nom_fr": "Shadar-kai",
+      "name_en": "Shadar-kai",
+      "group": "C — Variantes culturelles et autres peuples du multivers",
+      "source": "MToF, MotM",
+      "priority": "P1",
+      "visual_guide": "Elfe du Gisombre, visage pâle et austère."
+    },
+    {
+      "slug": "githyanki",
+      "nom_fr": "Githyanki",
+      "name_en": "Githyanki",
+      "group": "C — Variantes culturelles et autres peuples du multivers",
+      "source": "MToF, MotM",
+      "priority": "P1",
+      "visual_guide": "Gith guerrier astral, profil anguleux."
+    },
+    {
+      "slug": "githzerai",
+      "nom_fr": "Githzerai",
+      "name_en": "Githzerai",
+      "group": "C — Variantes culturelles et autres peuples du multivers",
+      "source": "MToF, MotM",
+      "priority": "P1",
+      "visual_guide": "Gith ascète, posture sereine et sévère."
+    },
+    {
+      "slug": "tortue",
+      "nom_fr": "Tortue / Tortle",
+      "name_en": "Tortle",
+      "group": "C — Variantes culturelles et autres peuples du multivers",
+      "source": "Tortle Package, MotM",
+      "priority": "P1",
+      "visual_guide": "Tortue anthropomorphe, carapace bien visible."
+    },
+    {
+      "slug": "centaure",
+      "nom_fr": "Centaure",
+      "name_en": "Centaur",
+      "group": "C — Variantes culturelles et autres peuples du multivers",
+      "source": "Ravnica, MotM",
+      "priority": "P1",
+      "visual_guide": "Torse humanoïde et corps équin."
+    },
+    {
+      "slug": "minotaure",
+      "nom_fr": "Minotaure",
+      "name_en": "Minotaur",
+      "group": "C — Variantes culturelles et autres peuples du multivers",
+      "source": "Ravnica, MotM",
+      "priority": "P1",
+      "visual_guide": "Humanoïde bovin à cornes."
+    },
+    {
+      "slug": "satyre",
+      "nom_fr": "Satyre",
+      "name_en": "Satyr",
+      "group": "C — Variantes culturelles et autres peuples du multivers",
+      "source": "Theros, MotM",
+      "priority": "P1",
+      "visual_guide": "Traits caprins, cornes et cheveux bouclés."
+    },
+    {
+      "slug": "changelin",
+      "nom_fr": "Changelin",
+      "name_en": "Changeling",
+      "group": "D — Eberron, Ravnica, Theros et Acquisitions Incorporated",
+      "source": "Eberron, MotM",
+      "priority": "P1",
+      "visual_guide": "Humanoïde métamorphe à peau très pâle."
+    },
+    {
+      "slug": "kalashtar",
+      "nom_fr": "Kalashtar",
+      "name_en": "Kalashtar",
+      "group": "D — Eberron, Ravnica, Theros et Acquisitions Incorporated",
+      "source": "Eberron",
+      "priority": "P1",
+      "visual_guide": "Humain à présence psionique onirique."
+    },
+    {
+      "slug": "feral",
+      "nom_fr": "Féral",
+      "name_en": "Shifter",
+      "group": "D — Eberron, Ravnica, Theros et Acquisitions Incorporated",
+      "source": "Eberron, MotM",
+      "priority": "P1",
+      "visual_guide": "Humanoïde aux traits de bête, oreilles et crocs."
+    },
+    {
+      "slug": "forgelier",
+      "nom_fr": "Forgelier",
+      "name_en": "Warforged",
+      "group": "D — Eberron, Ravnica, Theros et Acquisitions Incorporated",
+      "source": "Eberron",
+      "priority": "P1",
+      "visual_guide": "Automate vivant, bois, métal et conscience."
+    },
+    {
+      "slug": "loxodon",
+      "nom_fr": "Loxodon",
+      "name_en": "Loxodon",
+      "group": "D — Eberron, Ravnica, Theros et Acquisitions Incorporated",
+      "source": "Ravnica",
+      "priority": "P1",
+      "visual_guide": "Éléphant humanoïde et trompe."
+    },
+    {
+      "slug": "hybride-simic",
+      "nom_fr": "Hybride simic",
+      "name_en": "Simic Hybrid",
+      "group": "D — Eberron, Ravnica, Theros et Acquisitions Incorporated",
+      "source": "Ravnica",
+      "priority": "P1",
+      "visual_guide": "Humanoïde hybride aux adaptations biomagiques."
+    },
+    {
+      "slug": "vedalken",
+      "nom_fr": "Vedalken",
+      "name_en": "Vedalken",
+      "group": "D — Eberron, Ravnica, Theros et Acquisitions Incorporated",
+      "source": "Ravnica",
+      "priority": "P1",
+      "visual_guide": "Humanoïde grand et glabre, peau bleue."
+    },
+    {
+      "slug": "verdan",
+      "nom_fr": "Verdan",
+      "name_en": "Verdan",
+      "group": "D — Eberron, Ravnica, Theros et Acquisitions Incorporated",
+      "source": "Acquisitions Incorporated",
+      "priority": "P2",
+      "visual_guide": "Petit humanoïde verdâtre, physionomie singulière."
+    },
+    {
+      "slug": "leonin",
+      "nom_fr": "Léonin",
+      "name_en": "Leonin",
+      "group": "D — Eberron, Ravnica, Theros et Acquisitions Incorporated",
+      "source": "Theros",
+      "priority": "P1",
+      "visual_guide": "Lion humanoïde, crinière imposante."
+    },
+    {
+      "slug": "dhampir",
+      "nom_fr": "Dhampir",
+      "name_en": "Dhampir",
+      "group": "E — Lignées, fées et écoles",
+      "source": "Van Richten",
+      "priority": "P0",
+      "visual_guide": "Humanoïde marqué par un héritage vampirique."
+    },
+    {
+      "slug": "sang-maudit",
+      "nom_fr": "Sang maudit",
+      "name_en": "Hexblood",
+      "group": "E — Lignées, fées et écoles",
+      "source": "Van Richten",
+      "priority": "P1",
+      "visual_guide": "Lignée de sorcellerie féerique, couronne de signes."
+    },
+    {
+      "slug": "ressuscite",
+      "nom_fr": "Ressuscité",
+      "name_en": "Reborn",
+      "group": "E — Lignées, fées et écoles",
+      "source": "Van Richten",
+      "priority": "P1",
+      "visual_guide": "Être revenu à la vie, coutures ou peau pâle optionnelles."
+    },
+    {
+      "slug": "fadette",
+      "nom_fr": "Fadette / Fée",
+      "name_en": "Fairy",
+      "group": "E — Lignées, fées et écoles",
+      "source": "Witchlight, MotM",
+      "priority": "P1",
+      "visual_guide": "Petite fée ailée, ailes membraneuses."
+    },
+    {
+      "slug": "conil",
+      "nom_fr": "Conil",
+      "name_en": "Harengon",
+      "group": "E — Lignées, fées et écoles",
+      "source": "Witchlight, MotM",
+      "priority": "P1",
+      "visual_guide": "Lapin anthropomorphe, longues oreilles."
+    },
+    {
+      "slug": "hiboulin",
+      "nom_fr": "Hiboulin",
+      "name_en": "Owlin",
+      "group": "E — Lignées, fées et écoles",
+      "source": "Strixhaven",
+      "priority": "P1",
+      "visual_guide": "Hibou anthropomorphe ailé."
+    },
+    {
+      "slug": "elfe-astral",
+      "nom_fr": "Elfe astral",
+      "name_en": "Astral Elf",
+      "group": "F — Spelljammer et Dragonlance",
+      "source": "Spelljammer",
+      "priority": "P1",
+      "visual_guide": "Elfe aux symboles stellaires/astraux."
+    },
+    {
+      "slug": "autognome",
+      "nom_fr": "Autognome",
+      "name_en": "Autognome",
+      "group": "F — Spelljammer et Dragonlance",
+      "source": "Spelljammer",
+      "priority": "P1",
+      "visual_guide": "Petit automate gnome en laiton."
+    },
+    {
+      "slug": "giff",
+      "nom_fr": "Giff",
+      "name_en": "Giff",
+      "group": "F — Spelljammer et Dragonlance",
+      "source": "Spelljammer",
+      "priority": "P1",
+      "visual_guide": "Hippopotame humanoïde."
+    },
+    {
+      "slug": "hadozee",
+      "nom_fr": "Hadozee",
+      "name_en": "Hadozee",
+      "group": "F — Spelljammer et Dragonlance",
+      "source": "Spelljammer",
+      "priority": "P2",
+      "visual_guide": "Humanoïde simiesque avec membrane de glisse."
+    },
+    {
+      "slug": "plasmoide",
+      "nom_fr": "Plasmoïde",
+      "name_en": "Plasmoid",
+      "group": "F — Spelljammer et Dragonlance",
+      "source": "Spelljammer",
+      "priority": "P1",
+      "visual_guide": "Être gélatineux translucide."
+    },
+    {
+      "slug": "thri-kreen",
+      "nom_fr": "Thri-kreen",
+      "name_en": "Thri-kreen",
+      "group": "F — Spelljammer et Dragonlance",
+      "source": "Spelljammer",
+      "priority": "P1",
+      "visual_guide": "Insectoïde à mandibules et bras secondaires."
+    },
+    {
+      "slug": "kender",
+      "nom_fr": "Kender",
+      "name_en": "Kender",
+      "group": "F — Spelljammer et Dragonlance",
+      "source": "Dragonlance",
+      "priority": "P1",
+      "visual_guide": "Petit humanoïde vif, visage curieux."
+    },
+    {
+      "slug": "locathah",
+      "nom_fr": "Locathah",
+      "name_en": "Locathah",
+      "group": "G — Publications officielles particulières (accord MJ)",
+      "source": "Locathah Rising",
+      "priority": "P2",
+      "visual_guide": "Poisson humanoïde amphibie."
+    },
+    {
+      "slug": "grung",
+      "nom_fr": "Grung",
+      "name_en": "Grung",
+      "group": "G — Publications officielles particulières (accord MJ)",
+      "source": "One Grung Above",
+      "priority": "P2",
+      "visual_guide": "Petite grenouille arboricole de couleur vive."
+    }
+  ],
+  "variant_illustrations": [
+    {
+      "slug": "nain-des-collines",
+      "name_fr": "Nain des collines",
+      "family": "Nain",
+      "source": "PHB 2014",
+      "priority": "P2"
+    },
+    {
+      "slug": "nain-des-montagnes",
+      "name_fr": "Nain des montagnes",
+      "family": "Nain",
+      "source": "PHB 2014",
+      "priority": "P2"
+    },
+    {
+      "slug": "haut-elfe",
+      "name_fr": "Haut-elfe",
+      "family": "Elfe",
+      "source": "PHB 2014",
+      "priority": "P1"
+    },
+    {
+      "slug": "elfe-des-bois",
+      "name_fr": "Elfe des bois",
+      "family": "Elfe",
+      "source": "PHB 2014",
+      "priority": "P1"
+    },
+    {
+      "slug": "drow",
+      "name_fr": "Elfe noir / Drow",
+      "family": "Elfe",
+      "source": "PHB 2014",
+      "priority": "P1"
+    },
+    {
+      "slug": "elfe-pallide",
+      "name_fr": "Elfe pâle / Pallid Elf",
+      "family": "Elfe",
+      "source": "Wildemount",
+      "priority": "P2"
+    },
+    {
+      "slug": "halfelin-pied-leger",
+      "name_fr": "Halfelin pied-léger",
+      "family": "Halfelin",
+      "source": "PHB 2014",
+      "priority": "P2"
+    },
+    {
+      "slug": "halfelin-robuste",
+      "name_fr": "Halfelin robuste",
+      "family": "Halfelin",
+      "source": "PHB 2014",
+      "priority": "P2"
+    },
+    {
+      "slug": "halfelin-sagespectre",
+      "name_fr": "Halfelin sagespectre / Ghostwise",
+      "family": "Halfelin",
+      "source": "SCAG",
+      "priority": "P2"
+    },
+    {
+      "slug": "halfelin-lotusden",
+      "name_fr": "Halfelin Lotusden",
+      "family": "Halfelin",
+      "source": "Wildemount",
+      "priority": "P2"
+    },
+    {
+      "slug": "gnome-des-forets",
+      "name_fr": "Gnome des forêts",
+      "family": "Gnome",
+      "source": "PHB 2014",
+      "priority": "P2"
+    },
+    {
+      "slug": "gnome-des-roches",
+      "name_fr": "Gnome des roches",
+      "family": "Gnome",
+      "source": "PHB 2014",
+      "priority": "P2"
+    },
+    {
+      "slug": "genasi-air",
+      "name_fr": "Génasi de l’air",
+      "family": "Génasi",
+      "source": "EEPC/MotM",
+      "priority": "P1"
+    },
+    {
+      "slug": "genasi-terre",
+      "name_fr": "Génasi de la terre",
+      "family": "Génasi",
+      "source": "EEPC/MotM",
+      "priority": "P1"
+    },
+    {
+      "slug": "genasi-feu",
+      "name_fr": "Génasi du feu",
+      "family": "Génasi",
+      "source": "EEPC/MotM",
+      "priority": "P1"
+    },
+    {
+      "slug": "genasi-eau",
+      "name_fr": "Génasi de l’eau",
+      "family": "Génasi",
+      "source": "EEPC/MotM",
+      "priority": "P1"
+    },
+    {
+      "slug": "drakeide-chromatique",
+      "name_fr": "Drakéide chromatique",
+      "family": "Drakéide",
+      "source": "Fizban",
+      "priority": "P1"
+    },
+    {
+      "slug": "drakeide-metallique",
+      "name_fr": "Drakéide métallique",
+      "family": "Drakéide",
+      "source": "Fizban",
+      "priority": "P1"
+    },
+    {
+      "slug": "drakeide-gemme",
+      "name_fr": "Drakéide de gemme",
+      "family": "Drakéide",
+      "source": "Fizban",
+      "priority": "P1"
+    },
+    {
+      "slug": "drakeide-sangdragon",
+      "name_fr": "Drakéide sangdragon / Draconblood",
+      "family": "Drakéide",
+      "source": "Wildemount",
+      "priority": "P2"
+    },
+    {
+      "slug": "drakeide-ravenite",
+      "name_fr": "Drakéide ravenite",
+      "family": "Drakéide",
+      "source": "Wildemount",
+      "priority": "P2"
+    },
+    {
+      "slug": "aasimar-protecteur",
+      "name_fr": "Aasimar protecteur",
+      "family": "Aasimar",
+      "source": "Volo",
+      "priority": "P2"
+    },
+    {
+      "slug": "aasimar-fleau",
+      "name_fr": "Aasimar fléau",
+      "family": "Aasimar",
+      "source": "Volo",
+      "priority": "P2"
+    },
+    {
+      "slug": "aasimar-dechu",
+      "name_fr": "Aasimar déchu",
+      "family": "Aasimar",
+      "source": "Volo",
+      "priority": "P2"
+    },
+    {
+      "slug": "tieffelin-aile",
+      "name_fr": "Tieffelin ailé",
+      "family": "Tieffelin",
+      "source": "SCAG",
+      "priority": "P2"
+    },
+    {
+      "slug": "tieffelin-feral",
+      "name_fr": "Tieffelin féral",
+      "family": "Tieffelin",
+      "source": "SCAG",
+      "priority": "P2"
+    },
+    {
+      "slug": "feral-peau-epaisse",
+      "name_fr": "Féral Peau-épaisse / Beasthide",
+      "family": "Féral",
+      "source": "Eberron",
+      "priority": "P2"
+    },
+    {
+      "slug": "feral-longues-dents",
+      "name_fr": "Féral Longues-dents / Longtooth",
+      "family": "Féral",
+      "source": "Eberron",
+      "priority": "P2"
+    },
+    {
+      "slug": "feral-pas-rapide",
+      "name_fr": "Féral Pas-rapide / Swiftstride",
+      "family": "Féral",
+      "source": "Eberron",
+      "priority": "P2"
+    },
+    {
+      "slug": "feral-traqueur",
+      "name_fr": "Féral Traqueur / Wildhunt",
+      "family": "Féral",
+      "source": "Eberron",
+      "priority": "P2"
+    }
+  ]
+}

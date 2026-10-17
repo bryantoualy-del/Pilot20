@@ -1,0 +1,225 @@
+{
+  "date": "2026-10-17",
+  "baseHead": "5694e331a72c2d6f334962e7f170dca5fb3e8286",
+  "node": {
+    "passed": 384,
+    "failed": 0
+  },
+  "browserScenarios": 36,
+  "runs": {
+    "e2e-results.json": {
+      "passed": 14,
+      "results": [
+        "Three sources preferred on; extension data absent honestly",
+        "Expert fighter 1; mode switching; graphical creation/save/preview",
+        "Real Second Wind engine action consumed resource and healed HP",
+        "IndexedDB reload and character library survive page close/reload",
+        "Edit/revision/finalize persists atomically",
+        "Guided bard 10: subclass, inspiration, expertise and Magical Secrets",
+        "Inert local private pack drives expert subclass choices and compilation (synthetic only)",
+        "Source off/on preserves and restores private selections",
+        "Export includes build plan; archive/restore library",
+        "FR/EN interface and phone layout",
+        "Offline reload, library, create draft and persistence",
+        "Fully offline character creation, final save, edit and real Companion session",
+        "Previously installed private pack remains usable offline, including declared/resolved manual engine action",
+        "Export imported into clean browser with missing-pack warning and preserved plan"
+      ],
+      "browser": "131.0.6778.0",
+      "errors": []
+    },
+    "e2e-v031-results.json": {
+      "passed": 8,
+      "results": [
+        "A: complete human fighter 1 through all eight steps without template suggestions; acolyte grants, saves, style, scores, armor, save and preview",
+        "B: bard 10, level-specific college and expertise, two ASIs, inspiration and distinct Magical Secrets; real compiler",
+        "C: wizard 10 school, 24 spellbook entries, separate preparation, source filtering and explicit missing French labels",
+        "E: close the actual persistent browser context, reopen and resume exact step, viewed level, source campaign and all choices",
+        "D: level reduction blocks invalid effects, explicit archival permits revalidation at level 1, then all high-level decisions restore without loss",
+        "F: source off/on persisted; private feature/source preservation remains covered by the original browser suite",
+        "In-progress library filter hides finalized characters and retains resumable drafts",
+        "G (emulation only): tablet and desktop widths, 44px step targets, editable field focus and persistent navigation; physical Safari and virtual keyboard remain unverified"
+      ],
+      "errors": [],
+      "browser": "131.0.6778.0",
+      "metrics": [
+        {
+          "step": "Classe",
+          "height": 1327,
+          "viewport": 820,
+          "viewportScrolls": 1,
+          "stepCount": 8,
+          "choices": 0,
+          "viewportWidth": 1180,
+          "documentWidth": 1180
+        },
+        {
+          "step": "Guerrier capacités",
+          "height": 1092,
+          "viewport": 820,
+          "viewportScrolls": 1,
+          "stepCount": 8,
+          "choices": 1,
+          "viewportWidth": 1180,
+          "documentWidth": 1180
+        },
+        {
+          "step": "Progression",
+          "height": 1187,
+          "viewport": 820,
+          "viewportScrolls": 1,
+          "stepCount": 8,
+          "choices": 2,
+          "viewportWidth": 1180,
+          "documentWidth": 1180
+        },
+        {
+          "step": "Sorts",
+          "height": 1051,
+          "viewport": 820,
+          "viewportScrolls": 1,
+          "stepCount": 8,
+          "choices": 1,
+          "viewportWidth": 1180,
+          "documentWidth": 1180
+        }
+      ],
+      "physicalSafari": false
+    },
+    "e2e-v032-results.json": {
+      "results": [
+        "Discovery filters, two-class comparison and mobile preview preserve persisted draft",
+        "Bard 10 subclass comparisons: 3 tablet / 2 stacked phone, installed synthetic packs only, no mutation",
+        "Score simulation cancels without writes and confirms through the existing autosave",
+        "Finalization distinguishes diagnostics and returns to the identity control",
+        "Responsive 7 viewports including portrait/landscape, no horizontal overflow and 44px primary controls",
+        "Keyboard focus in dialog, Escape close, numeric input focus, reduced-motion preference and primary text contrast",
+        "Offline reload, creation and local class icon decoding succeed"
+      ],
+      "passed": 7,
+      "errors": [],
+      "metrics": [
+        {
+          "operation": "class comparison open",
+          "milliseconds": 113.9221950000001
+        },
+        {
+          "operation": "bard subclass comparison open",
+          "milliseconds": 101.31077800000003
+        },
+        {
+          "operation": "score simulation open",
+          "milliseconds": 197.06180499999937
+        },
+        {
+          "viewport": {
+            "width": 375,
+            "height": 667
+          },
+          "document": {
+            "width": 375,
+            "height": 2112
+          }
+        },
+        {
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "document": {
+            "width": 390,
+            "height": 2054
+          }
+        },
+        {
+          "viewport": {
+            "width": 430,
+            "height": 932
+          },
+          "document": {
+            "width": 430,
+            "height": 2004
+          }
+        },
+        {
+          "viewport": {
+            "width": 844,
+            "height": 390
+          },
+          "document": {
+            "width": 844,
+            "height": 1352
+          }
+        },
+        {
+          "viewport": {
+            "width": 820,
+            "height": 1180
+          },
+          "document": {
+            "width": 820,
+            "height": 1399
+          }
+        },
+        {
+          "viewport": {
+            "width": 1024,
+            "height": 768
+          },
+          "document": {
+            "width": 1024,
+            "height": 1352
+          }
+        },
+        {
+          "viewport": {
+            "width": 1180,
+            "height": 820
+          },
+          "document": {
+            "width": 1180,
+            "height": 1327
+          }
+        }
+      ],
+      "browser": "131.0.6778.0",
+      "physicalSafari": false
+    },
+    "e2e-races-quick-results.json": {
+      "results": [
+        "A: quick fighter human SRD, three screens, explicit confirmation, saved Companion",
+        "B: fighter 3 requires explicit active subclass",
+        "My character dialog, keyboard Escape and return to same screen",
+        "Missing kobold pack stays visible and cannot be selected",
+        "Offline reload restores draft and local assets",
+        "Homebrew graphical creation, non-saving preview, GM authorization and reusable installation",
+        "Tasha assistant: campaign authorization, installed feat, GM review and resume"
+      ],
+      "errors": [],
+      "metrics": {
+        "interactions": 11,
+        "screens": 3,
+        "heights": [
+          {
+            "title": "Donnez-lui votre style",
+            "height": 820,
+            "viewport": 820
+          },
+          {
+            "title": "Prêt à jouer",
+            "height": 980,
+            "viewport": 820
+          },
+          {
+            "stage": "confirmed-summary",
+            "height": 1135,
+            "viewport": 820
+          }
+        ],
+        "milliseconds": 3763.9483870000004
+      },
+      "browser": "131.0.6778.0",
+      "emulationOnly": true
+    }
+  }
+}

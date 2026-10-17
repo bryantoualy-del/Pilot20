@@ -1,3 +1,6 @@
+import { renderQuick } from "./quick.js";
+import { raceGallery } from "./races.js";
+import { openRaceEditor } from "./race-editor.js";
 import {
   discoveryGallery,
   subclassComparison,
@@ -242,6 +245,7 @@ export function inspectEntry(entry, a) {
   );
 }
 export async function renderEditor(main, d, a) {
+  if (d.mode === "quick") return renderQuick(main, d, a);
   const { t } = a;
   const record = await a.library.get(d.id),
     expectedCharacterRevision = record?.definition.revision ?? null;
@@ -254,6 +258,7 @@ export async function renderEditor(main, d, a) {
   }
   const update = async (fn, redraw = true) => {
     fn(d);
+    d.quickEdited = true;
     d.finalized = false;
     d.confirmed = false;
     d.reviewed = false;
@@ -373,7 +378,7 @@ export async function renderEditor(main, d, a) {
       el(
         "small",
         { id: "draft-save-state", role: "status" },
-        t("saved") +
+        (d.updatedAt ? t("saved") : t("saving")) +
           (d.updatedAt
             ? " · " +
               new Date(d.updatedAt).toLocaleTimeString(a.state.locale, {
@@ -423,12 +428,6 @@ export async function renderEditor(main, d, a) {
       undefined,
       report,
     );
-    const previewPanel = el(
-      "div",
-      { class: "panel live-preview" },
-      previewView(a, currentPreview),
-    );
-    aside.append(previewPanel);
     nav.id = "creation-steps";
     nav.classList.toggle("expanded", stepsExpanded);
     const mobileTools = el(
@@ -451,9 +450,6 @@ export async function renderEditor(main, d, a) {
         },
         w("Étapes", "Steps"),
       ),
-      button(w("Aperçu", "Preview"), () =>
-        a.modal(previewView(a, currentPreview)),
-      ),
     );
     saveState.append(
       el(
@@ -465,6 +461,33 @@ export async function renderEditor(main, d, a) {
           " / " +
           steps.length,
       ),
+      button(w("Mon personnage", "My character"), () =>
+        a.modal(
+          el(
+            "section",
+            {},
+            previewView(a, currentPreview),
+            ["origin", "class", "features", "scores", "training", "spells"].map(
+              (step) =>
+                button(w("Modifier : ", "Edit: ") + t(step), async () => {
+                  document.querySelector("#dialog").close();
+                  d.step = step;
+                  await a.autosave(d);
+                  await draw();
+                }),
+            ),
+          ),
+        ),
+      ),
+      d.returnToQuick !== undefined
+        ? button(w("Revenir au mode Rapide", "Return to Quick"), async () => {
+            d.mode = "quick";
+            d.quickScreen = d.returnToQuick;
+            delete d.returnToQuick;
+            await a.autosave(d);
+            await a.render();
+          })
+        : null,
       mobileTools,
     );
     const stepIssues = report.issues;
@@ -475,13 +498,23 @@ export async function renderEditor(main, d, a) {
       if (count) b.append(badge(String(count), "warning"));
     });
     const center = el("div", { class: "editor-main" }, body);
+    center.append(
+      el(
+        "details",
+        { class: "editor-tools-container", open: d.mode === "expert" },
+        el("summary", {}, w("Outils avancés", "Advanced tools")),
+        aside,
+      ),
+    );
+    shell.classList.toggle("guided-creator", d.mode === "guided");
     shell.replaceChildren(
       title,
       saveState,
-      el("div", { class: "editor-layout" }, nav, center, aside),
+      el("div", { class: "editor-layout" }, nav, center),
     );
-    nav.append(helpPanel(a, d.mode === "expert"));
-    if (d.step === "features") body.append(subclassComparison(a, d, update));
+    if (d.mode === "expert") nav.append(helpPanel(a, true));
+    if (d.step === "features" && d.mode === "expert")
+      body.append(subclassComparison(a, d, update));
     if (d.step === "origin") {
       body.append(
         field(
@@ -623,37 +656,23 @@ export async function renderEditor(main, d, a) {
         ),
       );
       body.append(
+        button(w("Créer une race", "Create a race"), () =>
+          openRaceEditor(a, d, update),
+        ),
         el(
           "details",
           { class: "race-gallery" },
           el("summary", {}, w("Explorer les races", "Explore races")),
-          el(
-            "div",
-            { class: "class-grid" },
-            a.context.index.list("race").map((entry) =>
-              button(
-                [
-                  el("strong", {}, a.name(entry)),
-                  el(
-                    "small",
-                    {},
-                    t("speed") + " · " + entry.data.speed + " ft",
-                  ),
-                  badge(entry.source.document),
-                ],
-                () =>
-                  update((x) => {
-                    x.raceId = entry.id;
-                    x.subraceId = null;
-                    x.customOriginRequiresReview = false;
-                    x.origin = a.name(entry);
-                  }),
-                d.raceId === entry.id ? "active" : "",
-              ),
-            ),
-          ),
+          raceGallery(a, d, update),
         ),
       );
+      if (race?.data.homebrewDefinition)
+        body.append(
+          button(
+            w("Modifier cette race maison", "Edit this homebrew race"),
+            () => openRaceEditor(a, d, update, race.data.homebrewDefinition),
+          ),
+        );
       if (race) {
         if (race.data.subraces.length)
           body.append(
