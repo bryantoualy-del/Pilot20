@@ -1,3 +1,4 @@
+import { refreshPortrait } from "../../src/creator/appearance.js";
 import {
   newHomebrewRace,
   validateHomebrewRace,
@@ -611,7 +612,9 @@ export function openRaceEditor(a, d, update, initial = null) {
               a.context = await a.campaigns.context(next);
             }
             await update((x) => {
+              x.manualRace = null;
               x.raceId = pack.catalog.items[0].id;
+              refreshPortrait(a.context, x);
               x.subraceId = null;
               x.origin = race.name.fr;
               x.customOriginRequiresReview = false;

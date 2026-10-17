@@ -53,8 +53,8 @@ export function helpPanel(a, expert) {
     [
       w("Sources et prérequis", "Sources and prerequisites"),
       w(
-        "Cocher une source ne fournit pas son contenu. Les options jouables exigent un pack installé et activé. Un changement peut invalider un choix : il reste conservé pour restauration.",
-        "Selecting a source does not install content. Playable options need an installed, enabled pack. Changes can invalidate a choice, retained for restoration.",
+        "Les règles automatiques dépendent des sources installées et activées. Toutes les races restent sélectionnables avec des traits manuels. Un changement de source conserve les choix à revoir.",
+        "Automatic rules depend on installed, enabled sources. All races remain selectable with manual traits. Source changes preserve decisions for review.",
       ),
     ],
     [

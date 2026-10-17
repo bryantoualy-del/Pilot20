@@ -813,6 +813,13 @@
             },
             "description": {
               "type": "string"
+            },
+            "gender": {
+              "enum": [
+                "",
+                "femme",
+                "homme"
+              ]
             }
           },
           "required": [

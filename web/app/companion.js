@@ -122,6 +122,19 @@ export async function renderCompanion(main, id, a) {
           ),
         ),
       ),
+      d.identity.gender
+        ? el(
+            "p",
+            {},
+            a.state.locale === "fr"
+              ? d.identity.gender === "femme"
+                ? "Femme"
+                : "Homme"
+              : d.identity.gender === "femme"
+                ? "Woman"
+                : "Man",
+          )
+        : "",
       el("p", {}, d.identity.description),
     );
     if (!compatible)

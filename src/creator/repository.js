@@ -1,3 +1,6 @@
+import { isBuiltInPortrait, GENDERS } from "./appearance.js";
+import { RACE_FAMILIES } from "../catalog/race-discovery.js";
+import { manualRaceVariants } from "./race-selection.js";
 import { EQUIPMENT, WEAPONS } from "../catalog/equipment.js";
 import {
   check,
@@ -55,6 +58,7 @@ export function validateDraft(d) {
     typeof d.portrait === "string" &&
       d.portrait.length <= 10000 &&
       (!d.portrait ||
+        isBuiltInPortrait(d.portrait) ||
         /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(
           d.portrait,
         )),
@@ -98,6 +102,27 @@ export function validateDraft(d) {
         ),
       "Retained decisions",
     );
+  if (d.gender !== undefined) check(GENDERS.includes(d.gender), "Draft gender");
+  if (d.manualSpeed !== undefined)
+    check(
+      Number.isInteger(d.manualSpeed) &&
+        d.manualSpeed >= 0 &&
+        d.manualSpeed <= 200,
+      "Draft manual speed",
+    );
+  if (d.manualRace != null) {
+    check(
+      !d.raceId && RACE_FAMILIES.some((f) => f.slug === d.manualRace.familyId),
+      "Draft manual race",
+    );
+    check(
+      d.manualRace.variantId === null ||
+        manualRaceVariants(d).some(
+          (v) => v.rulesVersionId === d.manualRace.variantId,
+        ),
+      "Draft manual variant",
+    );
+  }
   if (d.raceId !== undefined)
     check(d.raceId === null || id(d.raceId), "Draft race");
   if (d.backgroundId !== undefined)

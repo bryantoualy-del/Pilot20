@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { chromium } from "playwright";
 import { spawn } from "node:child_process";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, writeFile, readFile } from "node:fs/promises";
 const port = 4195,
   server = spawn(process.execPath, ["scripts/serve-web.mjs"], {
     env: { ...process.env, PORT: String(port) },
@@ -72,6 +72,12 @@ try {
   );
   await change(p.getByLabel("Classe", { exact: true }), "fighter");
   await change(p.getByLabel("Race", { exact: true }), "srd51:race:human");
+  assert.equal(
+    await p
+      .locator("main")
+      .evaluate((e) => /(^|\s)null(\s|$)/.test(e.textContent)),
+    false,
+  );
   for (const [name, width, height] of [
     ["ipad-landscape", 1180, 820],
     ["ipad-portrait", 820, 1180],
@@ -164,9 +170,14 @@ try {
     await p.getByRole("button", { name: "Continuer", exact: true }).isEnabled(),
     false,
   );
-  const previousSubclassHeader=await p.locator(".quick-header").elementHandle();
+  const previousSubclassHeader = await p
+    .locator(".quick-header")
+    .elementHandle();
   await p.getByRole("button", { name: /Champion/ }).click();
-  await p.waitForFunction(element=>!element.isConnected,previousSubclassHeader);
+  await p.waitForFunction(
+    (element) => !element.isConnected,
+    previousSubclassHeader,
+  );
   await previousSubclassHeader.dispose();
   assert.equal(
     await p.getByRole("button", { name: "Continuer", exact: true }).isEnabled(),
@@ -197,15 +208,40 @@ try {
   assert.ok(
     await p
       .locator(".race-card")
-      .getByText("Pack privé manquant", { exact: true })
+      .getByText("Traits manuels", { exact: true })
       .count(),
   );
-  assert.equal(await p.locator(".race-card button").count(), 0);
+  await p
+    .locator(".race-card")
+    .getByRole("button", { name: "Choisir Kobold", exact: true })
+    .click();
+  await p
+    .getByLabel("Race", { exact: true })
+    .locator("option:checked")
+    .filter({ hasText: "Kobold" })
+    .waitFor({ state: "attached" });
+  await change(p.getByLabel("Femme / Homme", { exact: true }), "femme");
+  assert.match(
+    await p
+      .getByAltText("Portrait du personnage", { exact: true })
+      .getAttribute("src"),
+    /kobold-femme.webp$/,
+  );
+  await p
+    .getByLabel("Variante / version", { exact: true })
+    .selectOption("kobold/motm-2022");
+  await p
+    .getByLabel("Variante / version", { exact: true })
+    .locator("option:checked")
+    .filter({ hasText: "motm" })
+    .waitFor({ state: "attached" });
   await p.screenshot({
     path: "docs/screenshots/races/kobold-discovery.png",
     fullPage: true,
   });
-  results.push("Missing kobold pack stays visible and cannot be selected");
+  results.push(
+    "All 59 races selectable; Kobold woman portrait and MotM metadata variant without pack",
+  );
   await ctx.setOffline(true);
   await p.reload();
   await p
@@ -218,8 +254,22 @@ try {
     .getByRole("button", { name: "Reprendre une création", exact: true })
     .click();
   await p.locator(".quick-creator").waitFor();
+  assert.equal(
+    await p.getByLabel("Femme / Homme", { exact: true }).inputValue(),
+    "femme",
+  );
+  assert.equal(
+    await p.getByLabel("Race", { exact: true }).inputValue(),
+    "manual-race:kobold",
+  );
+  assert.equal(
+    await p.getByLabel("Variante / version", { exact: true }).inputValue(),
+    "kobold/motm-2022",
+  );
   await ctx.setOffline(false);
-  results.push("Offline reload restores draft and local assets");
+  results.push(
+    "Offline reload restores race, variant, gender, draft and local assets",
+  );
   await p.getByRole("button", { name: "Créer une race", exact: true }).click();
   const dialog = p.locator("dialog");
   await dialog
@@ -277,6 +327,106 @@ try {
     .waitFor({ state: "attached" });
   results.push(
     "Tasha assistant: campaign authorization, installed feat, GM review and resume",
+  );
+  await p.getByRole("button", { name: "Accueil", exact: true }).first().click();
+  await p
+    .getByRole("button", { name: "Créer un personnage", exact: true })
+    .first()
+    .click();
+  await change(
+    p.getByLabel("Nom du personnage", { exact: true }),
+    "Kobold aventurière",
+  );
+  await change(p.getByLabel("Race", { exact: true }), "manual-race:kobold");
+  await change(p.getByLabel("Femme / Homme", { exact: true }), "homme");
+  assert.match(
+    await p
+      .getByAltText("Portrait du personnage", { exact: true })
+      .getAttribute("src"),
+    /kobold.webp$/,
+  );
+  await p.getByText("Personnaliser le portrait", { exact: true }).click();
+  await p.getByLabel("Importer un portrait", { exact: true }).setInputFiles({
+    name: "portrait.webp",
+    mimeType: "image/webp",
+    buffer: await readFile("web/assets/shared/races/humain.webp"),
+  });
+  await p.waitForFunction(() =>
+    document
+      .querySelector(".character-portrait")
+      ?.src.startsWith("data:image/jpeg"),
+  );
+  await change(p.getByLabel("Femme / Homme", { exact: true }), "femme");
+  assert.match(
+    await p
+      .getByAltText("Portrait du personnage", { exact: true })
+      .getAttribute("src"),
+    /^data:image\/jpeg/,
+  );
+  await p.getByText("Personnaliser le portrait", { exact: true }).click();
+  await p
+    .getByRole("button", { name: "Utiliser le portrait proposé", exact: true })
+    .click();
+  await p.waitForFunction(() =>
+    document
+      .querySelector(".character-portrait")
+      ?.src.endsWith("kobold-femme.webp"),
+  );
+  results.push(
+    "Uploaded portrait survives gender change; explicit reset restores built-in portrait",
+  );
+  const portrait = p.getByAltText("Portrait du personnage", { exact: true });
+  await p.waitForFunction(() => {
+    const img = document.querySelector(".character-portrait");
+    return img?.complete && img.naturalWidth > 0;
+  });
+  await p.getByRole("button", { name: "Continuer", exact: true }).click();
+  await p
+    .getByRole("heading", { name: "Donnez-lui votre style", exact: true })
+    .waitFor();
+  await p.getByRole("button", { name: "Continuer", exact: true }).click();
+  await p.getByRole("heading", { name: "Prêt à jouer", exact: true }).waitFor();
+  await p
+    .getByRole("button", { name: "Accepter ces recommandations", exact: true })
+    .click();
+  await p
+    .getByRole("heading", { name: "Choix confirmés", exact: true })
+    .waitFor();
+  for (const field of await p.locator("fieldset").all()) {
+    await field.locator("input[type=checkbox]").first().click();
+    await p.waitForFunction(
+      () => document.querySelectorAll("fieldset").length === 0,
+    );
+  }
+  await p
+    .getByLabel("Je confirme les suggestions et les choix affichés.", {
+      exact: true,
+    })
+    .click();
+  await p
+    .getByLabel("Vérifications manuelles confirmées", { exact: true })
+    .click();
+  await p
+    .getByRole("button", {
+      name: "Sauvegarder et ouvrir le Companion",
+      exact: true,
+    })
+    .click();
+  await p.getByText("Companion Preview", { exact: true }).waitFor();
+  await p
+    .getByRole("heading", { name: "Kobold aventurière", exact: true })
+    .waitFor();
+  assert.ok(await p.getByText("Femme", { exact: true }).count());
+  assert.match(
+    await p.locator(".companion-head img").getAttribute("src"),
+    /kobold-femme.webp$/,
+  );
+  await p.screenshot({
+    path: "docs/screenshots/races/kobold-woman-companion.png",
+    fullPage: true,
+  });
+  results.push(
+    "Manual Kobold woman finalized in three screens with portrait visible in Companion",
   );
   assert.deepEqual(errors, []);
 } finally {

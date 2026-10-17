@@ -26,6 +26,8 @@ export const newDraft = (campaignId = "default", id = crypto.randomUUID()) => ({
   mode: "quick",
   name: "",
   portrait: "",
+  gender: "",
+  manualRace: null,
   classes: [{ id: "fighter", level: 1, subclassId: null }],
   scores: { str: 15, dex: 13, con: 14, int: 10, wis: 12, cha: 8 },
   selections: {},
@@ -167,11 +169,15 @@ export function compileDraft(context, config, d) {
   c.identity = {
     name: d.name,
     portrait: d.portrait,
+    gender: d.gender ?? "",
     description: [
       d.description,
       context.index.get(d.raceId)?.data.homebrewDefinition?.description,
       context.index.get(d.raceId)?.data.homebrewDefinition?.appearance,
       d.origin,
+      d.manualRace
+        ? "Traits et bonus de race à renseigner et vérifier manuellement."
+        : "",
       d.languages,
       d.traits,
       d.equipmentNotes,
@@ -182,10 +188,14 @@ export function compileDraft(context, config, d) {
   };
   if (!d.raceId)
     c.ancestry = {
-      id: "user:custom-origin",
+      id: d.manualRace
+        ? "user:race:" + d.manualRace.familyId
+        : "user:custom-origin",
       subraceId: null,
       source: customSource,
     };
+  if (d.manualRace && d.manualSpeed !== undefined)
+    c.movement.walk = d.manualSpeed;
   if (d.equipment !== "none") {
     check(Object.hasOwn(EQUIPMENT, d.equipment), "Equipment profile");
     c.equipment.push({

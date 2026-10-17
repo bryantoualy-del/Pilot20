@@ -9,14 +9,14 @@
     },
     {
       "title": "Prêt à jouer",
-      "height": 980,
+      "height": 1084,
       "viewport": 820
     },
     {
       "stage": "confirmed-summary",
-      "height": 1135,
+      "height": 1239,
       "viewport": 820
     }
   ],
-  "milliseconds": 5112.002554999999
+  "milliseconds": 2715.0755419999996
 }

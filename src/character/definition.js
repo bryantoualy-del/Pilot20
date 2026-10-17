@@ -9,7 +9,7 @@ export function validateCharacter(d) {
   if(d.reactiveRules!==undefined) {check(Array.isArray(d.reactiveRules) && d.reactiveRules.length<=50,'Reactive character rules');ids(d.reactiveRules.map(r=>r.id));d.reactiveRules.forEach(validateReactiveRule);}
   if(d.castingModifiers!==undefined) {check(Array.isArray(d.castingModifiers) && d.castingModifiers.length<=20,'Character casting modifiers');ids(d.castingModifiers.map(r=>r.id));d.castingModifiers.forEach(validateCastingModifier);}
   check(d.kind==='character' && d.schemaVersion===2 && d.ruleset==='dnd5e-2014' && id(d.id) && integer(d.revision,1),'Character header');
-  keys(d.identity,['name','portrait','description']); check(text(d.identity.name) && d.identity.name.trim() && text(d.identity.portrait) && text(d.identity.description),'Identity');
+  keys(d.identity,['name','portrait','description','gender'],['name','portrait','description']);if(d.identity.gender!==undefined)check(['','femme','homme'].includes(d.identity.gender),'Identity gender'); check(text(d.identity.name) && d.identity.name.trim() && text(d.identity.portrait) && text(d.identity.description),'Identity');
   keys(d.ancestry,['id','subraceId','source']); check(id(d.ancestry.id) && (d.ancestry.subraceId===null || id(d.ancestry.subraceId)),'Ancestry');source(d.ancestry.source);
   check(text(d.background) && (d.alignment===null || text(d.alignment)),'Background');
   keys(d.scores,ABILITIES);check(ABILITIES.every(k=>integer(d.scores[k],1,30)),'Ability scores');
