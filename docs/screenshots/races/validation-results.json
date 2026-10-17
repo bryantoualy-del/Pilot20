@@ -1,11 +1,11 @@
 {
   "date": "2026-10-17",
-  "baseHead": "5694e331a72c2d6f334962e7f170dca5fb3e8286",
+  "baseHead": "1baaac7cae4b0e4e44572f58b7babc7b98ef4875",
   "node": {
-    "passed": 384,
+    "passed": 389,
     "failed": 0
   },
-  "browserScenarios": 36,
+  "browserScenarios": 38,
   "runs": {
     "e2e-results.json": {
       "passed": 14,
@@ -40,53 +40,11 @@
         "In-progress library filter hides finalized characters and retains resumable drafts",
         "G (emulation only): tablet and desktop widths, 44px step targets, editable field focus and persistent navigation; physical Safari and virtual keyboard remain unverified"
       ],
-      "errors": [],
       "browser": "131.0.6778.0",
-      "metrics": [
-        {
-          "step": "Classe",
-          "height": 1327,
-          "viewport": 820,
-          "viewportScrolls": 1,
-          "stepCount": 8,
-          "choices": 0,
-          "viewportWidth": 1180,
-          "documentWidth": 1180
-        },
-        {
-          "step": "Guerrier capacités",
-          "height": 1092,
-          "viewport": 820,
-          "viewportScrolls": 1,
-          "stepCount": 8,
-          "choices": 1,
-          "viewportWidth": 1180,
-          "documentWidth": 1180
-        },
-        {
-          "step": "Progression",
-          "height": 1187,
-          "viewport": 820,
-          "viewportScrolls": 1,
-          "stepCount": 8,
-          "choices": 2,
-          "viewportWidth": 1180,
-          "documentWidth": 1180
-        },
-        {
-          "step": "Sorts",
-          "height": 1051,
-          "viewport": 820,
-          "viewportScrolls": 1,
-          "stepCount": 8,
-          "choices": 1,
-          "viewportWidth": 1180,
-          "documentWidth": 1180
-        }
-      ],
-      "physicalSafari": false
+      "errors": []
     },
     "e2e-v032-results.json": {
+      "passed": 7,
       "results": [
         "Discovery filters, two-class comparison and mobile preview preserve persisted draft",
         "Bard 10 subclass comparisons: 3 tablet / 2 stacked phone, installed synthetic packs only, no mutation",
@@ -96,130 +54,35 @@
         "Keyboard focus in dialog, Escape close, numeric input focus, reduced-motion preference and primary text contrast",
         "Offline reload, creation and local class icon decoding succeed"
       ],
-      "passed": 7,
-      "errors": [],
-      "metrics": [
-        {
-          "operation": "class comparison open",
-          "milliseconds": 113.9221950000001
-        },
-        {
-          "operation": "bard subclass comparison open",
-          "milliseconds": 101.31077800000003
-        },
-        {
-          "operation": "score simulation open",
-          "milliseconds": 197.06180499999937
-        },
-        {
-          "viewport": {
-            "width": 375,
-            "height": 667
-          },
-          "document": {
-            "width": 375,
-            "height": 2112
-          }
-        },
-        {
-          "viewport": {
-            "width": 390,
-            "height": 844
-          },
-          "document": {
-            "width": 390,
-            "height": 2054
-          }
-        },
-        {
-          "viewport": {
-            "width": 430,
-            "height": 932
-          },
-          "document": {
-            "width": 430,
-            "height": 2004
-          }
-        },
-        {
-          "viewport": {
-            "width": 844,
-            "height": 390
-          },
-          "document": {
-            "width": 844,
-            "height": 1352
-          }
-        },
-        {
-          "viewport": {
-            "width": 820,
-            "height": 1180
-          },
-          "document": {
-            "width": 820,
-            "height": 1399
-          }
-        },
-        {
-          "viewport": {
-            "width": 1024,
-            "height": 768
-          },
-          "document": {
-            "width": 1024,
-            "height": 1352
-          }
-        },
-        {
-          "viewport": {
-            "width": 1180,
-            "height": 820
-          },
-          "document": {
-            "width": 1180,
-            "height": 1327
-          }
-        }
-      ],
       "browser": "131.0.6778.0",
-      "physicalSafari": false
+      "errors": []
     },
     "e2e-races-quick-results.json": {
+      "passed": 9,
       "results": [
         "A: quick fighter human SRD, three screens, explicit confirmation, saved Companion",
         "B: fighter 3 requires explicit active subclass",
         "My character dialog, keyboard Escape and return to same screen",
-        "Missing kobold pack stays visible and cannot be selected",
-        "Offline reload restores draft and local assets",
+        "All 59 races selectable; Kobold woman portrait and MotM metadata variant without pack",
+        "Offline reload restores race, variant, gender, draft and local assets",
         "Homebrew graphical creation, non-saving preview, GM authorization and reusable installation",
-        "Tasha assistant: campaign authorization, installed feat, GM review and resume"
+        "Tasha assistant: campaign authorization, installed feat, GM review and resume",
+        "Uploaded portrait survives gender change; explicit reset restores built-in portrait",
+        "Manual Kobold woman finalized in three screens with portrait visible in Companion"
       ],
-      "errors": [],
-      "metrics": {
-        "interactions": 11,
-        "screens": 3,
-        "heights": [
-          {
-            "title": "Donnez-lui votre style",
-            "height": 820,
-            "viewport": 820
-          },
-          {
-            "title": "Prêt à jouer",
-            "height": 980,
-            "viewport": 820
-          },
-          {
-            "stage": "confirmed-summary",
-            "height": 1135,
-            "viewport": 820
-          }
-        ],
-        "milliseconds": 5112.002554999999
-      },
       "browser": "131.0.6778.0",
-      "emulationOnly": true
+      "errors": []
     }
-  }
+  },
+  "portraits": {
+    "families": 59,
+    "genderVariants": 118,
+    "format": "WebP 256x256",
+    "manifestHashesVerified": true
+  },
+  "notes": [
+    "Local Chromium 131 emulation; physical Safari unverified.",
+    "All families selectable; unsupported mechanics are explicit manual origins.",
+    "Gender and portraits have no rules effect; uploaded portraits preserved."
+  ]
 }

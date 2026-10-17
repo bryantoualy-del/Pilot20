@@ -1606,3 +1606,26 @@ textarea[rows="14"] {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Race portraits stay legible on compact screens. */
+.appearance-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block: 0.75rem;
+}
+.appearance-controls > small {
+  flex-basis: 100%;
+}
+.appearance-controls > details {
+  flex-basis: 100%;
+}
+.character-portrait {
+  object-fit: cover;
+  border-radius: 1rem;
+  border: 1px solid var(--line, #5e5146);
+}
+.manual-race-controls {
+  margin-block: 0.75rem;
+}

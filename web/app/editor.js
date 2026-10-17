@@ -1,5 +1,11 @@
 import { renderQuick } from "./quick.js";
-import { raceGallery } from "./races.js";
+import { appearanceControls } from "./appearance.js";
+import {
+  raceOptions,
+  raceSelection,
+  selectRace,
+} from "../../src/creator/race-selection.js";
+import { raceGallery, manualRaceControls } from "./races.js";
 import { openRaceEditor } from "./race-editor.js";
 import {
   discoveryGallery,
@@ -545,40 +551,9 @@ export async function renderEditor(main, d, a) {
               d.description,
             ),
           ),
-          field(
-            t("portrait"),
-            el("input", {
-              type: "file",
-              accept: "image/png,image/jpeg,image/webp",
-              onchange: async (e) => {
-                try {
-                  const f = e.target.files[0];
-                  if (!f) return;
-                  if (f.size > 10000000) throw Error("size");
-                  const image = await createImageBitmap(f);
-                  const canvas = document.createElement("canvas");
-                  canvas.width = canvas.height = 128;
-                  canvas.getContext("2d").drawImage(image, 0, 0, 128, 128);
-                  image.close();
-                  await update((x) => {
-                    x.portrait = canvas.toDataURL("image/jpeg", 0.65);
-                  });
-                } catch (e) {
-                  a.fail(e);
-                }
-              },
-            }),
-          ),
         ),
+        appearanceControls(a, d, update),
       );
-      if (d.portrait)
-        body.append(
-          el(
-            "div",
-            { class: "avatar" },
-            el("img", { src: d.portrait, alt: "" }),
-          ),
-        );
     }
     function originControl(q) {
       const values = d.originSelections?.[q.id] ?? [];
@@ -638,20 +613,12 @@ export async function renderEditor(main, d, a) {
         field(
           t("origin"),
           select(
-            [
-              ["", t("custom")],
-              ...a.context.index.list("race").map((r) => [r.id, a.name(r)]),
-            ],
-            d.raceId ?? "",
+            [["", t("custom")], ...raceOptions(a.context, a.state.locale)],
+            raceSelection(d),
             (e) =>
-              update((x) => {
-                x.raceId = e.target.value || null;
-                x.subraceId = null;
-                x.customOriginRequiresReview = !x.raceId;
-                x.origin =
-                  a.context.index.get(x.raceId)?.name[a.state.locale] ??
-                  x.origin;
-              }),
+              update((x) =>
+                selectRace(a.context, x, e.target.value, a.state.locale),
+              ),
           ),
         ),
       );
@@ -666,6 +633,7 @@ export async function renderEditor(main, d, a) {
           raceGallery(a, d, update),
         ),
       );
+      body.append(...[manualRaceControls(a, d, update)].filter(Boolean));
       if (race?.data.homebrewDefinition)
         body.append(
           button(
@@ -760,7 +728,7 @@ export async function renderEditor(main, d, a) {
                 ),
             ),
           );
-      } else
+      } else if (!d.manualRace)
         body.append(
           field(
             t("origin") + " · " + t("custom"),

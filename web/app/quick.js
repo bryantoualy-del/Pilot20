@@ -1,4 +1,3 @@
-import { raceLibrary } from "../../src/catalog/race-discovery.js";
 import { assetImage } from "./asset-registry.js";
 import { WEAPONS, ARMORS } from "../../src/catalog/equipment.js";
 import { choiceName, optionName, issueMessage } from "./editor.js";
@@ -13,7 +12,14 @@ import {
 import { recommendQuick, quickDecisions } from "../../src/creator/quick.js";
 import { previewDraft } from "../../src/creator/experience.js";
 import { previewView } from "./experience.js";
-import { raceGallery, raceImage } from "./races.js";
+import { appearanceControls } from "./appearance.js";
+import {
+  raceOptions,
+  raceSelection,
+  selectRace,
+} from "../../src/creator/race-selection.js";
+import { raceFamily } from "../../src/creator/appearance.js";
+import { raceGallery, raceImage, manualRaceControls } from "./races.js";
 import { openRaceEditor } from "./race-editor.js";
 export async function renderQuick(main, d, a) {
   const fr = a.state.locale === "fr",
@@ -122,13 +128,7 @@ export async function renderQuick(main, d, a) {
           "div",
           { class: "row" },
           assetImage("class", cls.id),
-          d.raceId
-            ? raceImage(
-                raceLibrary(a.context).find((f) =>
-                  f.versions.some((v) => v.entry.id === d.raceId),
-                )?.slug ?? "custom",
-              )
-            : null,
+          raceFamily(a.context, d) ? raceImage(raceFamily(a.context, d)) : null,
         ),
         field(
           a.t("name"),
@@ -181,16 +181,13 @@ export async function renderQuick(main, d, a) {
           select(
             [
               ["", w("Choisir une race", "Choose a race")],
-              ...a.context.index.list("race").map((r) => [r.id, a.name(r)]),
+              ...raceOptions(a.context, a.state.locale),
             ],
-            d.raceId ?? "",
+            raceSelection(d),
             (e) =>
-              update((x) => {
-                x.raceId = e.target.value || null;
-                x.subraceId = null;
-                x.origin = a.name(a.context.index.get(x.raceId));
-                x.customOriginRequiresReview = false;
-              }),
+              update((x) =>
+                selectRace(a.context, x, e.target.value, a.state.locale),
+              ),
           ),
         ),
         button(w("Créer une race", "Create a race"), () =>
@@ -227,6 +224,12 @@ export async function renderQuick(main, d, a) {
             ),
           ),
         );
+      body.append(
+        ...[
+          appearanceControls(a, d, update),
+          manualRaceControls(a, d, update),
+        ].filter(Boolean),
+      );
       const gallery = el(
         "details",
         {},
@@ -239,7 +242,7 @@ export async function renderQuick(main, d, a) {
         async () => {
           if (
             !d.name.trim() ||
-            !d.raceId ||
+            (!d.raceId && !d.manualRace) ||
             (r.origin?.race?.data.subraces.length && !d.subraceId)
           ) {
             a.notice?.(
@@ -256,7 +259,7 @@ export async function renderQuick(main, d, a) {
       );
       next.disabled =
         !d.name.trim() ||
-        !r.origin?.race ||
+        (!r.origin?.race && !d.manualRace) ||
         (r.origin?.race?.data.subraces.length && !d.subraceId);
       body.append(next);
     }
@@ -369,11 +372,25 @@ export async function renderQuick(main, d, a) {
           d.quickRecommendation ?? recommendQuick(a.context, a.config, d),
         rr = draftProgression(a.context, a.config, rec);
       body.append(
+        d.portrait
+          ? el("img", {
+              src: d.portrait,
+              alt: w("Portrait du personnage", "Character portrait"),
+              width: 96,
+              height: 96,
+              class: "character-portrait",
+            })
+          : "",
         el("h2", {}, d.name),
+        d.gender
+          ? badge(
+              d.gender === "femme" ? w("Femme", "Woman") : w("Homme", "Man"),
+            )
+          : "",
         el(
           "p",
           {},
-          a.name(a.context.index.get(d.raceId)) +
+          (d.origin || a.name(a.context.index.get(d.raceId))) +
             " · " +
             a.cls(cls.id) +
             " " +
@@ -449,6 +466,17 @@ export async function renderQuick(main, d, a) {
               await draw();
             },
             "primary",
+          ),
+        );
+      if (d.manualRace)
+        body.append(
+          el(
+            "p",
+            { class: "warning-text" },
+            w(
+              "Traits et bonus de race manuels : relisez vos scores finaux et vos notes avec le MJ.",
+              "Manual racial traits and bonuses: review final scores and notes with your GM.",
+            ),
           ),
         );
       const decisions = quickDecisions(a.context, a.config, d);
