@@ -1456,3 +1456,11 @@ body.keyboard-open .creator-shell .editor-actions {
 .creator-shell .draft-tools {
   font-size: 12px;
 }
+/* Explicit logical minima prevent primary controls shrinking across browser metrics. */
+.creator-shell .editor-actions > button {
+  min-height: 46px;
+  min-block-size: 46px;
+  min-width: 44px;
+  min-inline-size: 44px;
+  flex: 0 0 auto;
+}

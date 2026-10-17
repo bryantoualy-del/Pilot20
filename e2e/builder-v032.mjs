@@ -317,7 +317,7 @@ try {
         h: n.getBoundingClientRect().height,
       })),
     );
-    assert.ok(sizes.every((s) => s.w >= 44 && s.h >= 44));
+    assert.ok(sizes.every((s) => s.w >= 44 && s.h >= 44),JSON.stringify({viewport:v,sizes}));
     metrics.push({
       viewport: v,
       document: await p.evaluate(() => ({
