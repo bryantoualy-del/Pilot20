@@ -34,6 +34,7 @@ const packs = [classCatalog, spellCatalog, originCatalog],
 test("59 visual families and 30 variants are distinct from installed mechanics", () => {
   assert.equal(RACE_FAMILIES.length, 59);
   assert.equal(RACE_VARIANTS.length, 30);
+  assert.equal(raceLibrary(ctx, { source: "srd51" }).length, 9);
   assert.equal(
     raceLibrary(ctx, { query: "kobold" })[0].availability,
     "pack-missing",
@@ -123,6 +124,10 @@ test("homebrew validates, round-trips, reuses existing statistics and gates by c
     repo = campaignRepository(storage, packs);
   await repo.saveUserRace(p);
   assert.ok((await repo.context(on)).index.get(r.id));
+  assert.equal(
+    raceLibrary(await repo.context(on), { source: "homebrew" }).length,
+    1,
+  );
   r.version++;
   r.speed = 35;
   await repo.saveUserRace(validateHomebrewRace(r));

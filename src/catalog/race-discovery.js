@@ -61,6 +61,15 @@ export function raceLibrary(
   context,
   { query = "", source = "", family = "", availability = "" } = {},
 ) {
+  const entrySource = (e) =>
+    e.source.kind === "srd"
+      ? "srd51"
+      : e.source.kind === "homebrew"
+        ? "homebrew"
+        : e.data.customLineage
+          ? "tce"
+          : context.statuses?.find((s) => s.packIds.includes(e.data.packId))
+              ?.id;
   const known = RACE_FAMILIES.map((f) => {
     const matches = context.installed
       .list("race")
@@ -81,6 +90,12 @@ export function raceLibrary(
     }));
     return {
       ...f,
+      sourceIds: [
+        ...new Set([
+          ...f.sourceIds,
+          ...matches.map(entrySource).filter(Boolean),
+        ]),
+      ],
       mechanicalVariants: mechanicalVariants.filter(
         (v) => v.raceFamilyId === f.raceFamilyId,
       ),
@@ -111,7 +126,7 @@ export function raceLibrary(
         name_en: e.name.en,
         aliases: e.data.aliases ?? [],
         source: e.source.document,
-        sourceIds: [],
+        sourceIds: [entrySource(e)].filter(Boolean),
         versions: [
           {
             entry: e,

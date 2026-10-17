@@ -164,7 +164,10 @@ try {
     await p.getByRole("button", { name: "Continuer", exact: true }).isEnabled(),
     false,
   );
+  const previousSubclassHeader=await p.locator(".quick-header").elementHandle();
   await p.getByRole("button", { name: /Champion/ }).click();
+  await p.waitForFunction(element=>!element.isConnected,previousSubclassHeader);
+  await previousSubclassHeader.dispose();
   assert.equal(
     await p.getByRole("button", { name: "Continuer", exact: true }).isEnabled(),
     true,
