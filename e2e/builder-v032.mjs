@@ -35,10 +35,14 @@ async function step(name) {
   await p.locator(".steps").waitFor({ state: "attached" });
   if (!(await p.locator(".steps").isVisible()))
     await p.getByRole("button", { name: "Étapes", exact: true }).click();
+  const previous = await p.locator('.editor-main h2').elementHandle();
   await p
     .locator(".steps")
     .getByRole("button", { name: new RegExp(name) })
     .click();
+  // A repeated active step has the same heading text: wait for its actual replacement.
+  await p.waitForFunction(element=>!element.isConnected, previous);
+  await previous.dispose();
   await p.locator(".editor-main h2").filter({ hasText: name }).waitFor();
 }
 async function capture(name, focus = null) {
