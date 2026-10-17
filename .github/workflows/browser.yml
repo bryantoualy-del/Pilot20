@@ -22,4 +22,6 @@ jobs:
           path: |
             artifacts/e2e-results.json
             artifacts/e2e-v031-results.json
+            artifacts/e2e-v032-results.json
+            artifacts/e2e-races-quick-results.json
             docs/screenshots/

@@ -1079,3 +1079,530 @@ main:has(.creator-shell) {
   min-block-size: 46px;
   flex: 0 0 auto;
 }
+/* V0.3.2 — shared workspace; presentation changes with available space. */
+.asset-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  flex: none;
+  vertical-align: middle;
+  color: var(--accent);
+}
+.asset-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.creator-shell .class-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.discovery-card {
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  background: #111c29;
+}
+.discovery-card.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px #d6a36b44;
+}
+.discovery-card .class-card {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 4px;
+  min-height: 145px;
+  gap: 6px;
+}
+.discovery-card small {
+  display: block;
+}
+.discovery-card > button:last-child {
+  width: 100%;
+  padding: 8px;
+}
+.discovery-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-bottom: 12px;
+}
+.discovery-filters .check {
+  font-size: 13px;
+  border: 0;
+}
+.discovery-card .check {
+  font-size: 13px;
+}
+.discovery p {
+  font-size: 14px;
+}
+.context-help {
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+.context-help.expert {
+  font-size: 12px;
+}
+.character-preview {
+  margin: 0;
+}
+.character-preview > small {
+  display: block;
+}
+.character-preview .asset-icon {
+  margin: 10px 0;
+}
+.preview-portrait {
+  border-radius: 12px;
+  object-fit: cover;
+  display: block;
+  margin: 12px 0;
+}
+.preview-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0;
+}
+.preview-stats > div {
+  background: #101a26;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px;
+}
+.preview-stats strong {
+  display: block;
+  font-size: 23px;
+  color: var(--text);
+}
+.preview-stats small {
+  font-size: 12px;
+}
+.creator-shell .live-preview {
+  position: sticky;
+  top: 12px;
+}
+.creator-shell .draft-tools {
+  position: static;
+  margin-top: 12px;
+}
+.creator-shell .draft-tools > h3,
+.creator-shell .draft-tools > p,
+.creator-shell .draft-tools > small {
+  display: none;
+}
+.level-timeline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 12px 0;
+}
+.level-timeline button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px;
+}
+.diagnostic {
+  margin: 12px 0;
+}
+.diagnostic button {
+  display: block;
+  text-align: left;
+  width: 100%;
+  margin-top: 6px;
+  overflow-wrap: anywhere;
+}
+.diagnostic.error {
+  border-left: 3px solid var(--danger);
+  padding-left: 8px;
+}
+.wide-dialog {
+  width: 1050px;
+  max-width: 96vw;
+}
+.comparison-options,
+.comparison-values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  gap: 16px;
+}
+.comparison-options article {
+  min-width: 0;
+}
+.comparison section {
+  margin: 18px 0;
+}
+.comparison p {
+  overflow-wrap: anywhere;
+}
+.comparison-row {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.comparison-row.different {
+  border-left: 3px solid var(--accent);
+  background: #d6a36b09;
+}
+.comparison-values small {
+  color: var(--accent);
+}
+.simulation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.mobile-tools {
+  display: none;
+}
+.creator-shell .editor-layout {
+  grid-template-columns: 154px minmax(0, 1fr) 224px;
+}
+.creator-shell .editor-aside {
+  grid-column: auto;
+  min-width: 0;
+}
+.creator-shell .editor-actions {
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+}
+@media (min-width: 1400px) {
+  .creator-shell .class-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 701px) and (max-width: 1079px) {
+  .creator-shell .editor-layout {
+    grid-template-columns: 150px minmax(0, 1fr);
+  }
+  .creator-shell .editor-aside {
+    display: none;
+  }
+  .mobile-tools {
+    display: flex;
+    gap: 8px;
+  }
+  .mobile-tools button:first-child {
+    display: none;
+  }
+}
+@media (max-width: 700px) {
+  .creator-shell .editor-layout {
+    display: block;
+  }
+  .creator-shell .steps {
+    display: none;
+  }
+  .creator-shell .steps.expanded {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 12px 0;
+  }
+  .creator-shell .editor-aside {
+    display: none;
+  }
+  .creator-shell .class-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .discovery-card .class-card {
+    min-height: 130px;
+    align-items: flex-start;
+  }
+  .mobile-tools {
+    display: flex;
+    gap: 6px;
+  }
+  .draft-status {
+    flex-wrap: wrap;
+  }
+  .draft-status > button {
+    max-width: none;
+  }
+  .draft-status .mobile-tools button {
+    max-width: none;
+  }
+  .creator-shell .section-head h1 {
+    font-size: 25px;
+  }
+  .comparison-options,
+  .comparison-values,
+  .simulation-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .comparison-options article {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+  }
+  .comparison-row h3 {
+    font-size: 17px;
+  }
+  dialog {
+    padding: 18px;
+    max-height: calc(100dvh - 24px);
+  }
+  .creator-shell .editor-actions {
+    bottom: 0;
+    gap: 8px;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .creator-shell .editor-actions button {
+    min-width: 88px;
+  }
+  .discovery-filters {
+    gap: 2px 12px;
+  }
+  .discovery-card > button:last-child {
+    width: auto;
+  }
+  .creator-shell .panel {
+    padding: 14px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+body.keyboard-open .creator-shell .editor-actions {
+  position: static;
+}
+@media (max-width: 1079px) {
+  .creator-shell .editor-aside {
+    display: block;
+    grid-column: 2;
+  }
+  .creator-shell .editor-aside > .live-preview {
+    display: none;
+  }
+}
+@media (max-width: 700px) {
+  .creator-shell .editor-aside {
+    grid-column: 1;
+    margin-top: 16px;
+  }
+}
+.creator-shell .draft-tools > small {
+  display: block;
+}
+/* Stick the whole rail, so preview never covers the draft tools below it. */
+.creator-shell .editor-aside {
+  position: sticky;
+  top: 12px;
+}
+.creator-shell .editor-aside .panel {
+  position: static;
+}
+@media (max-width: 1079px) {
+  .creator-shell .editor-aside {
+    position: static;
+  }
+}
+/* Compact rail: keep the live sheet useful without stretching short steps. */
+.creator-shell .preview-stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+  margin: 10px 0;
+}
+.creator-shell .preview-stats > div {
+  padding: 6px;
+}
+.creator-shell .preview-stats small {
+  font-size: 10px;
+  line-height: 1.25;
+  margin: 0;
+}
+.creator-shell .preview-stats strong {
+  font-size: 20px;
+}
+.creator-shell .character-preview > p {
+  font-size: 12px;
+  line-height: 1.4;
+  margin: 8px 0;
+}
+.creator-shell .character-preview > h3 {
+  margin: 8px 0;
+}
+.creator-shell .character-preview > small {
+  font-size: 12px;
+  margin: 4px 0;
+}
+.creator-shell .character-preview > .warning-text {
+  font-size: 11px;
+}
+.creator-shell .character-preview .asset-icon {
+  width: 44px;
+  height: 44px;
+  margin: 0 0 0 10px;
+}
+.creator-shell .character-preview details {
+  font-size: 12px;
+}
+.creator-shell .draft-tools > .badge,
+.creator-shell .draft-tools > small {
+  display: none;
+}
+.creator-shell .draft-tools > small:last-of-type {
+  display: block;
+  margin: 0;
+}
+.creator-shell .draft-tools {
+  font-size: 12px;
+}
+/* Explicit logical minima prevent primary controls shrinking across browser metrics. */
+.creator-shell .editor-actions > button {
+  min-height: 46px;
+  min-block-size: 46px;
+  min-width: 44px;
+  min-inline-size: 44px;
+  flex: 0 0 auto;
+}
+
+/* Dedicated three-screen Quick surface; the full editor remains available on request. */
+.quick-creator {
+  max-width: 960px;
+  margin: auto;
+}
+.quick-header {
+  position: static;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.quick-header h1 {
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
+}
+.quick-header small {
+  display: block;
+}
+.quick-body {
+  margin-top: 1rem;
+  padding: clamp(1rem, 3vw, 2rem);
+}
+.quick-identity {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+}
+.quick-body > .primary {
+  display: block;
+  margin: 1.5rem 0;
+}
+.race-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  max-height: 520px;
+  overflow: auto;
+  margin: 1rem 0;
+}
+.race-card {
+  padding: 1rem;
+  background: #151d2b;
+  border: 1px solid #64503c;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.race-card img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 12px;
+}
+.race-card h3 {
+  margin: 0;
+}
+.race-card button {
+  white-space: normal;
+}
+.guided-creator .editor-layout {
+  grid-template-columns: 210px minmax(0, 1fr);
+}
+.guided-creator .editor-aside {
+  display: none;
+}
+.guided-creator .draft-tools {
+  display: none;
+}
+.mobile-tools {
+  gap: 0.5rem;
+}
+.quick-body fieldset {
+  margin: 1rem 0;
+}
+.quick-body .check {
+  display: flex;
+}
+.quick-body details {
+  margin: 1rem 0;
+}
+.quick-creator button {
+  min-height: 46px;
+}
+.quick-creator input,
+.quick-creator select {
+  font-size: 16px;
+}
+textarea[rows="14"] {
+  width: 100%;
+  font-family: monospace;
+  min-height: 280px;
+}
+@media (max-width: 700px) {
+  .quick-identity {
+    grid-template-columns: 1fr 90px;
+  }
+  .guided-creator .editor-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .quick-header .row {
+    flex-wrap: wrap;
+  }
+  .quick-body {
+    padding: 1rem;
+  }
+  .race-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .quick-creator button {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+}
+
+.creator-shell .editor-layout {
+  grid-template-columns: 210px minmax(0, 1fr);
+}
+.creator-shell .editor-tools-container .editor-aside {
+  display: block;
+  position: static;
+  max-height: none;
+  overflow: visible;
+}
+.creator-shell .editor-tools-container .draft-tools {
+  display: block;
+}
+.editor-tools-container {
+  margin-top: 1rem;
+}
+.quick-identity + .asset-icon {
+  width: 64px;
+  height: 64px;
+}
+@media (max-width: 700px) {
+  .creator-shell .editor-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

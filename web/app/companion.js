@@ -196,6 +196,13 @@ export async function renderCompanion(main, id, a) {
             "article",
             { class: "ability" },
             badge(t(automation(ability))),
+            el(
+              "ul",
+              {},
+              (ability.combat?.requirements ?? []).map((text) =>
+                el("li", {}, text),
+              ),
+            ),
             el("h3", {}, abilityName(ability)),
             el(
               "p",
@@ -357,6 +364,13 @@ export async function renderCompanion(main, id, a) {
         {},
         el("h2", {}, abilityName(ability)),
         badge(t(automation(ability))),
+        el(
+          "ul",
+          {},
+          (ability.combat?.requirements ?? []).map((text) =>
+            el("li", {}, text),
+          ),
+        ),
         el("p", {}, t("cost") + " : " + t(ability.cost)),
         ability.resource
           ? el(
@@ -396,6 +410,13 @@ export async function renderCompanion(main, id, a) {
         {},
         el("h2", {}, abilityName(ability)),
         badge(t(automation(ability))),
+        el(
+          "ul",
+          {},
+          (ability.combat?.requirements ?? []).map((text) =>
+            el("li", {}, text),
+          ),
+        ),
         el("p", {}, t("cost") + " : " + t(compiled.cost)),
       );
     let target = "hero",

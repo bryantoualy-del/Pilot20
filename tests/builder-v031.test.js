@@ -37,6 +37,12 @@ function draft(classId = "fighter", level = 1, race = "human", subrace = null) {
     subraceId: subrace,
     backgroundId: "srd51:background:acolyte",
   });
+  // Identity is explicitly chosen by the fixture, never by recommendations.
+  for (const cl of d.classes)
+    if (cl.level >= ctx.index.class(cl.id).data.subclassLevel)
+      cl.subclassId =
+        ctx.index.list("subclass").find((s) => s.data.classId === cl.id)?.id ??
+        null;
   d = suggestChoices(ctx, config, d);
   d.confirmed = d.reviewed = true;
   return d;

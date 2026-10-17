@@ -1,0 +1,932 @@
+[
+  {
+    "raceFamilyId": "nain",
+    "variantId": "collines",
+    "name": {
+      "fr": "Nain des collines",
+      "en": "Hill Dwarf"
+    },
+    "sourceId": "phb14",
+    "sourceVersion": "2014",
+    "rulesVersionId": "nain/collines-2014",
+    "license": "metadata-only",
+    "visualAssetId": "race:nain",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "nain",
+    "variantId": "montagnes",
+    "name": {
+      "fr": "Nain des montagnes",
+      "en": "Mountain Dwarf"
+    },
+    "sourceId": "phb14",
+    "sourceVersion": "2014",
+    "rulesVersionId": "nain/montagnes-2014",
+    "license": "metadata-only",
+    "visualAssetId": "race:nain",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "elfe",
+    "variantId": "haut-elfe",
+    "name": {
+      "fr": "Haut-elfe",
+      "en": "High Elf"
+    },
+    "sourceId": "phb14",
+    "sourceVersion": "2014",
+    "rulesVersionId": "elfe/haut-elfe-2014",
+    "license": "metadata-only",
+    "visualAssetId": "race:elfe",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "elfe",
+    "variantId": "bois",
+    "name": {
+      "fr": "Elfe des bois",
+      "en": "Wood Elf"
+    },
+    "sourceId": "phb14",
+    "sourceVersion": "2014",
+    "rulesVersionId": "elfe/bois-2014",
+    "license": "metadata-only",
+    "visualAssetId": "race:elfe",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "elfe",
+    "variantId": "drow",
+    "name": {
+      "fr": "Elfe noir / Drow",
+      "en": "Drow"
+    },
+    "sourceId": "phb14",
+    "sourceVersion": "2014",
+    "rulesVersionId": "elfe/drow-2014",
+    "license": "metadata-only",
+    "visualAssetId": "race:elfe",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "halfelin",
+    "variantId": "pied-leger",
+    "name": {
+      "fr": "Halfelin pied-léger",
+      "en": "Lightfoot Halfling"
+    },
+    "sourceId": "phb14",
+    "sourceVersion": "2014",
+    "rulesVersionId": "halfelin/pied-leger-2014",
+    "license": "metadata-only",
+    "visualAssetId": "race:halfelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "halfelin",
+    "variantId": "robuste",
+    "name": {
+      "fr": "Halfelin robuste",
+      "en": "Stout Halfling"
+    },
+    "sourceId": "phb14",
+    "sourceVersion": "2014",
+    "rulesVersionId": "halfelin/robuste-2014",
+    "license": "metadata-only",
+    "visualAssetId": "race:halfelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "gnome",
+    "variantId": "forets",
+    "name": {
+      "fr": "Gnome des forêts",
+      "en": "Forest Gnome"
+    },
+    "sourceId": "phb14",
+    "sourceVersion": "2014",
+    "rulesVersionId": "gnome/forets-2014",
+    "license": "metadata-only",
+    "visualAssetId": "race:gnome",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "gnome",
+    "variantId": "roches",
+    "name": {
+      "fr": "Gnome des roches",
+      "en": "Rock Gnome"
+    },
+    "sourceId": "phb14",
+    "sourceVersion": "2014",
+    "rulesVersionId": "gnome/roches-2014",
+    "license": "metadata-only",
+    "visualAssetId": "race:gnome",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "humain",
+    "variantId": "standard",
+    "name": {
+      "fr": "Humain standard",
+      "en": "Standard Human"
+    },
+    "sourceId": "phb14",
+    "sourceVersion": "2014",
+    "rulesVersionId": "humain/standard-2014",
+    "license": "metadata-only",
+    "visualAssetId": "race:humain",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "humain",
+    "variantId": "variante",
+    "name": {
+      "fr": "Humain variante (don)",
+      "en": "Variant Human (feat)"
+    },
+    "sourceId": "phb14",
+    "sourceVersion": "2014",
+    "rulesVersionId": "humain/variante-2014",
+    "license": "metadata-only",
+    "visualAssetId": "race:humain",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "genasi",
+    "variantId": "air",
+    "name": {
+      "fr": "Air",
+      "en": "Air"
+    },
+    "sourceId": "eepc",
+    "sourceVersion": "2015",
+    "rulesVersionId": "genasi/air-2015",
+    "license": "metadata-only",
+    "visualAssetId": "race:genasi",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "genasi",
+    "variantId": "air",
+    "name": {
+      "fr": "Air",
+      "en": "Air"
+    },
+    "sourceId": "motm",
+    "sourceVersion": "2022",
+    "rulesVersionId": "genasi/air-2022",
+    "license": "metadata-only",
+    "visualAssetId": "race:genasi",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "genasi",
+    "variantId": "terre",
+    "name": {
+      "fr": "Terre",
+      "en": "Earth"
+    },
+    "sourceId": "eepc",
+    "sourceVersion": "2015",
+    "rulesVersionId": "genasi/terre-2015",
+    "license": "metadata-only",
+    "visualAssetId": "race:genasi",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "genasi",
+    "variantId": "terre",
+    "name": {
+      "fr": "Terre",
+      "en": "Earth"
+    },
+    "sourceId": "motm",
+    "sourceVersion": "2022",
+    "rulesVersionId": "genasi/terre-2022",
+    "license": "metadata-only",
+    "visualAssetId": "race:genasi",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "genasi",
+    "variantId": "feu",
+    "name": {
+      "fr": "Feu",
+      "en": "Fire"
+    },
+    "sourceId": "eepc",
+    "sourceVersion": "2015",
+    "rulesVersionId": "genasi/feu-2015",
+    "license": "metadata-only",
+    "visualAssetId": "race:genasi",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "genasi",
+    "variantId": "feu",
+    "name": {
+      "fr": "Feu",
+      "en": "Fire"
+    },
+    "sourceId": "motm",
+    "sourceVersion": "2022",
+    "rulesVersionId": "genasi/feu-2022",
+    "license": "metadata-only",
+    "visualAssetId": "race:genasi",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "genasi",
+    "variantId": "eau",
+    "name": {
+      "fr": "Eau",
+      "en": "Water"
+    },
+    "sourceId": "eepc",
+    "sourceVersion": "2015",
+    "rulesVersionId": "genasi/eau-2015",
+    "license": "metadata-only",
+    "visualAssetId": "race:genasi",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "genasi",
+    "variantId": "eau",
+    "name": {
+      "fr": "Eau",
+      "en": "Water"
+    },
+    "sourceId": "motm",
+    "sourceVersion": "2022",
+    "rulesVersionId": "genasi/eau-2022",
+    "license": "metadata-only",
+    "visualAssetId": "race:genasi",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "drakeide",
+    "variantId": "chromatique",
+    "name": {
+      "fr": "Drakéide chromatique",
+      "en": "Chromatic Dragonborn"
+    },
+    "sourceId": "fizban",
+    "sourceVersion": "2021",
+    "rulesVersionId": "drakeide/chromatique-2021",
+    "license": "metadata-only",
+    "visualAssetId": "race:drakeide",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "drakeide",
+    "variantId": "metallique",
+    "name": {
+      "fr": "Drakéide métallique",
+      "en": "Metallic Dragonborn"
+    },
+    "sourceId": "fizban",
+    "sourceVersion": "2021",
+    "rulesVersionId": "drakeide/metallique-2021",
+    "license": "metadata-only",
+    "visualAssetId": "race:drakeide",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "drakeide",
+    "variantId": "gemme",
+    "name": {
+      "fr": "Drakéide de gemme",
+      "en": "Gem Dragonborn"
+    },
+    "sourceId": "fizban",
+    "sourceVersion": "2021",
+    "rulesVersionId": "drakeide/gemme-2021",
+    "license": "metadata-only",
+    "visualAssetId": "race:drakeide",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "aasimar",
+    "variantId": "protecteur",
+    "name": {
+      "fr": "Aasimar protecteur",
+      "en": "Protector Aasimar"
+    },
+    "sourceId": "volo",
+    "sourceVersion": "2016",
+    "rulesVersionId": "aasimar/protecteur-2016",
+    "license": "metadata-only",
+    "visualAssetId": "race:aasimar",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "aasimar",
+    "variantId": "fleau",
+    "name": {
+      "fr": "Aasimar fléau",
+      "en": "Scourge Aasimar"
+    },
+    "sourceId": "volo",
+    "sourceVersion": "2016",
+    "rulesVersionId": "aasimar/fleau-2016",
+    "license": "metadata-only",
+    "visualAssetId": "race:aasimar",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "aasimar",
+    "variantId": "dechu",
+    "name": {
+      "fr": "Aasimar déchu",
+      "en": "Fallen Aasimar"
+    },
+    "sourceId": "volo",
+    "sourceVersion": "2016",
+    "rulesVersionId": "aasimar/dechu-2016",
+    "license": "metadata-only",
+    "visualAssetId": "race:aasimar",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "tieffelin",
+    "variantId": "asmodee",
+    "name": {
+      "fr": "Asmodeus",
+      "en": "Asmodeus"
+    },
+    "sourceId": "mtf",
+    "sourceVersion": "2018",
+    "rulesVersionId": "tieffelin/asmodee-2018",
+    "license": "metadata-only",
+    "visualAssetId": "race:tieffelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "tieffelin",
+    "variantId": "baalzebul",
+    "name": {
+      "fr": "Baalzebul",
+      "en": "Baalzebul"
+    },
+    "sourceId": "mtf",
+    "sourceVersion": "2018",
+    "rulesVersionId": "tieffelin/baalzebul-2018",
+    "license": "metadata-only",
+    "visualAssetId": "race:tieffelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "tieffelin",
+    "variantId": "dispater",
+    "name": {
+      "fr": "Dispater",
+      "en": "Dispater"
+    },
+    "sourceId": "mtf",
+    "sourceVersion": "2018",
+    "rulesVersionId": "tieffelin/dispater-2018",
+    "license": "metadata-only",
+    "visualAssetId": "race:tieffelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "tieffelin",
+    "variantId": "fierna",
+    "name": {
+      "fr": "Fierna",
+      "en": "Fierna"
+    },
+    "sourceId": "mtf",
+    "sourceVersion": "2018",
+    "rulesVersionId": "tieffelin/fierna-2018",
+    "license": "metadata-only",
+    "visualAssetId": "race:tieffelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "tieffelin",
+    "variantId": "glasya",
+    "name": {
+      "fr": "Glasya",
+      "en": "Glasya"
+    },
+    "sourceId": "mtf",
+    "sourceVersion": "2018",
+    "rulesVersionId": "tieffelin/glasya-2018",
+    "license": "metadata-only",
+    "visualAssetId": "race:tieffelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "tieffelin",
+    "variantId": "levistus",
+    "name": {
+      "fr": "Levistus",
+      "en": "Levistus"
+    },
+    "sourceId": "mtf",
+    "sourceVersion": "2018",
+    "rulesVersionId": "tieffelin/levistus-2018",
+    "license": "metadata-only",
+    "visualAssetId": "race:tieffelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "tieffelin",
+    "variantId": "mammon",
+    "name": {
+      "fr": "Mammon",
+      "en": "Mammon"
+    },
+    "sourceId": "mtf",
+    "sourceVersion": "2018",
+    "rulesVersionId": "tieffelin/mammon-2018",
+    "license": "metadata-only",
+    "visualAssetId": "race:tieffelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "tieffelin",
+    "variantId": "mephistopheles",
+    "name": {
+      "fr": "Mephistopheles",
+      "en": "Mephistopheles"
+    },
+    "sourceId": "mtf",
+    "sourceVersion": "2018",
+    "rulesVersionId": "tieffelin/mephistopheles-2018",
+    "license": "metadata-only",
+    "visualAssetId": "race:tieffelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "tieffelin",
+    "variantId": "zariel",
+    "name": {
+      "fr": "Zariel",
+      "en": "Zariel"
+    },
+    "sourceId": "mtf",
+    "sourceVersion": "2018",
+    "rulesVersionId": "tieffelin/zariel-2018",
+    "license": "metadata-only",
+    "visualAssetId": "race:tieffelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "tieffelin",
+    "variantId": "aile",
+    "name": {
+      "fr": "Tieffelin ailé",
+      "en": "Winged Tiefling"
+    },
+    "sourceId": "scag",
+    "sourceVersion": "2015",
+    "rulesVersionId": "tieffelin/aile-2015",
+    "license": "metadata-only",
+    "visualAssetId": "race:tieffelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "tieffelin",
+    "variantId": "feral",
+    "name": {
+      "fr": "Tieffelin féral",
+      "en": "Feral Tiefling"
+    },
+    "sourceId": "scag",
+    "sourceVersion": "2015",
+    "rulesVersionId": "tieffelin/feral-2015",
+    "license": "metadata-only",
+    "visualAssetId": "race:tieffelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "demi-elfe",
+    "variantId": "drow",
+    "name": {
+      "fr": "Ascendance drow",
+      "en": "Drow descent"
+    },
+    "sourceId": "scag",
+    "sourceVersion": "2015",
+    "rulesVersionId": "demi-elfe/drow-2015",
+    "license": "metadata-only",
+    "visualAssetId": "race:demi-elfe",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "demi-elfe",
+    "variantId": "aquatique",
+    "name": {
+      "fr": "Ascendance aquatique",
+      "en": "Sea elf descent"
+    },
+    "sourceId": "scag",
+    "sourceVersion": "2015",
+    "rulesVersionId": "demi-elfe/aquatique-2015",
+    "license": "metadata-only",
+    "visualAssetId": "race:demi-elfe",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "demi-elfe",
+    "variantId": "haut-elfe",
+    "name": {
+      "fr": "Ascendance haut-elfe",
+      "en": "High elf descent"
+    },
+    "sourceId": "scag",
+    "sourceVersion": "2015",
+    "rulesVersionId": "demi-elfe/haut-elfe-2015",
+    "license": "metadata-only",
+    "visualAssetId": "race:demi-elfe",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "demi-elfe",
+    "variantId": "bois",
+    "name": {
+      "fr": "Ascendance elfe des bois",
+      "en": "Wood elf descent"
+    },
+    "sourceId": "scag",
+    "sourceVersion": "2015",
+    "rulesVersionId": "demi-elfe/bois-2015",
+    "license": "metadata-only",
+    "visualAssetId": "race:demi-elfe",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "feral",
+    "variantId": "beasthide",
+    "name": {
+      "fr": "Peau-épaisse",
+      "en": "Beasthide"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "feral/beasthide-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:feral",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "feral",
+    "variantId": "longtooth",
+    "name": {
+      "fr": "Longues-dents",
+      "en": "Longtooth"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "feral/longtooth-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:feral",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "feral",
+    "variantId": "swiftstride",
+    "name": {
+      "fr": "Pas-rapide",
+      "en": "Swiftstride"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "feral/swiftstride-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:feral",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "feral",
+    "variantId": "wildhunt",
+    "name": {
+      "fr": "Traqueur",
+      "en": "Wildhunt"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "feral/wildhunt-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:feral",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "demi-elfe",
+    "variantId": "mark-detection",
+    "name": {
+      "fr": "Marque : Détection",
+      "en": "Mark of Detection"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "demi-elfe/mark-detection-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:demi-elfe",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "humain",
+    "variantId": "mark-finding",
+    "name": {
+      "fr": "Marque : Découverte",
+      "en": "Mark of Finding"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "humain/mark-finding-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:humain",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "demi-orc",
+    "variantId": "mark-finding",
+    "name": {
+      "fr": "Marque : Découverte",
+      "en": "Mark of Finding"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "demi-orc/mark-finding-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:demi-orc",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "humain",
+    "variantId": "mark-handling",
+    "name": {
+      "fr": "Marque : Dressage",
+      "en": "Mark of Handling"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "humain/mark-handling-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:humain",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "halfelin",
+    "variantId": "mark-healing",
+    "name": {
+      "fr": "Marque : Guérison",
+      "en": "Mark of Healing"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "halfelin/mark-healing-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:halfelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "halfelin",
+    "variantId": "mark-hospitality",
+    "name": {
+      "fr": "Marque : Hospitalité",
+      "en": "Mark of Hospitality"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "halfelin/mark-hospitality-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:halfelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "humain",
+    "variantId": "mark-making",
+    "name": {
+      "fr": "Marque : Fabrication",
+      "en": "Mark of Making"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "humain/mark-making-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:humain",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "humain",
+    "variantId": "mark-passage",
+    "name": {
+      "fr": "Marque : Passage",
+      "en": "Mark of Passage"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "humain/mark-passage-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:humain",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "gnome",
+    "variantId": "mark-scribing",
+    "name": {
+      "fr": "Marque : Écriture",
+      "en": "Mark of Scribing"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "gnome/mark-scribing-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:gnome",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "humain",
+    "variantId": "mark-sentinel",
+    "name": {
+      "fr": "Marque : Sentinelle",
+      "en": "Mark of Sentinel"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "humain/mark-sentinel-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:humain",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "elfe",
+    "variantId": "mark-shadow",
+    "name": {
+      "fr": "Marque : Ombre",
+      "en": "Mark of Shadow"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "elfe/mark-shadow-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:elfe",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "demi-elfe",
+    "variantId": "mark-storm",
+    "name": {
+      "fr": "Marque : Tempête",
+      "en": "Mark of Storm"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "demi-elfe/mark-storm-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:demi-elfe",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "nain",
+    "variantId": "mark-warding",
+    "name": {
+      "fr": "Marque : Protection",
+      "en": "Mark of Warding"
+    },
+    "sourceId": "eberron",
+    "sourceVersion": "2019",
+    "rulesVersionId": "nain/mark-warding-2019",
+    "license": "metadata-only",
+    "visualAssetId": "race:nain",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "elfe",
+    "variantId": "pallid",
+    "name": {
+      "fr": "Elfe pâle",
+      "en": "Pallid Elf"
+    },
+    "sourceId": "wildemount",
+    "sourceVersion": "2020",
+    "rulesVersionId": "elfe/pallid-2020",
+    "license": "metadata-only",
+    "visualAssetId": "race:elfe",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "halfelin",
+    "variantId": "lotusden",
+    "name": {
+      "fr": "Halfelin Lotusden",
+      "en": "Lotusden Halfling"
+    },
+    "sourceId": "wildemount",
+    "sourceVersion": "2020",
+    "rulesVersionId": "halfelin/lotusden-2020",
+    "license": "metadata-only",
+    "visualAssetId": "race:halfelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "halfelin",
+    "variantId": "ghostwise",
+    "name": {
+      "fr": "Halfelin sagespectre",
+      "en": "Ghostwise Halfling"
+    },
+    "sourceId": "scag",
+    "sourceVersion": "2015",
+    "rulesVersionId": "halfelin/ghostwise-2015",
+    "license": "metadata-only",
+    "visualAssetId": "race:halfelin",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "drakeide",
+    "variantId": "draconblood",
+    "name": {
+      "fr": "Sangdragon",
+      "en": "Draconblood"
+    },
+    "sourceId": "wildemount",
+    "sourceVersion": "2020",
+    "rulesVersionId": "drakeide/draconblood-2020",
+    "license": "metadata-only",
+    "visualAssetId": "race:drakeide",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  },
+  {
+    "raceFamilyId": "drakeide",
+    "variantId": "ravenite",
+    "name": {
+      "fr": "Ravenite",
+      "en": "Ravenite"
+    },
+    "sourceId": "wildemount",
+    "sourceVersion": "2020",
+    "rulesVersionId": "drakeide/ravenite-2020",
+    "license": "metadata-only",
+    "visualAssetId": "race:drakeide",
+    "availability": "pack-missing",
+    "automationCoverage": "unsupported"
+  }
+]

@@ -1,0 +1,97 @@
+{
+  "results": [
+    "Discovery filters, two-class comparison and mobile preview preserve persisted draft",
+    "Bard 10 subclass comparisons: 3 tablet / 2 stacked phone, installed synthetic packs only, no mutation",
+    "Score simulation cancels without writes and confirms through the existing autosave",
+    "Finalization distinguishes diagnostics and returns to the identity control",
+    "Responsive 7 viewports including portrait/landscape, no horizontal overflow and 44px primary controls",
+    "Keyboard focus in dialog, Escape close, numeric input focus, reduced-motion preference and primary text contrast",
+    "Offline reload, creation and local class icon decoding succeed"
+  ],
+  "metrics": [
+    {
+      "operation": "class comparison open",
+      "milliseconds": 113.9221950000001
+    },
+    {
+      "operation": "bard subclass comparison open",
+      "milliseconds": 101.31077800000003
+    },
+    {
+      "operation": "score simulation open",
+      "milliseconds": 197.06180499999937
+    },
+    {
+      "viewport": {
+        "width": 375,
+        "height": 667
+      },
+      "document": {
+        "width": 375,
+        "height": 2112
+      }
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "document": {
+        "width": 390,
+        "height": 2054
+      }
+    },
+    {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "document": {
+        "width": 430,
+        "height": 2004
+      }
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "document": {
+        "width": 844,
+        "height": 1352
+      }
+    },
+    {
+      "viewport": {
+        "width": 820,
+        "height": 1180
+      },
+      "document": {
+        "width": 820,
+        "height": 1399
+      }
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "document": {
+        "width": 1024,
+        "height": 1352
+      }
+    },
+    {
+      "viewport": {
+        "width": 1180,
+        "height": 820
+      },
+      "document": {
+        "width": 1180,
+        "height": 1327
+      }
+    }
+  ],
+  "browser": "131.0.6778.0",
+  "physicalSafari": false
+}

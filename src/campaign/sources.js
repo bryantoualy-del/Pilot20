@@ -9,6 +9,26 @@ export const SOURCES = Object.freeze([
   Object.freeze({ id: "srd51", name: "SRD 5.1 — D&D 5e 2014" }),
   Object.freeze({ id: "xge", name: "Guide complet de Xanathar" }),
   Object.freeze({ id: "tce", name: "Chaudron des merveilles de Tasha" }),
+  ...Object.entries({
+    phb14: "Manuel des joueurs 2014 (hors SRD)",
+    volo: "Volo (2016)",
+    motm: "Monsters of the Multiverse (2022)",
+    eberron: "Eberron",
+    fizban: "Fizban",
+    scag: "Sword Coast Adventurer’s Guide",
+    mtf: "Mordenkainen’s Tome of Foes",
+    eepc: "Elemental Evil",
+    ravnica: "Ravnica",
+    theros: "Theros",
+    ravenloft: "Van Richten",
+    witchlight: "Witchlight",
+    strixhaven: "Strixhaven",
+    spelljammer: "Spelljammer",
+    dragonlance: "Dragonlance",
+    wildemount: "Wildemount",
+    special: "Publications particulières (accord MJ)",
+    homebrew: "Choix maison",
+  }).map(([id, name]) => Object.freeze({ id, name })),
 ]);
 const uniqueIds = (v) =>
   Array.isArray(v) && v.every(id) && new Set(v).size === v.length;
@@ -19,7 +39,7 @@ export function defaultCampaign(campaignId = "default") {
     id: campaignId,
     revision: 1,
     ruleset: "dnd5e-2014",
-    enabledSourceIds: SOURCES.map((s) => s.id),
+    enabledSourceIds: ["srd51", "xge", "tce"],
     enabledOptions: [],
   };
 }
@@ -64,13 +84,19 @@ export function parsePrivatePack(raw, { authorized = false } = {}) {
   check(
     p.kind === "pilot20-private-rule-pack" &&
       p.schemaVersion === 1 &&
-      ["xge", "tce"].includes(p.sourceId),
+      SOURCES.some((s) => s.id === p.sourceId && s.id !== "srd51"),
     "Private pack header",
   );
   validateCatalogV3(p.catalog);
   check(
     p.catalog.items.length > 0 &&
-      p.catalog.items.every((i) => i.source.kind === "private"),
+      p.catalog.items.every(
+        (i) =>
+          i.source.kind === "private" ||
+          (p.sourceId === "homebrew" &&
+            i.source.kind === "homebrew" &&
+            i.source.license === "user-data"),
+      ),
     "Private provenance required",
   );
   return p;

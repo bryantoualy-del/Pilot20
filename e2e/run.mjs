@@ -35,9 +35,9 @@ results.push = (...items) => {
 p.on("pageerror", (e) => errors.push(e.message));
 const screenshot = async (name) => {
   await p.locator("#notice").waitFor({ state: "hidden" });
-  await mkdir("docs/screenshots/v031", { recursive: true });
+  await mkdir("docs/screenshots/v032/regression", { recursive: true });
   await p.screenshot({
-    path: "docs/screenshots/v031/" + name + ".png",
+    path: "docs/screenshots/v032/regression/" + name + ".png",
     fullPage: true,
   });
 };
@@ -55,6 +55,9 @@ const step = async (oldName) => {
       Équipement: "Sorts & équipement",
       Récapitulatif: "Finalisation",
     }[oldName] ?? oldName;
+  await p.locator(".steps").waitFor({ state: "attached" });
+  if (!(await p.locator(".steps").isVisible()))
+    await p.getByRole("button", { name: "Étapes", exact: true }).click();
   await p
     .locator(".steps")
     .getByRole("button", { name: new RegExp(name) })
@@ -70,17 +73,18 @@ const step = async (oldName) => {
 const blur = async (locator) => {
   await locator.blur();
   await p
-    .locator("#notice")
-    .filter({ hasText: "Enregistré sur cet appareil" })
+    .locator("#draft-save-state")
+    .filter({ hasText: /Sauvegardé|Enregistré sur cet appareil/ })
     .waitFor();
 };
-async function begin(name, mode = "Rapide") {
+async function begin(name, mode = "Expert") {
   await p
     .getByRole("button", { name: "Créer un personnage", exact: true })
     .first()
     .click();
   await p.getByLabel("Nom du personnage", { exact: true }).waitFor();
   await p.getByRole("button", { name: mode, exact: true }).click();
+  await p.locator(".creator-shell").waitFor();
   const f = p.getByLabel("Nom du personnage", { exact: true });
   await f.fill(name);
   await blur(f);
@@ -113,6 +117,28 @@ async function save() {
   await p.getByText("Companion Preview", { exact: true }).waitFor();
 }
 async function templateSuggestions() {
+  await p.getByRole("button", { name: "Expert", exact: true }).click();
+  await step("Capacités");
+  const focus = p.getByLabel("Niveau consulté", { exact: true });
+  if (await focus.count()) {
+    for (const l of ["1", "2", "3"])
+      if (await focus.locator('option[value="' + l + '"]').count()) {
+        const oldHeading = await p.locator(".editor-main h2").elementHandle();
+        await focus.selectOption(l);
+        await p.waitForFunction((e) => !e.isConnected, oldHeading);
+        await oldHeading.dispose();
+        const sub = p
+          .locator("select")
+          .filter({ has: p.locator('option[value="srd51:college-of-lore"]') });
+        if ((await sub.count()) && !(await sub.inputValue()))
+          await sub.selectOption("srd51:college-of-lore");
+        const wiz = p.locator("select").filter({
+          has: p.locator('option[value="srd51:school-of-evocation"]'),
+        });
+        if ((await wiz.count()) && !(await wiz.inputValue()))
+          await wiz.selectOption("srd51:school-of-evocation");
+      }
+  }
   const panel = p.locator(".template-tools");
   if ((await panel.getAttribute("open")) === null)
     await panel.locator("summary").first().click();
@@ -158,7 +184,7 @@ try {
   await screenshot("ipad-creator");
   await save();
   results.push(
-    "Quick fighter 1; mode switching; graphical creation/save/preview",
+    "Expert fighter 1; mode switching; graphical creation/save/preview",
   );
   await p
     .getByRole("button", {

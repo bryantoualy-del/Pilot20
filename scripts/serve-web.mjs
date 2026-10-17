@@ -3,12 +3,15 @@ import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 const root = path.resolve(process.env.PILOT20_WEB_ROOT ?? "dist"),
   port = Number(process.env.PORT ?? 4173),
+  host = process.argv.includes("--lan") ? "0.0.0.0" : (process.env.PILOT20_HOST ?? "127.0.0.1"),
   types = {
     ".html": "text/html",
     ".js": "application/javascript",
     ".json": "application/json",
     ".css": "text/css",
     ".svg": "image/svg+xml",
+    ".webp":"image/webp",
+    ".png":"image/png",
     ".webmanifest": "application/manifest+json",
   };
 http
@@ -37,6 +40,6 @@ http
       res.writeHead(404).end("Not found");
     }
   })
-  .listen(port, "127.0.0.1", () =>
-    console.log("Pilot20: http://127.0.0.1:" + port + "/web/index.html"),
+  .listen(port, host, () =>
+    console.log("Pilot20: http://" + host + ":" + port + "/web/index.html"),
   );

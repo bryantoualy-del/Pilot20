@@ -1,0 +1,49 @@
+{
+  "revision": "races-manual",
+  "scenario": "Same custom fighter 1: default scores, Defense, Athletics/Perception, Religion/Medicine background, chain and shield. No suggestions.",
+  "interactions": 22,
+  "screenChanges": 9,
+  "corrections": 0,
+  "unresolvedAtFinalization": 0,
+  "heights": [
+    {
+      "step": "Classe & niveau",
+      "documentHeight": 954,
+      "viewport": 820
+    },
+    {
+      "step": "Capacités de classe",
+      "documentHeight": 1135,
+      "viewport": 820
+    },
+    {
+      "step": "Historique",
+      "documentHeight": 1965,
+      "viewport": 820
+    },
+    {
+      "step": "Caractéristiques",
+      "documentHeight": 1314,
+      "viewport": 820
+    },
+    {
+      "step": "Maîtrises",
+      "documentHeight": 1113,
+      "viewport": 820
+    },
+    {
+      "step": "Sorts & équipement",
+      "documentHeight": 980,
+      "viewport": 820
+    },
+    {
+      "step": "Finalisation",
+      "documentHeight": 1209,
+      "viewport": 820
+    }
+  ],
+  "automatedElapsedMs": 5046.174021,
+  "browser": "131.0.6778.0",
+  "humanTest": false,
+  "errors": []
+}

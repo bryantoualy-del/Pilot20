@@ -41,8 +41,8 @@ try {
       await l.fill(v);
       await l.blur();
       await p
-        .locator("#notice")
-        .filter({ hasText: "Enregistré sur cet appareil" })
+        .locator("#draft-save-state")
+        .filter({ hasText: /Sauvegardé|Enregistré sur cet appareil/ })
         .waitFor();
     };
     const check = async (l) => {
