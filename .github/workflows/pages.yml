@@ -1,0 +1,64 @@
+name: Publish Pilot20 to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - .github/workflows/pages.yml
+      - scripts/package-web.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm test
+      - run: npm run build:web
+      - name: Check published entry points
+        run: |
+          test -s dist/index.html
+          test -s dist/web/index.html
+          test -s dist/sw.js
+          test -s dist/web/assets/shared/races/kobold-femme.webp
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - name: Deploy the compiled application
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Verify the public application and assets
+        env:
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          for asset in index.html web/index.html sw.js web/app/app.js src/catalog/data/race-portraits.json web/assets/shared/races/kobold-femme.webp; do
+            curl --fail --silent --show-error --retry 8 --retry-delay 10 --retry-all-errors --max-time 20 "${PAGES_URL%/}/$asset" --output /dev/null
+          done
+          echo "Pilot20: ${PAGES_URL%/}/web/index.html" >> "$GITHUB_STEP_SUMMARY"

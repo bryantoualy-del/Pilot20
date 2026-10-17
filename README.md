@@ -1,5 +1,9 @@
 # Pilot20
 
+[Ouvrir Pilot20 sur GitHub Pages](https://bryantoualy-del.github.io/Pilot20/)
+
+Le workflow `Publish Pilot20 to GitHub Pages` teste et compile l’application, puis publie le contenu de `dist/` à chaque mise à jour de `main`. Il vérifie ensuite la page, le service worker et les assets publics. La racine du site ouvre le créateur dans `web/index.html`.
+
 Application locale pour personnages D&D 5e **2014** : moteur universel, catalogue SRD, créateur graphique et bibliothèque. V0.3.1 proposée en revue, avec effets manuels et validation Safari physique encore à réaliser.
 
 ```sh
