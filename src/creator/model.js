@@ -120,6 +120,7 @@ export function draftProgression(context, config, d) {
             c.level < (context.index.class(c.id)?.data.subclassLevel ?? 99),
         ),
       issues: [
+        ...((d.selections['ranger:beast-companion']??[]).includes('phb14:ranger:companion:other')&&!d.companionNotes?.trim()?[{code:'creator-companion',choiceId:'ranger:beast-companion'}]:[]),
         ...unavailable.issues,
         ...report.issues,
         ...gear.issues,
@@ -146,6 +147,7 @@ export function draftProgression(context, config, d) {
 /** UI orchestration only: all progression and statistics are produced by existing authorities. */
 export function compileDraft(context, config, d) {
   const issues = [];
+  if((d.selections['ranger:beast-companion']??[]).includes('phb14:ranger:companion:other')&&!d.companionNotes?.trim())return{valid:false,character:null,issues:[{code:'creator-companion',choiceId:'ranger:beast-companion'}],status:'draft'};
   if(d.pendingAdvancement){const transition=validateLevelGain(context.index,{...buildRequest(d),campaignOptions:config.enabledOptions},d.pendingAdvancement);if(transition.length)return{valid:false,character:null,issues:transition,status:'draft'};}
   const hp=hitPointPlan(context.index,d);
   if(!hp.valid)return {valid:false,character:null,issues:hp.issues,status:'draft'};
@@ -196,6 +198,7 @@ export function compileDraft(context, config, d) {
       d.languages,
       d.traits,
       d.equipmentNotes,
+      d.companionNotes,
       d.background.feature,
     ]
       .filter(Boolean)

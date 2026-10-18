@@ -18,6 +18,7 @@ import { StorageError } from "../persistence/adapters.js";
 import { validateCharacter } from "../character/definition.js";
 export function validateDraft(d) {
   json(d);
+  if(d.companionNotes!==undefined)check(typeof d.companionNotes==='string'&&d.companionNotes.length<=3000,'Companion notes');
   if(d.hpMode!==undefined)check(['average','rolled'].includes(d.hpMode),'HP method');
   if(d.hpRolls!==undefined){check(d.hpRolls&&typeof d.hpRolls==='object'&&!Array.isArray(d.hpRolls)&&Object.keys(d.hpRolls).length<=400,'HP roll map');for(const [key,value]of Object.entries(d.hpRolls))check(id(key)&&Number.isInteger(value)&&value>=1&&value<=12,'HP die result');}
   if(d.startingEquipmentEnabled!==undefined)check(typeof d.startingEquipmentEnabled==='boolean','Starting equipment flag');

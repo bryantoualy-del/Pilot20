@@ -154,6 +154,7 @@ export async function renderCreator(main,input,a) {
       body.append(choiceList(q,values,values=>update(x=>{
         if(q.kind==='subclass'){const c=x.classes.find(c=>c.id===q.classId);if(c.subclassId&&c.subclassId!==values[0])retainDecision(x,'subclass',q.classId);c.subclassId=values[0]??null;}else x.selections[q.id]=values;
       })));
+      if(q.id==='ranger:beast-companion'&&values.includes('phb14:ranger:companion:other'))body.append(field(w('Nom de la bête, FP et référence du profil','Beast name, CR and profile reference'),el('textarea',{value:d.companionNotes??'',maxlength:3000,onchange:e=>update(x=>{x.companionNotes=e.target.value;})})));
       if(q.id===q.classId+':known-spells'){const exchanges=originSpellExchanges(q.classId);if(exchanges)body.append(exchanges);}
     }
     if(current.kind==='equipment-choice'){
