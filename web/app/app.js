@@ -313,7 +313,7 @@ async function render() {
 }
 async function start() {
   const d = newDraft(state.campaignId);
-  d.startingEquipmentEnabled=true;d.startingEquipmentChoices={};
+  d.startingEquipmentEnabled=true;d.startingEquipmentChoices={};d.scoreMethod='standard';
   await autosave(d);
   await nav("creator", d.id);
 }

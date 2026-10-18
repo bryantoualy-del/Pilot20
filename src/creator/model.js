@@ -504,7 +504,9 @@ export function restoreDecision(d, position) {
 }
 /** A class change parks its previous choices for explicit restoration. */
 export function changePrimaryClass(d,nextClassId){
- const previous=d.classes[0];if(previous.id===nextClassId){d.classChosen=true;return;}
+ const previous=d.classes[0],firstChoice=d.classChosen===false,untouchedStandard=d.scoreMethod==='standard'&&Object.entries(templateScores(previous.id)).every(([key,value])=>d.scores[key]===value);
+ if(firstChoice&&untouchedStandard)d.scores=templateScores(nextClassId);
+ if(previous.id===nextClassId){d.classChosen=true;return;}
  if(previous.subclassId)retainDecision(d,'subclass',previous.id);
  for(const key of Object.keys(d.selections))if(key.startsWith(previous.id+':'))retainDecision(d,'class',key);
  d.classes[0]={id:nextClassId,level:previous.level,subclassId:null};d.classChosen=true;

@@ -1,3 +1,5 @@
+import {classIcon} from './class-icons.js';
+import {classInfo} from './class-info.js';
 import {rollHitDie} from '../../src/creator/hit-points.js';
 import {showEntryDetails} from './spell-detail.js';
 import {spellMatches} from '../../src/catalog/spell-reference.js';
@@ -102,9 +104,11 @@ export async function renderCreator(main,input,a) {
     }
     if(current.kind==='class'){
       const cls=d.classes[0];
-      body.append(field(text('class'),select([['',w('Choisir une classe','Choose a class')],...a.context.index.list('class').map(c=>[c.data.classId,a.cls(c.data.classId)])],d.classChosen===false?'':cls.id,e=>{
-        if(!e.target.value)return;update(x=>{changePrimaryClass(x,e.target.value);});
-      })),field(text('level'),el('input',{type:'number',min:1,max:20,value:cls.level,onchange:e=>{const n=Number(e.target.value);if(Number.isInteger(n)&&n>=1&&n+d.classes.slice(1).reduce((s,c)=>s+c.level,0)<=20)update(x=>{x.classes[0].level=n;});else a.notice(w('Le niveau total doit rester entre 1 et 20.','Total level must stay between 1 and 20.'));}})));
+      const classes=el('div',{class:'single-classes',role:'group','aria-label':text('class')});
+      for(const entry of a.context.index.list('class').sort((a1,b1)=>a.cls(a1.data.classId).localeCompare(a.cls(b1.data.classId),a.state.locale))){const id=entry.data.classId,selected=d.classChosen!==false&&cls.id===id,b=button([el('span',{class:'single-class-symbol','aria-hidden':'true'},classIcon(id)+'\uFE0E'),el('span',{},a.cls(id))],()=>update(x=>{changePrimaryClass(x,id);}),selected?'selected':'');b.setAttribute('aria-pressed',String(selected));b.disabled=d.classes.slice(1).some(c=>c.id===id);classes.append(b);}
+      body.append(classes);
+      if(d.classChosen!==false){const info=classInfo(cls.id,a.state.locale);if(info)body.append(el('p',{},info.description));const primary=Object.entries(templateScores(cls.id)).find(([,value])=>value===15)?.[0];body.append(el('p',{},w('Caractéristique conseillée : ','Suggested ability: ')+a.label(primary)));}
+      body.append(field(text('level'),el('input',{type:'number',min:1,max:20,value:cls.level,onchange:e=>{const n=Number(e.target.value);if(Number.isInteger(n)&&n>=1&&n+d.classes.slice(1).reduce((s,c)=>s+c.level,0)<=20)update(x=>{x.classes[0].level=n;});else a.notice(w('Le niveau total doit rester entre 1 et 20.','Total level must stay between 1 and 20.'));}})));
       if(a.config.enabledOptions.includes('multiclass')){
         const advanced=el('details',{},el('summary',{},w('Ajouter une classe','Add a class')));
         for(const [i,c]of d.classes.entries())if(i>0)advanced.append(el('p',{},a.cls(c.id)),field(text('level'),el('input',{type:'number',min:1,max:20,value:c.level,onchange:e=>{const n=Number(e.target.value);if(Number.isInteger(n)&&n>=1&&d.classes.reduce((s,c,j)=>s+(i===j?n:c.level),0)<=20)update(x=>{x.classes[i].level=n;});}})),button(w('Retirer cette classe','Remove this class'),()=>update(x=>{x.classes.splice(i,1);})));
