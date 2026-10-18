@@ -276,7 +276,7 @@ export function resolveProgression(index, request) {
           addChoice(c.id, spec.key, 1, 1, spec.options, spec.kind);
         continue;
       }
-      let options = spec.options;
+      let options = spec.spellList?listSpells(index,spec.spellList.classId,{minimumLevel:spec.spellList.minimumLevel,maximumLevel:spec.spellList.maximumLevel}).map(s=>s.id):spec.options;
       if(spec.kind==='feature')options=options.filter(id=>{const key=index.get(id)?.data.uniqueRuleKey;return !key||!Object.entries(selections).filter(([choice])=>choice!==c.id+':'+spec.key).flatMap(([,values])=>values).some(other=>index.get(other)?.data.uniqueRuleKey===key);});
       if(spec.kind==='proficiency'&&!spec.toolReplacementFor)options=options.filter(id=>!background.proficiencies.some(p=>canonicalProficiency(p)===canonicalProficiency(id)));
       if(spec.filterAvailableFeatures) options=options.filter(id=>{const f=index.get(id);return f?.type==='feature'&&f.data.classId===c.id&&f.data.minimumClassLevel<=L&&(f.data.selectionRequires??[]).every(id=>selected.has(id)||features.has(id));});
@@ -302,7 +302,7 @@ export function resolveProgression(index, request) {
       if (spec.kind === "expertise")
         options = [
           ...new Set(
-            [...proficientSkills].concat(
+            (spec.expertiseFromChoice?(selections[c.id+':'+spec.expertiseFromChoice]??[]):[...proficientSkills]).concat(
               c.id === "rogue" ? ["thieves-tools"] : [],
             ),
           ),
