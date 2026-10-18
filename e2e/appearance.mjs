@@ -24,7 +24,11 @@ try {
     background:getComputedStyle(document.documentElement).getPropertyValue('--bg').trim(),
   }));}
   const closed=await style();assert.equal(closed.open,false);assert.notEqual(closed.arrowWidth,'0px');
-  assert.match(closed.hint,/Afficher/);assert.equal(closed.colorScheme,'light');assert.equal(closed.background,'#f6e3cd');
+  assert.match(closed.hint,/Afficher/);assert.equal(closed.colorScheme,'light');assert.equal(closed.background,'#f4f0e5');
+  const progress=p.getByRole('progressbar',{name:'Progression de la création'});
+  assert.equal(await progress.getAttribute('value'),'1');
+  assert.ok(Number(await progress.getAttribute('max'))>1);
+  assert.match(await progress.getAttribute('aria-valuetext'),/Votre personnage/);
   await p.screenshot({path:'docs/screenshots/appearance/phone-closed.png',fullPage:true});
   await summary.click();await p.waitForTimeout(200);
   const opened=await style();assert.equal(opened.open,true);assert.notEqual(opened.arrow,closed.arrow);assert.match(opened.hint,/Masquer/);

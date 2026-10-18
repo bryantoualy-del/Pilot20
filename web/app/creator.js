@@ -79,13 +79,14 @@ export async function renderCreator(main,input,a) {
   async function draw(focus=false) {
     const plan=singlePath(a.context,a.config,d),{report,current,decisions,position}=plan;
     if(d.step!==current.id){d.step=current.id;await a.autosave(d);}
-    const body=el('div',{class:'single-body','data-decision-id':current.id,'data-kind':current.kind},el('p',{class:'eyebrow'},`${position+1} / ${decisions.length} · D&D 2014`),el('h1',{tabindex:-1},label(current)));
+    const body=el('div',{class:'single-body','data-decision-id':current.id,'data-kind':current.kind},el('h1',{tabindex:-1},label(current)),el('p',{class:'single-edition'},'D&D 2014'));
     const saveState=el('span',{id:'draft-save-state',role:'status'},text(d.finalized?'saved':'draftSaved'));
     const header=el('div',{class:'single-heading'},el('span',{},d.name||w('Nouveau personnage','New character')),saveState,button(text('saveAndExit'),async()=>{try{await a.autosave(d);await a.nav('library');}catch(e){a.fail(e);}}));
-    const sectionNav=el('details',{class:'single-plan'},el('summary',{},w('Revoir une étape','Review a step')),el('nav',{'aria-label':w('Étapes de création','Creation steps')},decisions.map(decision=>{
+    const sectionNav=el('details',{class:'single-plan'},el('summary',{},el('span',{},w('Création du personnage','Character creation')),el('span',{class:'single-step-count'},`${position+1} / ${decisions.length}`)),el('nav',{'aria-label':w('Étapes de création','Creation steps')},decisions.map(decision=>{
       const b=button(label(decision),()=>go(decision.id));if(decision.id===current.id)b.setAttribute('aria-current','step');return b;
     })));
-    shell.replaceChildren(header,sectionNav,body);
+    const progress=el('progress',{class:'single-progress',value:position+1,max:decisions.length,'aria-label':w('Progression de la création','Character creation progress'),'aria-valuetext':`${position+1} / ${decisions.length} · ${label(current)}`});
+    shell.replaceChildren(header,sectionNav,progress,body);
     if(d.pendingAdvancement)body.append(el('p',{role:'status'},w('Progression en cours : ','Level gain in progress: ')+a.cls(d.pendingAdvancement.classId)),button(w('Annuler ce gain de niveau','Cancel this level gain'),async()=>{const restored=cancelAdvancement(d);Object.keys(d).forEach(k=>delete d[k]);Object.assign(d,restored);await a.autosave(d);await draw(true);}));
     if(current.kind==='identity'){
       body.append(field(text('name'),el('input',{id:'character-name',value:d.name,maxlength:200,autocomplete:'off',onchange:e=>update(x=>{x.name=e.target.value;})})),
