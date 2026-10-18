@@ -1,3 +1,4 @@
+import {economy,compileInventory} from './equipment-economy.js';
 import {validateLevelGain} from './advancement.js';
 import {hitPointPlan} from './hit-points.js';
 import {startingEquipment,compileStartingEquipment,startingProficiencies} from './starting-equipment.js';
@@ -29,6 +30,9 @@ export const newDraft = (campaignId = "default", id = crypto.randomUUID()) => ({
   revision: 1,
   mode: "single",
   classChosen: false,
+  startingEquipmentVersion:2,
+  equipmentMethod:'kit',
+  inventoryLedger:[],
   name: "",
   portrait: "",
   gender: "",
@@ -105,6 +109,7 @@ export function draftProgression(context, config, d) {
     return {
       ...report,
       startingEquipment:gear,
+      economy:economy(d),
       hitPoints:hp,
       hpPreview:hp.valid?
         hitPointTotal(
@@ -114,7 +119,7 @@ export function draftProgression(context, config, d) {
         (report.origin?.hpPerLevel ?? 0) *
           d.classes.reduce((n, c) => n + c.level, 0):null,
       valid:
-        report.valid && gear.valid && hp.valid &&
+        report.valid && gear.valid && hp.valid && economy(d).valid &&
         unavailable.valid &&
         !d.classes.some(
           (c) =>
@@ -126,6 +131,7 @@ export function draftProgression(context, config, d) {
         ...unavailable.issues,
         ...report.issues,
         ...gear.issues,
+        ...economy(d).issues,
         ...hp.issues,
         ...d.classes
           .filter(
@@ -180,7 +186,10 @@ export function compileDraft(context, config, d) {
   const gear=startingEquipment(d,c.proficiencies);
   if(!gear.valid)return {...r,character:null,valid:false,issues:gear.issues,status:'draft'};
   if(d.startingEquipmentEnabled===true)for(const item of r.origin?.equipment??[]){const row=c.equipment.find(e=>e.id==='background:'+item.id);if(row&&item.name){row.name=structuredClone(item.name);row.quantity=1;}}
-  c.equipment.push(...compileStartingEquipment(d,c));
+  const money=economy(d);if(!money.valid)return{...r,character:null,valid:false,issues:money.issues,status:'draft'};
+  if(money.wealth||gear.backgroundItems)c.equipment=c.equipment.filter(e=>!e.id.startsWith('background:'));
+  if(!money.wealth&&gear.backgroundItems)for(const item of gear.backgroundItems){const weapon=weaponProfile(item.id,c.scores,c.proficiencies);c.equipment.push({id:'background:'+item.id,name:item.name,quantity:item.quantity,kind:weapon?'weapon':'item',weapon,armor:null,equipped:!!weapon,source:SRD_SOURCE});}
+  c.equipment.push(...compileStartingEquipment(d,c),...compileInventory(d,c));
   if ((d.customOriginRequiresReview || d.background.customized) && !d.reviewed)
     issues.push({ code: "creator-custom-review" });
   if (issues.length)
@@ -252,6 +261,8 @@ export function compileDraft(context, config, d) {
     const die=r.scaling.monk.martialArtsDie,kensei=new Set(Object.entries(d.selections).filter(([key])=>(key.startsWith('monk:kensei-')&&key!=='monk:kensei-art'||key==='monk:dedicated-weapon')).flatMap(([,v])=>v));
     for(const e of c.equipment.filter(e=>e.weapon)){const id=e.id.split(':').at(-1),w=WEAPONS[id];if(!w)continue;const monkWeapon=w.category==='simple'&&!w.ranged&&!['greatclub'].includes(id)||id==='shortsword'||kensei.has(w.proficiency);if(!monkWeapon)continue;if(c.scores.dex>c.scores.str)e.weapon.ability='dex';const m=/^1d(\d+)$/.exec(e.weapon.dice);if(m&&Number(m[1])<die)e.weapon.dice='1d'+die;}
   }
+  for(const item of c.equipment)if((d.unequippedItems??[]).includes(item.id))item.equipped=false;
+  if(['armor','shield'].some(kind=>c.equipment.filter(e=>e.equipped&&e.kind===kind).length>1))return{...r,valid:false,character:null,equipmentPreview:c.equipment,issues:[{code:'equipment-conflict'}],status:'draft'};
   validateCharacter(c);
   check(validateBuild(c).valid, "Creator modifiers invalid");
   const stats = derive(c);

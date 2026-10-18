@@ -1,0 +1,7 @@
+# P30 — Matériel, richesse et inventaire
+
+Le joueur choisit matériel de classe/historique ou richesse initiale. La richesse remplace les deux ensembles. Les formules des13 classes exigent les résultats individuels des d4 et les conservent par classe ; le moine n’applique pas ×10. Les achats sont comptabilisés en pièces de cuivre sans arrondi flottant ; le reliquat est une bourse réelle. En mode matériel, seuls les fonds de l’historique sont disponibles. Les acquisitions ultérieures/cadeaux sont distincts et portent une provenance, sans crédit d’or inventé.
+
+Les18 historiques ont des objets structurés et des choix explicites (prières, instrument, outil, jeu, marchand). Les armes et armures achetées utilisent leurs profils réels. On peut porter/ranger le matériel ; un conflit d’armures bloque la sauvegarde avec un correctif accessible. Les focaliseurs ont leurs variantes, un bâton a le profil de bâton (quarterstaff). Les anciens brouillons sans version2 gardent leurs paquets et objets exactement ; aucune migration silencieuse.
+
+Validation locale :5 tests économie (13 formules,18 historiques, soldes, dépassement, matériel personnalisé, rangement et compatibilité) et5 tests équipement préexistants. Les prix personnalisés restent déclarés par le joueur/MJ ; ils ne sont pas certifiés par le logiciel. Le contenu d’un paquetage reste un paquetage nommé, à consulter dans le SRD. Pas de moteur d’encombrement ni de commerce de campagne.
