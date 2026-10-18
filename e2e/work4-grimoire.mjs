@@ -38,6 +38,7 @@ try{
  const row=p.locator(`.grimoire-spell[data-spell-id="${fixtures.wizard.copyId}"]`);await row.waitFor();await row.getByRole('button',{name:'Inscrire',exact:true}).click();
  await p.locator('#dialog input[type=checkbox]').check();await p.locator('#dialog').getByRole('button',{name:'Confirmer la copie',exact:true}).click();
  await p.waitForFunction(async id=>{const {openIndexedDB}=await import('/src/persistence/adapters.js');const s=await openIndexedDB();try{return(await s.get('characters',id)).definition.revision===2;}finally{s.close();}},'grimoire-wizard');
+ await p.locator('.grimoire[data-character-id="grimoire-wizard"][data-character-revision="2"]').waitFor();
  let after=await read('wizard');assert.ok(after.definition.spells.known.includes(fixtures.wizard.copyId),JSON.stringify({expected:fixtures.wizard.copyId,known:after.definition.spells.known,heading:await p.locator('.grimoire .eyebrow').textContent()}));assert.deepEqual(after.definition.spells.prepared,before.definition.spells.prepared);
  results.push('Wizard10 copy persists without changing preparation or removing previous book entries');
  await p.getByRole('button',{name:'Modifier la préparation',exact:true}).click();await search(fixtures.wizard.removeName);
@@ -45,6 +46,7 @@ try{
  await search(fixtures.wizard.copyName);await p.locator(`.grimoire-spell[data-spell-id="${fixtures.wizard.copyId}"]`).getByRole('checkbox',{name:'Préparer',exact:true}).check();
  await p.getByRole('button',{name:'Enregistrer la préparation',exact:true}).click();
  await p.waitForFunction(async id=>{const {openIndexedDB}=await import('/src/persistence/adapters.js');const s=await openIndexedDB();try{return(await s.get('characters',id)).definition.revision===3;}finally{s.close();}},'grimoire-wizard');
+ await p.locator('.grimoire[data-character-id="grimoire-wizard"][data-character-revision="3"]').waitFor();
  after=await read('wizard');assert.ok(after.definition.spells.prepared.includes(fixtures.wizard.copyId));assert.ok(!after.definition.spells.prepared.includes(fixtures.wizard.removeId));assert.ok(after.definition.spells.known.includes(fixtures.wizard.removeId));
  results.push('Daily preparation changes atomically while the wizard book retains the unprepared spell');
  for(const size of [{width:390,height:844},{width:1180,height:820}]){await p.setViewportSize(size);await search('');await p.screenshot({path:`docs/screenshots/work4/grimoire-${size.width}x${size.height}.png`,fullPage:true});const m=await p.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth}));assert.ok(m.scrollWidth<=m.width);metrics.push(m);}

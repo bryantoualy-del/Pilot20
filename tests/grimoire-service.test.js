@@ -32,7 +32,7 @@ test('preparation is a staged complete set; known casters get no preparation com
  assert.equal(out.record.spellbook.characterRevision,2);assert.deepEqual(f.draft,before);
 });
 test('wizard copy adds a book entry without using a daily preparation slot or deleting previous entries',async()=>{
- const f=await fixture(),report=draftProgression(f.context,f.config,f.draft),q=report.choices.find(q=>q.kind==='spellbook');
+ const f=await fixture('wizard',10),report=draftProgression(f.context,f.config,f.draft),q=report.choices.find(q=>q.kind==='spellbook');
  const id=q.options.find(id=>!f.draft.selections[q.id].includes(id));assert.ok(id);
  const args={type:'copy',spellId:id,confirmedCopy:true,note:'Source, time and copying cost confirmed by player'};
  assert.throws(()=>stageWizardCopy(f.context,f.config,f.draft,{...args,confirmedCopy:false}));

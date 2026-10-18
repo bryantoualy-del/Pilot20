@@ -14,7 +14,7 @@ export async function renderGrimoire(main,characterId,a){
  if(!['all',...view.classIds].includes(ui.classId))ui.classId=view.classIds[0]??'all';
  let editing=false,staged=[],page=0;
  const service=grimoireService({library:a.library,drafts:a.drafts,campaigns:a.campaigns});
- const shell=el('section',{class:'grimoire'});main.append(shell);
+ const shell=el('section',{class:'grimoire','data-character-id':characterId,'data-character-revision':record.definition.revision});main.append(shell);
  const grants=()=>view.book.grants.filter(g=>ui.classId==='all'||g.classId===ui.classId);
  const prepared=()=>view.choices.find(q=>q.kind==='prepared'&&q.classId===ui.classId);
  const wizardBook=()=>view.choices.find(q=>q.kind==='spellbook'&&q.classId==='wizard');
