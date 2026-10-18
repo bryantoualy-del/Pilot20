@@ -13,11 +13,11 @@ spells={x['name']['en']:x['id'] for x in json.load(open(root/'src/catalog/data/s
 spells.update({x['name']['en']:x['id'] for x in json.load(open(root/'src/catalog/data/spell-reference-2014.json'))})
 for x in json.load(open(root/'src/catalog/data/phb-spell-facts.json')):spells[x['name_en']]='phb14:spell:'+re.sub('[^a-z0-9]+','-',x['name_en'].lower()).strip('-')
 def extra(names,levels,mode):return [{'classLevel':lv,'mode':mode,'spellIds':[spells[s] for s in names[n*2:n*2+2]]} for n,lv in enumerate(levels)]
-add('xge','warlock','hexblade','The Hexblade','Magelame',[
- (1,'hexblades-curse','Malédiction du Magelame','Action bonus, cible visible à9 m,1 minute. Ajoutez le bonus de maîtrise aux dégâts contre elle ; critiques sur19–20. À sa mort, récupérez niveau d’occultiste+Charisme PV, minimum1. Fin anticipée si vous êtes neutralisé ou mourez.'),
+add('xge','warlock','hexblade','The Hexblade','Lame maudite',[
+ (1,'hexblades-curse','Malédiction de la Lame maudite','Action bonus, cible visible à9 m,1 minute. Ajoutez le bonus de maîtrise aux dégâts contre elle ; critiques sur19–20. À sa mort, récupérez niveau d’occultiste+Charisme PV, minimum1. Fin anticipée si vous êtes neutralisé ou mourez.'),
  (1,'hex-warrior','Guerrier des maléfices','Maîtrise des armures intermédiaires, boucliers et armes de guerre. Après un repos long, choisissez une arme maîtrisée sans propriété à deux mains : Charisme peut remplacer Force/Dextérité à ses attaques et dégâts. S’étend à toute arme du Pacte de la lame.',{'proficiencies':['medium-armor','shields','martial-weapons']}),
  (6,'accursed-specter','Spectre maudit','Quand vous tuez un humanoïde, vous pouvez asservir son spectre jusqu’au prochain repos long. Il reçoit moitié de votre niveau d’occultiste en PV temporaires et un bonus d’attaque égal à Charisme, minimum0. Une création par repos long ; initiative et profil propres au spectre.'),
- (10,'armor-of-hexes','Armure de maléfices','Si la cible de votre malédiction du Magelame vous touche, votre réaction permet un d6 :4 ou plus transforme la touche en échec.'),
+ (10,'armor-of-hexes','Armure de maléfices','Si la cible de votre malédiction de la Lame maudite vous touche, votre réaction permet un d6 :4 ou plus transforme la touche en échec.'),
  (14,'master-of-hexes','Maître des maléfices','À la mort d’une cible maudite, vous pouvez transférer la malédiction à une autre cible visible à9 m sans récupérer les PV de la première. Impossible si vous êtes neutralisé.')],
  [resource('hexblades-curse',1,1,'short'),resource('accursed-specter',6,1)],extra(['Shield','Wrathful Smite','Blur','Branding Smite','Elemental Weapon','Blink','Phantasmal Killer','Staggering Smite','Cone of Cold','Banishing Smite'],[1,3,5,7,9],'expanded'))
 add('xge','bard','glamour','College of Glamour','Collège de la séduction',[

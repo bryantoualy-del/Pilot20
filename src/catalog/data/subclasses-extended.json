@@ -9,11 +9,11 @@
       "type": "feature",
       "name": {
         "en": "Hexblades Curse",
-        "fr": "Malédiction du Magelame"
+        "fr": "Malédiction de la Lame maudite"
       },
       "source": {
         "kind": "reference",
-        "document": "Guide complet de Xanathar / Magelame",
+        "document": "Guide complet de Xanathar / Lame maudite",
         "license": "Pilot20-original-summary",
         "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
       },
@@ -42,7 +42,7 @@
       },
       "source": {
         "kind": "reference",
-        "document": "Guide complet de Xanathar / Magelame",
+        "document": "Guide complet de Xanathar / Lame maudite",
         "license": "Pilot20-original-summary",
         "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
       },
@@ -78,7 +78,7 @@
       },
       "source": {
         "kind": "reference",
-        "document": "Guide complet de Xanathar / Magelame",
+        "document": "Guide complet de Xanathar / Lame maudite",
         "license": "Pilot20-original-summary",
         "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
       },
@@ -107,7 +107,7 @@
       },
       "source": {
         "kind": "reference",
-        "document": "Guide complet de Xanathar / Magelame",
+        "document": "Guide complet de Xanathar / Lame maudite",
         "license": "Pilot20-original-summary",
         "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
       },
@@ -116,7 +116,7 @@
         "rulesSourceId": "xge",
         "classId": "warlock",
         "minimumClassLevel": 10,
-        "description": "Si la cible de votre malédiction du Magelame vous touche, votre réaction permet un d6 :4 ou plus transforme la touche en échec.",
+        "description": "Si la cible de votre malédiction de la Lame maudite vous touche, votre réaction permet un d6 :4 ou plus transforme la touche en échec.",
         "language": "fr",
         "automation": {
           "status": "manual",
@@ -136,7 +136,7 @@
       },
       "source": {
         "kind": "reference",
-        "document": "Guide complet de Xanathar / Magelame",
+        "document": "Guide complet de Xanathar / Lame maudite",
         "license": "Pilot20-original-summary",
         "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
       },
@@ -161,11 +161,11 @@
       "type": "subclass",
       "name": {
         "en": "The Hexblade",
-        "fr": "Magelame"
+        "fr": "Lame maudite"
       },
       "source": {
         "kind": "reference",
-        "document": "Guide complet de Xanathar / Magelame",
+        "document": "Guide complet de Xanathar / Lame maudite",
         "license": "Pilot20-original-summary",
         "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
       },
