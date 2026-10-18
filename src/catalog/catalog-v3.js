@@ -84,12 +84,21 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       "Unsupported reason",
     );
     const d = i.data;
+    if(i.type==='subclass'&&d.casting){
+      keys(d.casting,['ability','progression','startsAtClassLevel'],['ability','progression']);
+      check(ABILITIES.includes(d.casting.ability)&&d.casting.progression==='third'&&d.casting.startsAtClassLevel===3,'Subclass casting');
+      check(id(d.spellListClassId),'Subclass spell list');
+      for(const key of ['cantripsKnown','spellsKnown','unrestrictedSpellsKnown'])check(d[key]?.length===20&&d[key].every(n=>integer(n,0,100)),'Subclass known progression');
+      check(Array.isArray(d.restrictedSpellSchools)&&d.restrictedSpellSchools.length===2,'Subclass spell schools');
+    }
     if(d.buildEffects){
-      keys(d.buildEffects,['proficiencies','attacksPerAction'],[]);
+      keys(d.buildEffects,['proficiencies','attacksPerAction','resistances'],[]);
       check(i.type==='feature','Build effects belong to features');
       if(d.buildEffects.proficiencies)list(d.buildEffects.proficiencies,'Feature proficiencies');
       if(d.buildEffects.attacksPerAction!==undefined)check(integer(d.buildEffects.attacksPerAction,1,4),'Feature attacks');
+      if(d.buildEffects.resistances)check(d.buildEffects.resistances.every(t=>['acid','cold','fire','force','lightning','necrotic','poison','psychic','radiant','thunder','bludgeoning','piercing','slashing'].includes(t)),'Feature resistances');
     }
+    if(d.spellGrantReplacement){keys(d.spellGrantReplacement,['schools','classIds']);list(d.spellGrantReplacement.schools,'Spell replacement schools');list(d.spellGrantReplacement.classIds,'Spell replacement lists');}
     for (const field of ["aliases", "reviewNotes"])
       if (d[field] !== undefined)
         check(
@@ -585,7 +594,7 @@ export function createCatalogIndex(
     for (const row of d.extraSpells ?? []) {
       check(
         integer(row.classLevel, 1, 20) &&
-          ["prepared", "expanded"].includes(row.mode),
+          ["prepared", "known", "expanded"].includes(row.mode),
         "Extra spell grant",
       );
       list(row.spellIds, "Extra spells");

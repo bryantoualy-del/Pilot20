@@ -69,6 +69,7 @@ const choiceTitles = {
   "additional-style": ["Style supplémentaire", "Additional style"],
   cantrips: ["Tours de magie", "Cantrips"],
   "known-spells": ["Sorts connus", "Known spells"],
+  "known-free-spells": ["Sorts au choix — toutes écoles", "Spells of any school"],
   prepared: ["Sorts préparés", "Prepared spells"],
   spellbook: ["Grimoire", "Spellbook"],
   invocations: ["Invocations", "Invocations"],
@@ -144,6 +145,8 @@ export function issueMessage(issue, report, a) {
     title = q ? choiceName(q, a) : "",
     fr = a.state.locale === "fr";
   const messages = {
+    'invalid-granted-spell-replacement':fr?'Vérifiez le niveau, l’école et l’origine du sort remplacé ; un seul remplacement est permis par niveau.':'Review the exchanged spell’s level, school and origin; only one exchange is allowed per level.',
+    'duplicate-granted-spell':fr?'Deux octrois donnent le même sort. Choisissez un autre remplacement.':'Two grants provide the same spell. Choose another exchange.',
     "creator-name": a.t("requiredName"),
     "creator-origin": a.t("requiredOrigin"),
     "creator-background-skills": fr

@@ -19,8 +19,8 @@ try{
   const {newDraft,suggestChoices,compileDraft,draftProgression}=await import('/src/creator/model.js');const {spellReference}=await import('/src/catalog/spell-reference.js');
   const library=characterLibrary(storage),drafts=creatorRepository(storage,library),campaigns=campaignRepository(storage,playerCatalogs);
   const config=await campaigns.initialize(),ctx=await campaigns.context(config),out={};
-  for(const [cls,level]of [['wizard',10],['cleric',5],['bard',10],['warlock',11],['artificer',10]]){
-   let d=newDraft('default','grimoire-'+cls);Object.assign(d,{name:'Grimoire '+cls,mode:'single',classChosen:true,raceId:'srd51:race:human',backgroundId:'srd51:background:acolyte',classes:[{id:cls,level,subclassId:({bard:'xge:bard:glamour',warlock:'xge:warlock:hexblade'})[cls]??ctx.index.class(cls).data.subclassIds[0]}]});
+  for(const [cls,level]of [['wizard',10],['cleric',5],['bard',10],['warlock',11],['artificer',10],['sorcerer',10],['fighter',10]]){
+   let d=newDraft('default','grimoire-'+cls);Object.assign(d,{name:'Grimoire '+cls,mode:'single',classChosen:true,raceId:'srd51:race:human',backgroundId:'srd51:background:acolyte',classes:[{id:cls,level,subclassId:({bard:'xge:bard:glamour',warlock:'xge:warlock:hexblade',sorcerer:'tce:sorcerer:aberrant-mind',fighter:'phb14:fighter:eldritch-knight'})[cls]??ctx.index.class(cls).data.subclassIds[0]}]});
    d=suggestChoices(ctx,config,d);for(const q of draftProgression(ctx,config,d).choices.filter(q=>q.kind==='prepared'))d.selections[q.id]=q.options.slice(0,q.count);
    d.confirmed=d.reviewed=true;await drafts.save(d);const result=compileDraft(ctx,config,d);if(!result.valid)throw Error(JSON.stringify(result.issues));await drafts.finalize(d,result.character,{expectedDraftRevision:1,spellbook:result.spellbook});
    const book=result.choices.find(q=>q.kind==='spellbook'),prep=result.choices.find(q=>q.kind==='prepared');
@@ -33,6 +33,7 @@ try{
  async function open(cls){await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();const card=p.locator('article').filter({has:p.getByRole('heading',{name:'Grimoire '+cls,exact:true})});await card.getByRole('button',{name:'Grimoire',exact:true}).click();await p.locator('.grimoire[data-character-id="grimoire-'+cls+'"]').waitFor();}
  async function search(name){await p.getByRole('searchbox',{name:'Rechercher un sort',exact:true}).fill(name);}
  async function read(cls){return p.evaluate(async id=>{const {openIndexedDB}=await import('/src/persistence/adapters.js');const s=await openIndexedDB();try{return await s.get('characters',id);}finally{s.close();}},'grimoire-'+cls);}
+ async function creatorChange(action){const old=await p.locator('.single-body').elementHandle();await action();await p.waitForFunction(e=>!e.isConnected,old);await old.dispose();}
  await open('bard');assert.equal(await p.getByRole('button',{name:'Modifier la préparation',exact:true}).count(),0);results.push('Bard10 has no daily preparation command');
  await open('warlock');assert.equal(await p.getByRole('button',{name:'Modifier la préparation',exact:true}).count(),0);assert.ok((await read('warlock')).spellbook.grants.some(g=>g.acquisition==='arcanum'&&g.route==='arcanum'));results.push('Warlock11 keeps arcanum distinct and has no generic preparation command');
  await open('wizard');const before=await read('wizard');await p.getByRole('tab',{name:'Catalogue',exact:true}).click();await search(fixtures.wizard.copyName);
@@ -81,6 +82,20 @@ try{
  await p.getByRole('tab',{name:'Catalogue',exact:true}).click();await search('catapulte');const catapult=p.locator('.grimoire-spell').filter({has:p.getByRole('button',{name:'Catapulte',exact:true})});await catapult.waitFor();await catapult.getByRole('button',{name:'Catapulte',exact:true}).click();
  assert.ok((await p.locator('#dialog').textContent()).includes('Projette un objet'));assert.equal(await p.locator('#dialog details').filter({has:p.getByText('Référence',{exact:true})}).getAttribute('open'),null);await p.locator('#dialog').evaluate(e=>e.close());
  results.push('Artificer10 has daily preparation and fixed subclass grants; an XGE spell has local French effects and a collapsed reference');
+ await open('fighter');assert.equal((await read('fighter')).definition.classes[0].casting.progression,'third');assert.equal(await p.getByRole('button',{name:'Modifier la préparation',exact:true}).count(),0);results.push('Eldritch Knight10 opens a known-spell Grimoire without daily preparation');
+ await open('sorcerer');assert.equal(await p.getByRole('button',{name:'Modifier la préparation',exact:true}).count(),0);
+ await p.getByRole('button',{name:'Modifier le personnage',exact:true}).click();await p.locator('#character-name').waitFor();
+ await p.locator('.single-plan summary').click();await creatorChange(()=>p.locator('.single-plan nav').getByRole('button',{name:'Sorts connus',exact:true}).click());
+ await p.locator('.single-body details').filter({has:p.getByText('Remplacer un sort d’origine — facultatif',{exact:true})}).locator('summary').click();
+ await creatorChange(()=>p.getByLabel('Niveau d’ensorceleur du remplacement',{exact:true}).selectOption('2'));
+ await p.locator('.single-body details').filter({has:p.getByText('Remplacer un sort d’origine — facultatif',{exact:true})}).locator('summary').click();
+ await creatorChange(()=>p.getByLabel('Sort accordé à remplacer',{exact:true}).selectOption('phb14:spell:arms-of-hadar'));
+ await p.locator('.single-body details').filter({has:p.getByText('Remplacer un sort d’origine — facultatif',{exact:true})}).locator('summary').click();
+ await creatorChange(()=>p.getByLabel('Nouveau sort',{exact:true}).selectOption('srd51:identify'));
+ await p.locator('.single-plan summary').click();await creatorChange(()=>p.locator('.single-plan nav').getByRole('button',{name:'Votre personnage est-il prêt ?',exact:true}).click());
+ await creatorChange(()=>p.locator('.single-body input[type=checkbox]').check());await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).click();
+ await p.getByRole('heading',{name:'Grimoire sorcerer',exact:true}).waitFor();const exchanged=await read('sorcerer');assert.ok(exchanged.definition.spells.known.includes('srd51:identify'));assert.ok(!exchanged.definition.spells.known.includes('phb14:spell:arms-of-hadar'));assert.ok(!exchanged.definition.spells.prepared.includes('srd51:identify'));
+ results.push('Aberrant Mind origin spell exchange is recorded through the Creator and saved as known, not prepared');
  assert.deepEqual(errors,[]);await context.close();
 }finally{await writeFile('artifacts/e2e-work4-grimoire-results.json',JSON.stringify({results,metrics,errors,physicalSafari:false},null,2));if(browser)await browser.close();server.kill();}
 console.log(results);

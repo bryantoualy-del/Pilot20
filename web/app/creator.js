@@ -10,12 +10,14 @@ import {ARMORS,WEAPONS} from '../../src/catalog/equipment.js';
 import {optionName,choiceName,issueMessage} from './editor.js';
 import {appearanceControls} from './appearance.js';
 import {raceIcon} from './race-icons.js';
+import {replacementOptions} from '../../src/catalog/spell-grants.js';
 
 export async function renderCreator(main,input,a) {
   const d=migrateSingleDraft(input),w=(fr,en)=>a.state.locale==='fr'?fr:en;
   if(input.mode!=='single')await a.autosave(d);
   const shell=el('section',{class:'single-creator'});main.append(shell);
   const filters=new Map();
+  const swaps=new Map();
   const text=key=>a.t(key);
   const label=decision=>({identity:w('Votre personnage','Your character'),race:w('Choisissez votre race','Choose your race'),subrace:text('subrace'),class:w('Classe et niveau','Class and level'),background:text('background'),scores:text('scores'),equipment:text('equipment'),summary:w('Votre personnage est-il prêt ?','Is your character ready?')})[decision.kind]??(decision.kind==='origin-choice'?w('Un choix de votre origine','An origin choice'):choiceName(decision.choice,a));
   async function update(fn,{navigation=false}={}) {
@@ -24,6 +26,23 @@ export async function renderCreator(main,input,a) {
   }
   async function go(id){d.step=id;await a.autosave(d);await draw(true);}
   const details=entry=>showEntryDetails(entry,a);
+  function originSpellExchanges(classId){
+    const c=d.classes.find(c=>c.id===classId),sub=a.context.index.get(c?.subclassId);if(!sub?.data.spellGrantReplacement)return null;
+    const state=swaps.get(classId)??{level:c.level,slot:null};swaps.set(classId,state);
+    const recorded=(d.spellGrantReplacements??[]).find(r=>r.originId===sub.id&&r.classLevel===state.level);
+    const slots=sub.data.extraSpells.filter(r=>r.mode==='known'&&r.classLevel<=state.level).flatMap(r=>r.spellIds);
+    if(!slots.includes(state.slot))state.slot=recorded?.originalSpellId??slots[0];
+    const existing=recorded?.originalSpellId===state.slot?recorded.spellId:'';
+    return el('details',{},el('summary',{},w('Remplacer un sort d’origine — facultatif','Replace an origin spell — optional')),
+      el('p',{},w('Un seul remplacement par niveau d’ensorceleur. Le nouveau sort doit être du même niveau et appartenir aux écoles et listes autorisées. Vous pouvez renseigner ici les choix réellement faits aux niveaux précédents.','One replacement per sorcerer level. The spell must keep its level and use the allowed schools and lists. You may record actual choices from earlier levels.')),
+      field(w('Niveau d’ensorceleur du remplacement','Sorcerer level of the exchange'),select(Array.from({length:c.level},(_,i)=>[String(i+1),String(i+1)]),String(state.level),e=>{state.level=Number(e.target.value);state.slot=null;draw();})),
+      field(w('Sort accordé à remplacer','Original granted spell'),select(slots.map(id=>[id,a.name(a.context.index.get(id))]),state.slot,e=>{state.slot=e.target.value;draw();})),
+      field(w('Nouveau sort','New spell'),select([['',w('Aucun remplacement à ce niveau','No exchange at this level')],...replacementOptions(a.context.index,sub.id,state.slot).filter(s=>s.id!==state.slot).map(s=>[s.id,a.name(s)])],existing,e=>update(x=>{
+        x.spellGrantReplacements=(x.spellGrantReplacements??[]).filter(r=>!(r.originId===sub.id&&r.classLevel===state.level));
+        if(e.target.value)x.spellGrantReplacements.push({originId:sub.id,originalSpellId:state.slot,spellId:e.target.value,classLevel:state.level});
+      }))),
+      (d.spellGrantReplacements??[]).filter(r=>r.originId===sub.id).map(r=>el('p',{},w('Niveau ','Level ')+r.classLevel+' : '+a.name(a.context.installed.get(r.originalSpellId))+' → '+a.name(a.context.installed.get(r.spellId)))));
+  }
   function choiceList(q,values,onchange,{origin=false}={}) {
     const filter=filters.get(q.id)??{query:'',page:0};filters.set(q.id,filter);
     const wrap=el('div',{'data-choice-id':q.id,class:'single-choice'}),list=el('div',{class:'single-options'}),pages=el('div',{class:'single-pages'});
@@ -112,6 +131,7 @@ export async function renderCreator(main,input,a) {
       body.append(choiceList(q,values,values=>update(x=>{
         if(q.kind==='subclass'){const c=x.classes.find(c=>c.id===q.classId);if(c.subclassId&&c.subclassId!==values[0])retainDecision(x,'subclass',q.classId);c.subclassId=values[0]??null;}else x.selections[q.id]=values;
       })));
+      if(q.id===q.classId+':known-spells'){const exchanges=originSpellExchanges(q.classId);if(exchanges)body.append(exchanges);}
     }
     if(current.kind==='equipment'){
       body.append(field(text('armor'),select(Object.entries(ARMORS).map(([id,v])=>[id,v.name[a.state.locale]]).concat([['none',text('unarmored')]]),d.equipment,e=>update(x=>{x.equipment=e.target.value;}))),check(text('shield'),d.shield,e=>update(x=>{x.shield=e.target.checked;})),
