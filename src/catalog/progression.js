@@ -99,6 +99,10 @@ export function resolveProgression(index, request) {
             adjustedScores[a]++;
             adjustedScores[b]++;
           }
+  const scoresBeforeFeatureIncreases={...adjustedScores},scoreFeatures=new Set(origin.featIds??[]);
+  for(const c of classes){for(const row of [...(index.class(c.id)?.data.grants??[]),...(index.get(c.subclassId)?.data.grants??[])])if(row.level<=c.level)for(const id of row.featureIds)scoreFeatures.add(id);}
+  for(const id of Object.values(selections).flat())if(index.get(id)?.type==='feature')scoreFeatures.add(id);
+  for(const id of scoreFeatures){const f=index.get(id),owner=classes.find(c=>c.id===f?.data.classId),effect=f?.data.buildEffects;if(!owner||owner.level<(f.data.minimumClassLevel??1)||owner.level<(effect?.minimumClassLevel??1))continue;for(const [a,row]of Object.entries(effect?.scoreIncreases??{}))adjustedScores[a]=Math.max(adjustedScores[a],Math.min(row.maximum,adjustedScores[a]+row.amount));}
   const features = new Set(origin.featIds ?? []),
     resources = [],
     choices = [],
@@ -270,6 +274,7 @@ export function resolveProgression(index, request) {
         continue;
       }
       let options = spec.options;
+      if(spec.kind==='feature')options=options.filter(id=>{const key=index.get(id)?.data.uniqueRuleKey;return !key||![...selected].some(other=>other!==id&&index.get(other)?.data.uniqueRuleKey===key);});
       if(spec.kind==='proficiency'&&!spec.toolReplacementFor)options=options.filter(id=>!background.proficiencies.some(p=>canonicalProficiency(p)===canonicalProficiency(id)));
       if(spec.filterAvailableFeatures) options=options.filter(id=>{const f=index.get(id);return f?.type==='feature'&&f.data.classId===c.id&&f.data.minimumClassLevel<=L&&(f.data.selectionRequires??[]).every(id=>selected.has(id)||features.has(id));});
       if(spec.toolReplacementFor){
@@ -512,7 +517,7 @@ export function resolveProgression(index, request) {
         continue;
       }
       const [, a, b] = v.split(":");
-      if (adjustedScores[a] > 20 || adjustedScores[b] > 20)
+      if (scoresBeforeFeatureIncreases[a] > 20 || scoresBeforeFeatureIncreases[b] > 20)
         issues.push({ code: "asi-cap", choiceId: choice.id });
     }
   for (const t of spellbookTranscriptions) {
@@ -578,6 +583,8 @@ export function resolveProgression(index, request) {
     new Set(resources.map((r) => r.id)).size === resources.length,
     "Duplicate resolved resource",
   );
+  let unarmoredDefense=false;for(const c of classes){const id=index.class(c.id)?.data.armorRuleFeatureId;if(id&&features.has(id)){if(unarmoredDefense)features.delete(id);else unarmoredDefense=true;}}
+  const uniqueRules=new Map();for(const id of features){const key=index.get(id)?.data.uniqueRuleKey;if(key){if(uniqueRules.has(key))issues.push({code:'duplicate-feature-rule',featureId:id,otherFeatureId:uniqueRules.get(key),choiceId:choices.find(q=>(effectiveSelections[q.id]??[]).includes(id))?.id});else uniqueRules.set(key,id);}}
   for(const fid of features){const feature=index.get(fid),owner=classes.find(c=>c.id===feature?.data.classId);for(const row of feature?.data.innateSpells??[])if(owner&&owner.level>=row.classLevel)for(const id of row.spellIds)origin.spells.push({id,level:row.classLevel,ability:row.ability,ownerId:fid,featureOwnerId:fid,resourceId:owner.id+':'+row.resourceId,requirements:row.requirements,source:feature.source});}
   return {
     origin,
@@ -614,6 +621,8 @@ export function resolveProgression(index, request) {
     issues,
     valid: issues.length === 0,
     scores: adjustedScores,
+    scoresBeforeFeatureIncreases,
+    featureHpBonus:[...features].reduce((n,id)=>{const f=index.get(id),c=classes.find(c=>c.id===f?.data.classId);return n+(f?.data.buildEffects?.hpPerClassLevel??0)*(c?.level??0);},0),
     scaling,
     slots: spellSlots(castingClasses),
     limits: [

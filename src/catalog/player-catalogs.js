@@ -1,3 +1,4 @@
+import {CORE_BUILD_EFFECTS,CORE_FRENCH,DRAGON_ANCESTRY} from './core-build-effects.js';
 import references from './data/spell-reference-2014.json' with {type:'json'};
 import notes from './data/extended-spell-notes-fr.json' with {type:'json'};
 import artificer from './data/artificer.json' with {type:'json'};
@@ -21,6 +22,12 @@ export const phbSpells={kind:'catalog',schemaVersion:3,ruleset:'dnd5e-2014',id:'
 const playerSpells=structuredClone(spellCatalog);
 const playerClasses=structuredClone(classCatalog);
 const playerOrigins=structuredClone(originCatalog);
+playerClasses.items.find(i=>i.type==='class'&&i.data.classId==='sorcerer').data.choices.find(q=>q.key==='dragon-ancestor').subclassId='srd51:draconic-bloodline';
+playerClasses.items.find(i=>i.type==='class'&&i.data.classId==='druid').data.choices.find(q=>q.key==='land').subclassId='srd51:circle-of-the-land';
+for(const [key,fr,type,damageFr]of DRAGON_ANCESTRY){const f=playerClasses.items.find(i=>i.id==='srd51:sorcerer:'+key);f.name.fr=fr+' · '+damageFr;Object.assign(f.data,{dragonDamageType:type,descriptionEn:'Dragon ancestry associated with '+type+' damage. It grants no permanent damage resistance.',description:'Dragon ancestral associé aux dégâts de '+damageFr+'. La résistance éventuelle d’Affinité élémentaire demande ses conditions et une dépense de sorcellerie ; elle n’est pas permanente.',language:'fr'});}
+for(const [id,effect]of Object.entries(CORE_BUILD_EFFECTS))playerClasses.items.find(i=>i.id===id).data.buildEffects=effect;
+for(const [id,[fr,description]]of Object.entries(CORE_FRENCH)){const f=playerClasses.items.find(i=>i.id===id);f.name.fr=fr;f.data.descriptionEn=f.data.description;f.data.description=description;f.data.language='fr';}
+for(const feature of playerClasses.items.filter(i=>i.type==='feature'&&/srd51:(fighter|paladin|ranger):(archery|defense|dueling|great-weapon-fighting|protection|two-weapon-fighting)$/.test(i.id)))feature.data.uniqueRuleKey='fighting-style:'+feature.id.split(':').at(-1);
 playerClasses.items.find(i=>i.id==='srd51:life-domain:bonus-proficiency').data.buildEffects={proficiencies:['heavy-armor']};
 for(const row of subraceAdditions)playerOrigins.items.find(i=>i.id===row.raceId).data.subraces.push(row.subrace);
 for(const sub of subclasses.items.filter(i=>i.type==='subclass'))playerClasses.items.find(i=>i.type==='class'&&i.data.classId===sub.data.classId).data.subclassIds.push(sub.id);

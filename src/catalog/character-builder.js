@@ -118,6 +118,13 @@ export function buildCharacter(
     const feature=index.get(featureId),effect=feature?.data.buildEffects;if(!effect)continue;
     if((definitions.find(c=>c.id===feature.data.classId)?.level??0)<(effect.minimumClassLevel??1))continue;
     Object.assign(featureMovement,effect.movement??{});
+    const owner=definitions.find(c=>c.id===feature.data.classId),pb=2+Math.floor((definitions.reduce((n,c)=>n+c.level,0)-1)/4);
+    const modify=(suffix,stat,value,operation='add',condition=null)=>d.modifiers.push({id:featureId+':'+suffix,stat,value,operation,reason:feature.name.en,source:feature.source,...(condition?{condition}:{})});
+    if(effect.hpPerClassLevel)modify('hp','maxHp',effect.hpPerClassLevel*owner.level);
+    if(effect.naturalArmor)d.armorRules.push({id:featureId+':armor',...structuredClone(effect.naturalArmor),source:feature.source});
+    if(effect.halfProficiency)modify('checks',effect.halfProficiency==='all'?'untrainedCheckBonus':'untrainedPhysicalCheckBonus',effect.halfProficiency==='all'?Math.floor(pb/2):Math.ceil(pb/2),'max');
+    if(effect.defenseStyle)modify('armor','ac',1,'add','wearing-armor');
+    if(effect.rangedWeaponAttackBonus)modify('archery','rangedWeaponAttackBonus',effect.rangedWeaponAttackBonus,'max');
     d.proficiencies.push(...(effect.proficiencies??[]));
     d.defenses.resistances.push(...(effect.resistances??[]));
     if(effect.attacksPerAction)d.modifiers.push({id:featureId+':attacks',stat:'attacksPerAction',operation:'max',value:effect.attacksPerAction,reason:feature.name.en,source:feature.source});
@@ -147,7 +154,7 @@ export function buildCharacter(
         reason: "Class attack progression; does not stack between classes.",
         source: e.source,
       });
-    if (c.id === "barbarian" && d.features.includes(data.armorRuleFeatureId))
+    if (c.id === "barbarian" && d.features.includes(data.armorRuleFeatureId)&&!d.armorRules.some(a=>['barbarian:unarmored','monk:unarmored'].includes(a.id)))
       d.armorRules.push({
         id: "barbarian:unarmored",
         base: 10,
@@ -155,7 +162,7 @@ export function buildCharacter(
         shieldAllowed: true,
         source: e.source,
       });
-    if (c.id === "monk" && d.features.includes(data.armorRuleFeatureId))
+    if (c.id === "monk" && d.features.includes(data.armorRuleFeatureId)&&!d.armorRules.some(a=>['barbarian:unarmored','monk:unarmored'].includes(a.id)))
       d.armorRules.push({
         id: "monk:unarmored",
         base: 10,

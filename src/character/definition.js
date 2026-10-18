@@ -34,7 +34,7 @@ export function validateCharacter(d) {
     if(e.quantity!==undefined)check(integer(e.quantity,1,10000),'Equipment quantity');
     check(id(e.id) && ['weapon','armor','shield','item'].includes(e.kind) && typeof e.equipped==='boolean','Equipment item');source(e.source);
     if(e.armor!==null) {keys(e.armor,['base','dexCap','bonus','minStrength','heavy']);check(integer(e.armor.base,0,30) && (e.armor.dexCap===null || integer(e.armor.dexCap,0,10)) && integer(e.armor.bonus,-5,10) && integer(e.armor.minStrength,0,30) && typeof e.armor.heavy==='boolean','Armor');}
-    if(e.weapon!==null) {keys(e.weapon,['ability','proficient','bonus','dice','damageType']);check(ABILITIES.includes(e.weapon.ability) && typeof e.weapon.proficient==='boolean' && integer(e.weapon.bonus,-5,10) && text(e.weapon.dice) && id(e.weapon.damageType),'Weapon');}
+    if(e.weapon!==null) {keys(e.weapon,['ability','proficient','bonus','dice','damageType','ranged'],['ability','proficient','bonus','dice','damageType']);if(e.weapon.ranged!==undefined)check(typeof e.weapon.ranged==='boolean','Ranged weapon metadata');check(ABILITIES.includes(e.weapon.ability) && typeof e.weapon.proficient==='boolean' && integer(e.weapon.bonus,-5,10) && text(e.weapon.dice) && id(e.weapon.damageType),'Weapon');}
     check((e.kind==='weapon')===(e.weapon!==null) && (['armor','shield'].includes(e.kind))===(e.armor!==null),'Equipment profile mismatch');
   }
   keys(d.spells,['known','prepared']);ids(d.spells.known);ids(d.spells.prepared);

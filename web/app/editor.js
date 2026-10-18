@@ -154,6 +154,7 @@ export function issueMessage(issue, report, a) {
     title = q ? choiceName(q, a) : "",
     fr = a.state.locale === "fr";
   const messages = {
+    'duplicate-feature-rule':fr?'Ce style de combat est déjà acquis. Choisissez un autre style.':'This fighting style is already known. Choose another style.',
     'hp-roll':fr?'Renseignez un résultat valide pour chaque dé de vie.':'Enter a valid result for every Hit Die.',
     'hp-method':fr?'Choisissez une méthode de points de vie.':'Choose a hit point method.',
     'hp-chronology':fr?'Vérifiez l’ordre des niveaux avant de calculer les points de vie.':'Review the level order before calculating hit points.',

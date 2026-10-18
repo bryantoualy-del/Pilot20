@@ -15,7 +15,7 @@ test('all 13 initial classes compile actual named equipment, quantities and matc
  }
 });
 test('fighter alternatives change armor, weapons and derived AC without granting extra multiclass kits',()=>{
- const {d,r}=build(draft());assert.equal(r.stats.ac,18);assert.equal(r.character.equipment.find(e=>e.id.endsWith(':bolts')).quantity,20);
+ const base=draft();base.selections['fighter:fighting-style']=['srd51:fighter:archery'];const {d,r}=build(base);assert.equal(r.stats.ac,18);assert.equal(r.character.equipment.find(e=>e.id.endsWith(':bolts')).quantity,20);
  const changed=structuredClone(d);changed.startingEquipmentChoices['starting:fighter:armor']=['leather-bow'];changed.startingEquipmentChoices['starting:fighter:arms']=['two-weapons'];changed.startingEquipmentChoices['starting:fighter:martial-1']=['rapier'];changed.startingEquipmentChoices['starting:fighter:martial-2']=['rapier'];
  const next=build(changed);assert.equal(next.r.character.equipment.some(e=>e.kind==='shield'),false);assert.equal(next.r.character.equipment.find(e=>e.id.endsWith(':rapier')).quantity,2);assert.ok(next.r.character.equipment.some(e=>e.id.endsWith(':longbow')));assert.ok(next.r.stats.ac<18);
  const before=structuredClone(next.d.startingEquipmentChoices);changePrimaryClass(next.d,'wizard');const wizard=build(next.d);assert.deepEqual(Object.fromEntries(Object.entries(wizard.d.startingEquipmentChoices).filter(([id])=>id.startsWith('starting:fighter:'))),before);assert.ok(!wizard.r.character.equipment.some(e=>e.id.startsWith('starting:fighter:')));

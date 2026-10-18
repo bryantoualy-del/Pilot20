@@ -95,7 +95,7 @@ export function derive(d) {
   check(report.valid, "Incomplete build: " + JSON.stringify(report.issues));
   const level = d.classes.reduce((n, c) => n + c.level, 0),
     pb = proficiencyBonus(level),
-    stats = { level, proficiency: pb, attacksPerAction: 1 };
+    stats = { level, proficiency: pb, attacksPerAction: 1,untrainedCheckBonus:0,untrainedPhysicalCheckBonus:0,rangedWeaponAttackBonus:0 };
   for (const c of d.classes) stats["class." + c.id] = c.level;
   for (const k of ABILITIES) stats["mod." + k] = modifier(d.scores[k]);
   const skills = {},
@@ -154,7 +154,8 @@ export function derive(d) {
     }
   const trace = [];
   for (const m of d.modifiers) {
-    keys(m, ["id", "stat", "operation", "value", "reason", "source"]);
+    keys(m, ["id", "stat", "operation", "value", "reason", "source","condition"],["id", "stat", "operation", "value", "reason", "source"]);
+    if(m.condition!==undefined){check(m.condition==='wearing-armor','Modifier condition');if(!worn)continue;}
     source(m.source);
     const allowed = [
       "ac",
@@ -162,6 +163,7 @@ export function derive(d) {
       "speed",
       "initiative",
       "attacksPerAction",
+      "untrainedCheckBonus","untrainedPhysicalCheckBonus","rangedWeaponAttackBonus",
       ...ABILITIES.map((k) => "save." + k),
       ...Object.keys(SKILLS).map((k) => "skill." + k),
       ...d.classes.flatMap((c) => ["spellAttack." + c.id, "spellDC." + c.id]),
@@ -193,6 +195,10 @@ export function derive(d) {
       source: structuredClone(m.source),
     });
   }
+  const halfBonus=ability=>Math.max(stats.untrainedCheckBonus,['str','dex','con'].includes(ability)?stats.untrainedPhysicalCheckBonus:0);
+  for(const [skill,ability]of Object.entries(SKILLS))if(!d.skills[skill])stats['skill.'+skill]+=halfBonus(ability);
+  stats.initiative+=d.proficiencies.includes('initiative')?pb:halfBonus('dex');
+  const checks=Object.fromEntries(ABILITIES.map(a=>[a,stats['mod.'+a]+halfBonus(a)]));
   check(
     integer(stats.maxHp, 1) &&
       integer(stats.ac, 0, 100) &&
@@ -212,7 +218,7 @@ export function derive(d) {
   for (const w of d.equipment.filter((e) => e.kind === "weapon")) {
     const m = stats["mod." + w.weapon.ability];
     stats["weaponAttack." + w.id] =
-      m + (w.weapon.proficient ? pb : 0) + w.weapon.bonus;
+      m + (w.weapon.proficient ? pb : 0) + w.weapon.bonus+(w.weapon.ranged?stats.rangedWeaponAttackBonus:0);
     stats["weaponDamage." + w.id] = m + w.weapon.bonus;
     weapons[w.id] = {
       attack: stats["weaponAttack." + w.id],
@@ -234,6 +240,7 @@ export function derive(d) {
     modifiers: Object.fromEntries(ABILITIES.map((k) => [k, stats["mod." + k]])),
     skills,
     saves,
+    checks,
     casting,
     weapons,
     ac: stats.ac,

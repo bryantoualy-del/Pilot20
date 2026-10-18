@@ -521,6 +521,9 @@
         },
         "source": {
           "$ref": "#/$defs/source"
+        },
+        "condition": {
+          "const": "wearing-armor"
         }
       },
       "required": [
@@ -748,6 +751,9 @@
                       "prototype"
                     ]
                   }
+                },
+                "ranged": {
+                  "type": "boolean"
                 }
               },
               "required": [
