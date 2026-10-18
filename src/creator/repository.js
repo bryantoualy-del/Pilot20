@@ -1,4 +1,5 @@
 import {validateSpellbook, pinSpellbook} from '../spellbook/model.js';
+import {validateGrantReplacements} from '../catalog/spell-grants.js';
 import { isBuiltInPortrait, GENDERS } from "./appearance.js";
 import { RACE_FAMILIES } from "../catalog/race-discovery.js";
 import { manualRaceVariants } from "./race-selection.js";
@@ -15,6 +16,7 @@ import { StorageError } from "../persistence/adapters.js";
 import { validateCharacter } from "../character/definition.js";
 export function validateDraft(d) {
   json(d);
+  if(d.spellGrantReplacements!==undefined)validateGrantReplacements(d.spellGrantReplacements);
   check(
     d?.kind === "pilot20-creator-draft" &&
       d.schemaVersion === 1 &&

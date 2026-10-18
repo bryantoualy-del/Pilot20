@@ -1,4 +1,5 @@
 import { resolveOrigins } from "./origins.js";
+import {validateGrantReplacements,resolveSpellGrants} from './spell-grants.js';
 import {
   check,
   integer,
@@ -31,6 +32,12 @@ export const listSpells = (
     );
 export const meetsPrerequisites = (scores, anyOf) =>
   anyOf.some((all) => all.every((p) => scores[p.score] >= p.minimum));
+/** A subclass may supply casting; the fighter/rogue class itself remains nonmagical. */
+export function effectiveClassData(index,c){
+ const base=index.class(c.id)?.data,sub=c.subclassId?index.get(c.subclassId):null;
+ if(!base||sub?.data.classId!==c.id||c.level<base.subclassLevel)return base;
+ const out={...base};for(const key of ['casting','cantripsKnown','spellsKnown','spellListClassId','unrestrictedSpellsKnown','restrictedSpellSchools','acquisitionPolicy'])if(sub.data[key]!==undefined)out[key]=sub.data[key];return out;
+}
 /** Resolves a current build, never silently chooses. All acquisition levels are class levels. */
 export function resolveProgression(index, request) {
   let {
@@ -40,7 +47,9 @@ export function resolveProgression(index, request) {
     campaignOptions = [],
     background = { skills: [], proficiencies: [] },
     spellbookTranscriptions = [],
+    spellGrantReplacements = [],
   } = request;
+  validateGrantReplacements(spellGrantReplacements);
   const origin = resolveOrigins(index, {
     ...request,
     campaignOptions,
@@ -108,6 +117,7 @@ export function resolveProgression(index, request) {
         ),
     );
   const replacementOwners = new Map();
+  for(const swap of spellGrantReplacements)if(!classes.some(c=>c.subclassId===swap.originId))issues.push({code:'invalid-granted-spell-replacement',id:swap.spellId});
   for (const f of optional) {
     for (const key of f.data.suppressesChoices ?? [])
       suppressedChoices.add(f.data.classId + ":" + key);
@@ -143,7 +153,7 @@ export function resolveProgression(index, request) {
   for (const [position, c] of classes.entries()) {
     const entry = index.class(c.id);
     check(entry, "Unknown class: " + c.id);
-    const d = entry.data,
+    const d = effectiveClassData(index,c),
       L = c.level;
     if (
       classes.length > 1 &&
@@ -187,26 +197,21 @@ export function resolveProgression(index, request) {
       Object.entries(d.scaling ?? {}).map(([k, v]) => [k, v[L - 1]]),
     );
     const extraSpells = [
-      ...(sub?.data.extraSpells ?? []),
+      ...(sub?.data.extraSpells ?? []).map(r=>({...r,ownerId:sub.id})),
       ...[...selected].flatMap((id) => {
         const d = index.get(id)?.data;
-        return d?.classId === c.id ? (d.extraSpells ?? []) : [];
+        return d?.classId === c.id ? (d.extraSpells ?? []).map(r=>({...r,ownerId:id})) : [];
       }),
     ].filter((r) => r.classLevel <= L);
-    grantedSpells.push(
-      ...extraSpells
-        .filter((r) => r.mode === "prepared")
-        .flatMap((r) =>
-          r.spellIds.map((id) => ({ id, classId: c.id, mode: "prepared" })),
-        ),
-    );
+    const grants=resolveSpellGrants(index,c,extraSpells,spellGrantReplacements);grantedSpells.push(...grants.rows);issues.push(...grants.issues);
     const allowedSpells = (minimumLevel = 1) => [
       ...new Set([
-        ...listSpells(index, c.id, {
+        ...listSpells(index, d.spellListClassId??c.id, {
           minimumLevel,
           maximumLevel: maxSpell,
-        }).map((s) => s.id),
+        }).map((s) => s.id).filter(id=>!grantedSpells.some(g=>g.classId===c.id&&g.mode==='known'&&g.id===id)),
         ...extraSpells
+          .filter(r=>r.mode!=='known')
           .flatMap((r) => r.spellIds)
           .filter((id) => index.get(id).data.level >= minimumLevel),
       ]),
@@ -333,7 +338,7 @@ export function resolveProgression(index, request) {
         "cantrips",
         1,
         d.cantripsKnown[L - 1],
-        listSpells(index, c.id, { maximumLevel: 0 }).map((s) => s.id),
+        listSpells(index, d.spellListClassId??c.id, { maximumLevel: 0 }).filter(s=>!grantedSpells.some(g=>g.classId===c.id&&g.id===s.id)).map((s) => s.id),
         "spell",
       );
     if (d.spellsKnown?.[L - 1]) {
@@ -344,10 +349,11 @@ export function resolveProgression(index, request) {
         c.id,
         "known-spells",
         d.casting.progression === "half" ? 2 : 1,
-        count,
-        allowedSpells(),
+        count-(d.unrestrictedSpellsKnown?.[L-1]??0),
+        d.restrictedSpellSchools?allowedSpells().filter(id=>d.restrictedSpellSchools.includes(index.get(id).data.school)):allowedSpells(),
         "spell",
       );
+      if(d.unrestrictedSpellsKnown?.[L-1])addChoice(c.id,'known-free-spells',3,d.unrestrictedSpellsKnown[L-1],allowedSpells(),'spell');
     }
     if (c.id === "wizard") {
       const extras = spellbookTranscriptions.filter(

@@ -98,7 +98,11 @@ export function spellbookFromBuild(index, character, report, request) {
       add(spellId, q.id, q.classId, copied?'copy':acquisition, needsPreparation && acquisition === 'book' ? 'daily' : 'none');
     }
   }
-  for (const g of report.grantedSpells) add(g.id, g.classId + ':automatic', g.classId, 'granted', 'always');
+  for (const g of report.grantedSpells) {
+    const grant=add(g.id,g.ownerId??g.classId+':automatic',g.classId,'granted',g.mode==='prepared'?'always':'none');
+    if(g.classLevel)grant.acquiredAt.classLevel=g.classLevel;
+    if(g.ownerId&&index.get(g.ownerId))grant.source=index.get(g.ownerId).source;
+  }
   for (const q of report.choices.filter(q => ['prepared', 'signature-spell'].includes(q.kind))) {
     for (const spellId of report.selections[q.id] ?? []) {
       let grant = book.grants.find(g => g.classId === q.classId && g.spellId === spellId);

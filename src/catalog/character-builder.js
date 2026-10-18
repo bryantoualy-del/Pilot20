@@ -5,7 +5,7 @@ import {
 } from "./advancement.js";
 import { check, SKILLS } from "../character/contracts.js";
 import { validateCharacter, validateBuild } from "../character/definition.js";
-import { resolveProgression } from "./progression.js";
+import { resolveProgression,effectiveClassData } from "./progression.js";
 import { ability, compileSpell, attachClassAdapters } from "./adapters.js";
 /** Production constructor. No fixture imports, random rolls, implied subclass or automatic player choices. */
 export function buildCharacter(
@@ -69,7 +69,7 @@ export function buildCharacter(
       level: c.level,
       subclassId: c.subclassId ?? null,
       hitDie: entry.data.hitDie,
-      casting: entry.data.casting,
+      casting: effectiveClassData(index,c).casting,
       source: entry.source,
     };
   });
@@ -116,6 +116,7 @@ export function buildCharacter(
   for(const featureId of d.features){
     const feature=index.get(featureId),effect=feature?.data.buildEffects;if(!effect)continue;
     d.proficiencies.push(...(effect.proficiencies??[]));
+    d.defenses.resistances.push(...(effect.resistances??[]));
     if(effect.attacksPerAction)d.modifiers.push({id:featureId+':attacks',stat:'attacksPerAction',operation:'max',value:effect.attacksPerAction,reason:feature.name.en,source:feature.source});
   }
   for (const [n, c] of definitions.entries()) {
@@ -283,9 +284,9 @@ export function buildCharacter(
     };
     spellClasses
       .get(g.classId)
-      .set(g.id, { ...existing, normal: true, prepared: true });
+      .set(g.id, { ...existing, normal: true, prepared: g.mode==='prepared' });
     d.spells.known.push(g.id);
-    d.spells.prepared.push(g.id);
+    if(g.mode==='prepared'||entry.data.level===0)d.spells.prepared.push(g.id);
   }
   d.features = [...new Set(d.features)];
   d.proficiencies = [

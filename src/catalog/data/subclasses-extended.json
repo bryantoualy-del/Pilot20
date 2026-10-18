@@ -1232,6 +1232,1364 @@
           ]
         }
       }
+    },
+    {
+      "id": "tce:sorcerer:aberrant-mind:psionic-spells",
+      "type": "feature",
+      "name": {
+        "en": "Psionic Spells",
+        "fr": "Sorts psioniques"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Aberrance",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "sorcerer",
+        "minimumClassLevel": 1,
+        "description": "Apprenez les sorts de la table sans les compter dans le quota d’ensorceleur. À chaque niveau d’ensorceleur, un de ces sorts peut être remplacé par un sort du même niveau de divination ou d’enchantement issu des listes d’ensorceleur, magicien ou occultiste.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:sorcerer:aberrant-mind:telepathic-speech",
+      "type": "feature",
+      "name": {
+        "en": "Telepathic Speech",
+        "fr": "Discours télépathique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Aberrance",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "sorcerer",
+        "minimumClassLevel": 1,
+        "description": "Action bonus : lien avec une créature visible à9 m pendant un nombre de minutes égal au niveau d’ensorceleur. Distance maximale1,5 km×Charisme, minimum1,5 km. Chacun doit comprendre la langue mentale de l’autre. Un nouveau lien, votre mort ou votre neutralisation termine le précédent.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:sorcerer:aberrant-mind:psionic-sorcery",
+      "type": "feature",
+      "name": {
+        "en": "Psionic Sorcery",
+        "fr": "Magie psionique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Aberrance",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "sorcerer",
+        "minimumClassLevel": 6,
+        "description": "Les sorts de niveau1 ou plus acquis par Sorts psioniques peuvent coûter autant de points de sorcellerie que leur niveau au lieu d’un emplacement. Cette méthode retire les composantes verbales et somatiques, et toutes les matérielles sauf celles consommées.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:sorcerer:aberrant-mind:psychic-defenses",
+      "type": "feature",
+      "name": {
+        "en": "Psychic Defenses",
+        "fr": "Défenses psychiques"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Aberrance",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "sorcerer",
+        "minimumClassLevel": 6,
+        "description": "Résistance psychique et avantage aux sauvegardes contre charme et peur.",
+        "language": "fr",
+        "buildEffects": {
+          "resistances": [
+            "psychic"
+          ]
+        },
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:sorcerer:aberrant-mind:revelation-in-flesh",
+      "type": "feature",
+      "name": {
+        "en": "Revelation In Flesh",
+        "fr": "Révélation incarnée"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Aberrance",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "sorcerer",
+        "minimumClassLevel": 14,
+        "description": "Action bonus,10 minutes : dépensez un ou plusieurs points de sorcellerie, un par bénéfice : voir l’invisible à18 m sans abri total, vol stationnaire égal à votre vitesse, nage au double de votre vitesse avec respiration aquatique, ou corps fluide passant dans2,5 cm et échappant aux entraves/agrippement non magiques pour1,50 m de mouvement.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:sorcerer:aberrant-mind:warping-implosion",
+      "type": "feature",
+      "name": {
+        "en": "Warping Implosion",
+        "fr": "Distorsion implosive"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Aberrance",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "sorcerer",
+        "minimumClassLevel": 18,
+        "description": "Action : téléportation de36 m vers un espace visible libre. Les créatures à9 m du départ font une sauvegarde de Force contre3d10 force et traction vers le départ ; réussite : moitié sans traction. Une utilisation gratuite par repos long, ou5 points pour recommencer.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:sorcerer:aberrant-mind",
+      "type": "subclass",
+      "name": {
+        "en": "Aberrant Mind",
+        "fr": "Aberrance"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Aberrance",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "sorcerer",
+        "grants": [
+          {
+            "level": 1,
+            "featureIds": [
+              "tce:sorcerer:aberrant-mind:psionic-spells",
+              "tce:sorcerer:aberrant-mind:telepathic-speech"
+            ]
+          },
+          {
+            "level": 6,
+            "featureIds": [
+              "tce:sorcerer:aberrant-mind:psionic-sorcery",
+              "tce:sorcerer:aberrant-mind:psychic-defenses"
+            ]
+          },
+          {
+            "level": 14,
+            "featureIds": [
+              "tce:sorcerer:aberrant-mind:revelation-in-flesh"
+            ]
+          },
+          {
+            "level": 18,
+            "featureIds": [
+              "tce:sorcerer:aberrant-mind:warping-implosion"
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "id": "warping-implosion-free",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "extraSpells": [
+          {
+            "classLevel": 1,
+            "mode": "known",
+            "spellIds": [
+              "phb14:spell:arms-of-hadar",
+              "phb14:spell:dissonant-whispers"
+            ]
+          },
+          {
+            "classLevel": 3,
+            "mode": "known",
+            "spellIds": [
+              "srd51:calm-emotions",
+              "srd51:detect-thoughts"
+            ]
+          },
+          {
+            "classLevel": 5,
+            "mode": "known",
+            "spellIds": [
+              "phb14:spell:hunger-of-hadar",
+              "srd51:sending"
+            ]
+          },
+          {
+            "classLevel": 7,
+            "mode": "known",
+            "spellIds": [
+              "srd51:black-tentacles",
+              "dnd2014.spell.8445e9f6-a53b-5f60-8a91-0bb3644f19c8"
+            ]
+          },
+          {
+            "classLevel": 9,
+            "mode": "known",
+            "spellIds": [
+              "srd51:telepathic-bond",
+              "srd51:telekinesis"
+            ]
+          },
+          {
+            "classLevel": 1,
+            "mode": "known",
+            "spellIds": [
+              "dnd2014.spell.36a1e744-9cb1-59e6-8a0a-0dc0311761db"
+            ]
+          }
+        ],
+        "choices": [],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "spellGrantReplacement": {
+          "schools": [
+            "divination",
+            "enchantment"
+          ],
+          "classIds": [
+            "sorcerer",
+            "wizard",
+            "warlock"
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:sorcerer:clockwork-soul:clockwork-magic",
+      "type": "feature",
+      "name": {
+        "en": "Clockwork Magic",
+        "fr": "Magie mécanique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Âme mécanique",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "sorcerer",
+        "minimumClassLevel": 1,
+        "description": "Apprenez les sorts de la table hors quota d’ensorceleur. À chaque niveau d’ensorceleur, un de ces sorts peut être remplacé par une abjuration ou transmutation de même niveau issue des listes d’ensorceleur, magicien ou occultiste.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:sorcerer:clockwork-soul:restore-balance",
+      "type": "feature",
+      "name": {
+        "en": "Restore Balance",
+        "fr": "Équilibre restauré"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Âme mécanique",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "sorcerer",
+        "minimumClassLevel": 1,
+        "description": "Réaction lorsqu’une créature visible à18 m va lancer un d20 avec avantage ou désavantage : annulez cet avantage ou désavantage. Bonus de maîtrise utilisations par repos long.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:sorcerer:clockwork-soul:bastion-of-law",
+      "type": "feature",
+      "name": {
+        "en": "Bastion Of Law",
+        "fr": "Bastion de loi"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Âme mécanique",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "sorcerer",
+        "minimumClassLevel": 6,
+        "description": "Action et1–5 points de sorcellerie : protégez une créature visible à9 m avec autant de d8. Lorsqu’elle subit des dégâts, elle peut dépenser des dés pour les réduire de leur somme. Fin au repos long ou à votre nouvelle utilisation.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:sorcerer:clockwork-soul:trance-of-order",
+      "type": "feature",
+      "name": {
+        "en": "Trance Of Order",
+        "fr": "Transe harmonique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Âme mécanique",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "sorcerer",
+        "minimumClassLevel": 14,
+        "description": "Action bonus,1 minute : pas d’avantage aux attaques contre vous ; vos d20 d’attaque, test ou sauvegarde inférieurs à10 comptent comme10. Une utilisation gratuite par repos long, ou5 points pour recommencer.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:sorcerer:clockwork-soul:clockwork-cavalcade",
+      "type": "feature",
+      "name": {
+        "en": "Clockwork Cavalcade",
+        "fr": "Chevauchée mécanique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Âme mécanique",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "sorcerer",
+        "minimumClassLevel": 18,
+        "description": "Action : esprits de l’ordre dans un cube de9 m depuis vous. Répartissez jusqu’à100 PV de soins, réparez les objets entièrement inclus et terminez les sorts de niveau6 ou moins sur les créatures/objets choisis. Une utilisation gratuite par repos long, ou7 points pour recommencer.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:sorcerer:clockwork-soul",
+      "type": "subclass",
+      "name": {
+        "en": "Clockwork Soul",
+        "fr": "Âme mécanique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Âme mécanique",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "sorcerer",
+        "grants": [
+          {
+            "level": 1,
+            "featureIds": [
+              "tce:sorcerer:clockwork-soul:clockwork-magic",
+              "tce:sorcerer:clockwork-soul:restore-balance"
+            ]
+          },
+          {
+            "level": 6,
+            "featureIds": [
+              "tce:sorcerer:clockwork-soul:bastion-of-law"
+            ]
+          },
+          {
+            "level": 14,
+            "featureIds": [
+              "tce:sorcerer:clockwork-soul:trance-of-order"
+            ]
+          },
+          {
+            "level": 18,
+            "featureIds": [
+              "tce:sorcerer:clockwork-soul:clockwork-cavalcade"
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "id": "restore-balance",
+            "recovery": "long",
+            "maxByLevel": [
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              }
+            ]
+          },
+          {
+            "id": "trance-of-order-free",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "id": "clockwork-cavalcade-free",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "extraSpells": [
+          {
+            "classLevel": 1,
+            "mode": "known",
+            "spellIds": [
+              "srd51:alarm",
+              "srd51:protection-from-evil-and-good"
+            ]
+          },
+          {
+            "classLevel": 3,
+            "mode": "known",
+            "spellIds": [
+              "srd51:aid",
+              "srd51:lesser-restoration"
+            ]
+          },
+          {
+            "classLevel": 5,
+            "mode": "known",
+            "spellIds": [
+              "srd51:dispel-magic",
+              "srd51:protection-from-energy"
+            ]
+          },
+          {
+            "classLevel": 7,
+            "mode": "known",
+            "spellIds": [
+              "srd51:freedom-of-movement",
+              "dnd2014.spell.453be0f7-c67c-5a5f-a828-c9d89463db55"
+            ]
+          },
+          {
+            "classLevel": 9,
+            "mode": "known",
+            "spellIds": [
+              "srd51:greater-restoration",
+              "srd51:wall-of-force"
+            ]
+          }
+        ],
+        "choices": [],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "spellGrantReplacement": {
+          "schools": [
+            "abjuration",
+            "transmutation"
+          ],
+          "classIds": [
+            "sorcerer",
+            "wizard",
+            "warlock"
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:fighter:eldritch-knight:spellcasting",
+      "type": "feature",
+      "name": {
+        "en": "Spellcasting",
+        "fr": "Sorts"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Chevalier occulte",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "fighter",
+        "minimumClassLevel": 3,
+        "description": "Magie de magicien mémorisée, fondée sur Intelligence, sans grimoire ni préparation quotidienne. Deux sorts mineurs au niveau3, trois au10. Sorts connus surtout d’abjuration ou d’évocation ; un choix libre au niveau3, puis aux niveaux8,14 et20. Un remplacement de sort connu par niveau de guerrier, en respectant son groupe.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:fighter:eldritch-knight:weapon-bond",
+      "type": "feature",
+      "name": {
+        "en": "Weapon Bond",
+        "fr": "Lien avec une arme"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Chevalier occulte",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "fighter",
+        "minimumClassLevel": 3,
+        "description": "Un rituel d’1 h lie une arme ; deux armes liées au plus. Impossible de vous en désarmer tant que vous n’êtes pas neutralisé. Une action bonus rappelle une arme liée depuis le même plan.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:fighter:eldritch-knight:war-magic",
+      "type": "feature",
+      "name": {
+        "en": "War Magic",
+        "fr": "Magie de guerre"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Chevalier occulte",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "fighter",
+        "minimumClassLevel": 7,
+        "description": "Après avoir utilisé votre action pour lancer un sort mineur, une action bonus permet une attaque d’arme.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:fighter:eldritch-knight:eldritch-strike",
+      "type": "feature",
+      "name": {
+        "en": "Eldritch Strike",
+        "fr": "Frappe occulte"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Chevalier occulte",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "fighter",
+        "minimumClassLevel": 10,
+        "description": "Une cible touchée par votre arme est désavantagée à sa prochaine sauvegarde contre un de vos sorts lancé avant la fin de votre prochain tour.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:fighter:eldritch-knight:arcane-charge",
+      "type": "feature",
+      "name": {
+        "en": "Arcane Charge",
+        "fr": "Charge arcanique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Chevalier occulte",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "fighter",
+        "minimumClassLevel": 15,
+        "description": "Lorsque vous utilisez Fougue, vous pouvez vous téléporter jusqu’à9 m vers un espace visible et libre, avant ou après l’action supplémentaire.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:fighter:eldritch-knight:improved-war-magic",
+      "type": "feature",
+      "name": {
+        "en": "Improved War Magic",
+        "fr": "Magie de guerre améliorée"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Chevalier occulte",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "fighter",
+        "minimumClassLevel": 18,
+        "description": "L’action bonus d’attaque d’arme est aussi possible après votre action utilisée pour un sort de niveau1 ou plus.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:fighter:eldritch-knight",
+      "type": "subclass",
+      "name": {
+        "en": "Eldritch Knight",
+        "fr": "Chevalier occulte"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Chevalier occulte",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "fighter",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "phb14:fighter:eldritch-knight:spellcasting",
+              "phb14:fighter:eldritch-knight:weapon-bond"
+            ]
+          },
+          {
+            "level": 7,
+            "featureIds": [
+              "phb14:fighter:eldritch-knight:war-magic"
+            ]
+          },
+          {
+            "level": 10,
+            "featureIds": [
+              "phb14:fighter:eldritch-knight:eldritch-strike"
+            ]
+          },
+          {
+            "level": 15,
+            "featureIds": [
+              "phb14:fighter:eldritch-knight:arcane-charge"
+            ]
+          },
+          {
+            "level": 18,
+            "featureIds": [
+              "phb14:fighter:eldritch-knight:improved-war-magic"
+            ]
+          }
+        ],
+        "resources": [],
+        "extraSpells": [],
+        "choices": [],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "casting": {
+          "ability": "int",
+          "progression": "third",
+          "startsAtClassLevel": 3
+        },
+        "spellListClassId": "wizard",
+        "cantripsKnown": [
+          0,
+          0,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "spellsKnown": [
+          0,
+          0,
+          3,
+          4,
+          4,
+          4,
+          5,
+          6,
+          6,
+          7,
+          8,
+          8,
+          9,
+          10,
+          10,
+          11,
+          11,
+          11,
+          12,
+          13
+        ],
+        "restrictedSpellSchools": [
+          "abjuration",
+          "evocation"
+        ],
+        "unrestrictedSpellsKnown": [
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "acquisitionPolicy": {
+          "knownReplacementPerClassLevel": 1,
+          "invocationReplacementPerClassLevel": 0,
+          "spellbookLearnedAtFirstLevel": 0,
+          "spellbookLearnedPerClassLevel": 0
+        }
+      }
+    },
+    {
+      "id": "phb14:rogue:arcane-trickster:spellcasting",
+      "type": "feature",
+      "name": {
+        "en": "Spellcasting",
+        "fr": "Sorts"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Escroc arcanique",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "rogue",
+        "minimumClassLevel": 3,
+        "description": "Magie de magicien mémorisée fondée sur Intelligence. Main du mage et deux autres sorts mineurs ; un sort mineur de plus au niveau10. Sorts connus surtout d’enchantement ou d’illusion, avec choix libres aux niveaux3,8,14 et20. Un remplacement par niveau de roublard, selon son groupe.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:rogue:arcane-trickster:mage-hand-legerdemain",
+      "type": "feature",
+      "name": {
+        "en": "Mage Hand Legerdemain",
+        "fr": "Main du mage prestidigitatrice"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Escroc arcanique",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "rogue",
+        "minimumClassLevel": 3,
+        "description": "Main du mage peut être invisible ; elle manipule contenants et outils de voleur à distance. Une action bonus d’Action rusée peut la contrôler. Les tâches furtives emploient les tests opposés appropriés.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:rogue:arcane-trickster:magical-ambush",
+      "type": "feature",
+      "name": {
+        "en": "Magical Ambush",
+        "fr": "Embuscade magique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Escroc arcanique",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "rogue",
+        "minimumClassLevel": 9,
+        "description": "Si vous êtes caché d’une créature au moment où vous lui lancez un sort, elle subit le désavantage aux sauvegardes contre ce sort pendant ce tour.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:rogue:arcane-trickster:versatile-trickster",
+      "type": "feature",
+      "name": {
+        "en": "Versatile Trickster",
+        "fr": "Escroc polyvalent"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Escroc arcanique",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "rogue",
+        "minimumClassLevel": 13,
+        "description": "Action bonus : votre Main du mage distraie une créature à1,50 m d’elle ; avantage à vos attaques contre cette créature jusqu’à la fin du tour.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:rogue:arcane-trickster:spell-thief",
+      "type": "feature",
+      "name": {
+        "en": "Spell Thief",
+        "fr": "Voleur de sorts"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Escroc arcanique",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "rogue",
+        "minimumClassLevel": 17,
+        "description": "Réaction après un sort qui vous cible ou vous inclut : forcez une sauvegarde de caractéristique d’incantation contre votre DD. Échec : vous annulez le sort sur vous, et si son niveau est accessible, vous le volez pour8 h, l’adversaire ne pouvant plus le lancer pendant ce temps. Une utilisation par repos long.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:rogue:arcane-trickster",
+      "type": "subclass",
+      "name": {
+        "en": "Arcane Trickster",
+        "fr": "Escroc arcanique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Escroc arcanique",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "rogue",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "phb14:rogue:arcane-trickster:spellcasting",
+              "phb14:rogue:arcane-trickster:mage-hand-legerdemain"
+            ]
+          },
+          {
+            "level": 9,
+            "featureIds": [
+              "phb14:rogue:arcane-trickster:magical-ambush"
+            ]
+          },
+          {
+            "level": 13,
+            "featureIds": [
+              "phb14:rogue:arcane-trickster:versatile-trickster"
+            ]
+          },
+          {
+            "level": 17,
+            "featureIds": [
+              "phb14:rogue:arcane-trickster:spell-thief"
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "id": "spell-thief",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "extraSpells": [
+          {
+            "classLevel": 3,
+            "mode": "known",
+            "spellIds": [
+              "srd51:mage-hand"
+            ]
+          }
+        ],
+        "choices": [],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "casting": {
+          "ability": "int",
+          "progression": "third",
+          "startsAtClassLevel": 3
+        },
+        "spellListClassId": "wizard",
+        "cantripsKnown": [
+          0,
+          0,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "spellsKnown": [
+          0,
+          0,
+          3,
+          4,
+          4,
+          4,
+          5,
+          6,
+          6,
+          7,
+          8,
+          8,
+          9,
+          10,
+          10,
+          11,
+          11,
+          11,
+          12,
+          13
+        ],
+        "restrictedSpellSchools": [
+          "enchantment",
+          "illusion"
+        ],
+        "unrestrictedSpellsKnown": [
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "acquisitionPolicy": {
+          "knownReplacementPerClassLevel": 1,
+          "invocationReplacementPerClassLevel": 0,
+          "spellbookLearnedAtFirstLevel": 0,
+          "spellbookLearnedPerClassLevel": 0
+        }
+      }
     }
   ]
 }

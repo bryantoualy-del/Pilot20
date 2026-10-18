@@ -283,6 +283,7 @@ export function validateSavedPlan(context, request) {
   for (const t of request.spellbookTranscriptions ?? [])
     if (!index.get(t.spellId))
       issues.push({ code: "unavailable-transcription", id: t.spellId });
+  for(const swap of request.spellGrantReplacements??[])if(!index.get(swap.originId)||!index.get(swap.spellId))issues.push({code:'invalid-granted-spell-replacement',id:swap.spellId});
   return { valid: issues.length === 0, issues };
 }
 export function buildCampaignCharacter(context, request, campaign) {
