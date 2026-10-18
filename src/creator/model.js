@@ -263,6 +263,7 @@ export function compileDraft(context, config, d) {
     for(const e of c.equipment.filter(e=>e.weapon)){const id=e.id.split(':').at(-1),w=WEAPONS[id];if(!w)continue;const monkWeapon=w.category==='simple'&&!w.ranged&&!['greatclub'].includes(id)||id==='shortsword'||kensei.has(w.proficiency);if(!monkWeapon)continue;if(c.scores.dex>c.scores.str)e.weapon.ability='dex';const m=/^1d(\d+)$/.exec(e.weapon.dice);if(m&&Number(m[1])<die)e.weapon.dice='1d'+die;}
   }
   for(const item of c.equipment)if((d.unequippedItems??[]).includes(item.id))item.equipped=false;
+  if(r.origin?.race?.data.armorProhibited&&c.equipment.some(e=>e.equipped&&e.kind==='armor'))return{...r,valid:false,character:null,equipmentPreview:c.equipment,issues:[{code:'racial-armor-prohibited'}],status:'draft'};
   if(['armor','shield'].some(kind=>c.equipment.filter(e=>e.equipped&&e.kind===kind).length>1))return{...r,valid:false,character:null,equipmentPreview:c.equipment,issues:[{code:'equipment-conflict'}],status:'draft'};
   validateCharacter(c);
   check(validateBuild(c).valid, "Creator modifiers invalid");

@@ -123,8 +123,7 @@ export function derive(d) {
         : 10 + stats["mod.dex"] + shieldBonus,
     },
   ];
-  if (!worn)
-    for (const a of d.armorRules.filter((a) => !shield || a.shieldAllowed))
+  for (const a of d.armorRules.filter((a) => (!worn || a.allowWithArmor) && (!shield || a.shieldAllowed)))
       acOptions.push({
         id: a.id,
         value:
@@ -250,7 +249,7 @@ export function derive(d) {
     ac: stats.ac,
     maxHp: stats.maxHp,
     speed: stats.speed,
-    movement:{walk:stats.speed,...(d.movement.climb!==undefined?{climb:d.movement.climbMatchesWalk?stats.speed:d.movement.climb}:{}),...(d.movement.swim!==undefined?{swim:d.movement.swimMatchesWalk?stats.speed:d.movement.swim}:{}),...(d.movement.fly!==undefined?{fly:d.movement.fly}:{})},
+    movement:{walk:stats.speed,...(d.movement.climb!==undefined?{climb:d.movement.climbMatchesWalk?stats.speed:d.movement.climb}:{}),...(d.movement.swim!==undefined?{swim:d.movement.swimMatchesWalk?stats.speed:d.movement.swim}:{}),...(d.movement.fly!==undefined?{fly:d.movement.flightArmorRestricted&&worn&&(worn.armor.heavy||worn.armor.dexCap!==null)?0:d.movement.flyMatchesWalk?stats.speed:d.movement.fly}:{})},
     initiative: stats.initiative,
     attacksPerAction: stats.attacksPerAction,
     acOptions,

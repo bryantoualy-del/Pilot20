@@ -449,6 +449,9 @@ export function buildCharacter(
     d.defenses.resistances = [
       ...new Set([...d.defenses.resistances, ...o.resistances]),
     ];
+    if(o.naturalArmor)d.armorRules.push({id:o.race.id+':natural-armor',...structuredClone(o.naturalArmor),allowWithArmor:true,source:o.race.source});
+    if(o.armorBonus)d.modifiers.push({id:o.race.id+':armor-bonus',stat:'ac',operation:'add',value:o.armorBonus,reason:'Racial armor bonus',source:o.race.source});
+    if(o.initiativeProficiency)d.modifiers.push({id:o.race.id+':initiative',stat:'initiative',operation:'add',value:2+Math.floor((definitions.reduce((n,c)=>n+c.level,0)-1)/4),reason:'Hare-Trigger',source:o.race.source});
     const dragon = o.ledger.find((r) => r.kind === "draconic")?.value;
     if (dragon) {
       const damage = {
@@ -516,6 +519,7 @@ export function buildCharacter(
     const e = index.get(spell.id);
     if (!e) continue;
     const sid = spell.featureOwnerId?spell.featureOwnerId+':spell:'+e.id:"origin:spell:" + e.id;
+    if(spell.racialUses){const rid=(spell.ownerId??o.race.id)+':'+(spell.racialPool??e.id)+':uses';if(!d.resources.some(r=>r.id===rid))d.resources.push({id:rid,...spell.racialUses,source:spell.source});spell.resourceId=rid;}
     d.spells.known.push(e.id);
     d.spells.prepared.push(e.id);
     d.features.push(sid);
@@ -527,7 +531,7 @@ export function buildCharacter(
           ...(spell.target?{target:spell.target}:{}),...(spell.maxTargets?{maxTargets:spell.maxTargets}:{}),
           ...(e.data.concentration?{concentration:{effectId:e.id,start:'activation'}}:{}),
           ...(spell.resourceId&&!report.resources.some(r=>r.id===spell.resourceId&&r.unlimited)?{resource:{id:spell.resourceId,amount:spell.resourceAmount??1}}:{}),
-          cost: spell.featureOwnerId?spell.economy??'none':spell.level === 1 ? "action" : "none",
+          cost: spell.featureOwnerId?spell.economy??'none':/bonus/i.test(e.data.castingTime)?'bonus':/reaction|réaction/i.test(e.data.castingTime)?'reaction':'action',
           combat: {
             version: 1,
             mode: "manual",

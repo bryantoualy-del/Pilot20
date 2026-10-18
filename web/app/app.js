@@ -286,23 +286,6 @@ async function render() {
             .map(cardDraft),
         ),
       ),
-      el(
-        "section",
-        { class: "source-strip" },
-        el("h2", {}, t("sources")),
-        el("p", {}, t("sourceHelp")),
-        el(
-          "div",
-          { class: "row" },
-          context.statuses.map((s) =>
-            badge(
-              s.name + " · " + s.installedEntries,
-              s.installedEntries ? "" : "warning",
-            ),
-          ),
-        ),
-        button(t("checkSources"), () => nav("sources")),
-      ),
     );
   if (state.route === "library") await libraryScreen(main, all);
   if (state.route === "sources") await sourcesScreen(main);

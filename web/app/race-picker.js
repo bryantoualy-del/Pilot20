@@ -20,7 +20,7 @@ export function renderRacePicker(d, a, update, filters) {
   wrapper.append(field(w('Rechercher une race', 'Search races'), search), count, grid);
   function fill() {
     grid.replaceChildren();
-    const families = raceLibrary(a.context, { query: state.query }).sort((x, y) =>
+    const families = raceLibrary(a.context, { query: state.query }).filter(f=>f.versions.length).sort((x, y) =>
       Number(y.versions.some(v => v.available)) - Number(x.versions.some(v => v.available)) ||
       (a.state.locale === 'fr' ? x.nom_fr : x.name_en).localeCompare(a.state.locale === 'fr' ? y.nom_fr : y.name_en, a.state.locale));
     let shown = 0;
@@ -29,11 +29,13 @@ export function renderRacePicker(d, a, update, filters) {
       const selected = versions.some(v => v.entry.id === d.raceId);
       const label = a.state.locale === 'fr' ? f.nom_fr : f.name_en;
       const b = button([raceIcon(f.nom_fr, f.slug), el('span', {}, label,
-        !versions.length ? el('small', {}, f.availability === 'source-disabled'
-          ? w('Source désactivée', 'Source disabled') : w('Règles à intégrer', 'Rules pending')) : null)],
-        () => update(x => selectRace(a.context, x, versions.find(v => v.entry.id === d.raceId)?.entry.id ?? versions[0].entry.id, a.state.locale)),
+        !versions.length ? el('small', {}, w('Source désactivée', 'Source disabled')) : null)],
+        async () => {
+          if(versions.length){await update(x => selectRace(a.context,x,versions.find(v=>v.entry.id===d.raceId)?.entry.id??versions[0].entry.id,a.state.locale));return;}
+          a.modal(el('section',{},el('h2',{},label),el('p',{},w('Choisissez la version à autoriser pour cette campagne.','Choose the version to enable in this campaign.')),f.versions.map(v=>button(a.name(v.entry)+' · '+v.entry.source.document,async()=>{try{const sourceId=v.entry.data.rulesSourceId??(v.entry.data.customLineage?'tce':'srd51'),old=a.config,next={...old,revision:old.revision+1,enabledSourceIds:[...new Set([...old.enabledSourceIds,sourceId])]};await a.campaigns.save(next,{expectedRevision:old.revision});a.config=next;a.context=await a.campaigns.context(next);await update(x=>selectRace(a.context,x,v.entry.id,a.state.locale));document.querySelector('#dialog').close();}catch(e){a.fail(e);}},'primary'))));
+        },
         selected ? 'selected' : '');
-      b.disabled = !versions.length;
+      b.disabled = !f.versions.length;
       b.setAttribute('aria-pressed', String(selected));
       grid.append(b); shown++;
     }

@@ -1,0 +1,723 @@
+[
+  {
+    "name": {
+      "fr": "Aarakocra",
+      "en": "Aarakocra"
+    },
+    "slug": "aarakocra",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 0,
+    "traits": [
+      "Vol",
+      "Serres (1d6+Mod.For tranchants)",
+      "Appel du vent"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Aarakocra"
+  },
+  {
+    "name": {
+      "fr": "Aasimar",
+      "en": "Aasimar"
+    },
+    "slug": "aasimar",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Résistance céleste (résistance aux dégâts nécrotiques et radiants)",
+      "Main guérisseuse (BMd4 pv/repos long)",
+      "Révélation céleste"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Aasimar"
+  },
+  {
+    "name": {
+      "fr": "Centaure",
+      "en": "Centaur"
+    },
+    "slug": "centaure",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 40,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 0,
+    "traits": [
+      "Charge",
+      "Équin",
+      "Sabot (1d6+Mod.For contondant)",
+      "Affinité à la nature"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Centaure"
+  },
+  {
+    "name": {
+      "fr": "Changelin",
+      "en": "Changeling"
+    },
+    "slug": "changelin",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 0,
+    "traits": [
+      "Changement d'apparence",
+      "Instincts de changelin"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Changelin"
+  },
+  {
+    "name": {
+      "fr": "Conil",
+      "en": "Harengon"
+    },
+    "slug": "conil",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 0,
+    "traits": [
+      "Démarrage du lièvre",
+      "Sens léporidés",
+      "Pas chanceux",
+      "Saut de lapin"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Conil"
+  },
+  {
+    "name": {
+      "fr": "Duergar",
+      "en": "Duergar"
+    },
+    "slug": "duergar",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 120,
+    "traits": [
+      "Résistance naine",
+      "Vigueur psionique",
+      "Magie duergar"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Duergar"
+  },
+  {
+    "name": {
+      "fr": "Éladrin",
+      "en": "Eladrin"
+    },
+    "slug": "eladrin",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Ascendance féerique (AV aux JdS vs charme et la magie ne peut pas vous endormir)",
+      "Sens aiguisés",
+      "Transe (4h de méditation remplacent 8h de sommeil)",
+      "Foulée féerique"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Éladrin"
+  },
+  {
+    "name": {
+      "fr": "Elfe aquatique",
+      "en": "Sea Elf"
+    },
+    "slug": "elfe-aquatique",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Nage (9 m)",
+      "Enfant de la mer",
+      "Ascendance féerique",
+      "Ami de la mer",
+      "Sens aiguisés",
+      "Transe"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Elfe aquatique"
+  },
+  {
+    "name": {
+      "fr": "Fadette",
+      "en": "Fairy"
+    },
+    "slug": "fadette",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "small",
+    "flexible": true,
+    "darkvision": 0,
+    "traits": [
+      "Caractéristiques de fée (type Fée)",
+      "Vol (9 m)",
+      "Magie des fées"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Fadette"
+  },
+  {
+    "name": {
+      "fr": "Féral",
+      "en": "Shifter"
+    },
+    "slug": "feral",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Instincts bestiaux",
+      "Changement"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Féral"
+  },
+  {
+    "name": {
+      "fr": "Firbolg",
+      "en": "Firbolg"
+    },
+    "slug": "firbolg",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 0,
+    "traits": [
+      "Pas caché",
+      "Puissamment bâti",
+      "Langage des bêtes et des feuilles",
+      "Magie firbolg"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Firbolg"
+  },
+  {
+    "name": {
+      "fr": "Forgelier",
+      "en": "Warforged"
+    },
+    "slug": "forgelier",
+    "sourceId": "eberron",
+    "sourceDocument": "Eberron: Rising from the Last War",
+    "speed": 30,
+    "size": "medium",
+    "flexible": false,
+    "darkvision": 0,
+    "traits": [
+      "Résistance des forgeliers",
+      "Repos de la sentinelle",
+      "Protection intégrée",
+      "Conception spécialisée"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Forgelier"
+  },
+  {
+    "name": {
+      "fr": "Génasi de l'air",
+      "en": "Air Genasi"
+    },
+    "slug": "genasi-de-l-air",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 35,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Souffle sans fin",
+      "Résistance à la foudre",
+      "Se mêler au vent"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Génasi de l'air"
+  },
+  {
+    "name": {
+      "fr": "Génasi de l'eau",
+      "en": "Water Genasi"
+    },
+    "slug": "genasi-de-l-eau",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Résistance à l'acide",
+      "Amphibien",
+      "Nage (9 m)",
+      "Appeler la vague"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Génasi de l'eau"
+  },
+  {
+    "name": {
+      "fr": "Génasi du feu",
+      "en": "Fire Genasi"
+    },
+    "slug": "genasi-du-feu",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Résistance au feu",
+      "Atteindre le brasier"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Génasi du feu"
+  },
+  {
+    "name": {
+      "fr": "Génasi de la terre",
+      "en": "Earth Genasi"
+    },
+    "slug": "genasi-de-la-terre",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Marche de la terre",
+      "Fusionner avec la pierre"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Génasi de la terre"
+  },
+  {
+    "name": {
+      "fr": "Githyanki",
+      "en": "Githyanki"
+    },
+    "slug": "githyanki",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 0,
+    "traits": [
+      "Savoir astral",
+      "Résistance psychique",
+      "Psioniques githyanki"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Githyanki"
+  },
+  {
+    "name": {
+      "fr": "Githzerai",
+      "en": "Githzerai"
+    },
+    "slug": "githzerai",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 0,
+    "traits": [
+      "Discipline mentale",
+      "Résistance psychique",
+      "Psioniques githzerai"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Githzerai"
+  },
+  {
+    "name": {
+      "fr": "Gnome des profondeurs",
+      "en": "Deep Gnome"
+    },
+    "slug": "gnome-des-profondeurs",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "small",
+    "flexible": true,
+    "darkvision": 120,
+    "traits": [
+      "Résistance à la magie gnome",
+      "Camouflage svirfnebelin",
+      "Don des svirfnebelins"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Gnome des profondeurs"
+  },
+  {
+    "name": {
+      "fr": "Gobelin",
+      "en": "Goblin"
+    },
+    "slug": "gobelin",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "small",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Ascendance féerique",
+      "Fureur des petits",
+      "Fuite agile"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Gobelin"
+  },
+  {
+    "name": {
+      "fr": "Gobelours",
+      "en": "Bugbear"
+    },
+    "slug": "gobelours",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Ascendance féerique",
+      "Longs membres",
+      "Puissamment bâti",
+      "Sournois",
+      "Attaque surprise (+2d6)"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Gobelours"
+  },
+  {
+    "name": {
+      "fr": "Goliath",
+      "en": "Goliath"
+    },
+    "slug": "goliath",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 0,
+    "traits": [
+      "Petit géant",
+      "Montagnard",
+      "Endurance de la pierre (-1d12 -Mod.Con aux DG)"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Goliath"
+  },
+  {
+    "name": {
+      "fr": "Halfelin sagespectre",
+      "en": "Ghostwise Halfling"
+    },
+    "slug": "halfelin-sagespectre",
+    "sourceId": "scag",
+    "sourceDocument": "Sword Coast Adventurer's Guide",
+    "speed": 25,
+    "size": "small",
+    "flexible": false,
+    "darkvision": 0,
+    "traits": [
+      "Chanceux (relancer un 1)",
+      "Brave (AV aux JdS vs effrayé)",
+      "Agilité halfeline (peut passer dans l'espace d'une créature de taille supérieure)",
+      "Communication silencieuse (télépathie à 9 m)"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Halfelin sagespectre"
+  },
+  {
+    "name": {
+      "fr": "Hiboulin",
+      "en": "Owlin"
+    },
+    "slug": "hiboulin",
+    "sourceId": "strixhaven",
+    "sourceDocument": "Strixhaven: A Curriculum of Chaos",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Vol (9 m)",
+      "Plumage silencieux"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Hiboulin"
+  },
+  {
+    "name": {
+      "fr": "Hobgobelin",
+      "en": "Hobgoblin"
+    },
+    "slug": "hobgobelin",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Ascendance féerique",
+      "Don féerique",
+      "Effet de groupe"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Hobgobelin"
+  },
+  {
+    "name": {
+      "fr": "Homme-lézard",
+      "en": "Lizardfolk"
+    },
+    "slug": "homme-lezard",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 0,
+    "traits": [
+      "Nage (9 m)",
+      "Morsure (1d6+Mod.For tranchant)",
+      "Retenir son souffle (15 min)",
+      "Mâchoires affamées",
+      "Armure naturelle",
+      "Intuition naturelle"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Homme-lézard"
+  },
+  {
+    "name": {
+      "fr": "Kenku",
+      "en": "Kenku"
+    },
+    "slug": "kenku",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 0,
+    "traits": [
+      "Copie de maître",
+      "Mémoire de kenku",
+      "Imitation des sons"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Kenku"
+  },
+  {
+    "name": {
+      "fr": "Minotaure",
+      "en": "Minotaur"
+    },
+    "slug": "minotaure",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 0,
+    "traits": [
+      "Cornes (1d6+Mod.For perforant)",
+      "Charge",
+      "Mémoire de labyrinthe",
+      "Cornes martelantes"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Minotaure"
+  },
+  {
+    "name": {
+      "fr": "Orc",
+      "en": "Orc"
+    },
+    "slug": "orc",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Puissamment bâti",
+      "Endurance implacable",
+      "Montée d'adrénaline"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Orc"
+  },
+  {
+    "name": {
+      "fr": "Ressuscité",
+      "en": "Reborn"
+    },
+    "slug": "ressuscite",
+    "sourceId": "ravenloft",
+    "sourceDocument": "Van Richten's Guide to Ravenloft",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 0,
+    "traits": [
+      "Ascendance ancestrale",
+      "Affinité avec le trépas",
+      "Savoir d'une vie antériere"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Ressuscité"
+  },
+  {
+    "name": {
+      "fr": "Sang maudit",
+      "en": "Hexblood"
+    },
+    "slug": "sang-maudit",
+    "sourceId": "ravenloft",
+    "sourceDocument": "Van Richten's Guide to Ravenloft",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Ascendance ancestrale",
+      "Gage irréel",
+      "Magie de sang maudit"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Sang maudit"
+  },
+  {
+    "name": {
+      "fr": "Satyre",
+      "en": "Satyr"
+    },
+    "slug": "satyre",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 35,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 0,
+    "traits": [
+      "Bélier (1d6+Mod.For contondant)",
+      "Résistance à la magie",
+      "Sauts de joie",
+      "Fêtard"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Satyre"
+  },
+  {
+    "name": {
+      "fr": "Shadar-kai",
+      "en": "Shadar-kai"
+    },
+    "slug": "shadar-kai",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Bénédiction de la Reine corneille (9 m)",
+      "Ascendance féerique (AV aux JdS vs charme et la magie ne peut pas vous endormir)",
+      "Sens aiguisés",
+      "Résistance nécrotique",
+      "Transe (4h de méditation remplacent 8h de sommeil)"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Shadar-kai"
+  },
+  {
+    "name": {
+      "fr": "Tabaxi",
+      "en": "Tabaxi"
+    },
+    "slug": "tabaxi",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Escalade",
+      "Griffes de chat (1d6+Mod.For tranchant)",
+      "Talent de chat",
+      "Agilité féline"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Tabaxi"
+  },
+  {
+    "name": {
+      "fr": "Torte",
+      "en": "Tortle"
+    },
+    "slug": "torte",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 0,
+    "traits": [
+      "Griffes (1d6+Mod.For tranchant)",
+      "Apnée",
+      "Armure naturelle",
+      "Intuition de la nature",
+      "Carapace protectrice"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Torte"
+  },
+  {
+    "name": {
+      "fr": "Triton",
+      "en": "Triton"
+    },
+    "slug": "triton",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Nage (9 m)",
+      "Emissaire de la mer",
+      "Gardien des profondeurs",
+      "Contrôle de l'air et de l'eau"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Triton"
+  },
+  {
+    "name": {
+      "fr": "Yuan-ti",
+      "en": "Yuan-ti"
+    },
+    "slug": "yuan-ti",
+    "sourceId": "motm",
+    "sourceDocument": "Monsters of the Multiverse",
+    "speed": 30,
+    "size": "medium",
+    "flexible": true,
+    "darkvision": 60,
+    "traits": [
+      "Résistance à la magie",
+      "Résistance au poison",
+      "Incantation ophique"
+    ],
+    "evidence": "AideDD audit 02_Catalogue_races.md / Yuan-ti"
+  }
+]
