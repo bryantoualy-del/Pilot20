@@ -126,6 +126,9 @@ export function buildCharacter(
     if(effect.defenseStyle)modify('armor','ac',1,'add','wearing-armor');
     if(effect.rangedWeaponAttackBonus)modify('archery','rangedWeaponAttackBonus',effect.rangedWeaponAttackBonus,'max');
     d.proficiencies.push(...(effect.proficiencies??[]));
+    for(const skill of effect.skills??[])d.skills[skill]=Math.max(d.skills[skill]??0,1);
+    d.defenses.immunities.push(...(effect.immunities??[]));
+    if(effect.heavyArmorBonus)modify('heavy-armor','ac',effect.heavyArmorBonus,'add','wearing-heavy-armor');
     d.defenses.resistances.push(...(effect.resistances??[]));
     if(effect.attacksPerAction)d.modifiers.push({id:featureId+':attacks',stat:'attacksPerAction',operation:'max',value:effect.attacksPerAction,reason:feature.name.en,source:feature.source});
   }

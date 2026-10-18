@@ -1,3 +1,4 @@
+import {clericDomains} from './cleric-domains.js';
 import {warlockInvocations} from './warlock-invocations.js';
 import {CORE_BUILD_EFFECTS,CORE_FRENCH,DRAGON_ANCESTRY} from './core-build-effects.js';
 import references from './data/spell-reference-2014.json' with {type:'json'};
@@ -36,10 +37,10 @@ for(const [id,[fr,description]]of Object.entries(CORE_FRENCH)){const f=playerCla
 for(const feature of playerClasses.items.filter(i=>i.type==='feature'&&/srd51:(fighter|paladin|ranger):(archery|defense|dueling|great-weapon-fighting|protection|two-weapon-fighting)$/.test(i.id)))feature.data.uniqueRuleKey='fighting-style:'+feature.id.split(':').at(-1);
 playerClasses.items.find(i=>i.id==='srd51:life-domain:bonus-proficiency').data.buildEffects={proficiencies:['heavy-armor']};
 for(const row of subraceAdditions)playerOrigins.items.find(i=>i.id===row.raceId).data.subraces.push(row.subrace);
-for(const sub of subclasses.items.filter(i=>i.type==='subclass'))playerClasses.items.find(i=>i.type==='class'&&i.data.classId===sub.data.classId).data.subclassIds.push(sub.id);
+for(const sub of [...subclasses.items,...clericDomains.items].filter(i=>i.type==='subclass'))playerClasses.items.find(i=>i.type==='class'&&i.data.classId===sub.data.classId).data.subclassIds.push(sub.id);
 for(const item of playerSpells.items){const ref=references.find(r=>r.id===item.id);if(ref?.classIds.includes('artificer'))item.data.classIds=[...new Set([...item.data.classIds,'artificer'])];}
 const allReferences=spellReferences();
 for(const item of [...playerSpells.items,...extendedSpells.items,...phbSpells.items])item.data.optionalTashaClassIds=allReferences.find(r=>r.id===item.id)?.optionalTashaClassIds??[];
 const expandedLists={kind:'catalog',schemaVersion:3,ruleset:'dnd5e-2014',id:'pilot20:tce-additional-spell-lists',items:[...new Set(allReferences.flatMap(r=>r.optionalTashaClassIds??[]))].map(classId=>({id:'tce:'+classId+':additional-spells',type:'feature',name:{fr:'Sorts supplémentaires — '+classCatalog.items.find(c=>c.type==='class'&&c.data.classId===classId).name.fr,en:'Additional '+classId+' spells'},source:referencedSource('tce','https://dnd.wizards.com/products/tashas-cauldron-everything'),data:{ruleset:'dnd5e-2014',rulesSourceId:'tce',classId,minimumClassLevel:['paladin','ranger'].includes(classId)?2:1,optionalClassFeature:true,campaignOption:'tce:additional-spells:'+classId,description:'Ajoute à la liste de classe les sorts supplémentaires de Tasha. Ne les apprend ni ne les prépare automatiquement.',language:'fr',automation:{status:'manual',handler:null,limits:['Individual spell effects remain player/GM adjudication.']}}}))};
 playerClasses.items.find(i=>i.type==='class'&&i.data.classId==='warlock').data.choices.find(q=>q.key==='pact-boon').options.push('tce:warlock:pact-of-the-talisman');
-export const playerCatalogs=[playerClasses,playerSpells,playerOrigins,extendedSpells,phbSpells,artificer,expandedLists,subclasses,extraOrigins,warlockInvocations];
+export const playerCatalogs=[playerClasses,playerSpells,playerOrigins,extendedSpells,phbSpells,artificer,expandedLists,subclasses,extraOrigins,warlockInvocations,clericDomains];

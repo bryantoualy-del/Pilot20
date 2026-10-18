@@ -92,9 +92,12 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       check(Array.isArray(d.restrictedSpellSchools)&&d.restrictedSpellSchools.length===2,'Subclass spell schools');
     }
     if(d.buildEffects){
-      keys(d.buildEffects,['proficiencies','attacksPerAction','resistances','minimumClassLevel','movement','scoreIncreases','hpPerClassLevel','naturalArmor','halfProficiency','defenseStyle','rangedWeaponAttackBonus'],[]);
+      keys(d.buildEffects,['proficiencies','attacksPerAction','resistances','minimumClassLevel','movement','scoreIncreases','hpPerClassLevel','naturalArmor','halfProficiency','defenseStyle','rangedWeaponAttackBonus','skills','immunities','heavyArmorBonus'],[]);
       check(i.type==='feature','Build effects belong to features');
       const e=d.buildEffects;
+      if(e.skills)check(Array.isArray(e.skills)&&e.skills.every(s=>Object.hasOwn(SKILLS,s)),'Feature skills');
+      if(e.immunities)list(e.immunities,'Feature immunities');
+      if(e.heavyArmorBonus!==undefined)check(integer(e.heavyArmorBonus,1,5),'Heavy armor bonus');
       if(e.scoreIncreases){keys(e.scoreIncreases,ABILITIES,[]);for(const row of Object.values(e.scoreIncreases)){keys(row,['amount','maximum']);check(integer(row.amount,1,10)&&integer(row.maximum,20,30),'Feature score increase');}}
       if(e.hpPerClassLevel!==undefined)check(integer(e.hpPerClassLevel,1,5),'Feature HP');
       if(e.naturalArmor){keys(e.naturalArmor,['base','abilities','shieldAllowed']);check(integer(e.naturalArmor.base,10,20)&&Array.isArray(e.naturalArmor.abilities)&&e.naturalArmor.abilities.every(a=>ABILITIES.includes(a))&&typeof e.naturalArmor.shieldAllowed==='boolean','Feature armor');}

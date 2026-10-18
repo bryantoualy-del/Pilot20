@@ -120,7 +120,7 @@ export function validateRuleData(d) {
     }
   }
   for(const m of d.modifiers) {
-    keys(m,['id','stat','operation','value','reason','source','condition'],['id','stat','operation','value','reason','source']);if(m.condition!==undefined)check(m.condition==='wearing-armor','Modifier condition');source(m.source);
+    keys(m,['id','stat','operation','value','reason','source','condition'],['id','stat','operation','value','reason','source']);if(m.condition!==undefined)check(['wearing-armor','wearing-heavy-armor'].includes(m.condition),'Modifier condition');source(m.source);
     check(id(m.id) && refs.includes(m.stat) && !m.stat.startsWith('class.') && !m.stat.startsWith('mod.') && ['add','set','max'].includes(m.operation) && typeof m.reason==='string' && m.reason.trim(),'Modifier shape');
     expression(m.value,stats);
   }
