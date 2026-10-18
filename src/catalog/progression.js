@@ -38,7 +38,7 @@ export const meetsPrerequisites = (scores, anyOf) =>
 export function effectiveClassData(index,c){
  const base=index.class(c.id)?.data,sub=c.subclassId?index.get(c.subclassId):null;
  if(!base)return base;
- const out={...base};if(sub?.data.classId===c.id&&c.level>=base.subclassLevel)for(const key of ['casting','cantripsKnown','spellsKnown','spellListClassId','unrestrictedSpellsKnown','restrictedSpellSchools','acquisitionPolicy'])if(sub.data[key]!==undefined)out[key]=sub.data[key];
+ const out={...base};if(sub?.data.classId===c.id&&c.level>=base.subclassLevel)for(const key of ['casting','cantripsKnown','spellsKnown','spellListClassId','spellListClassIds','unrestrictedSpellsKnown','restrictedSpellSchools','acquisitionPolicy'])if(sub.data[key]!==undefined)out[key]=sub.data[key];
  for(const f of index.list('feature'))if(f.data.optionalClassFeature&&f.data.classId===c.id&&c.level>=f.data.minimumClassLevel&&f.data.acquisitionPolicyOverride)out.acquisitionPolicy={...out.acquisitionPolicy,...f.data.acquisitionPolicyOverride};
  return out;
 }
@@ -212,9 +212,10 @@ export function resolveProgression(index, request) {
       }),
     ].filter((r) => r.classLevel <= L);
     const grants=resolveSpellGrants(index,c,extraSpells,spellGrantReplacements);grantedSpells.push(...grants.rows.filter(r=>r.mode!=='book'||!(selections[c.id+':spellbook']??[]).includes(r.id)));issues.push(...grants.issues);
+    const classSpells=opts=>[...new Map((d.spellListClassIds??[d.spellListClassId??c.id]).flatMap(id=>listSpells(index,id,opts)).map(s=>[s.id,s])).values()];
     const allowedSpells = (minimumLevel = 1) => [
       ...new Set([
-        ...listSpells(index, d.spellListClassId??c.id, {
+        ...classSpells({
           minimumLevel,
           maximumLevel: maxSpell,
         }).map((s) => s.id).filter(id=>!grantedSpells.some(g=>g.classId===c.id&&['known','book'].includes(g.mode)&&g.id===id)),
@@ -278,6 +279,7 @@ export function resolveProgression(index, request) {
         continue;
       }
       let options = spec.spellList?listSpells(index,spec.spellList.classId,{minimumLevel:spec.spellList.minimumLevel,maximumLevel:spec.spellList.maximumLevel}).map(s=>s.id):spec.options;
+      if(spec.replacementSpellList&&L>spec.level)options=[...new Set([...options,...listSpells(index,spec.replacementSpellList,{minimumLevel:1,maximumLevel:maxSpell}).map(s=>s.id)])];
       if(spec.bonusIfAlreadyKnown&&!(selections[c.id+':cantrips']??[]).includes(spec.bonusIfAlreadyKnown))options=[spec.bonusIfAlreadyKnown];
       if(spec.kind==='feature')options=options.filter(id=>{const key=index.get(id)?.data.uniqueRuleKey;return !key||!Object.entries(selections).filter(([choice])=>choice!==c.id+':'+spec.key).flatMap(([,values])=>values).some(other=>index.get(other)?.data.uniqueRuleKey===key);});
       if(spec.kind==='proficiency'&&!spec.toolReplacementFor)options=options.filter(id=>!background.proficiencies.some(p=>canonicalProficiency(p)===canonicalProficiency(id)));
@@ -324,6 +326,7 @@ export function resolveProgression(index, request) {
               : (optional.find((f) => f.data.choices?.includes(spec))?.id ??
                 entry.id)),
           ...(spec.distinctGroup ? { distinctGroup: spec.distinctGroup } : {}),
+          ...(spec.replaceableKnown?{replaceableKnown:true}:{}),
           ...(spec.adjudication ? { adjudication: spec.adjudication } : {}),
         },
       );
@@ -349,7 +352,7 @@ export function resolveProgression(index, request) {
         "cantrips",
         1,
         d.cantripsKnown[L - 1],
-        listSpells(index, d.spellListClassId??c.id, { maximumLevel: 0 }).filter(s=>!grantedSpells.some(g=>g.classId===c.id&&g.id===s.id)).map((s) => s.id),
+        classSpells({ maximumLevel: 0 }).filter(s=>!grantedSpells.some(g=>g.classId===c.id&&g.id===s.id)).map((s) => s.id),
         "spell",
       );
     if (d.spellsKnown?.[L - 1]) {

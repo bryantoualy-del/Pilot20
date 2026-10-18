@@ -38,7 +38,7 @@ export function validateAdvancementHistory(index,request,history) {
      if(added.length!==(advancing?(policy.spellbookLearnedPerClassLevel??0):0)+copied.length)addIssue('spellbook-acquisition-count');
      continue;
     }
-    const learned=old.id.endsWith(':known-spells')||old.id.endsWith(':known-free-spells')||old.id.includes(':magical-secrets-');
+    const learned=old.replaceableKnown||old.id.endsWith(':known-spells')||old.id.endsWith(':known-free-spells')||old.id.includes(':magical-secrets-');
     const invocation=old.id.endsWith(':invocations');
     if(learned||invocation) {
      const key=old.classId+(invocation?':invocation':':known');budgets.set(key,(budgets.get(key)??0)+removed.length);
