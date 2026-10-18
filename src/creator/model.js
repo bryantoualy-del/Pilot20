@@ -1,3 +1,4 @@
+import {startingEquipment,compileStartingEquipment,startingProficiencies} from './starting-equipment.js';
 import {spellbookFromBuild} from '../spellbook/model.js';
 import {
   EQUIPMENT,
@@ -95,8 +96,10 @@ export function draftProgression(context, config, d) {
       })),
       campaignOptions: config.enabledOptions,
     });
+    const gear=startingEquipment(d,startingProficiencies(context.index,d,report));
     return {
       ...report,
+      startingEquipment:gear,
       hpPreview:
         hitPointTotal(
           averageHpProgression(
@@ -110,7 +113,7 @@ export function draftProgression(context, config, d) {
         (report.origin?.hpPerLevel ?? 0) *
           d.classes.reduce((n, c) => n + c.level, 0),
       valid:
-        report.valid &&
+        report.valid && gear.valid &&
         unavailable.valid &&
         !d.classes.some(
           (c) =>
@@ -120,6 +123,7 @@ export function draftProgression(context, config, d) {
       issues: [
         ...unavailable.issues,
         ...report.issues,
+        ...gear.issues,
         ...d.classes
           .filter(
             (c) =>
@@ -166,6 +170,10 @@ export function compileDraft(context, config, d) {
   if (!r.character || issues.length)
     return { ...r, valid: false, character: null, issues, status: "draft" };
   const c = r.character;
+  const gear=startingEquipment(d,c.proficiencies);
+  if(!gear.valid)return {...r,character:null,valid:false,issues:gear.issues,status:'draft'};
+  if(d.startingEquipmentEnabled===true)for(const item of r.origin?.equipment??[]){const row=c.equipment.find(e=>e.id==='background:'+item.id);if(row&&item.name){row.name=structuredClone(item.name);row.quantity=1;}}
+  c.equipment.push(...compileStartingEquipment(d,c));
   if ((d.customOriginRequiresReview || d.background.customized) && !d.reviewed)
     issues.push({ code: "creator-custom-review" });
   if (issues.length)
@@ -351,8 +359,9 @@ export function suggestChoices(
       if(!q)break;
       d.originSelections??={};d.originSelections[q.id]=q.options.slice(0,q.count);
     }
-    const r = draftProgression(context, config, d),
-      usedSkills = new Set(r.origin?.background.skills ?? d.background.skills),
+    const r = draftProgression(context, config, d);
+    for(const q of r.startingEquipment?.choices??[])if(!d.startingEquipmentChoices?.[q.id]?.length){d.startingEquipmentChoices??={};d.startingEquipmentChoices[q.id]=[q.options[0].id];}
+    const usedSkills = new Set(r.origin?.background.skills ?? d.background.skills),
       usedExpertise = new Set(),
       features = new Set(),
       spells = new Map(),
@@ -491,4 +500,12 @@ export function restoreDecision(d, position) {
     d[key][old.choiceId] = [...old.values];
   }
   d.confirmed = d.reviewed = d.finalized = false;
+}
+/** A class change parks its previous choices for explicit restoration. */
+export function changePrimaryClass(d,nextClassId){
+ const previous=d.classes[0];if(previous.id===nextClassId){d.classChosen=true;return;}
+ if(previous.subclassId)retainDecision(d,'subclass',previous.id);
+ for(const key of Object.keys(d.selections))if(key.startsWith(previous.id+':'))retainDecision(d,'class',key);
+ d.classes[0]={id:nextClassId,level:previous.level,subclassId:null};d.classChosen=true;
+ d.confirmed=d.reviewed=d.finalized=false;
 }

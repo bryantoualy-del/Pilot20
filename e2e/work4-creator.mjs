@@ -39,7 +39,7 @@ try{
   assert.ok(visited++<35,'bounded fighter creation');
   const kind=await p.locator('.single-body').getAttribute('data-kind');
   assert.ok(!['choice:fighter:cantrips','choice:fighter:prepared'].includes(await p.locator('.single-body').getAttribute('data-decision-id')));
-  if(['origin-choice','class-choice'].includes(kind)){
+  if(['origin-choice','class-choice','equipment-choice'].includes(kind)){
    let guard=0;
    while(await p.locator('.single-actions .primary').isDisabled()){
     assert.ok(guard++<20,'bounded option quota');
@@ -47,6 +47,7 @@ try{
     await changed(()=>options.first().check());
    }
   }
+  if(kind==='equipment')for(const size of [{width:390,height:844},{width:1180,height:820}]){await p.setViewportSize(size);await p.screenshot({path:`docs/screenshots/work4/equipment-${size.width}x${size.height}.png`,fullPage:true});assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));}
   await next();
  }
  await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).waitFor();
@@ -55,7 +56,7 @@ try{
  await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).waitFor();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();
  results.push('Fighter1 created through one route, race and skill decisions resolved, backtracking preserves scores, saved to library');
  const record=await p.evaluate(async()=>{const {openIndexedDB}=await import('/src/persistence/adapters.js');const s=await openIndexedDB();try{return(await s.list('characters'))[0].value;}finally{s.close();}});
- assert.equal(record.definition.identity.name,'Work4 Guerrier');assert.equal(record.definition.background,'Guild Merchant');assert.equal(record.spellbook.characterRevision,record.definition.revision);
+ assert.equal(record.definition.identity.name,'Work4 Guerrier');assert.ok(record.definition.equipment.some(e=>e.id.startsWith('starting:fighter:')));assert.equal(record.definition.background,'Guild Merchant');assert.equal(record.spellbook.characterRevision,record.definition.revision);
  const savedDraft=(await drafts())[0];assert.equal(savedDraft.mode,'single');assert.equal(savedDraft.finalized,true);
  await p.reload();await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();
  await p.getByRole('button',{name:'Modifier',exact:true}).click();await p.locator('.single-body[data-kind=summary]').waitFor();

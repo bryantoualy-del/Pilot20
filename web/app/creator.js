@@ -2,7 +2,7 @@ import {showEntryDetails} from './spell-detail.js';
 import {spellMatches} from '../../src/catalog/spell-reference.js';
 import {el,button,field,select,check,badge} from './dom.js';
 import {migrateSingleDraft,singlePath,decisionReady} from '../../src/creator/single-path.js';
-import {compileDraft,retainDecision,restoreDecision,templateScores} from '../../src/creator/model.js';
+import {compileDraft,retainDecision,restoreDecision,templateScores,changePrimaryClass} from '../../src/creator/model.js';
 import {raceOptions,raceSelection,selectRace} from '../../src/creator/race-selection.js';
 import {ABILITIES,SKILLS} from '../../src/character/contracts.js';
 import {POINT_COST,rollAbilityScores} from '../../src/catalog/origins.js';
@@ -19,7 +19,7 @@ export async function renderCreator(main,input,a) {
   const filters=new Map();
   const swaps=new Map();
   const text=key=>a.t(key);
-  const label=decision=>({identity:w('Votre personnage','Your character'),race:w('Choisissez votre race','Choose your race'),subrace:text('subrace'),class:w('Classe et niveau','Class and level'),background:text('background'),scores:text('scores'),equipment:text('equipment'),summary:w('Votre personnage est-il prêt ?','Is your character ready?')})[decision.kind]??(decision.kind==='origin-choice'?w('Un choix de votre origine','An origin choice'):choiceName(decision.choice,a));
+  const label=decision=>({identity:w('Votre personnage','Your character'),race:w('Choisissez votre race','Choose your race'),subrace:text('subrace'),class:w('Classe et niveau','Class and level'),background:text('background'),scores:text('scores'),equipment:text('equipment'),summary:w('Votre personnage est-il prêt ?','Is your character ready?')})[decision.kind]??(decision.kind==='origin-choice'?w('Un choix de votre origine','An origin choice'):decision.kind==='equipment-choice'?decision.choice.label[a.state.locale]:choiceName(decision.choice,a));
   async function update(fn,{navigation=false}={}) {
     d.finalized=false;d.status='draft';d.confirmed=false;d.reviewed=false;fn(d);
     await a.autosave(d);await draw(navigation);
@@ -101,7 +101,7 @@ export async function renderCreator(main,input,a) {
     if(current.kind==='class'){
       const cls=d.classes[0];
       body.append(field(text('class'),select([['',w('Choisir une classe','Choose a class')],...a.context.index.list('class').map(c=>[c.data.classId,a.cls(c.data.classId)])],d.classChosen===false?'':cls.id,e=>{
-        if(!e.target.value)return;update(x=>{if(x.classes[0].subclassId)retainDecision(x,'subclass',x.classes[0].id);x.classes[0]={id:e.target.value,level:x.classes[0].level,subclassId:null};x.classChosen=true;});
+        if(!e.target.value)return;update(x=>{changePrimaryClass(x,e.target.value);});
       })),field(text('level'),el('input',{type:'number',min:1,max:20,value:cls.level,onchange:e=>{const n=Number(e.target.value);if(Number.isInteger(n)&&n>=1&&n+d.classes.slice(1).reduce((s,c)=>s+c.level,0)<=20)update(x=>{x.classes[0].level=n;});else a.notice(w('Le niveau total doit rester entre 1 et 20.','Total level must stay between 1 and 20.'));}})));
       if(a.config.enabledOptions.includes('multiclass')){
         const advanced=el('details',{},el('summary',{},w('Ajouter une classe','Add a class')));
@@ -133,7 +133,17 @@ export async function renderCreator(main,input,a) {
       })));
       if(q.id===q.classId+':known-spells'){const exchanges=originSpellExchanges(q.classId);if(exchanges)body.append(exchanges);}
     }
-    if(current.kind==='equipment'){
+    if(current.kind==='equipment-choice'){
+      const q=current.choice,selected=d.startingEquipmentChoices?.[q.id]?.[0];
+      body.append(el('div',{class:'single-options'},q.options.map(o=>el('div',{class:'single-option'+(o.id===selected?' selected':'')},el('label',{},el('input',{type:'radio',name:q.id,checked:o.id===selected,'aria-label':o.name[a.state.locale],onchange:()=>update(x=>{x.startingEquipmentChoices??={};x.startingEquipmentChoices[q.id]=[o.id];})}),el('span',{},o.name[a.state.locale]))))));
+    }
+    if(current.kind==='equipment'&&d.startingEquipmentEnabled===true){
+      body.append(el('p',{},w('Votre matériel de départ, en complément de celui de votre historique.','Your starting kit, in addition to your background equipment.')),
+        el('ul',{},(report.startingEquipment?.items??[]).map(i=>el('li',{},i.quantity+' × '+i.name[a.state.locale]))),
+        el('details',{},el('summary',{},w('Équipement de l’historique','Background equipment')),(report.origin?.equipment??[]).map(i=>el('p',{},i.name[a.state.locale]))),
+        el('p',{},w('Vous pouvez revenir aux choix précédents pour modifier ce matériel.','Go back to a previous decision to change this kit.')));
+    }
+    if(current.kind==='equipment'&&d.startingEquipmentEnabled!==true){
       body.append(field(text('armor'),select(Object.entries(ARMORS).map(([id,v])=>[id,v.name[a.state.locale]]).concat([['none',text('unarmored')]]),d.equipment,e=>update(x=>{x.equipment=e.target.value;}))),check(text('shield'),d.shield,e=>update(x=>{x.shield=e.target.checked;})),
         el('details',{},el('summary',{},text('weapons')),Object.entries(WEAPONS).map(([id,item])=>check(item.name[a.state.locale],d.weapons?.includes(id)??false,e=>update(x=>{x.weapons=e.target.checked?[...(x.weapons??[]),id]:(x.weapons??[]).filter(v=>v!==id);})))),
         el('p',{},w('Les alternatives complètes d’équipement de départ sont encore en cours d’intégration.','Complete starting-equipment alternatives are still being integrated.')));
