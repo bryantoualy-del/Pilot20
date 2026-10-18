@@ -150,6 +150,9 @@ export function issueMessage(issue, report, a) {
     title = q ? choiceName(q, a) : "",
     fr = a.state.locale === "fr";
   const messages = {
+    'hp-roll':fr?'Renseignez un résultat valide pour chaque dé de vie.':'Enter a valid result for every Hit Die.',
+    'hp-method':fr?'Choisissez une méthode de points de vie.':'Choose a hit point method.',
+    'hp-chronology':fr?'Vérifiez l’ordre des niveaux avant de calculer les points de vie.':'Review the level order before calculating hit points.',
     'starting-equipment-choice':fr?'Choisissez votre équipement pour continuer.':'Choose your equipment to continue.',
     'starting-equipment-class':fr?'L’équipement de départ de cette classe nécessite une vérification.':'Review the starting equipment for this class.',
     'invalid-granted-spell-replacement':fr?'Vérifiez le niveau, l’école et l’origine du sort remplacé ; un seul remplacement est permis par niveau.':'Review the exchanged spell’s level, school and origin; only one exchange is allowed per level.',

@@ -1,3 +1,4 @@
+import {rollHitDie} from '../../src/creator/hit-points.js';
 import {showEntryDetails} from './spell-detail.js';
 import {spellMatches} from '../../src/catalog/spell-reference.js';
 import {el,button,field,select,check,badge} from './dom.js';
@@ -19,7 +20,7 @@ export async function renderCreator(main,input,a) {
   const filters=new Map();
   const swaps=new Map();
   const text=key=>a.t(key);
-  const label=decision=>({identity:w('Votre personnage','Your character'),race:w('Choisissez votre race','Choose your race'),subrace:text('subrace'),class:w('Classe et niveau','Class and level'),background:text('background'),scores:text('scores'),equipment:text('equipment'),summary:w('Votre personnage est-il prêt ?','Is your character ready?')})[decision.kind]??(decision.kind==='origin-choice'?w('Un choix de votre origine','An origin choice'):decision.kind==='equipment-choice'?decision.choice.label[a.state.locale]:choiceName(decision.choice,a));
+  const label=decision=>({identity:w('Votre personnage','Your character'),race:w('Choisissez votre race','Choose your race'),subrace:text('subrace'),class:w('Classe et niveau','Class and level'),background:text('background'),scores:text('scores'),'hit-points':w('Points de vie','Hit points'),equipment:text('equipment'),summary:w('Votre personnage est-il prêt ?','Is your character ready?')})[decision.kind]??(decision.kind==='origin-choice'?w('Un choix de votre origine','An origin choice'):decision.kind==='equipment-choice'?decision.choice.label[a.state.locale]:choiceName(decision.choice,a));
   async function update(fn,{navigation=false}={}) {
     d.finalized=false;d.status='draft';d.confirmed=false;d.reviewed=false;fn(d);
     await a.autosave(d);await draw(navigation);
@@ -123,7 +124,18 @@ export async function renderCreator(main,input,a) {
       for(const ability of ABILITIES)grid.append(field(a.label(ability),el('input',{type:'number',min:1,max:30,value:d.scores[ability],onchange:e=>{const n=Number(e.target.value);if(Number.isInteger(n)&&n>=1&&n<=30)update(x=>{x.scores[ability]=n;});}}),w('Final : ','Final: ')+(report.scores?.[ability]??'—')));
       body.append(grid);
       if(d.scoreMethod==='point-buy')body.append(el('p',{},Object.values(d.scores).reduce((s,n)=>s+(POINT_COST[n]??100),0)+' / 27'));
-      body.append(el('p',{},text('hp')+' : '+(report.hpPreview??'—')+' · '+w('Moyenne des dés de vie','Average Hit Dice')));
+      body.append(el('p',{},w('Points de vie prévus : ','Estimated hit points: ')+(report.hpPreview??'—')));
+    }
+    if(current.kind==='hit-points'){
+      body.append(field(w('Gain de points de vie','Hit point gains'),select([['average',w('Valeur fixe des dés','Fixed die values')],['rolled',w('Résultats des dés lancés','Rolled die results')]],d.hpMode??'average',e=>update(x=>{x.hpMode=e.target.value;}))),
+        el('p',{},w('Au premier niveau du personnage, le dé de vie donne automatiquement sa valeur maximale. La Constitution s’applique à chaque niveau, avec au moins 1 PV gagné.','At the character’s first level, the Hit Die automatically gives its maximum. Constitution applies at each level, with at least 1 HP gained.')));
+      const rows=el('div',{class:'single-hp'});
+      for(const row of report.hitPoints?.levels??[]){
+        const title=w('Niveau ','Level ')+row.characterLevel+' · '+a.cls(row.classId)+' '+row.classLevel+' · d'+row.hitDie;
+        if(row.first||report.hitPoints.mode==='average')rows.append(el('p',{},title+' : '+row.hp));
+        else rows.append(field(title,el('input',{type:'number',min:1,max:row.hitDie,value:d.hpRolls?.[row.key]??'','aria-label':title,onchange:e=>{const n=Number(e.target.value);if(Number.isInteger(n)&&n>=1&&n<=row.hitDie)update(x=>{x.hpRolls??={};x.hpRolls[row.key]=n;});}}),button(w('Lancer le dé','Roll die'),()=>update(x=>{x.hpRolls??={};x.hpRolls[row.key]=rollHitDie(row.hitDie);})))) ;
+      }
+      body.append(rows,el('p',{role:'status'},w('Total prévu : ','Estimated total: ')+(report.hpPreview??'—')));
     }
     if(current.kind==='origin-choice')body.append(choiceList(current.choice,d.originSelections?.[current.choice.id]??[],values=>update(x=>{x.originSelections??={};x.originSelections[current.choice.id]=values;}),{origin:true}));
     if(current.kind==='class-choice'){

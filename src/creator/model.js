@@ -1,3 +1,4 @@
+import {hitPointPlan} from './hit-points.js';
 import {startingEquipment,compileStartingEquipment,startingProficiencies} from './starting-equipment.js';
 import {spellbookFromBuild} from '../spellbook/model.js';
 import {
@@ -15,7 +16,6 @@ import {
 } from "../campaign/sources.js";
 import {
   derive,
-  averageHpProgression,
   hitPointTotal,
 } from "../character/derive.js";
 import { validateCharacter, validateBuild } from "../character/definition.js";
@@ -77,6 +77,8 @@ export function buildRequest(d) {
     advancementHistory: structuredClone(d.advancementHistory ?? []),
     spellbookTranscriptions: structuredClone(d.spellbookTranscriptions ?? []),
     spellGrantReplacements:structuredClone(d.spellGrantReplacements??[]),
+    hpMode:d.hpMode??'average',
+    hpProgression:null,
   };
 }
 export function draftProgression(context, config, d) {
@@ -96,24 +98,20 @@ export function draftProgression(context, config, d) {
       })),
       campaignOptions: config.enabledOptions,
     });
-    const gear=startingEquipment(d,startingProficiencies(context.index,d,report));
+    const gear=startingEquipment(d,startingProficiencies(context.index,d,report)),hp=hitPointPlan(context.index,d);
     return {
       ...report,
       startingEquipment:gear,
-      hpPreview:
+      hitPoints:hp,
+      hpPreview:hp.valid?
         hitPointTotal(
-          averageHpProgression(
-            d.classes.map((c) => ({
-              ...c,
-              hitDie: context.index.class(c.id).data.hitDie,
-            })),
-          ),
+          hp.progression,
           report.scores,
         ) +
         (report.origin?.hpPerLevel ?? 0) *
-          d.classes.reduce((n, c) => n + c.level, 0),
+          d.classes.reduce((n, c) => n + c.level, 0):null,
       valid:
-        report.valid && gear.valid &&
+        report.valid && gear.valid && hp.valid &&
         unavailable.valid &&
         !d.classes.some(
           (c) =>
@@ -124,6 +122,7 @@ export function draftProgression(context, config, d) {
         ...unavailable.issues,
         ...report.issues,
         ...gear.issues,
+        ...hp.issues,
         ...d.classes
           .filter(
             (c) =>
@@ -146,6 +145,8 @@ export function draftProgression(context, config, d) {
 /** UI orchestration only: all progression and statistics are produced by existing authorities. */
 export function compileDraft(context, config, d) {
   const issues = [];
+  const hp=hitPointPlan(context.index,d);
+  if(!hp.valid)return {valid:false,character:null,issues:hp.issues,status:'draft'};
   if (!d.name.trim()) issues.push({ code: "creator-name" });
   if (
     (!d.raceId && !d.origin.trim()) ||
@@ -157,7 +158,7 @@ export function compileDraft(context, config, d) {
   if (!d.confirmed) issues.push({ code: "creator-confirmation" });
   let r;
   try {
-    r = buildCampaignCharacter(context, buildRequest(d), config);
+    r = buildCampaignCharacter(context,{...buildRequest(d),hpProgression:d.hpMode==='rolled'?hp.progression:null},config);
   } catch {
     r = {
       valid: false,
