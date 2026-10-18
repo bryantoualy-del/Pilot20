@@ -7,7 +7,7 @@ import {newDraft,suggestChoices,compileDraft,draftProgression} from '../src/crea
 import {MemoryStorage} from '../src/persistence/adapters.js';
 import {characterLibrary} from '../src/persistence/library.js';
 import {creatorRepository} from '../src/creator/repository.js';
-const config={...defaultCampaign(),enabledSourceIds:[...defaultCampaign().enabledSourceIds,'motm','eberron','scag','strixhaven','ravenloft']};
+const config={...defaultCampaign(),sourceRestrictions:true,enabledSourceIds:[...defaultCampaign().enabledSourceIds,'motm','eberron','scag','strixhaven','ravenloft']};
 const ctx=campaignCatalog(playerCatalogs,[],config);
 function make(id,level=1){let d=Object.assign(newDraft(),{name:id,raceId:id,backgroundId:'srd51:background:acolyte',classChosen:true,scoresAreBase:true,classes:[{id:'fighter',level,subclassId:level>=3?'srd51:champion':null}]});d=suggestChoices(ctx,config,d);d.confirmed=d.reviewed=true;const r=compileDraft(ctx,config,d);assert.equal(r.valid,true,id+' '+JSON.stringify(r.issues));return {d,r};}
 test('every audited new profile creates a real fighter with racial bonuses and traits',()=>{
@@ -37,7 +37,7 @@ test('innate spells acquire at actual levels, retain chosen ability and share He
  assert.equal(pools.length,1);assert.equal(pools[0].max,1);assert.equal(pools[0].recovery,'long');
 });
 test('a disabled racial source is filtered, while its installed data remain intact',()=>{
- const off=campaignCatalog(playerCatalogs,[],defaultCampaign());assert.equal(off.index.get('motm:race:aasimar'),undefined);assert.ok(off.installed.get('motm:race:aasimar'));
+ const off=campaignCatalog(playerCatalogs,[],{...defaultCampaign(),sourceRestrictions:true});assert.equal(off.index.get('motm:race:aasimar'),undefined);assert.ok(off.installed.get('motm:race:aasimar'));
 });
 test('racial decisions and spell origins survive finalize, export and import',async()=>{
  const{d,r}=make('motm:race:aasimar',3),s=new MemoryStorage(),repo=creatorRepository(s,characterLibrary(s));

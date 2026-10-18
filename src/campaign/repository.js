@@ -21,7 +21,19 @@ export function campaignRepository(storage, publicPacks) {
       check(id(campaignId), "Campaign ID");
       const key = configKey(campaignId),
         old = await storage.get("meta", key);
-      if (old !== undefined) return validateCampaign(old);
+      if (old !== undefined) {
+        validateCampaign(old);
+        if (old.sourceRestrictions !== undefined) return old;
+        // Preserve the old allow-list, options and every character record verbatim.
+        const migrated = { ...old, revision: old.revision + 1, sourceRestrictions: false };
+        try {
+          await storage.batch([{ store: "meta", key, value: old }], [{ store: "meta", key, value: migrated }]);
+          return migrated;
+        } catch (e) {
+          if (e instanceof StorageError && e.code === "conflict") return this.initialize(campaignId);
+          throw e;
+        }
+      }
       const config = defaultCampaign(campaignId);
       try {
         await storage.batch(
@@ -37,10 +49,9 @@ export function campaignRepository(storage, publicPacks) {
     },
     async get(campaignId = "default") {
       check(id(campaignId), "Campaign ID");
-      return validateCampaign(
-        (await storage.get("meta", configKey(campaignId))) ??
-          defaultCampaign(campaignId),
-      );
+      const old = await storage.get("meta", configKey(campaignId));
+      if (old === undefined) return defaultCampaign(campaignId);
+      return old.sourceRestrictions === undefined ? this.initialize(campaignId) : validateCampaign(old);
     },
     async save(config, { expectedRevision = null } = {}) {
       validateCampaign(config);

@@ -27,6 +27,6 @@ test('Soulknife psionic dice use character proficiency, while die size and power
  const enabled={...config,enabledOptions:['multiclass']},ctx=campaignCatalog(playerCatalogs,[],enabled);let next=suggestChoices(ctx,enabled,multi);next.reviewed=next.confirmed=true;const out=compileDraft(ctx,enabled,next);assert.equal(out.valid,true,JSON.stringify(out.issues));assert.equal(derive(out.character).resources['rogue:psionic-energy'].max,8);assert.ok(!out.character.features.includes('tce:rogue:soulknife:soul-blades'));
 });
 test('source removal hides a subclass and flags the saved choice without deleting it',()=>{
- const {d}=make('xge:bard:glamour',10),saved=structuredClone(d);const disabled={...config,enabledSourceIds:['srd51','tce','phb14']},ctx=campaignCatalog(playerCatalogs,[],disabled);
+ const {d}=make('xge:bard:glamour',10),saved=structuredClone(d);const disabled={...config,sourceRestrictions:true,enabledSourceIds:['srd51','tce','phb14']},ctx=campaignCatalog(playerCatalogs,[],disabled);
  assert.ok(!ctx.index.class('bard').data.subclassIds.includes('xge:bard:glamour'));assert.equal(compileDraft(ctx,disabled,d).valid,false);assert.deepEqual(d,saved);
 });

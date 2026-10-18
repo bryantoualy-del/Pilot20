@@ -16,7 +16,7 @@ import { renderCompanion } from "./companion.js";
 const root = document.querySelector("#app"),
   dialog = document.querySelector("#dialog");
 const state = {
-  route: "home",
+  route: location.hash === "#sources" ? "sources" : "home",
   locale: "fr",
   campaignId: "default",
   query: "",
@@ -610,33 +610,20 @@ async function sourcesScreen(main) {
     }
   };
   main.append(
+    check(state.locale === "fr" ? "Activer les restrictions du MJ par ouvrage" : "Enable GM source restrictions",
+      config.sourceRestrictions === true,
+      e => change(c => { c.sourceRestrictions = e.target.checked; })),
     el(
       "div",
       { class: "source-cards" },
-      context.statuses.map((s) =>
-        el(
-          "article",
-          { class: "card source-card" },
+      context.statuses.filter(s => s.installedEntries > 0).map((s) =>
+        el("article", { class: "card source-card" },
           check(s.name, s.selected, (e) =>
             change((c) => {
               c.enabledSourceIds = e.target.checked
-                ? [...c.enabledSourceIds, s.id]
+                ? [...new Set([...c.enabledSourceIds, s.id])]
                 : c.enabledSourceIds.filter((k) => k !== s.id);
-            }),
-          ),
-          badge(
-            s.installedEntries
-              ? s.installedEntries + " " + t("installed")
-              : t("missing"),
-            s.installedEntries ? "" : "warning",
-          ),
-          el(
-            "div",
-            { class: "coverage" },
-            Object.entries(s.coverage).map(([key, n]) =>
-              el("span", {}, n + " " + t(key)),
-            ),
-          ),
+            }), { disabled: !config.sourceRestrictions }),
         ),
       ),
     ),
@@ -668,7 +655,7 @@ async function sourcesScreen(main) {
             }),
           {
             disabled: !o.sourceIds.some((id) =>
-              config.enabledSourceIds.includes(id),
+              context.statuses.some(s => s.id === id && s.selected),
             ),
           },
         ),

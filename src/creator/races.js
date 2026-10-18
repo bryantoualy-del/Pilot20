@@ -1,3 +1,4 @@
+import { sourceEnabled } from "../campaign/sources.js";
 import { ABILITIES, SKILLS, check, id } from "../character/contracts.js";
 import { LANGUAGES } from "../catalog/origins.js";
 import { validateCatalogV3 } from "../catalog/catalog-v3.js";
@@ -205,7 +206,7 @@ export function validateHomebrewRace(r) {
 /** A strict UI assistant; never claims a pack is installed because the source is selected. */
 export function customLineagePack(input, context, draft) {
   check(
-    context.campaign.enabledSourceIds.includes("tce") &&
+    sourceEnabled(context.campaign, "tce") &&
       context.campaign.enabledOptions.includes("tce-custom-lineage"),
     "Tasha lineage requires campaign and GM authorization",
   );

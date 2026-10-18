@@ -223,7 +223,7 @@ test("standard, point-buy, manual and 4d6 methods reject forged distributions", 
 test("races/background are filtered by source and restored without mutating decisions", () => {
   const d = draft(),
     before = structuredClone(d);
-  const off = { ...config, enabledSourceIds: ["tce", "xge"] },
+  const off = { ...config, sourceRestrictions:true,enabledSourceIds: ["tce", "xge"] },
     filtered = campaignCatalog(packs, [], off);
   assert.equal(filtered.index.list("race").length, 0);
   assert.equal(compileDraft(filtered, off, d).valid, false);
