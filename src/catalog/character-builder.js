@@ -130,6 +130,7 @@ export function buildCharacter(
     d.defenses.immunities.push(...(effect.immunities??[]));
     for(const[ability,row]of Object.entries(effect.checkAbilityBonuses??{}))modify('check-'+ability,'checkBonus.'+ability,Math.max(row.minimum,Math.floor((d.scores[row.ability]-10)/2)));
     for(const skill of effect.expertiseSkills??[])d.skills[skill]=2;
+    if(effect.unarmoredSpeedByClassLevel)modify('unarmored-speed','speed',effect.unarmoredSpeedByClassLevel[owner.level-1],'add','unarmored-unshielded');
     if(effect.speedBonus)modify('speed','speed',effect.speedBonus);
     for(const ability of effect.saves??[])if(!d.saveProficiencies.includes(ability))d.saveProficiencies.push(ability);
     for(const[skill,ability]of Object.entries(effect.skillAbilityBonuses??{}))modify('skill-'+skill,'skill.'+skill,Math.floor((d.scores[ability]-10)/2));
@@ -307,7 +308,7 @@ export function buildCharacter(
     };
     spellClasses
       .get(g.classId)
-      .set(g.id, { ...existing, normal: true, prepared: g.mode==='prepared' });
+      .set(g.id, { ...existing, normal: true, prepared: existing.prepared||g.mode==='prepared' });
     d.spells.known.push(g.id);
     if(g.mode==='prepared'||entry.data.level===0)d.spells.prepared.push(g.id);
   }
@@ -521,7 +522,7 @@ export function buildCharacter(
           kind: spell.featureOwnerId?'class':"racial",
           ...(spell.target?{target:spell.target}:{}),...(spell.maxTargets?{maxTargets:spell.maxTargets}:{}),
           ...(e.data.concentration?{concentration:{effectId:e.id,start:'activation'}}:{}),
-          ...(spell.resourceId?{resource:{id:spell.resourceId,amount:1}}:{}),
+          ...(spell.resourceId?{resource:{id:spell.resourceId,amount:spell.resourceAmount??1}}:{}),
           cost: spell.featureOwnerId?spell.economy??'none':spell.level === 1 ? "action" : "none",
           combat: {
             version: 1,
