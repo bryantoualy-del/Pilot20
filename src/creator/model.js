@@ -1,3 +1,4 @@
+import {validateLevelGain} from './advancement.js';
 import {hitPointPlan} from './hit-points.js';
 import {startingEquipment,compileStartingEquipment,startingProficiencies} from './starting-equipment.js';
 import {spellbookFromBuild} from '../spellbook/model.js';
@@ -74,7 +75,7 @@ export function buildRequest(d) {
     scores: structuredClone(d.scores),
     selections: structuredClone(d.selections),
     background: structuredClone(d.background),
-    advancementHistory: structuredClone(d.advancementHistory ?? []),
+    advancementHistory: [...structuredClone(d.advancementHistory??[]),...(d.pendingAdvancement&&d.advancementHistory?.length?[{classId:d.pendingAdvancement.classId,classes:structuredClone(d.classes),selections:structuredClone(d.selections)}]:[])],
     spellbookTranscriptions: structuredClone(d.spellbookTranscriptions ?? []),
     spellGrantReplacements:structuredClone(d.spellGrantReplacements??[]),
     hpMode:d.hpMode??'average',
@@ -145,6 +146,7 @@ export function draftProgression(context, config, d) {
 /** UI orchestration only: all progression and statistics are produced by existing authorities. */
 export function compileDraft(context, config, d) {
   const issues = [];
+  if(d.pendingAdvancement){const transition=validateLevelGain(context.index,{...buildRequest(d),campaignOptions:config.enabledOptions},d.pendingAdvancement);if(transition.length)return{valid:false,character:null,issues:transition,status:'draft'};}
   const hp=hitPointPlan(context.index,d);
   if(!hp.valid)return {valid:false,character:null,issues:hp.issues,status:'draft'};
   if (!d.name.trim()) issues.push({ code: "creator-name" });

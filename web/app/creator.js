@@ -1,3 +1,5 @@
+import {beginAdvancement,cancelAdvancement} from '../../src/creator/advancement.js';
+import {sameDefinition} from '../../src/creator/revision.js';
 import {classIcon} from './class-icons.js';
 import {classInfo} from './class-info.js';
 import {rollHitDie} from '../../src/creator/hit-points.js';
@@ -18,6 +20,9 @@ import {replacementOptions} from '../../src/catalog/spell-grants.js';
 export async function renderCreator(main,input,a) {
   const d=migrateSingleDraft(input),w=(fr,en)=>a.state.locale==='fr'?fr:en;
   if(input.mode!=='single')await a.autosave(d);
+  const initialBuild=compileDraft(a.context,a.config,{...d,confirmed:true}),initialRecord=await a.library.get(d.id);
+  const expectedBaseDefinition=d.buildBaseline??initialBuild.character;
+  const externalEdits=initialRecord&&!sameDefinition(initialRecord.definition,expectedBaseDefinition);
   const shell=el('section',{class:'single-creator'});main.append(shell);
   const filters=new Map();
   const swaps=new Map();
@@ -81,6 +86,7 @@ export async function renderCreator(main,input,a) {
       const b=button(label(decision),()=>go(decision.id));if(decision.id===current.id)b.setAttribute('aria-current','step');return b;
     })));
     shell.replaceChildren(header,sectionNav,body);
+    if(d.pendingAdvancement)body.append(el('p',{role:'status'},w('Progression en cours : ','Level gain in progress: ')+a.cls(d.pendingAdvancement.classId)),button(w('Annuler ce gain de niveau','Cancel this level gain'),async()=>{const restored=cancelAdvancement(d);Object.keys(d).forEach(k=>delete d[k]);Object.assign(d,restored);await a.autosave(d);await draw(true);}));
     if(current.kind==='identity'){
       body.append(field(text('name'),el('input',{id:'character-name',value:d.name,maxlength:200,autocomplete:'off',onchange:e=>update(x=>{x.name=e.target.value;})})),
         el('p',{},w('Un nom suffit pour commencer. Vous pourrez le changer ensuite.','Start with a name. You can change it later.')),
@@ -169,6 +175,8 @@ export async function renderCreator(main,input,a) {
       const compiled=compileDraft(a.context,a.config,{...d,confirmed:true});
       body.append(el('p',{},d.classes.map(c=>a.cls(c.id)+' '+c.level).join(' / ')));
       if(compiled.stats)body.append(el('div',{class:'single-summary'},el('p',{},text('hp')+' '+compiled.stats.maxHp),el('p',{},text('ac')+' '+compiled.stats.ac)));
+      const events=d.advancementEvents??[];body.append(el('details',{},el('summary',{},w('Historique de progression','Advancement history')),el('p',{},d.advancementHistory?.length?w('Historique complet renseigné ; sa validité est contrôlée à la sauvegarde.','Complete history supplied; validation runs on save.'):w('Création directe au niveau choisi : les acquisitions antérieures ne sont pas connues. Aucun niveau passé n’a été inventé.','Created directly at the selected level: earlier acquisitions are unknown. No past levels were invented.')),events.map(e=>el('p',{},a.cls(e.classId)+' · '+e.from.classes.reduce((n,c)=>n+c.level,0)+' → '+e.to.classes.reduce((n,c)=>n+c.level,0)+' · '+new Date(e.recordedAt).toLocaleDateString(a.state.locale)))));
+      if(d.finalized&&!externalEdits&&!d.pendingAdvancement&&d.classes.reduce((n,c)=>n+c.level,0)<20)body.append(el('details',{},el('summary',{},w('Gagner un niveau','Gain a level')),d.classes.map(c=>button(a.cls(c.id)+' → '+(c.level+1),async()=>{const next=beginAdvancement(d,c.id);Object.keys(d).forEach(k=>delete d[k]);Object.assign(d,next);await a.autosave(d);await draw(true);})),a.config.enabledOptions.includes('multiclass')?a.context.index.list('class').filter(c=>!d.classes.some(x=>x.id===c.data.classId)).map(c=>button(w('Nouvelle classe : ','New class: ')+a.cls(c.data.classId),async()=>{const next=beginAdvancement(d,c.data.classId);Object.keys(d).forEach(k=>delete d[k]);Object.assign(d,next);await a.autosave(d);await draw(true);})):null));
       for(const issue of compiled.issues){const item=el('div',{class:'single-issue'},el('p',{},issueMessage(issue,report,a)));
         const decision=decisions.find(x=>x.choice?.id===issue.choiceId);if(decision)item.append(button(w('Corriger','Review'),()=>go(decision.id)));
         if(issue.choiceId&&['obsolete-choice','unavailable-selection','obsolete-origin-choice'].includes(issue.code))item.append(button(w('Conserver ce choix à part','Keep this choice for review'),()=>update(x=>retainDecision(x,issue.code==='obsolete-origin-choice'?'origin':'class',issue.choiceId))));
@@ -176,6 +184,7 @@ export async function renderCreator(main,input,a) {
       }
       if(d.retainedDecisions?.length)body.append(el('details',{},el('summary',{},w('Choix conservés','Retained choices')),d.retainedDecisions.map((r,i)=>el('div',{},el('p',{},r.values.map(id=>optionName(id,a)).join(', ')),button(text('restore'),()=>update(x=>restoreDecision(x,i)))))));
       body.append(check(w('J’ai vérifié les éléments saisis et les choix à confirmer avec le MJ.','I reviewed my entries and the choices requiring GM confirmation.'),d.reviewed,e=>update(x=>{x.reviewed=e.target.checked;})));
+      if(externalEdits)body.append(el('p',{role:'alert'},w('Cette fiche contient des modifications manuelles ou son ancien plan ne correspond plus au catalogue. La fiche actuelle sera conservée ; enregistrez votre nouvelle construction comme copie.','This sheet has manual edits or its old plan differs from the current catalog. Keep the original and save this build as a copy.')),button(w('Enregistrer comme copie','Save as a copy'),async()=>{const copy=structuredClone(d);copy.id=crypto.randomUUID();copy.name+=' (copie)';copy.revision=1;copy.finalized=false;delete copy.buildBaseline;await a.drafts.save(copy);await a.nav('creator',copy.id);}));
       const save=button(w('Enregistrer le personnage','Save character'),async()=>{
         try{
           const result=compileDraft(a.context,a.config,{...d,confirmed:true});if(!result.valid){a.notice(text('missingChoices'));return;}
@@ -183,9 +192,9 @@ export async function renderCreator(main,input,a) {
           result.character.revision=expectedCharacterRevision===null?1:expectedCharacterRevision+1;
           d.confirmed=true;d.status=result.status;
           d.sourceReferences=[...new Set([...result.character.features.filter(id=>a.context.index.get(id)),...result.character.spells.known,...[d.raceId,d.backgroundId].filter(Boolean)])];
-          await a.autosave(d);const saved=await a.drafts.finalize(d,result.character,{expectedCharacterRevision,expectedDraftRevision:d.revision,spellbook:result.spellbook});Object.assign(d,saved.draft);await a.nav('library');
+          await a.autosave(d);const saved=await a.drafts.finalize(d,result.character,{expectedCharacterRevision,expectedDraftRevision:d.revision,spellbook:result.spellbook,expectedBaseDefinition});Object.assign(d,saved.draft);await a.nav('library');
         }catch(e){a.fail(e);}
-      },'primary');save.disabled=!compiled.valid;body.append(save);
+      },'primary');save.disabled=!compiled.valid||!!externalEdits;body.append(save);
     }
     const ready=decisionReady(current,report,d);
     const errors=current.choice?report.issues.filter(i=>i.choiceId===current.choice.id):[];

@@ -1,3 +1,4 @@
+import {sameDefinition} from '../creator/revision.js';
 import {check} from '../character/contracts.js';
 import {compileDraft,draftProgression} from '../creator/model.js';
 import {migrateLegacySpellbook} from './model.js';
@@ -42,7 +43,7 @@ export function grimoireService({library,drafts,campaigns}){
       const config=await campaigns.get(draft.campaignId),context=await campaigns.context(config);
       const before=compileDraft(context,config,{...draft,confirmed:true});
       // External manual definition changes must never be discarded by rebuilding from an older draft.
-      check(before.valid&&comparable(before.character)===comparable(record.definition),'Character differs from its build plan; review it before changing spells');
+      check(before.valid&&sameDefinition(before.character,record.definition),'Character differs from its build plan; review it before changing spells');
       const next=command.type==='prepare'?stagePreparation(context,config,draft,command):command.type==='copy'?stageWizardCopy(context,config,draft,command):null;
       check(next,'Unknown grimoire operation');
       const result=compileDraft(context,config,next);check(result.valid,'Spell choices need review');

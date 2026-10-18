@@ -1,3 +1,5 @@
+import {finishAdvancement} from './advancement.js';
+import {sameDefinition} from './revision.js';
 import {validateSpellbook, pinSpellbook} from '../spellbook/model.js';
 import {validateGrantReplacements} from '../catalog/spell-grants.js';
 import { isBuiltInPortrait, GENDERS } from "./appearance.js";
@@ -193,13 +195,16 @@ export function creatorRepository(storage, library) {
     async finalize(
       d,
       character,
-      { expectedCharacterRevision = null, expectedDraftRevision, spellbook } = {},
+      { expectedCharacterRevision = null, expectedDraftRevision, spellbook, expectedBaseDefinition } = {},
     ) {
       validateDraft(d);
       const old = await storage.get("meta", key(d.id));
       check(old?.revision === expectedDraftRevision, "Draft revision conflict");
+      const existing=await library.get(d.id);
+      if(existing)check(sameDefinition(existing.definition,old.buildBaseline??expectedBaseDefinition),"La fiche contient des modifications manuelles ou une version différente du plan. Enregistrez une copie pour les conserver.");
       const next = {
-        ...structuredClone(d),
+        ...finishAdvancement(d),
+        buildBaseline:structuredClone(character),
         revision: old.revision + 1,
         finalized: true,
       };
