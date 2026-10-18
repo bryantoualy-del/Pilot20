@@ -23,7 +23,7 @@ try {
  await changed(async()=>{await p.locator('#character-name').fill('Source migration');await p.locator('#character-name').blur();});
  await changed(()=>p.locator('.single-actions .primary').click());
  const search=p.getByRole('searchbox',{name:'Rechercher une race',exact:true});
- for(const name of ['Dhampire','Génasi du feu','Kobold']){
+ for(const name of ['Dhampir','Génasi','Kobold']){
   await search.fill(name);const option=p.locator('.single-races button').first();assert.ok(await option.isEnabled());
   await changed(()=>option.click());assert.equal(await p.locator('#dialog[open]').count(),0);
  }
