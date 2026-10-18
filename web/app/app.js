@@ -727,7 +727,7 @@ try {
         apply.disabled=true;
         try{await saveQueue;if(lastSaveError)throw lastSaveError;location.reload();}catch(e){apply.disabled=false;fail(e);}
       },'primary');
-      root.append(el('aside',{id:'app-update',role:'status'},el('span',{},state.locale==='fr'?'Une nouvelle version est prête.':'A new version is ready.'),apply));
+      document.body.append(el('aside',{id:'app-update',role:'status'},el('span',{},state.locale==='fr'?'Une nouvelle version est prête.':'A new version is ready.'),apply));
     });
     const reg = await navigator.serviceWorker.register("../sw.js",{updateViaCache:'none'});
     reg.update().catch(()=>{});
