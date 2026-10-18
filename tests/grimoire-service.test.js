@@ -53,7 +53,7 @@ test('manual definition edits and disabled sources cannot be overwritten through
  const q=draftProgression(f.context,f.config,f.draft).choices.find(q=>q.kind==='prepared'),command={type:'prepare',classId:'wizard',spellIds:f.draft.selections[q.id]};
  await assert.rejects(f.service.apply(f.draft.id,command,{expectedCharacterRevision:2,expectedDraftRevision:2}),/differs from its build plan/);
  assert.equal((await f.library.get(f.draft.id)).definition.identity.description,'Manual player note');
- const g=await fixture('cleric',5),config={...g.config,revision:2,enabledSourceIds:['xge','tce']};await g.campaigns.save(config,{expectedRevision:1});
+ const g=await fixture('cleric',5),config={...g.config,revision:2,sourceRestrictionsEnabled:true,enabledSourceIds:['xge','tce']};await g.campaigns.save(config,{expectedRevision:1});
  await assert.rejects(g.service.apply(g.draft.id,{type:'prepare',classId:'cleric',spellIds:[]},{expectedCharacterRevision:1,expectedDraftRevision:2}));
  assert.equal((await g.library.get(g.draft.id)).definition.revision,1);
 });

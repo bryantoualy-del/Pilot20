@@ -99,7 +99,7 @@ test("suggestions preserve existing choices and mode switching is lossless", () 
 test("missing source does not discard selections or the saved class", () => {
   const d = complete(),
     saved = structuredClone(d);
-  const off = { ...c, enabledSourceIds: ["xge"] },
+  const off = { ...c, sourceRestrictionsEnabled:true,enabledSourceIds: ["xge"] },
     filtered = campaignCatalog([classCatalog, spellCatalog], [], off);
   assert.equal(compileDraft(filtered, off, d).character, null);
   assert.deepEqual(d, saved);

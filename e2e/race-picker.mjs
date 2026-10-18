@@ -41,8 +41,7 @@ try {
   await search.fill('aasimar');assert.equal(await p.locator('.single-races button').count(),1);
   assert.equal(await p.locator('.single-races button').isEnabled(),true);
   await p.locator('.single-races button').click();
-  await p.locator('#dialog').getByRole('button').filter({hasText:'Monsters of the Multiverse'}).click();
-  await p.locator('#dialog').waitFor({state:'hidden'});
+  assert.equal(await p.locator('#dialog[open]').count(),0,'installed races select directly without a source dialog');
   assert.equal(await p.locator('.single-races button[aria-pressed=true]').count(),1);
   await search.fill('dwarf');assert.equal(await p.getByRole('button',{name:'Nain',exact:true}).count(),1);
   await search.fill('kobold');assert.ok(await p.getByRole('button',{name:'Kobold',exact:true}).isEnabled());

@@ -44,7 +44,7 @@ test("59 visual families and 30 variants are distinct from installed mechanics",
     raceLibrary(ctx, { query: "human" })[0].availability,
     "available",
   );
-  const off = campaignCatalog(packs, [], { ...config, enabledSourceIds: [] });
+  const off = campaignCatalog(packs, [], { ...config, sourceRestrictionsEnabled:true,enabledSourceIds: [] });
   assert.equal(
     raceLibrary(off, { query: "human" })[0].availability,
     "source-disabled",
@@ -99,7 +99,7 @@ test("homebrew validates, round-trips, reuses existing statistics and gates by c
   assert.deepEqual(importRace(exportRace(r)), r);
   const on = {
       ...config,
-      enabledSourceIds: [...config.enabledSourceIds, "homebrew"],
+      sourceRestrictionsEnabled:true,enabledSourceIds: [...config.enabledSourceIds, "homebrew"],
     },
     c = campaignCatalog(packs, [p], on),
     d = newDraft();
@@ -239,7 +239,7 @@ test("synthetic kobold versions remain independent and bard 10 saves without cla
   p2.catalog.items[0].data.bonuses = { con: 1 };
   const on = {
       ...config,
-      enabledSourceIds: [...config.enabledSourceIds, "volo", "motm"],
+      sourceRestrictionsEnabled:true,enabledSourceIds: [...config.enabledSourceIds, "volo", "motm"],
     },
     c = campaignCatalog(packs, [p1, p2, originalPack], on);
   assert.equal(raceLibrary(c, { query: "kobold" })[0].versions.length, 2);
@@ -257,7 +257,7 @@ test("synthetic kobold versions remain independent and bard 10 saves without cla
   const saved = structuredClone(q),
     off = {
       ...on,
-      enabledSourceIds: on.enabledSourceIds.filter((s) => s !== "volo"),
+      sourceRestrictionsEnabled:true,enabledSourceIds: on.enabledSourceIds.filter((s) => s !== "volo"),
     };
   assert.equal(
     compileDraft(campaignCatalog(packs, [p1, p2, originalPack], off), off, q)

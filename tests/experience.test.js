@@ -61,7 +61,7 @@ test("incomplete and source-disabled previews do not manufacture armor or castin
   const p = previewDraft(ctx, config, d);
   assert.equal(p.stats, null);
   assert.equal(p.provisional, true);
-  const off = { ...config, enabledSourceIds: ["xge"] },
+  const off = { ...config, sourceRestrictionsEnabled:true,enabledSourceIds: ["xge"] },
     filtered = campaignCatalog([classCatalog, spellCatalog], [], off);
   assert.equal(previewDraft(filtered, off, complete()).stats, null);
 });

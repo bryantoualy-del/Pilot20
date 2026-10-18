@@ -37,7 +37,7 @@ test('innate spells acquire at actual levels, retain chosen ability and share He
  assert.equal(pools.length,1);assert.equal(pools[0].max,1);assert.equal(pools[0].recovery,'long');
 });
 test('a disabled racial source is filtered, while its installed data remain intact',()=>{
- const off=campaignCatalog(playerCatalogs,[],defaultCampaign());assert.equal(off.index.get('motm:race:aasimar'),undefined);assert.ok(off.installed.get('motm:race:aasimar'));
+ const off=campaignCatalog(playerCatalogs,[],{...defaultCampaign(),sourceRestrictionsEnabled:true});assert.equal(off.index.get('motm:race:aasimar'),undefined);assert.ok(off.installed.get('motm:race:aasimar'));
 });
 test('racial decisions and spell origins survive finalize, export and import',async()=>{
  const{d,r}=make('motm:race:aasimar',3),s=new MemoryStorage(),repo=creatorRepository(s,characterLibrary(s));

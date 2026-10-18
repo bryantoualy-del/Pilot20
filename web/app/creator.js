@@ -94,7 +94,7 @@ export async function renderCreator(main,input,a) {
       body.append(field(text('name'),el('input',{id:'character-name',value:d.name,maxlength:200,autocomplete:'off',onchange:e=>update(x=>{x.name=e.target.value;})})),
         el('p',{},w('Un nom suffit pour commencer. Vous pourrez le changer ensuite.','Start with a name. You can change it later.')),
         el('details',{},el('summary',{},w('Portrait et apparence — facultatif','Portrait and appearance — optional')),appearanceControls(a,d,update)),
-        el('details',{},el('summary',{},w('Cadre de votre aventure','Adventure settings')),el('p',{},a.context.statuses.filter(s=>s.selected).map(s=>s.name).join(' · ')),button(w('Modifier les sources','Change sources'),()=>a.nav('sources'))));
+        el('details',{},el('summary',{},w('Cadre de votre aventure','Adventure settings')),el('p',{},w('Catalogue D&D 2014 installé','Installed D&D 2014 catalogue'))));
     }
     if(current.kind==='race'){
       body.append(renderRacePicker(d,a,update,filters));

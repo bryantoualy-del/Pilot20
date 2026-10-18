@@ -7,7 +7,7 @@ export const messages = {
     components: "Composants",
     home: "Accueil",
     library: "Mes persos",
-    sources: "Sources de campagne",
+    sources: "Paramètres de campagne",
     create: "Créer un personnage",
     resume: "Reprendre un brouillon",
     open: "Ouvrir",
@@ -59,7 +59,7 @@ export const messages = {
     installed: "définitions installées",
     missing: "Aucun pack installé : contenu indisponible",
     sourceHelp:
-      "Autoriser un livre ne l’installe pas. Chaque capacité indique séparément sa couverture mécanique.",
+      "Tout le contenu D&D 2014 installé est disponible par défaut. Le MJ peut limiter les ouvrages ici. Les règles facultatives restent indépendantes.",
     options: "Règles facultatives",
     authorize:
       "Je dispose de l’autorisation nécessaire pour utiliser ce pack localement.",
@@ -181,7 +181,7 @@ export const messages = {
     components: "Components",
     home: "Home",
     library: "My characters",
-    sources: "Campaign sources",
+    sources: "Campaign settings",
     create: "Create character",
     resume: "Resume draft",
     open: "Open",
@@ -233,7 +233,7 @@ export const messages = {
     installed: "installed definitions",
     missing: "No installed pack: content unavailable",
     sourceHelp:
-      "Selecting a book does not install it. Mechanical coverage is shown for each ability.",
+      "All installed D&D 2014 content is available by default. The GM can restrict books here. Optional rules remain independent.",
     options: "Optional rules",
     authorize:
       "I have the required authorization for local private use of this pack.",

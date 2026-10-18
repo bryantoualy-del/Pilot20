@@ -1,3 +1,4 @@
+import { sourceEnabled } from '../../src/campaign/sources.js';
 import { raceLibrary } from '../../src/catalog/race-discovery.js';
 import { selectRace } from '../../src/creator/race-selection.js';
 import { openRaceEditor } from './race-editor.js';
@@ -20,7 +21,7 @@ export function renderRacePicker(d, a, update, filters) {
   wrapper.append(field(w('Rechercher une race', 'Search races'), search), count, grid);
   function fill() {
     grid.replaceChildren();
-    const families = raceLibrary(a.context, { query: state.query }).filter(f=>f.versions.length).sort((x, y) =>
+    const families = raceLibrary(a.context, { query: state.query }).filter(f=>f.versions.some(v=>v.available)).sort((x, y) =>
       Number(y.versions.some(v => v.available)) - Number(x.versions.some(v => v.available)) ||
       (a.state.locale === 'fr' ? x.nom_fr : x.name_en).localeCompare(a.state.locale === 'fr' ? y.nom_fr : y.name_en, a.state.locale));
     let shown = 0;
@@ -32,7 +33,7 @@ export function renderRacePicker(d, a, update, filters) {
         !versions.length ? el('small', {}, w('Source désactivée', 'Source disabled')) : null)],
         async () => {
           if(versions.length){await update(x => selectRace(a.context,x,versions.find(v=>v.entry.id===d.raceId)?.entry.id??versions[0].entry.id,a.state.locale));return;}
-          a.modal(el('section',{},el('h2',{},label),el('p',{},w('Choisissez la version à autoriser pour cette campagne.','Choose the version to enable in this campaign.')),f.versions.map(v=>button(a.name(v.entry)+' · '+v.entry.source.document,async()=>{try{const sourceId=v.entry.data.rulesSourceId??(v.entry.data.customLineage?'tce':'srd51'),old=a.config,next={...old,revision:old.revision+1,enabledSourceIds:[...new Set([...old.enabledSourceIds,sourceId])]};await a.campaigns.save(next,{expectedRevision:old.revision});a.config=next;a.context=await a.campaigns.context(next);await update(x=>selectRace(a.context,x,v.entry.id,a.state.locale));document.querySelector('#dialog').close();}catch(e){a.fail(e);}},'primary'))));
+
         },
         selected ? 'selected' : '');
       b.disabled = !f.versions.length;
@@ -42,8 +43,8 @@ export function renderRacePicker(d, a, update, filters) {
     if ('lignee sur mesure custom lineage tasha'.includes(state.query.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())) {
       const b = button([raceIcon('Lignée sur mesure'), el('span', {}, w('Lignée sur mesure', 'Custom lineage'))],
         () => openRaceEditor(a, d, update, null, { lineageOnly: true }));
-      b.disabled = !a.config.enabledSourceIds.includes('tce');
-      if (b.disabled) b.title = w('Activez Tasha dans Sources de campagne.', 'Enable Tasha in Campaign sources.');
+      b.disabled = !sourceEnabled(a.config, 'tce');
+      if (b.disabled) b.title = w('Tasha est restreint par les paramètres MJ.', 'Tasha is restricted by the GM settings.');
       grid.append(b); shown++;
     }
     count.textContent = shown + w(' races affichées', ' races shown');
@@ -57,6 +58,5 @@ export function renderRacePicker(d, a, update, filters) {
   if (d.manualRace || (!d.raceId && d.origin)) wrapper.append(el('p', { role: 'status' },
     w('Votre ancienne origine est conservée. Choisissez une race ou configurez une Lignée sur mesure pour la remplacer.',
       'Your previous origin is retained. Choose a race or configure Custom lineage to replace it.')));
-  wrapper.append(button(w('Sources de campagne', 'Campaign sources'), () => a.nav('sources')));
   return wrapper;
 }

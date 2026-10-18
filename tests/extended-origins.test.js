@@ -6,7 +6,7 @@ import {newDraft,suggestChoices,compileDraft,draftProgression} from '../src/crea
 import {derive} from '../src/character/derive.js';
 import {validateCatalogV3} from '../src/catalog/catalog-v3.js';
 import {canonicalProficiency} from '../src/catalog/proficiencies.js';
-const config={...defaultCampaign(),enabledSourceIds:['srd51','xge','tce','phb14','ravenloft','volo','motm']},ctx=campaignCatalog(playerCatalogs,[],config);
+const config={...defaultCampaign(),sourceRestrictionsEnabled:true,enabledSourceIds:['srd51','xge','tce','phb14','ravenloft','volo','motm']},ctx=campaignCatalog(playerCatalogs,[],config);
 function draft(overrides={}){return Object.assign(newDraft(),{name:'Origines — recette synthétique',raceId:'srd51:race:human',backgroundId:'srd51:background:acolyte',classes:[{id:'fighter',level:1,subclassId:null}],classChosen:true},overrides);}
 function build(input){let d=suggestChoices(ctx,config,input);d.confirmed=d.reviewed=true;const r=compileDraft(ctx,config,d);assert.equal(r.valid,true,JSON.stringify(r.issues));return {d,r,stats:derive(r.character)};}
 test('all 18 backgrounds compile with fighter, high-level rogue and Artificer without duplicate training',()=>{
@@ -52,7 +52,7 @@ test('five PHB subraces apply bonuses, distinct traits and source provenance',()
   if(sub==='wood-elf')assert.equal(stats.movement.walk,35);
   if(sub==='drow'){assert.ok(!r.character.features.includes('srd51:race:elf:darkvision'));assert.ok(r.character.spells.known.includes('srd51:darkness'));}
   if(sub==='stout-halfling')assert.ok(r.character.defenses.resistances.includes('poison'));
-  const disabled={...config,enabledSourceIds:['srd51']},off=campaignCatalog(playerCatalogs,[],disabled),saved=structuredClone(d);assert.equal(compileDraft(off,disabled,d).valid,false);assert.deepEqual(d,saved);
+  const disabled={...config,sourceRestrictionsEnabled:true,enabledSourceIds:['srd51']},off=campaignCatalog(playerCatalogs,[],disabled),saved=structuredClone(d);assert.equal(compileDraft(off,disabled,d).valid,false);assert.deepEqual(d,saved);
  }
 });
 test('public catalogue validation rejects a private source nested in a subrace',()=>{

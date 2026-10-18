@@ -28,6 +28,8 @@ jobs:
           path: docs/screenshots/appearance/
       - name: Verify race picker and Custom lineage
         run: npm run test:e2e:race-picker
+      - name: Verify unified catalogue and optional GM restrictions
+        run: node e2e/unified-sources.mjs
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
         with:

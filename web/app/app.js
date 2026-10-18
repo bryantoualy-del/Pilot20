@@ -6,7 +6,7 @@ import { openIndexedDB } from "../../src/persistence/adapters.js";
 import { characterLibrary } from "../../src/persistence/library.js";
 import { campaignRepository } from "../../src/campaign/repository.js";
 import { creatorRepository } from "../../src/creator/repository.js";
-import { validateSavedPlan } from "../../src/campaign/sources.js";
+import { validateSavedPlan, sourceEnabled } from "../../src/campaign/sources.js";
 import { frNames } from "./translations.js";
 import { messages, labels, classNames } from "./i18n.js";
 import { el, button, field, select, check, badge, download } from "./dom.js";
@@ -16,7 +16,7 @@ import { renderCompanion } from "./companion.js";
 const root = document.querySelector("#app"),
   dialog = document.querySelector("#dialog");
 const state = {
-  route: "home",
+  route: location.hash === "#sources" ? "sources" : "home",
   locale: "fr",
   campaignId: "default",
   query: "",
@@ -609,34 +609,20 @@ async function sourcesScreen(main) {
       fail(e);
     }
   };
-  main.append(
-    el(
-      "div",
-      { class: "source-cards" },
-      context.statuses.map((s) =>
-        el(
-          "article",
-          { class: "card source-card" },
-          check(s.name, s.selected, (e) =>
-            change((c) => {
-              c.enabledSourceIds = e.target.checked
-                ? [...c.enabledSourceIds, s.id]
-                : c.enabledSourceIds.filter((k) => k !== s.id);
-            }),
-          ),
-          badge(
-            s.installedEntries
-              ? s.installedEntries + " " + t("installed")
-              : t("missing"),
-            s.installedEntries ? "" : "warning",
-          ),
-          el(
-            "div",
-            { class: "coverage" },
-            Object.entries(s.coverage).map(([key, n]) =>
-              el("span", {}, n + " " + t(key)),
-            ),
-          ),
+  main.append(check(
+    state.locale === "fr" ? "Restreindre les ouvrages (MJ)" : "Restrict books (GM)",
+    config.sourceRestrictionsEnabled === true,
+    e => change(c => { c.sourceRestrictionsEnabled = e.target.checked; }),
+  ));
+  if (config.sourceRestrictionsEnabled) main.append(
+    el("div", { class: "source-cards" },
+      context.statuses.filter(s => s.installedEntries > 0).map(s =>
+        el("article", { class: "card source-card" },
+          check(s.name, s.selected, e => change(c => {
+            c.enabledSourceIds = e.target.checked
+              ? [...new Set([...c.enabledSourceIds, s.id])]
+              : c.enabledSourceIds.filter(k => k !== s.id);
+          })),
         ),
       ),
     ),
@@ -668,7 +654,7 @@ async function sourcesScreen(main) {
             }),
           {
             disabled: !o.sourceIds.some((id) =>
-              config.enabledSourceIds.includes(id),
+              sourceEnabled(config, id),
             ),
           },
         ),
