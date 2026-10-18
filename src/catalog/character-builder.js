@@ -171,6 +171,7 @@ export function buildCharacter(
           : definitions.find((c) => c.id === row.classId).hitDie / 2 + 1,
     }));
   if (hpProgression !== null) {
+    check(hpProgression.length===definitions.reduce((n,c)=>n+c.level,0)&&hpProgression.every((p,i)=>{const cls=definitions.find(c=>c.id===p.classId);return cls&&Number.isInteger(p.hp)&&p.hp>=1&&p.hp<=cls.hitDie&&(i!==0||(p.classId===definitions[0].id&&p.hp===cls.hitDie));}),'HP die results must match class dice and the initial maximum');
     if (advancementHistory.length)
       check(
         hpProgression.length === advancementHistory.length &&

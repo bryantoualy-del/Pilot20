@@ -14,7 +14,7 @@ export function singlePath(context,config,draft) {
   const report=draftProgression(context,config,draft),race=report.origin?.race;
   const decisions=[{id:'identity',kind:'identity'},{id:'race',kind:'race'}];
   if(race?.data.subraces.length)decisions.push({id:'subrace',kind:'subrace'});
-  decisions.push({id:'class',kind:'class'},{id:'background',kind:'background'},{id:'scores',kind:'scores'});
+  decisions.push({id:'class',kind:'class'},{id:'background',kind:'background'},{id:'scores',kind:'scores'},{id:'hit-points',kind:'hit-points'});
   decisions.push(...(report.origin?.choices??[]).map(q=>({id:'origin:'+q.id,kind:'origin-choice',choice:q})));
   const priority={skill:0,proficiency:1,subclass:2,asi:3,feature:4,expertise:5,spellbook:7,spell:8,prepared:9};
   decisions.push(...[...(report.choices??[])].sort((a,b)=>a.level-b.level||(priority[a.kind]??6)-(priority[b.kind]??6)||a.id.localeCompare(b.id)).map(q=>({id:'choice:'+q.id,kind:'class-choice',choice:q})));
@@ -37,6 +37,7 @@ export function decisionReady(decision,report,draft) {
     case 'class':return draft.classChosen!==false&&draft.classes.every(c=>c.level>=1&&c.level<=20)&&!report.issues.some(i=>['unavailable-class','multiclass-prerequisite','multiclass-option-disabled'].includes(i.code));
     case 'background':return !!draft.backgroundId||!!draft.background.name.trim()&&draft.background.skills.length===2;
     case 'scores':return !report.issues.some(i=>/score-method|origin-score-cap|asi-cap/.test(i.code));
+    case 'hit-points':return report.hitPoints?.valid===true;
     case 'summary':return report.valid;
     default:return true;
   }
