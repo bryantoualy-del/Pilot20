@@ -3,6 +3,7 @@ import {grimoireView,grimoireService} from '../../src/spellbook/service.js';
 import {spellMatches,spellReference} from '../../src/catalog/spell-reference.js';
 import {choiceName} from './editor.js';
 import {showEntryDetails} from './spell-detail.js';
+import {spellSchool} from '../../src/catalog/localization.js';
 
 export async function renderGrimoire(main,characterId,a){
  const record=await a.library.get(characterId);
@@ -47,7 +48,7 @@ export async function renderGrimoire(main,characterId,a){
   const status=el('div',{class:'grimoire-status',role:'status'}),list=el('div',{class:'grimoire-list'}),pages=el('div',{class:'single-pages'});
   const filters=el('details',{},el('summary',{},w('Filtres','Filters')),
    field(a.t('level'),select([['all',w('Tous les niveaux','All levels')],...Array.from({length:10},(_,n)=>[String(n),n===0?w('Sorts mineurs','Cantrips'):String(n)])],ui.level,async e=>{ui.level=e.target.value;page=0;await remember();fill();})),
-   field(w('École','School'),select([['all',w('Toutes les écoles','All schools')],...['abjuration','conjuration','divination','enchantment','evocation','illusion','necromancy','transmutation'].map(id=>[id,id])],ui.school,async e=>{ui.school=e.target.value;page=0;await remember();fill();})),
+   field(w('École','School'),select([['all',w('Toutes les écoles','All schools')],...['abjuration','conjuration','divination','enchantment','evocation','illusion','necromancy','transmutation'].map(id=>[id,spellSchool(id,a.state.locale)])],ui.school,async e=>{ui.school=e.target.value;page=0;await remember();fill();})),
    field(w('Source','Source'),select([['all',w('Toutes les sources','All sources')],...a.context.statuses.filter(s=>s.selected).map(s=>[s.id,s.name])],ui.source,async e=>{ui.source=e.target.value;page=0;await remember();fill();})),
    check(w('Concentration','Concentration'),ui.concentration,async e=>{ui.concentration=e.target.checked;page=0;await remember();fill();}),
    check(w('Rituel','Ritual'),ui.ritual,async e=>{ui.ritual=e.target.checked;page=0;await remember();fill();}),

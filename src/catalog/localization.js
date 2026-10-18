@@ -1,4 +1,7 @@
 import {spellReference} from './spell-reference.js';
+export function spellSchool(school,locale='fr') {
+  return locale==='fr'?({abjuration:'Abjuration',conjuration:'Invocation',divination:'Divination',enchantment:'Enchantement',evocation:'Évocation',illusion:'Illusion',necromancy:'Nécromancie',transmutation:'Transmutation'})[school]??school:school;
+}
 /** Stable IDs remain language independent. A missing French label is explicit, never presented as a verified translation. */
 export function localizedName(entry, locale = "fr", verified = {}) {
   if (!entry) return "";

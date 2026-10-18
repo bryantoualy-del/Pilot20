@@ -10,7 +10,9 @@ Every mutation reloads the character, draft and campaign, recompiles with the ex
 
 ## Verification
 
-New unit tests cover staged sets, no preparation for a bard, copying without preparation, failed writes, stale edits, disabled sources and preservation of external manual notes. `e2e/work4-grimoire.mjs` seeds explicitly synthetic SRD Wizard10/Cleric5/Bard10/Warlock11 fixtures, then uses the real Grimoire UI for copying, preparation, library reopening, fixed domain grants and responsive screenshots. It is not a validation of the Compagnie Creole's real sheets or physical Safari.
+New unit tests cover staged sets, no preparation for a bard, copying without preparation, failed writes, stale edits, disabled sources and preservation of external manual notes. `e2e/work4-grimoire.mjs` seeds explicitly synthetic SRD Wizard10/Cleric5/Bard10/Warlock11 fixtures, then uses the real Grimoire UI for copying, preparation, library reopening, fixed domain grants and responsive screenshots. It also reopens the wizard offline, then exports through the library UI and imports into a fresh browser context. It is not a validation of the Compagnie Creole's real sheets or physical Safari.
+
+The browser workflow retains the built application as `pilot20-work4-local-build` after successful tests. This downloadable artifact is a local test build, not a public deployment. See `P5-RECETTE-APPAREILS.md` for access and the remaining physical-device checks.
 
 ## Limits remaining for the full Work4 delivery
 

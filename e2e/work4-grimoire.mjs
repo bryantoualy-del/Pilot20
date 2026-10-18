@@ -54,6 +54,22 @@ try{
  const auto=p.locator(`.grimoire-spell[data-spell-id="${fixtures.cleric.autoId}"]`);await auto.waitFor();assert.equal(await auto.getByRole('checkbox',{name:'Préparer',exact:true}).count(),0);assert.ok((await auto.textContent()).includes('Toujours préparé'));
  const counter=await p.locator('.grimoire-status').textContent();await search('unmatchable search');assert.equal(await p.locator('.grimoire-status').textContent(),counter);results.push('Cleric domain spells stay always prepared outside the editable quota; search does not change counters');
  await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();await p.reload();await open('wizard');const reopened=await read('wizard');assert.deepEqual(reopened.spellbook,after.spellbook);results.push('Library reopening retains the exact spellbook and preparation metadata');
+ await p.waitForFunction(()=>navigator.serviceWorker.controller!==null);
+ await context.setOffline(true);await p.reload();await p.locator('header').waitFor();await open('wizard');
+ assert.deepEqual((await read('wizard')).spellbook,after.spellbook);await context.setOffline(false);results.push('The saved wizard Grimoire reopens offline with its exact preparation');
+ await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();
+ const exportCard=p.locator('article').filter({has:p.getByRole('heading',{name:'Grimoire wizard',exact:true})});
+ await exportCard.locator('summary').click();const downloadEvent=p.waitForEvent('download');await exportCard.getByRole('button',{name:'Exporter',exact:true}).click();
+ const downloaded=await downloadEvent,exportPath='artifacts/wizard-roundtrip.json';await downloaded.saveAs(exportPath);
+ const importedContext=await browser.newContext({viewport:{width:390,height:844}}),importPage=await importedContext.newPage();
+ importPage.on('pageerror',e=>errors.push(e.message));await importPage.goto(url);
+ await importPage.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();
+ await importPage.locator('input[type=file]').setInputFiles(exportPath);
+ const importedCard=importPage.locator('article').filter({has:importPage.getByRole('heading',{name:'Grimoire wizard',exact:true})});
+ await importedCard.getByRole('button',{name:'Grimoire',exact:true}).click();await importPage.locator('.grimoire[data-character-id="grimoire-wizard"]').waitFor();
+ const imported=await importPage.evaluate(async()=>{const {openIndexedDB}=await import('/src/persistence/adapters.js');const s=await openIndexedDB();try{return await s.get('characters','grimoire-wizard');}finally{s.close();}});
+ assert.deepEqual(imported.definition.spells,after.definition.spells);assert.deepEqual(imported.spellbook.grants,after.spellbook.grants);assert.deepEqual(imported.spellbook.preparedGrantIds,after.spellbook.preparedGrantIds);assert.equal(imported.spellbook.characterRevision,1);
+ results.push('UI export and import into a fresh browser context preserve copied spells, grants and preparation');await importedContext.close();
  assert.deepEqual(errors,[]);await context.close();
 }finally{await writeFile('artifacts/e2e-work4-grimoire-results.json',JSON.stringify({results,metrics,errors,physicalSafari:false},null,2));if(browser)await browser.close();server.kill();}
 console.log(results);
