@@ -27,10 +27,14 @@ export async function renderCreator(main,input,a) {
   const filters=new Map();
   const swaps=new Map();
   const text=key=>a.t(key);
-  const label=decision=>({identity:w('Votre personnage','Your character'),race:w('Choisissez votre race','Choose your race'),subrace:text('subrace'),class:w('Classe et niveau','Class and level'),background:text('background'),scores:text('scores'),'hit-points':w('Points de vie','Hit points'),'equipment-method':w('Votre équipement de départ','Your starting equipment'),equipment:text('equipment'),summary:w('Votre personnage est-il prêt ?','Is your character ready?')})[decision.kind]??(decision.kind==='origin-choice'?(decision.choice.label?.[a.state.locale]??optionName(decision.choice.key,a)):decision.kind==='equipment-choice'?decision.choice.label[a.state.locale]:choiceName(decision.choice,a));
+  const label=decision=>({identity:w('Votre personnage','Your character'),race:w('Choisissez votre race','Choose your race'),subrace:text('subrace'),class:w('Classe et niveau','Class and level'),background:text('background'),scores:text('scores'),'hit-points':w('Points de vie','Hit points'),'equipment-method':w('Votre équipement de départ','Your starting equipment'),equipment:text('equipment'),training:w('Maîtrises','Proficiencies'),summary:w('Votre personnage est-il prêt ?','Is your character ready?')})[decision.kind]??(decision.kind==='origin-choice'?(decision.choice.label?.[a.state.locale]??optionName(decision.choice.key,a)):decision.kind==='equipment-choice'?decision.choice.label[a.state.locale]:choiceName(decision.choice,a));
   async function update(fn,{navigation=false}={}) {
     d.finalized=false;d.status='draft';d.confirmed=false;d.reviewed=false;fn(d);
-    await a.autosave(d);await draw(navigation);
+    await equipmentDefaults();await a.autosave(d);await draw(navigation);
+  }
+  async function equipmentDefaults(){
+    if(!d.startingEquipmentEnabled||d.equipmentMethod==='wealth')return;
+    for(let pass=0;pass<8;pass++){const report=singlePath(a.context,a.config,d).report;const missing=(report.startingEquipment?.choices??[]).filter(q=>!d.startingEquipmentChoices?.[q.id]?.length);if(!missing.length)return;d.startingEquipmentChoices??={};for(const q of missing)if(q.options[0])d.startingEquipmentChoices[q.id]=[q.options[0].id];}
   }
   async function go(id){d.step=id;await a.autosave(d);await draw(true);}
   const details=entry=>showEntryDetails(entry,a);
@@ -86,7 +90,7 @@ export async function renderCreator(main,input,a) {
     const header=el('div',{class:'single-heading'},el('span',{},d.name||w('Nouveau personnage','New character')),saveState,exit);
     const groupOf=x=>x.kind==='origin-choice'?'origin':x.kind==='class-choice'?(['spell','spellbook','prepared'].includes(x.choice.kind)?'spells':'features'):['equipment-choice','equipment-method'].includes(x.kind)?'equipment':x.kind==='subrace'?'race':x.kind;
     const groups=[...new Set(decisions.map(groupOf))];
-    const groupNames={identity:text('name'),race:text('race'),class:text('class'),background:text('background'),scores:text('scores'),'hit-points':text('hp'),origin:w('Origine et maîtrises','Origin and training'),features:w('Capacités','Features'),spells:w('Sorts','Spells'),equipment:text('equipment'),summary:w('Récapitulatif','Summary')};
+    const groupNames={identity:text('name'),race:text('race'),class:text('class'),background:text('background'),scores:text('scores'),'hit-points':text('hp'),origin:w('Origine et maîtrises','Origin and training'),features:w('Capacités','Features'),spells:w('Sorts','Spells'),equipment:text('equipment'),training:w('Maîtrises','Proficiencies'),summary:w('Récapitulatif','Summary')};
     const sectionNav=el('details',{class:'single-plan'},el('summary',{},el('span',{},w('Création du personnage','Character creation')),el('span',{class:'single-step-count'},`${position+1} / ${decisions.length}`)),el('nav',{'aria-label':w('Étapes de création','Creation steps')},groups.map(group=>{
       const decision=decisions.find(x=>groupOf(x)===group);const b=button(groupNames[group],()=>go(decision.id));if(group===groupOf(current))b.setAttribute('aria-current','step');return b;
     })));
@@ -100,7 +104,7 @@ export async function renderCreator(main,input,a) {
     }
     if(current.kind==='race'){
       body.append(renderRacePicker(d,a,update,filters));
-      if(d.raceId)body.append(button(w('Traits de cette race','Race traits'),()=>details(a.context.index.get(d.raceId))));
+      if(report.origin?.race){const o=report.origin;body.append(el('section',{class:'race-facts','aria-live':'polite'},el('h2',{},a.name(o.race)),el('dl',{class:'spell-facts'},...[[w('Bonus','Bonuses'),Object.entries(o.bonuses??{}).filter(([,v])=>v).map(([k,v])=>a.label(k)+' +'+v).join(', ')||w('À choisir dans Caractéristiques','Choose in Ability scores')],[w('Taille','Size'),optionName(o.size,a)],[w('Vitesse','Speed'),(o.speed/5*1.5).toLocaleString(a.state.locale)+' m'],[w('Langues','Languages'),(o.languages??[]).map(id=>optionName(id,a)).join(', ')]].flatMap(([k,v])=>[el('dt',{},k),el('dd',{},v)])),el('ul',{},(o.traits??[]).filter(t=>[o.race.id,o.subrace?.id].includes(t.ownerId)).map(t=>el('li',{},t.name?.[a.state.locale]??t.id,t.description?el('p',{},t.description):null))),button(w('Tous les détails','All details'),()=>details(o.race))));}
     }
     if(current.kind==='subrace'){
       const race=report.origin.race;
@@ -114,7 +118,7 @@ export async function renderCreator(main,input,a) {
       if(d.classChosen!==false){const info=classInfo(cls.id,a.state.locale);if(info)body.append(el('p',{},info.description));const primary=Object.entries(templateScores(cls.id)).find(([,value])=>value===15)?.[0];body.append(el('p',{},w('Caractéristique conseillée : ','Suggested ability: ')+a.label(primary)));}
       const grants=[...(a.context.index.class(cls.id)?.data.grants??[]),...(a.context.index.get(cls.subclassId)?.data.grants??[])].filter(row=>row.level<=cls.level);
       const levels=[...new Set(grants.map(row=>row.level))].sort((a,b)=>a-b);
-      body.append(el('details',{},el('summary',{},w('Capacités par niveau','Features by level')),levels.map(level=>el('div',{class:'feature-level'},el('strong',{},text('level')+' '+level),grants.filter(row=>row.level===level).flatMap(row=>row.featureIds).map(id=>{const entry=a.context.index.get(id);return entry?button(a.name(entry),()=>details(entry),'subtle'):null;})))));
+      body.append(el('details',{},el('summary',{},w('Capacités par niveau','Features by level')),levels.map(level=>el('div',{class:'feature-level'},el('strong',{},text('level')+' '+level),el('div',{class:'feature-buttons'},grants.filter(row=>row.level===level).flatMap(row=>row.featureIds).map(id=>{const entry=a.context.index.get(id);return entry?button(a.name(entry),()=>details(entry),'subtle'):null;}))))));
       body.append(field(text('level'),el('input',{type:'number',min:1,max:20,value:cls.level,onchange:e=>{const n=Number(e.target.value);if(Number.isInteger(n)&&n>=1&&n+d.classes.slice(1).reduce((s,c)=>s+c.level,0)<=20)update(x=>{x.classes[0].level=n;});else a.notice(w('Le niveau total doit rester entre 1 et 20.','Total level must stay between 1 and 20.'));}})));
       if(a.config.enabledOptions.includes('multiclass')){
         const advanced=el('details',{},el('summary',{},w('Ajouter une classe','Add a class')));
@@ -129,10 +133,10 @@ export async function renderCreator(main,input,a) {
     }
     if(current.kind==='scores'){
       body.append(field(text('method'),select(['standard','point-buy','rolled','manual'].map(k=>[k,text(k==='manual'?'manualScores':k)]),d.scoreMethod,e=>update(x=>{x.scoreMethod=e.target.value;x.scoresAreBase=true;if(x.scoreMethod==='standard')x.scores=templateScores(x.classes[0].id);if(x.scoreMethod==='point-buy')x.scores=Object.fromEntries(ABILITIES.map(k=>[k,8]));}))),
-        check(w('Ajouter les bonus raciaux aux valeurs ci-dessous','Add racial bonuses to the scores below'),d.scoresAreBase,e=>update(x=>{x.scoresAreBase=e.target.checked;})));
+        d.scoreMethod==='point-buy'?null:check(w('Ajouter les bonus raciaux aux valeurs ci-dessous','Add racial bonuses to the scores below'),d.scoresAreBase,e=>update(x=>{x.scoresAreBase=e.target.checked;})));
       if(d.scoreMethod==='rolled')body.append(button(text('rollScores'),()=>update(x=>{const r=rollAbilityScores();x.scoreRolls=r.rolls;x.scores=Object.fromEntries(ABILITIES.map((k,i)=>[k,r.values[i]]));})));
       const spent=Object.values(d.scores).reduce((sum,n)=>sum+(POINT_COST[n]??100),0);
-      const grid=el('table',{class:'score-table'},el('thead',{},el('tr',{},['',w('Valeur brute','Base'),w('Bonus racial','Racial bonus'),w('Valeur finale','Final')].map(t=>el('th',{},t))))),rows=el('tbody',{});
+      const grid=el('table',{class:'score-table'},el('thead',{},el('tr',{},['',w('Valeur brute','Base'),w('Coût','Cost'),w('Bonus racial','Racial bonus'),w('Valeur finale','Final')].map(t=>el('th',{},t))))),rows=el('tbody',{});
       const scoreChoices=(report.origin?.choices??[]).filter(q=>q.kind==='score');
       const patterns=(report.origin?.choices??[]).filter(q=>q.key==='ability-pattern');
       for(const q of patterns)body.append(field(q.label[a.state.locale],select([['',w('Choisir','Choose')],...q.options.map(id=>[id,optionName(id,a)])],d.originSelections?.[q.id]?.[0]??'',e=>update(x=>{x.originSelections??={};x.originSelections[q.id]=e.target.value?[e.target.value]:[];for(const key of Object.keys(x.originSelections))if(key.startsWith(q.ownerId+':ability-bonus-'))delete x.originSelections[key];}))));
@@ -146,10 +150,10 @@ export async function renderCreator(main,input,a) {
         for(const q of scoreChoices){const values=d.originSelections?.[q.id]??[],selected=values.includes(ability);bonus.append(el('label',{},el('input',{type:q.count===1?'radio':'checkbox',name:q.id,checked:selected,disabled:!selected&&(!q.options.includes(ability)||values.length>=q.count&&q.count!==1),'aria-label':a.label(ability)+' +'+q.amount,onchange:e=>update(x=>{x.originSelections??={};x.originSelections[q.id]=e.target.checked?(q.count===1?[ability]:[...values,ability]):values.filter(v=>v!==ability);})}),el('span',{},'+'+q.amount)));}
         if(!scoreChoices.length)bonus.append(el('span',{},'+'+(report.origin?.bonuses?.[ability]??0)));
         const final=report.scores?.[ability]??n,mod=Math.floor((final-10)/2);
-        rows.append(el('tr',{},el('th',{scope:'row'},a.label(ability)),el('td',{},el('div',{class:'score-stepper'},minus,el('output',{},n),plus)),el('td',{},bonus),el('td',{},el('strong',{},final+' ('+(mod>=0?'+':'')+mod+')'))));
+        rows.append(el('tr',{},el('th',{scope:'row'},a.label(ability)),el('td',{},el('div',{class:'score-stepper'},minus,el('output',{},n),plus)),el('td',{},d.scoreMethod==='point-buy'?(POINT_COST[n]??'—'):'—'),el('td',{},bonus),el('td',{},el('strong',{},final+' ('+(mod>=0?'+':'')+mod+')'))));
       }
       grid.append(rows);body.append(grid);
-      if(d.scoreMethod==='point-buy')body.append(el('p',{class:'point-budget',role:'status'},w('Coût en points : ','Point cost: '),el('strong',{},spent+' / 27')));
+      if(d.scoreMethod==='point-buy')body.append(el('p',{class:'point-budget',role:'status'},w('Coût en points : ','Point cost: '),el('strong',{},Object.values(d.scores).some(n=>!Object.hasOwn(POINT_COST,n))?w('Score brut hors de 8–15','Base score outside 8–15'):spent+' / 27')));
       body.append(el('p',{},w('Points de vie prévus : ','Estimated hit points: ')+(report.hpPreview??'—')));
     }
     if(current.kind==='hit-points'){
@@ -163,6 +167,12 @@ export async function renderCreator(main,input,a) {
       }
       body.append(rows,el('p',{role:'status'},w('Total prévu : ','Estimated total: ')+(report.hpPreview??'—')));
     }
+    if(current.kind==='training'){
+      const fixed=[...(report.origin?.background?.skills??[]),...(report.origin?.languages??[]),...(report.origin?.background?.proficiencies??[])];
+      if(fixed.length)body.append(el('p',{},w('Déjà accordées : ','Already granted: ')+[...new Set(fixed)].map(id=>optionName(id,a)).join(', ')));
+      for(const q of current.classChoices)body.append(el('section',{},el('h2',{},choiceName(q,a)),choiceList(q,report.selections?.[q.id]??d.selections[q.id]??[],values=>update(x=>{x.selections[q.id]=values;}))));
+      for(const q of current.originChoices)body.append(el('section',{},el('h2',{},q.label?.[a.state.locale]??optionName(q.key,a)),choiceList(q,d.originSelections?.[q.id]??[],values=>update(x=>{x.originSelections??={};x.originSelections[q.id]=values;}))));
+    }
     if(current.kind==='origin-choice')body.append(choiceList(current.choice,d.originSelections?.[current.choice.id]??[],values=>update(x=>{x.originSelections??={};x.originSelections[current.choice.id]=values;}),{origin:true}));
     if(current.kind==='class-choice'){
       const q=current.choice;body.append(el('p',{},a.cls(q.classId)+' · '+text('level')+' '+q.level));
@@ -171,9 +181,10 @@ export async function renderCreator(main,input,a) {
         if(q.kind==='subclass'){const c=x.classes.find(c=>c.id===q.classId);if(c.subclassId&&c.subclassId!==values[0])retainDecision(x,'subclass',q.classId);c.subclassId=values[0]??null;}else x.selections[q.id]=values;
       });
       if(q.kind==='asi'){
+        if(!a.config.enabledOptions.includes('feats'))body.append(el('p',{},w('Les dons sont désactivés dans cette campagne. Vous pouvez les autoriser ci-dessous.','Feats are disabled for this campaign. You can enable them below.')),button(w('Autoriser les dons pour cette campagne','Enable feats for this campaign'),async()=>{const next={...a.config,revision:a.config.revision+1,enabledOptions:[...a.config.enabledOptions,'feats']};await a.campaigns.save(next,{expectedRevision:a.config.revision});await a.nav('creator',d.id);}));
         const selected=values[0]??'',isFeat=selected&&!selected.startsWith('asi:'),feats=q.options.filter(id=>!id.startsWith('asi:'));
         const state=filters.get(q.id)??{mode:isFeat?'feat':'scores',pair:selected.startsWith('asi:')?selected.split(':').slice(1):['','']};filters.set(q.id,state);
-        body.append(field(w('Choix','Choice'),select([['scores',w('Caractéristiques','Ability scores')],...(feats.length?[['feat',w('Don','Feat')]]:[])],state.mode,e=>{state.mode=e.target.value;saveChoice([]);})));
+        body.append(field(w('Choix','Choice'),select([['scores',w('Caractéristiques','Ability scores')],['feat',w('Don','Feat')]],state.mode,e=>{state.mode=e.target.value;saveChoice([]);})));
         if(state.mode==='feat')body.append(field(w('Don','Feat'),select([['',w('Choisir un don','Choose a feat')],...feats.map(id=>[id,optionName(id,a)])],isFeat?selected:'',e=>saveChoice(e.target.value?[e.target.value]:[]))));
         else for(const i of [0,1])body.append(field('+1 · '+(i+1),select([['',w('Choisir une caractéristique','Choose an ability')],...ABILITIES.map(id=>[id,a.label(id)])],state.pair[i],e=>{state.pair[i]=e.target.value;const [x,y]=state.pair,id=q.options.find(id=>id===`asi:${x}:${y}`||id===`asi:${y}:${x}`);saveChoice(id?[id]:[]);})));
       }else body.append(choiceList(q,values,saveChoice));
@@ -186,11 +197,13 @@ export async function renderCreator(main,input,a) {
       const q=current.choice,selected=d.startingEquipmentChoices?.[q.id]?.[0];
       body.append(el('div',{class:'single-options'},q.options.map(o=>el('div',{class:'single-option'+(o.id===selected?' selected':'')},el('label',{},el('input',{type:'radio',name:q.id,checked:o.id===selected,'aria-label':o.name[a.state.locale],onchange:()=>update(x=>{x.startingEquipmentChoices??={};x.startingEquipmentChoices[q.id]=[o.id];})}),el('span',{},o.name[a.state.locale]))))));
     }
-    if(current.kind==='equipment'&&d.startingEquipmentEnabled===true&&d.equipmentMethod!=='wealth'){
+    if(current.kind==='equipment'&&d.startingEquipmentEnabled===true){
+      body.append(field(w('Méthode','Method'),select([['kit',w('Matériel de départ','Starting kit')],['wealth',w('Achats','Purchases')]],d.equipmentMethod??'kit',e=>update(x=>{x.equipmentMethod=e.target.value;}))));
+      for(const q of report.startingEquipment?.choices??[])body.append(field(q.label[a.state.locale],select(q.options.map(o=>[o.id,o.name[a.state.locale]]),d.startingEquipmentChoices?.[q.id]?.[0]??'',e=>update(x=>{x.startingEquipmentChoices??={};x.startingEquipmentChoices[q.id]=[e.target.value];}))));
       body.append(el('p',{},w('Votre matériel de départ, en complément de celui de votre historique.','Your starting kit, in addition to your background equipment.')),
         el('ul',{},(report.startingEquipment?.items??[]).map(i=>el('li',{},i.quantity+' × '+i.name[a.state.locale]))),
         el('details',{},el('summary',{},w('Équipement de l’historique','Background equipment')),(report.origin?.equipment??[]).map(i=>el('p',{},i.name[a.state.locale]))),
-        el('p',{},w('Vous pouvez revenir aux choix précédents pour modifier ce matériel.','Go back to a previous decision to change this kit.')));
+        el('p',{},w('Les sélections ci-dessus modifient votre matériel.','Change your kit with the selectors above.')));
     }
     if(current.kind==='equipment'&&d.startingEquipmentEnabled!==true){
       body.append(field(text('armor'),select(Object.entries(ARMORS).map(([id,v])=>[id,v.name[a.state.locale]]).concat([['none',text('unarmored')]]),d.equipment,e=>update(x=>{x.equipment=e.target.value;}))),check(text('shield'),d.shield,e=>update(x=>{x.shield=e.target.checked;})),
@@ -232,5 +245,5 @@ export async function renderCreator(main,input,a) {
     shell.append(actions);
     if(focus){body.querySelector('h1').focus({preventScroll:true});window.scrollTo({top:0});}
   }
-  await draw();
+  await equipmentDefaults();await a.autosave(d);await draw();
 }

@@ -53,12 +53,13 @@ try{
   assert.ok(visited++<35,'bounded fighter creation');
   const kind=await p.locator('.single-body').getAttribute('data-kind');
   assert.ok(!['choice:fighter:cantrips','choice:fighter:prepared'].includes(await p.locator('.single-body').getAttribute('data-decision-id')));
-  if(['origin-choice','class-choice','equipment-choice'].includes(kind)){
+  if(['training','origin-choice','class-choice','equipment-choice'].includes(kind)){
    if(await p.locator('.single-body').getAttribute('data-decision-id')==='choice:fighter:fighting-style')await changed(()=>p.getByRole('radio',{name:'Défense',exact:true}).check());
    let guard=0;
    while(await p.locator('.single-actions .primary').isDisabled()){
     assert.ok(guard++<20,'bounded option quota');
-    const options=p.locator('.single-options input:enabled:not(:checked)');assert.ok(await options.count(),'an eligible option remains');
+    const groups=p.locator('.single-choice');let incomplete=-1;for(let i=0;i<await groups.count();i++){const count=(await groups.nth(i).locator('.single-choice-count').innerText()).match(/· (\d+) \/ (\d+)/);if(count&&Number(count[1])<Number(count[2])){incomplete=i;break;}}
+    const options=incomplete>=0?groups.nth(incomplete).locator('.single-options input:enabled:not(:checked)'):p.locator('.single-options input:enabled:not(:checked)');assert.ok(await options.count(),'an eligible option remains');
     await changed(()=>options.first().check());
    }
   }
@@ -66,7 +67,7 @@ try{
   await next();
  }
  await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).waitFor();
- assert.equal(await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).isEnabled(),true);
+ assert.equal(await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).isEnabled(),true,await p.locator('.single-body').innerText());
  // Leave restrictive filters in the list before finalizing. Saving must reveal the character.
  await p.getByRole('button',{name:'Enregistrer et quitter',exact:true}).click();
  await p.getByRole('heading',{name:'Mes persos',exact:true}).waitFor();
