@@ -9,7 +9,7 @@ try {
   await new Promise((resolve,reject)=>{server.stdout.once('data',resolve);server.once('error',reject);server.once('exit',n=>reject(Error('server '+n)));});
   const engine=process.env.PILOT20_E2E_BROWSER==='webkit'?webkit:chromium;
   browser=await engine.launch(engine===webkit?{}:{args:['--no-sandbox']});
-  const p=await browser.newPage({viewport:{width:390,height:844}}),errors=[];
+  const p=await browser.newPage({viewport:{width:390,height:844},reducedMotion:'reduce'}),errors=[];
   p.setDefaultTimeout(20000);p.on('pageerror',e=>errors.push(e.message));
   await mkdir('docs/screenshots/appearance',{recursive:true});
   await p.goto(`http://127.0.0.1:${port}/web/index.html`);

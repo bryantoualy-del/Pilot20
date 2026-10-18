@@ -81,7 +81,9 @@ export async function renderCreator(main,input,a) {
     if(d.step!==current.id){d.step=current.id;await a.autosave(d);}
     const body=el('div',{class:'single-body','data-decision-id':current.id,'data-kind':current.kind},el('h1',{tabindex:-1},label(current)),el('p',{class:'single-edition'},'D&D 2014'));
     const saveState=el('span',{id:'draft-save-state',role:'status'},text(d.finalized?'saved':'draftSaved'));
-    const header=el('div',{class:'single-heading'},el('span',{},d.name||w('Nouveau personnage','New character')),saveState,button(text('saveAndExit'),async()=>{try{await a.autosave(d);await a.nav('library');}catch(e){a.fail(e);}}));
+    const exit=button(w('Quitter','Exit'),async()=>{try{await a.autosave(d);await a.nav('library');}catch(e){a.fail(e);}});
+    exit.setAttribute('aria-label',text('saveAndExit'));exit.title=text('saveAndExit');
+    const header=el('div',{class:'single-heading'},el('span',{},d.name||w('Nouveau personnage','New character')),saveState,exit);
     const sectionNav=el('details',{class:'single-plan'},el('summary',{},el('span',{},w('Création du personnage','Character creation')),el('span',{class:'single-step-count'},`${position+1} / ${decisions.length}`)),el('nav',{'aria-label':w('Étapes de création','Creation steps')},decisions.map(decision=>{
       const b=button(label(decision),()=>go(decision.id));if(decision.id===current.id)b.setAttribute('aria-current','step');return b;
     })));
