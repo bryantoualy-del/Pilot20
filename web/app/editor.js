@@ -2096,6 +2096,7 @@ export async function renderEditor(main, d, a) {
               const saved = await a.drafts.finalize(d, result.character, {
                 expectedCharacterRevision,
                 expectedDraftRevision: d.revision,
+                spellbook: result.spellbook,
               });
               Object.assign(d, saved.draft);
               await a.nav("companion", d.id);

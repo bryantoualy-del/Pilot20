@@ -1,3 +1,4 @@
+import {spellbookFromBuild} from '../spellbook/model.js';
 import {
   EQUIPMENT,
   WEAPONS,
@@ -234,6 +235,7 @@ export function compileDraft(context, config, d) {
     ...r,
     character: c,
     stats,
+    spellbook: spellbookFromBuild(context.index, c, r, d),
     valid: true,
     issues: [],
     status: d.reviewed ? "ready" : "review",

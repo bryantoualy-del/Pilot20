@@ -1,3 +1,4 @@
+import {validateSpellbook, pinSpellbook} from '../spellbook/model.js';
 import { isBuiltInPortrait, GENDERS } from "./appearance.js";
 import { RACE_FAMILIES } from "../catalog/race-discovery.js";
 import { manualRaceVariants } from "./race-selection.js";
@@ -186,7 +187,7 @@ export function creatorRepository(storage, library) {
     async finalize(
       d,
       character,
-      { expectedCharacterRevision = null, expectedDraftRevision } = {},
+      { expectedCharacterRevision = null, expectedDraftRevision, spellbook } = {},
     ) {
       validateDraft(d);
       const old = await storage.get("meta", key(d.id));
@@ -198,6 +199,7 @@ export function creatorRepository(storage, library) {
       };
       const result = await library.save(character, {
         expectedRevision: expectedCharacterRevision,
+        ...(spellbook ? {spellbook} : {}),
         linkedMeta: [{ key: key(d.id), value: next, expectedValue: old }],
       });
       return { record: result, draft: next };
@@ -232,7 +234,10 @@ export function creatorRepository(storage, library) {
         "Creator export required",
       );
       const d = e.draft ? validateDraft(e.draft) : null;
-      if (e.character) validateCharacter(e.character.definition);
+      if (e.character) {
+        validateCharacter(e.character.definition);
+        if (e.character.spellbook) validateSpellbook(e.character.spellbook, e.character.definition);
+      }
       check(d || e.character, "Empty export");
       if (d && e.character)
         check(d.id === e.character.definition.id, "Export identity");
@@ -254,6 +259,7 @@ export function creatorRepository(storage, library) {
         if (d) d.revision = 1;
         await library.save(definition, {
           prefs: e.character.preferences,
+          ...(e.character.spellbook ? {spellbook: pinSpellbook(e.character.spellbook,definition)} : {}),
           initialArchived: e.character.archived,
           linkedMeta: d
             ? [{ key: key(d.id), value: d, expectedValue: undefined }]
