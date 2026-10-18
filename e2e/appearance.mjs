@@ -24,7 +24,7 @@ try {
     background:getComputedStyle(document.documentElement).getPropertyValue('--bg').trim(),
   }));}
   const closed=await style();assert.equal(closed.open,false);assert.notEqual(closed.arrowWidth,'0px');
-  assert.match(closed.hint,/Afficher/);assert.equal(closed.colorScheme,'light');assert.equal(closed.background,'#f4f0e5');
+  assert.match(closed.hint,/Afficher/);assert.equal(closed.colorScheme,'dark');assert.equal(closed.background,'#191b1f');
   const progress=p.getByRole('progressbar',{name:'Progression de la création'});
   assert.equal(await progress.getAttribute('value'),'1');
   assert.ok(Number(await progress.getAttribute('max'))>1);
@@ -43,5 +43,5 @@ try {
   const english=p.getByText('Portrait and appearance — optional',{exact:true});
   await english.waitFor();assert.match(await english.evaluate(e=>getComputedStyle(e,'::after').content),/Show/);
   assert.deepEqual(errors,[]);
-  console.log('Appearance: light parchment palette, explicit FR/EN disclosure hints, rotating chevron, portrait section opens by touch/keyboard, responsive375/390/1180 screenshots.');
+  console.log('Appearance: warm dark palette, explicit FR/EN disclosure hints, rotating chevron, portrait section opens by touch/keyboard, responsive375/390/1180 screenshots.');
 }finally{if(browser)await browser.close();server.kill();}

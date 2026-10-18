@@ -194,7 +194,7 @@ async function render() {
   const header = el(
     "header",
     {},
-    button("◈  Pilot20", () => nav("home"), "brand"),
+    button([el("img",{src:"./icon.svg",alt:""}),"Pilot20"], () => nav("home"), "brand"),
     el(
       "nav",
       { "aria-label": "Navigation" },
