@@ -101,11 +101,11 @@ try{
  await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();
  const bardCard=p.locator('article').filter({has:p.getByRole('heading',{name:'Work4 Barde10',exact:true})});await bardCard.getByRole('button',{name:/^Reprendre/}).click();
  await p.locator('.single-body').waitFor();assert.equal((await drafts()).find(d=>d.id==='work4-legacy-bard').mode,'single');
- await p.locator('.single-plan summary').click();const secrets=p.locator('.single-plan nav button').filter({hasText:/Secrets magiques.*10/});assert.equal(await secrets.count(),1);await changed(()=>secrets.click());
+ await p.locator('.single-plan summary').click();const spells=p.locator('.single-plan nav').getByRole('button',{name:'Sorts',exact:true});assert.equal(await spells.count(),1);await changed(()=>spells.click());let spellGuard=0;while(await p.locator('.single-body').getAttribute('data-decision-id')!=='choice:bard:magical-secrets-10'){assert.ok(spellGuard++<30);await next();}
  assert.equal(await p.locator('.single-body').getAttribute('data-decision-id'),'choice:bard:magical-secrets-10');
  assert.ok(await p.locator('.single-options input').count());results.push('Legacy expert Bard10 migrates without data loss and exposes real Magical Secrets10 decisions');
 
- await step('Points de vie');await changed(()=>p.locator('.single-hp').locator('..').locator('select').selectOption('rolled'));
+ await step('PV');await changed(()=>p.locator('.single-hp').locator('..').locator('select').selectOption('rolled'));
  assert.equal(await p.locator('.single-hp input').count(),9);assert.equal(await p.locator('.single-actions .primary').isDisabled(),true);
  for(let i=0;i<9;i++)await changed(async()=>{await p.locator('.single-hp input').nth(i).fill('4');await p.locator('.single-hp input').nth(i).blur();});
  assert.equal(await p.locator('.single-actions .primary').isEnabled(),true);const hpBefore=(await drafts()).find(d=>d.id==='work4-legacy-bard').hpRolls;assert.equal(Object.keys(hpBefore).length,9);

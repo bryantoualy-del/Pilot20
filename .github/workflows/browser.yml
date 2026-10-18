@@ -20,7 +20,7 @@ jobs:
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npx playwright install --with-deps ${{ matrix.engine }}
       - run: npm run build:web
-      - name: Verify parchment theme and disclosure controls
+      - name: Verify dark theme and disclosure controls
         run: npm run test:e2e:appearance
       - uses: actions/upload-artifact@v4
         with:
@@ -30,6 +30,7 @@ jobs:
         run: npm run test:e2e:race-picker
       - name: Verify unified sources and reversible MJ restrictions
         run: node e2e/unified-sources.mjs
+      - run: node e2e/compact-creator.mjs
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
         with:

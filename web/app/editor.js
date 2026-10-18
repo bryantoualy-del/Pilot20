@@ -102,6 +102,7 @@ export function optionName(value, a) {
   if (Object.hasOwn(SKILLS, value) || ABILITIES.includes(value))
     return a.label(value);
   if(a.context.index.class(value))return a.cls(value);
+  if(Object.hasOwn(languageLabels,value))return a.state.locale==='fr'?languageLabels[value]:human(value);
   if(value.startsWith('language:')){const key=value.slice(9);return a.state.locale==='fr'?languageLabels[key]??human(key):human(key);}
   const weapon=Object.values(WEAPONS).find(w=>w.proficiency===value);if(weapon)return weapon.name[a.state.locale];
   if(extraTrainingLabels[value])return extraTrainingLabels[value][a.state.locale==='fr'?0:1];
@@ -112,6 +113,7 @@ export function optionName(value, a) {
     'necrotic-shroud':['Voile nécrotique','Necrotic Shroud'],'radiant-consumption':['Lumière radiante','Radiant Consumption'],'radiant-soul':['Âme radiante','Radiant Soul'],autumn:['Automne','Autumn'],winter:['Hiver','Winter'],spring:['Printemps','Spring'],summer:['Été','Summer'],beasthide:['Peau de bête','Beasthide'],longtooth:['Longues dents','Longtooth'],swiftstride:['Longue foulée','Swiftstride'],wildhunt:['Traque sauvage','Wildhunt'],
     defiance:['Défiance','Defiance'],craftiness:['Astuce','Craftiness'],'draconic-sorcery':['Sorcellerie draconique','Draconic sorcery'],
     artisan:['Outils d’artisan','Artisan’s tools'],navigator:['Outils de navigateur','Navigator’s tools'],language:['Langue supplémentaire','Additional language'],
+    bagpipes:['Cornemuse','Bagpipes'],dulcimer:['Tympanon','Dulcimer'],horn:['Cor','Horn'],lyre:['Lyre','Lyre'],'pan-flute':['Flûte de pan','Pan flute'],panFlute:['Flûte de pan','Pan flute'],shawm:['Chalemie','Shawm'],viol:['Viole','Viol'],
     drum: ["Tambour", "Drum"],
     flute: ["Flûte", "Flute"],
     lute: ["Luth", "Lute"],
@@ -141,6 +143,7 @@ export function choiceName(q, a) {
   const owner=a.context.installed.get(q.ownerId),key=owner?.type==='feat'?q.id.split(':').at(-1):q.id.slice(q.classId.length+1),label=choiceLabels[key]?.[a.state.locale==='fr'?0:1];
   if(owner?.type==='feat')return a.name(owner)+(label?' · '+label:'');
   if(label)return label;
+  if(q.kind==='subclass')return a.t('subclass');
   const suffix = q.id.slice(q.classId.length + 1),
     lang = a.state.locale === "fr" ? 0 : 1;
   if (suffix.startsWith("asi-"))
