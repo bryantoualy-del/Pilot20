@@ -107,7 +107,7 @@ export function draftProgression(context, config, d) {
         hitPointTotal(
           hp.progression,
           report.scores,
-        ) +
+        ) + (report.featureHpBonus??0) +
         (report.origin?.hpPerLevel ?? 0) *
           d.classes.reduce((n, c) => n + c.level, 0):null,
       valid:
@@ -401,12 +401,12 @@ export function suggestChoices(
           (v) =>
             (q.kind !== "skill" || !usedSkills.has(v)) &&
             (q.kind !== "expertise" || !usedExpertise.has(v)) &&
-            (q.kind !== "feature" || !features.has(v)) &&
+            (q.kind !== "feature" || !features.has(v)&&![...features].some(id=>{const key=context.index.get(v)?.data.uniqueRuleKey;return key&&context.index.get(id)?.data.uniqueRuleKey===key;})) &&
             (q.kind !== "spell" || !spellSet.has(v)) &&
             (!q.distinctGroup || !group.has(v)),
         );
         if (q.kind === "asi") {
-          const scores = { ...draftProgression(context,config,d).scores };
+          const preview=draftProgression(context,config,d),scores={...(preview.scoresBeforeFeatureIncreases??preview.scores)};
           const priority = priorities[q.classId] ?? (q.classId==='artificer'?['int','con','dex','wis','str','cha']:ABILITIES);
           options = options
             .filter((v) => {

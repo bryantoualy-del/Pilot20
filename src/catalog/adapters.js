@@ -75,6 +75,6 @@ export function attachClassAdapters(character,index) {
  const shieldAvailable=d.abilities.some(a=>a.combat?.spell?.id==='srd51:shield'&&(a.combat.spell.access==='known'||d.spells.prepared.includes('srd51:shield')));
  const counter=d.abilities.find(a=>a.combat?.spell?.id==='srd51:counterspell'&&(a.combat.spell.access==='known'||d.spells.prepared.includes('srd51:counterspell')));
  if(shieldAvailable)d.reactiveRules.push(shield(stats.resources));
- if(counter){const cls=d.classes.find(c=>c.id===counter.combat.spell.classId);d.reactiveRules.push(counterspell(stats.resources,modifier(d.scores[cls.casting.ability])));}
+ if(counter){const cls=d.classes.find(c=>c.id===counter.combat.spell.classId);d.reactiveRules.push(counterspell(stats.resources,stats.checks[cls.casting.ability]));}
  return d;
 }

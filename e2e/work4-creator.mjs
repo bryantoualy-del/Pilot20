@@ -40,6 +40,7 @@ try{
   const kind=await p.locator('.single-body').getAttribute('data-kind');
   assert.ok(!['choice:fighter:cantrips','choice:fighter:prepared'].includes(await p.locator('.single-body').getAttribute('data-decision-id')));
   if(['origin-choice','class-choice','equipment-choice'].includes(kind)){
+   if(await p.locator('.single-body').getAttribute('data-decision-id')==='choice:fighter:fighting-style')await changed(()=>p.getByRole('radio',{name:'Défense',exact:true}).check());
    let guard=0;
    while(await p.locator('.single-actions .primary').isDisabled()){
     assert.ok(guard++<20,'bounded option quota');
@@ -56,6 +57,7 @@ try{
  await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).waitFor();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();
  results.push('Fighter1 created through one route, race and skill decisions resolved, backtracking preserves scores, saved to library');
  const record=await p.evaluate(async()=>{const {openIndexedDB}=await import('/src/persistence/adapters.js');const s=await openIndexedDB();try{return(await s.list('characters'))[0].value;}finally{s.close();}});
+ const armorClass=await p.evaluate(async d=>{const {derive}=await import('/src/character/derive.js');return derive(d).ac;},record.definition);assert.equal(armorClass,19);
  assert.equal(record.definition.identity.name,'Work4 Guerrier');assert.ok(record.definition.equipment.some(e=>e.id.startsWith('starting:fighter:')));assert.equal(record.definition.background,'Guild Merchant');assert.equal(record.spellbook.characterRevision,record.definition.revision);
  const savedDraft=(await drafts())[0];assert.equal(savedDraft.mode,'single');assert.equal(savedDraft.finalized,true);
  await p.reload();await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();

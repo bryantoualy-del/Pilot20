@@ -11,7 +11,8 @@ export function showEntryDetails(entry,a){
  }
  const note=a.state.locale==='fr'?spellNotesFr[entry.id]:null;
  if(note)body.append(el('p',{class:'entry-description'},note));
- if(data.description)body.append(el('details',{open:!note},el('summary',{},data.language==='fr'?w('Effets du sort','Spell effects · French'):w('Description complète en anglais','Full description')),el('p',{class:'entry-description'},data.description)));
+ const description=a.state.locale==='en'&&data.descriptionEn?data.descriptionEn:data.description,language=a.state.locale==='en'&&data.descriptionEn?'en':data.language;
+ if(description)body.append(el('details',{open:!note},el('summary',{},language==='fr'?entry.type==='spell'?w('Effets du sort','Spell effects · French'):w('Effets et règles','Effects and rules · French'):w('Description complète en anglais','Full description')),el('p',{class:'entry-description'},description)));
  const reference=spellReference(entry.id);
  body.append(el('details',{},el('summary',{},w('Référence','Reference')),el('p',{},entry.source.document),reference?el('p',{},reference.references.map(r=>r.sourceId+(r.pages.length?' · p. '+r.pages.join(', '):'')).join(' / ')):null,reference?el('a',{href:reference.detailUrl,target:'_blank',rel:'noopener noreferrer'},w('Fiche AideDD 2014','AideDD 2014 reference')):null));
  a.modal(body);

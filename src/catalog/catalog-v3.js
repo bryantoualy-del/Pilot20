@@ -92,8 +92,15 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       check(Array.isArray(d.restrictedSpellSchools)&&d.restrictedSpellSchools.length===2,'Subclass spell schools');
     }
     if(d.buildEffects){
-      keys(d.buildEffects,['proficiencies','attacksPerAction','resistances','minimumClassLevel','movement'],[]);
+      keys(d.buildEffects,['proficiencies','attacksPerAction','resistances','minimumClassLevel','movement','scoreIncreases','hpPerClassLevel','naturalArmor','halfProficiency','defenseStyle','rangedWeaponAttackBonus'],[]);
       check(i.type==='feature','Build effects belong to features');
+      const e=d.buildEffects;
+      if(e.scoreIncreases){keys(e.scoreIncreases,ABILITIES,[]);for(const row of Object.values(e.scoreIncreases)){keys(row,['amount','maximum']);check(integer(row.amount,1,10)&&integer(row.maximum,20,30),'Feature score increase');}}
+      if(e.hpPerClassLevel!==undefined)check(integer(e.hpPerClassLevel,1,5),'Feature HP');
+      if(e.naturalArmor){keys(e.naturalArmor,['base','abilities','shieldAllowed']);check(integer(e.naturalArmor.base,10,20)&&Array.isArray(e.naturalArmor.abilities)&&e.naturalArmor.abilities.every(a=>ABILITIES.includes(a))&&typeof e.naturalArmor.shieldAllowed==='boolean','Feature armor');}
+      if(e.halfProficiency!==undefined)check(['all','physical'].includes(e.halfProficiency),'Feature check proficiency');
+      if(e.defenseStyle!==undefined)check(e.defenseStyle===true,'Defense style');
+      if(e.rangedWeaponAttackBonus!==undefined)check(integer(e.rangedWeaponAttackBonus,1,10),'Ranged weapon bonus');
       if(d.buildEffects.minimumClassLevel!==undefined)check(integer(d.buildEffects.minimumClassLevel,1,20),'Build effect level');
       if(d.buildEffects.movement){keys(d.buildEffects.movement,['climb','swim','fly'],[]);for(const v of Object.values(d.buildEffects.movement))check(integer(v,0,200),'Build effect movement');}
       if(d.buildEffects.proficiencies)list(d.buildEffects.proficiencies,'Feature proficiencies');
@@ -101,6 +108,7 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       if(d.buildEffects.resistances)check(d.buildEffects.resistances.every(t=>['acid','cold','fire','force','lightning','necrotic','poison','psychic','radiant','thunder','bludgeoning','piercing','slashing'].includes(t)),'Feature resistances');
     }
     if(d.innateSpells){check(i.type==='feature'&&Array.isArray(d.innateSpells),'Feature spellcasting');for(const row of d.innateSpells){keys(row,['classLevel','spellIds','ability','resourceId','requirements']);check(integer(row.classLevel,1,20)&&ABILITIES.includes(row.ability)&&id(row.resourceId)&&typeof row.requirements==='string'&&row.requirements.length<=2000,'Feature spellcasting policy');list(row.spellIds,'Feature spells');}}
+    if(d.uniqueRuleKey!==undefined)check(id(d.uniqueRuleKey),'Unique rule key');
     if(d.spellGrantReplacement){keys(d.spellGrantReplacement,['schools','classIds']);list(d.spellGrantReplacement.schools,'Spell replacement schools');list(d.spellGrantReplacement.classIds,'Spell replacement lists');}
     for (const field of ["aliases", "reviewNotes"])
       if (d[field] !== undefined)

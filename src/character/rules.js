@@ -99,7 +99,7 @@ export function compileAbilities(d,stats,resources) {
 }
 
 export function validateRuleData(d) {
-  const refs=['level','proficiency','attacksPerAction','maxHp','ac','speed','initiative',
+  const refs=['level','proficiency','attacksPerAction','maxHp','ac','speed','initiative','untrainedCheckBonus','untrainedPhysicalCheckBonus','rangedWeaponAttackBonus',
     ...ABILITIES.flatMap(k=>['mod.'+k,'save.'+k]),
     ...Object.keys(SKILLS).map(k=>'skill.'+k),
     ...d.classes.flatMap(c=>['class.'+c.id,'spellAttack.'+c.id,'spellDC.'+c.id]),
@@ -120,7 +120,7 @@ export function validateRuleData(d) {
     }
   }
   for(const m of d.modifiers) {
-    keys(m,['id','stat','operation','value','reason','source']);source(m.source);
+    keys(m,['id','stat','operation','value','reason','source','condition'],['id','stat','operation','value','reason','source']);if(m.condition!==undefined)check(m.condition==='wearing-armor','Modifier condition');source(m.source);
     check(id(m.id) && refs.includes(m.stat) && !m.stat.startsWith('class.') && !m.stat.startsWith('mod.') && ['add','set','max'].includes(m.operation) && typeof m.reason==='string' && m.reason.trim(),'Modifier shape');
     expression(m.value,stats);
   }
