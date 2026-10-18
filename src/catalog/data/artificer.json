@@ -1,0 +1,4347 @@
+{
+  "kind": "catalog",
+  "schemaVersion": 3,
+  "ruleset": "dnd5e-2014",
+  "id": "pilot20:tce-artificer",
+  "items": [
+    {
+      "id": "tce:artificer:magical-tinkering",
+      "type": "feature",
+      "name": {
+        "en": "Magical Tinkering",
+        "fr": "Bricolage magique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 1,
+        "language": "fr",
+        "description": "Avec un outil maîtrisé, une action donne à un petit objet non magique un effet simple de lumière, son, odeur ou image. Un effet par objet, au plus Intelligence (minimum1) objets simultanés. Une action au contact termine un effet.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:spellcasting",
+      "type": "feature",
+      "name": {
+        "en": "Spellcasting",
+        "fr": "Sorts"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 1,
+        "language": "fr",
+        "description": "Intelligence ; outils maîtrisés tenus comme focaliseur, imposant une composante matérielle. Préparation : Intelligence + moitié du niveau d’artificier, arrondie à l’inférieur, minimum1. Repos long pour changer la liste. Un rituel doit être préparé. Un sort mineur peut être remplacé à chaque niveau d’artificier.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:infuse-item",
+      "type": "feature",
+      "name": {
+        "en": "Infuse Item",
+        "fr": "Influx d’objet"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Apprenez les influx indiqués par votre niveau. Au repos long, imprégnez des objets non magiques appropriés ; un influx par objet et un seul objet par influx. Le nombre simultané est limité. Oublier un influx termine son effet. Un influx connu peut être remplacé à chaque niveau d’artificier.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:right-tool",
+      "type": "feature",
+      "name": {
+        "en": "Right Tool",
+        "fr": "L’outil de circonstance"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 3,
+        "language": "fr",
+        "description": "Une heure de travail avec des outils de voleur ou d’artisan crée un jeu d’outils d’artisan. Cette heure peut se dérouler durant un repos ; les outils disparaissent à la prochaine utilisation.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:tool-expertise",
+      "type": "feature",
+      "name": {
+        "en": "Tool Expertise",
+        "fr": "Expertise de l’outillage"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 6,
+        "language": "fr",
+        "description": "Double le bonus de maîtrise sur les tests utilisant un outil que vous maîtrisez.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:flash-of-genius",
+      "type": "feature",
+      "name": {
+        "en": "Flash Of Genius",
+        "fr": "Trait de génie"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 7,
+        "language": "fr",
+        "description": "Réaction : ajoutez votre modificateur d’Intelligence au test de caractéristique ou à la sauvegarde de vous-même ou d’une créature visible à9 m. Intelligence utilisations, minimum1, récupérées au repos long.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:magic-item-adept",
+      "type": "feature",
+      "name": {
+        "en": "Magic Item Adept",
+        "fr": "Adepte des objets magiques"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Quatre harmonisations possibles. Fabrication d’objets magiques courants ou peu courants : quart du temps et moitié du coût habituel.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:spell-storing-item",
+      "type": "feature",
+      "name": {
+        "en": "Spell Storing Item",
+        "fr": "Objet de stockage de sort"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 11,
+        "language": "fr",
+        "description": "Au repos long, stockez un sort d’artificier de niveau1 ou2, d’incantation1 action, dans une arme ou un focaliseur ; inutile de le préparer. Le porteur utilise son action et votre modificateur d’incantation, mais sa propre concentration si nécessaire. Deux fois Intelligence utilisations, minimum2 ; une nouvelle inscription termine la précédente.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:magic-item-savant",
+      "type": "feature",
+      "name": {
+        "en": "Magic Item Savant",
+        "fr": "Érudit des objets magiques"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 14,
+        "language": "fr",
+        "description": "Cinq harmonisations possibles. Ignore les prérequis de classe, race, sort et niveau pour utiliser un objet magique ou s’harmoniser avec lui.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:magic-item-master",
+      "type": "feature",
+      "name": {
+        "en": "Magic Item Master",
+        "fr": "Maître des objets magiques"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 18,
+        "language": "fr",
+        "description": "Six harmonisations possibles.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:soul-of-artifice",
+      "type": "feature",
+      "name": {
+        "en": "Soul Of Artifice",
+        "fr": "Âme de l’artifice"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 20,
+        "language": "fr",
+        "description": "Bonus de +1 aux sauvegardes par objet actuellement harmonisé. Si vous tombez à0 PV sans mort immédiate, une réaction termine un influx pour rester à1 PV.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:infusion:mind-sharpener",
+      "type": "feature",
+      "name": {
+        "en": "Infusion:Mind Sharpener",
+        "fr": "Aiguisoir d’esprit"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Armure ou toge ;4 charges. Réaction après une sauvegarde de concentration ratée :1 charge pour réussir à la place. Récupère1d4 charges à l’aube.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion"
+      }
+    },
+    {
+      "id": "tce:artificer:infusion:spell-refueling-ring",
+      "type": "feature",
+      "name": {
+        "en": "Infusion:Spell Refueling Ring",
+        "fr": "Anneau de ravitaillement magique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 6,
+        "language": "fr",
+        "description": "Anneau harmonisé : une action récupère un emplacement de niveau3 au plus. Une utilisation par aube.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion"
+      }
+    },
+    {
+      "id": "tce:artificer:infusion:enhanced-weapon",
+      "type": "feature",
+      "name": {
+        "en": "Infusion:Enhanced Weapon",
+        "fr": "Arme améliorée"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Arme courante ou de guerre : +1 attaque et dégâts ; +2 au niveau10 d’artificier.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion"
+      }
+    },
+    {
+      "id": "tce:artificer:infusion:returning-weapon",
+      "type": "feature",
+      "name": {
+        "en": "Infusion:Returning Weapon",
+        "fr": "Arme boomerang"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Arme de lancer : +1 attaque et dégâts ; revient en main immédiatement après une attaque à distance.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion"
+      }
+    },
+    {
+      "id": "tce:artificer:infusion:radiant-weapon",
+      "type": "feature",
+      "name": {
+        "en": "Infusion:Radiant Weapon",
+        "fr": "Arme radiante"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 6,
+        "language": "fr",
+        "description": "Arme harmonisée : +1 attaque et dégâts, lumière commandée par action bonus.4 charges ; réaction après avoir été touché :1 charge pour imposer une sauvegarde de Constitution contre l’aveuglement jusqu’à la fin du prochain tour adverse. Récupère1d4 charges à l’aube.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion"
+      }
+    },
+    {
+      "id": "tce:artificer:infusion:arcane-propulsion-armor",
+      "type": "feature",
+      "name": {
+        "en": "Infusion:Arcane Propulsion Armor",
+        "fr": "Armure à propulsion arcanique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 14,
+        "language": "fr",
+        "description": "Armure harmonisée : +1,50 m de vitesse, gantelets magiques de1d8 force, lancer6/18 m avec retour. Remplace des membres manquants et ne peut être retirée contre la volonté du porteur.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion"
+      }
+    },
+    {
+      "id": "tce:artificer:infusion:armor-magical-strength",
+      "type": "feature",
+      "name": {
+        "en": "Infusion:Armor Magical Strength",
+        "fr": "Armure de force magique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Armure harmonisée ;6 charges.1 charge ajoute Intelligence à un test ou une sauvegarde de Force ; une réaction et1 charge évitent une chute à terre. Récupère1d6 charges à l’aube.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion"
+      }
+    },
+    {
+      "id": "tce:artificer:infusion:resistant-armor",
+      "type": "feature",
+      "name": {
+        "en": "Infusion:Resistant Armor",
+        "fr": "Armure résistante"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 6,
+        "language": "fr",
+        "description": "Armure harmonisée : résistance à un type choisi lors de l’imprégnation parmi acide, feu, force, foudre, froid, nécrotique, poison, psychique, radiant et tonnerre.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion"
+      }
+    },
+    {
+      "id": "tce:artificer:infusion:boots-winding-path",
+      "type": "feature",
+      "name": {
+        "en": "Infusion:Boots Winding Path",
+        "fr": "Bottes du sentier tortueux"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 6,
+        "language": "fr",
+        "description": "Bottes harmonisées : action bonus, téléportation de4,50 m au plus vers un espace visible et libre déjà occupé pendant votre tour.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion"
+      }
+    },
+    {
+      "id": "tce:artificer:infusion:repulsion-shield",
+      "type": "feature",
+      "name": {
+        "en": "Infusion:Repulsion Shield",
+        "fr": "Bouclier répulsif"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 6,
+        "language": "fr",
+        "description": "Bouclier harmonisé : +1 CA et4 charges. Après une touche de corps à corps, réaction et1 charge repoussent l’assaillant de4,50 m au plus. Récupère1d4 charges à l’aube.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion"
+      }
+    },
+    {
+      "id": "tce:artificer:infusion:enhanced-defense",
+      "type": "feature",
+      "name": {
+        "en": "Infusion:Enhanced Defense",
+        "fr": "Défense améliorée"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Armure ou bouclier : +1 CA ; +2 au niveau10 d’artificier.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion"
+      }
+    },
+    {
+      "id": "tce:artificer:infusion:enhanced-arcane-focus",
+      "type": "feature",
+      "name": {
+        "en": "Infusion:Enhanced Arcane Focus",
+        "fr": "Focaliseur arcanique amélioré"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Baguette, bâton ou sceptre harmonisé : +1 aux attaques de sort, sans abri partiel. +2 au niveau10 d’artificier.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion"
+      }
+    },
+    {
+      "id": "tce:artificer:infusion:helm-awareness",
+      "type": "feature",
+      "name": {
+        "en": "Infusion:Helm Awareness",
+        "fr": "Heaume de vigilance"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Casque harmonisé : avantage à l’initiative ; impossible de surprendre son porteur tant qu’il n’est pas neutralisé.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion"
+      }
+    },
+    {
+      "id": "tce:artificer:infusion:repeating-shot",
+      "type": "feature",
+      "name": {
+        "en": "Infusion:Repeating Shot",
+        "fr": "Salve"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Arme à munitions harmonisée : +1 aux attaques et dégâts à distance, ignore chargement et produit ses munitions magiques si nécessaire.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion"
+      }
+    },
+    {
+      "id": "tce:artificer:infusion:homunculus-servant",
+      "type": "feature",
+      "name": {
+        "en": "Infusion:Homunculus Servant",
+        "fr": "Serviteur homoncule"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Une gemme ou un cristal d’au moins100 po sert de cœur. Artificiel TP : CA13, PV1+Intelligence+niveau d’artificier, marche6 m, vol9 m. Joue après vous ; action bonus pour lui ordonner une action. Attaque à distance : modificateur de sort, portée9 m,1d4+maîtrise force. Réparation lui rend2d6 PV ; peut transmettre un sort de contact par sa réaction à36 m de vous. Son profil complet précise ses sauvegardes et sens.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:wand-of-magic-detection",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Wand Of Magic Detection",
+        "fr": "Réplique — Baguette de détection de la magie"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "wand-of-magic-detection"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:wand-of-secrets",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Wand Of Secrets",
+        "fr": "Réplique — Baguette des secrets"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "wand-of-secrets"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:cap-of-water-breathing",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Cap Of Water Breathing",
+        "fr": "Réplique — Capuchon de respiration aquatique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "cap-of-water-breathing"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:rope-of-climbing",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Rope Of Climbing",
+        "fr": "Réplique — Corde d’escalade"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "rope-of-climbing"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:alchemy-jug",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Alchemy Jug",
+        "fr": "Réplique — Cruche alchimique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "alchemy-jug"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:goggles-of-night",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Goggles Of Night",
+        "fr": "Réplique — Lunettes du nyctalope"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "goggles-of-night"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:sending-stones",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Sending Stones",
+        "fr": "Réplique — Pierres messagères"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "sending-stones"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:bag-of-holding",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Bag Of Holding",
+        "fr": "Réplique — Sac sans fond"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 2,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "bag-of-holding"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:ring-water-walking",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Ring Water Walking",
+        "fr": "Réplique — Anneau de marche sur l’onde"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 6,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "ring-water-walking"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:boots-elvenkind",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Boots Elvenkind",
+        "fr": "Réplique — Bottes elfiques"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 6,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "boots-elvenkind"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:cloak-manta-ray",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Cloak Manta Ray",
+        "fr": "Réplique — Cape de la raie manta"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 6,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "cloak-manta-ray"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:cloak-elvenkind",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Cloak Elvenkind",
+        "fr": "Réplique — Cape elfique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 6,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "cloak-elvenkind"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:pipes-haunting",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Pipes Haunting",
+        "fr": "Réplique — Flûte terrifiante"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 6,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "pipes-haunting"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:gloves-thievery",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Gloves Thievery",
+        "fr": "Réplique — Gants de chapardeur"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 6,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "gloves-thievery"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:eyes-charming",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Eyes Charming",
+        "fr": "Réplique — Regard charmeur"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 6,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "eyes-charming"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:lantern-revealing",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Lantern Revealing",
+        "fr": "Réplique — Lanterne de révélation"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 6,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "lantern-revealing"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:periapt-wound-closure",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Periapt Wound Closure",
+        "fr": "Réplique — Amulette de cicatrisation"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "periapt-wound-closure"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:ring-mind-shielding",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Ring Mind Shielding",
+        "fr": "Réplique — Anneau de barrière mentale"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "ring-mind-shielding"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:ring-jumping",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Ring Jumping",
+        "fr": "Réplique — Anneau de saut"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "ring-jumping"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:headband-intellect",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Headband Intellect",
+        "fr": "Réplique — Bandeau d’intelligence"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "headband-intellect"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:winged-boots",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Winged Boots",
+        "fr": "Réplique — Bottes ailées"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "winged-boots"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:boots-striding-springing",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Boots Striding Springing",
+        "fr": "Réplique — Bottes de sept lieues"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "boots-striding-springing"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:boots-winterlands",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Boots Winterlands",
+        "fr": "Réplique — Bottes des terres gelées"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "boots-winterlands"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:bracers-archery",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Bracers Archery",
+        "fr": "Réplique — Bracelets d’archer"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "bracers-archery"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:brooch-shielding",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Brooch Shielding",
+        "fr": "Réplique — Broche de défense"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "brooch-shielding"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:cloak-protection",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Cloak Protection",
+        "fr": "Réplique — Cape de protection"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "cloak-protection"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:efficient-quiver",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Efficient Quiver",
+        "fr": "Réplique — Carquois d’Ehlonna"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "efficient-quiver"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:hat-disguise",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Hat Disguise",
+        "fr": "Réplique — Chapeau de déguisement"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "hat-disguise"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:slippers-spider-climbing",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Slippers Spider Climbing",
+        "fr": "Réplique — Chaussons de l’araignée"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "slippers-spider-climbing"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:necklace-adaptation",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Necklace Adaptation",
+        "fr": "Réplique — Collier d’adaptation"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "necklace-adaptation"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:pipes-sewers",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Pipes Sewers",
+        "fr": "Réplique — Flûte des égouts"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "pipes-sewers"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:gauntlets-ogre-power",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Gauntlets Ogre Power",
+        "fr": "Réplique — Gantelets de puissance d’ogre"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "gauntlets-ogre-power"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:gloves-swimming-climbing",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Gloves Swimming Climbing",
+        "fr": "Réplique — Gants de nage et d’escalade"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "gloves-swimming-climbing"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:gloves-missile-snaring",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Gloves Missile Snaring",
+        "fr": "Réplique — Gants piégeurs de projectiles"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "gloves-missile-snaring"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:helm-telepathy",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Helm Telepathy",
+        "fr": "Réplique — Heaume de télépathie"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "helm-telepathy"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:medallion-thoughts",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Medallion Thoughts",
+        "fr": "Réplique — Médaillon des pensées"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "medallion-thoughts"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:eyes-eagle",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Eyes Eagle",
+        "fr": "Réplique — Yeux de lynx"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 10,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "eyes-eagle"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:amulet-health",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Amulet Health",
+        "fr": "Réplique — Amulette de santé"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 14,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "amulet-health"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:ring-free-action",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Ring Free Action",
+        "fr": "Réplique — Anneau d’action libre"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 14,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "ring-free-action"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:ring-protection",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Ring Protection",
+        "fr": "Réplique — Anneau de protection"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 14,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "ring-protection"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:ring-ram",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Ring Ram",
+        "fr": "Réplique — Anneau du bélier"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 14,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "ring-ram"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:boots-levitation",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Boots Levitation",
+        "fr": "Réplique — Bottes de lévitation"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 14,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "boots-levitation"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:boots-speed",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Boots Speed",
+        "fr": "Réplique — Bottes de rapidité"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 14,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "boots-speed"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:bracers-defense",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Bracers Defense",
+        "fr": "Réplique — Bracelets de défense"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 14,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "bracers-defense"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:cloak-bat",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Cloak Bat",
+        "fr": "Réplique — Cape de la chauve-souris"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 14,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "cloak-bat"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:belt-hill-giant-strength",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Belt Hill Giant Strength",
+        "fr": "Réplique — Ceinturon de force de géant des collines"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 14,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "belt-hill-giant-strength"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:horn-blasting",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Horn Blasting",
+        "fr": "Réplique — Cor de dévastation"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 14,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "horn-blasting"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:gem-seeing",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Gem Seeing",
+        "fr": "Réplique — Gemme de vision"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 14,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "gem-seeing"
+      }
+    },
+    {
+      "id": "tce:artificer:replicate:dimensional-shackles",
+      "type": "feature",
+      "name": {
+        "en": "Replicate:Dimensional Shackles",
+        "fr": "Réplique — Menottes dimensionnelles"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 14,
+        "language": "fr",
+        "description": "Influx appris pour cet objet précis. Produit une réplique en imprégnant un objet approprié ; les propriétés et l’harmonisation sont celles de l’objet magique. Une autre réplique est un autre influx connu.",
+        "reference": "Tasha 2014 / Artificier",
+        "optionKind": "infusion",
+        "replicatedItem": "dimensional-shackles"
+      }
+    },
+    {
+      "id": "tce:artificer:experimental-elixir",
+      "type": "feature",
+      "name": {
+        "en": "Experimental Elixir",
+        "fr": "Élixir expérimental"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 3,
+        "language": "fr",
+        "description": "Au repos long créez un élixir aléatoire ; deux au niveau6, trois au niveau15. Une action, du matériel d’alchimiste et un emplacement supplémentaire créent un élixir dont vous choisissez l’effet : soins2d4+Intelligence, vitesse+3 m1 h, CA+1 pendant10 min,1d4 aux attaques/sauvegardes1 min, vol3 m10 min ou modification d’apparence10 min.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:alchemical-savant",
+      "type": "feature",
+      "name": {
+        "en": "Alchemical Savant",
+        "fr": "Érudit alchimique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 5,
+        "language": "fr",
+        "description": "Avec le matériel d’alchimiste comme focaliseur, ajoutez Intelligence (minimum1) à un jet de soins ou de dégâts d’acide, feu, nécrotique ou poison d’un sort.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:restorative-reagents",
+      "type": "feature",
+      "name": {
+        "en": "Restorative Reagents",
+        "fr": "Ingrédients revigorants"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 9,
+        "language": "fr",
+        "description": "Vos élixirs accordent aussi2d6+Intelligence PV temporaires, minimum1. Restauration partielle sans emplacement ni préparation, avec matériel d’alchimiste : Intelligence fois, minimum1, par repos long.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:chemical-mastery",
+      "type": "feature",
+      "name": {
+        "en": "Chemical Mastery",
+        "fr": "Maîtrise chimique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 15,
+        "language": "fr",
+        "description": "Résistance acide et poison, immunité à empoisonné. Restauration suprême et guérison peuvent chacune être lancées une fois par repos long sans emplacement ni préparation, avec matériel d’alchimiste.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:alchemist",
+      "type": "subclass",
+      "name": {
+        "en": "Alchemist",
+        "fr": "Alchimiste"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "tce:artificer:experimental-elixir"
+            ]
+          },
+          {
+            "level": 5,
+            "featureIds": [
+              "tce:artificer:alchemical-savant"
+            ]
+          },
+          {
+            "level": 9,
+            "featureIds": [
+              "tce:artificer:restorative-reagents"
+            ]
+          },
+          {
+            "level": 15,
+            "featureIds": [
+              "tce:artificer:chemical-mastery"
+            ]
+          }
+        ],
+        "extraSpells": [
+          {
+            "classLevel": 3,
+            "spellIds": [
+              "srd51:healing-word",
+              "phb14:spell:ray-of-sickness"
+            ],
+            "mode": "prepared"
+          },
+          {
+            "classLevel": 5,
+            "spellIds": [
+              "srd51:acid-arrow",
+              "srd51:flaming-sphere"
+            ],
+            "mode": "prepared"
+          },
+          {
+            "classLevel": 9,
+            "spellIds": [
+              "srd51:gaseous-form",
+              "srd51:mass-healing-word"
+            ],
+            "mode": "prepared"
+          },
+          {
+            "classLevel": 13,
+            "spellIds": [
+              "srd51:blight",
+              "srd51:death-ward"
+            ],
+            "mode": "prepared"
+          },
+          {
+            "classLevel": 17,
+            "spellIds": [
+              "srd51:cloudkill",
+              "srd51:raise-dead"
+            ],
+            "mode": "prepared"
+          }
+        ],
+        "choices": [
+          {
+            "key": "alchemist-tool",
+            "level": 3,
+            "count": 1,
+            "options": [
+              "alchemists-supplies",
+              "brewers-supplies",
+              "calligraphers-supplies",
+              "carpenters-tools",
+              "cartographers-tools",
+              "cobblers-tools",
+              "cooks-utensils",
+              "glassblowers-tools",
+              "jewelers-tools",
+              "leatherworkers-tools",
+              "masons-tools",
+              "painters-supplies",
+              "potters-tools",
+              "smiths-tools",
+              "tinkers-tools",
+              "weavers-tools",
+              "woodcarvers-tools"
+            ],
+            "kind": "proficiency",
+            "toolReplacementFor": "alchemists-supplies"
+          }
+        ],
+        "resources": [
+          {
+            "id": "experimental-elixirs",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              1,
+              1,
+              1,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3
+            ]
+          },
+          {
+            "id": "restorative-reagents",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              }
+            ]
+          },
+          {
+            "id": "chemical-greater-restoration",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "id": "chemical-heal",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "language": "fr",
+        "description": "Spécialisation d’artificier ; aptitudes aux niveaux3,5,9 et15."
+      }
+    },
+    {
+      "id": "tce:artificer:arcane-armor",
+      "type": "feature",
+      "name": {
+        "en": "Arcane Armor",
+        "fr": "Armure arcanique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 3,
+        "language": "fr",
+        "description": "Une action avec outils de forgeron transforme votre armure : ignore le prérequis de Force, sert de focaliseur et remplace des membres manquants. Ne peut être retirée contre votre gré ; enfiler/retirer prend une action. Choisissez Gardien ou Infiltré ; changement possible après un repos court ou long.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:extra-attack-armorer",
+      "type": "feature",
+      "name": {
+        "en": "Extra Attack Armorer",
+        "fr": "Attaque supplémentaire"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 5,
+        "language": "fr",
+        "description": "Deux attaques par action Attaquer, sans cumul avec d’autres capacités semblables.",
+        "reference": "Tasha 2014 / Artificier",
+        "buildEffects": {
+          "attacksPerAction": 2
+        }
+      }
+    },
+    {
+      "id": "tce:artificer:armor-modifications",
+      "type": "feature",
+      "name": {
+        "en": "Armor Modifications",
+        "fr": "Modifications d’armure"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 9,
+        "language": "fr",
+        "description": "L’armure est divisée en plastron, bottes, casque et arme spéciale pour les influx. Deux objets imprégnés supplémentaires sont permis, exclusivement sur ces parties.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:perfected-armor",
+      "type": "feature",
+      "name": {
+        "en": "Perfected Armor",
+        "fr": "Armure parachevée"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 15,
+        "language": "fr",
+        "description": "Gardien : réaction, maîtrise utilisations par repos long, pour tirer une créature TG ou plus petite à9 m sur sauvegarde de Force ratée, puis l’attaquer si elle arrive à portée. Infiltré : une cible touchée au lance-foudre brille, est désavantagée contre vous ; prochaine attaque contre elle avantagée et +1d6 foudre si elle touche.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:armorer-proficiency",
+      "type": "feature",
+      "name": {
+        "en": "Armorer Proficiency",
+        "fr": "Techniques du métier"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 3,
+        "language": "fr",
+        "description": "Maîtrise des armures lourdes.",
+        "reference": "Tasha 2014 / Artificier",
+        "buildEffects": {
+          "proficiencies": [
+            "heavy-armor"
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:artificer:armor:guardian",
+      "type": "feature",
+      "name": {
+        "en": "Armor:Guardian",
+        "fr": "Gardien"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 3,
+        "language": "fr",
+        "description": "Gantelets de tonnerre : arme courante,1d8 tonnerre, Force ou Intelligence ; une touche désavantage les attaques contre autrui jusqu’à votre prochain tour. Champ protecteur : action bonus, PV temporaires égaux au niveau d’artificier, maîtrise utilisations par repos long.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:armor:infiltrator",
+      "type": "feature",
+      "name": {
+        "en": "Armor:Infiltrator",
+        "fr": "Infiltré"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 3,
+        "language": "fr",
+        "description": "Lance-foudre : arme courante à distance27/90 m,1d6 foudre, Dextérité ou Intelligence ; +1d6 une fois à votre tour. Vitesse+1,50 m ; avantage en Discrétion, qui neutralise le désavantage éventuel de l’armure.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:armorer",
+      "type": "subclass",
+      "name": {
+        "en": "Armorer",
+        "fr": "Armurier"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "tce:artificer:arcane-armor",
+              "tce:artificer:armorer-proficiency"
+            ]
+          },
+          {
+            "level": 5,
+            "featureIds": [
+              "tce:artificer:extra-attack-armorer"
+            ]
+          },
+          {
+            "level": 9,
+            "featureIds": [
+              "tce:artificer:armor-modifications"
+            ]
+          },
+          {
+            "level": 15,
+            "featureIds": [
+              "tce:artificer:perfected-armor"
+            ]
+          }
+        ],
+        "extraSpells": [
+          {
+            "classLevel": 3,
+            "spellIds": [
+              "srd51:magic-missile",
+              "srd51:thunderwave"
+            ],
+            "mode": "prepared"
+          },
+          {
+            "classLevel": 5,
+            "spellIds": [
+              "srd51:shatter",
+              "srd51:mirror-image"
+            ],
+            "mode": "prepared"
+          },
+          {
+            "classLevel": 9,
+            "spellIds": [
+              "srd51:lightning-bolt",
+              "srd51:hypnotic-pattern"
+            ],
+            "mode": "prepared"
+          },
+          {
+            "classLevel": 13,
+            "spellIds": [
+              "srd51:fire-shield",
+              "srd51:greater-invisibility"
+            ],
+            "mode": "prepared"
+          },
+          {
+            "classLevel": 17,
+            "spellIds": [
+              "srd51:wall-of-force",
+              "srd51:passwall"
+            ],
+            "mode": "prepared"
+          }
+        ],
+        "choices": [
+          {
+            "key": "armorer-tool",
+            "level": 3,
+            "count": 1,
+            "options": [
+              "smiths-tools",
+              "alchemists-supplies",
+              "brewers-supplies",
+              "calligraphers-supplies",
+              "carpenters-tools",
+              "cartographers-tools",
+              "cobblers-tools",
+              "cooks-utensils",
+              "glassblowers-tools",
+              "jewelers-tools",
+              "leatherworkers-tools",
+              "masons-tools",
+              "painters-supplies",
+              "potters-tools",
+              "tinkers-tools",
+              "weavers-tools",
+              "woodcarvers-tools"
+            ],
+            "kind": "proficiency",
+            "toolReplacementFor": "smiths-tools"
+          },
+          {
+            "key": "armor-model",
+            "level": 3,
+            "count": 1,
+            "options": [
+              "tce:artificer:armor:guardian",
+              "tce:artificer:armor:infiltrator"
+            ],
+            "kind": "feature"
+          }
+        ],
+        "resources": [],
+        "language": "fr",
+        "description": "Spécialisation d’artificier ; aptitudes aux niveaux3,5,9 et15."
+      }
+    },
+    {
+      "id": "tce:artificer:eldritch-cannon",
+      "type": "feature",
+      "name": {
+        "en": "Eldritch Cannon",
+        "fr": "Canon occulte"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 3,
+        "language": "fr",
+        "description": "Une action crée un canon P ou TP pour1 h : CA18, PV5×niveau, immunité poison/psychique. Une création gratuite par repos long ; les suivantes coûtent un emplacement. Action bonus à18 m pour l’activer et le déplacer de4,50 m : baliste2d8 force avec recul1,50 m, cône de feu4,50 m2d8 avec sauvegarde de Dextérité pour moitié, ou1d8+Intelligence PV temporaires aux créatures choisies à3 m.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:arcane-firearm",
+      "type": "feature",
+      "name": {
+        "en": "Arcane Firearm",
+        "fr": "Arme à feu arcanique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 5,
+        "language": "fr",
+        "description": "Une baguette, un bâton ou un sceptre gravé après un repos long devient focaliseur ; ajoutez1d8 à un jet de dégâts d’un sort d’artificier lancé avec lui.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:explosive-cannon",
+      "type": "feature",
+      "name": {
+        "en": "Explosive Cannon",
+        "fr": "Canon explosif"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 9,
+        "language": "fr",
+        "description": "Les dégâts du canon gagnent1d8. Une action à18 m peut le détruire en explosion de rayon6 m :3d8 force, moitié sur sauvegarde de Dextérité réussie.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:fortified-position",
+      "type": "feature",
+      "name": {
+        "en": "Fortified Position",
+        "fr": "Position fortifiée"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 15,
+        "language": "fr",
+        "description": "Abri partiel pour vous et vos alliés à3 m d’un canon. Deux canons simultanés possibles, création par la même action avec coûts séparés et activation par la même action bonus.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:artillerist",
+      "type": "subclass",
+      "name": {
+        "en": "Artillerist",
+        "fr": "Artilleur"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "tce:artificer:eldritch-cannon"
+            ]
+          },
+          {
+            "level": 5,
+            "featureIds": [
+              "tce:artificer:arcane-firearm"
+            ]
+          },
+          {
+            "level": 9,
+            "featureIds": [
+              "tce:artificer:explosive-cannon"
+            ]
+          },
+          {
+            "level": 15,
+            "featureIds": [
+              "tce:artificer:fortified-position"
+            ]
+          }
+        ],
+        "extraSpells": [
+          {
+            "classLevel": 3,
+            "spellIds": [
+              "srd51:shield",
+              "srd51:thunderwave"
+            ],
+            "mode": "prepared"
+          },
+          {
+            "classLevel": 5,
+            "spellIds": [
+              "srd51:shatter",
+              "srd51:scorching-ray"
+            ],
+            "mode": "prepared"
+          },
+          {
+            "classLevel": 9,
+            "spellIds": [
+              "srd51:fireball",
+              "srd51:wind-wall"
+            ],
+            "mode": "prepared"
+          },
+          {
+            "classLevel": 13,
+            "spellIds": [
+              "srd51:wall-of-fire",
+              "srd51:ice-storm"
+            ],
+            "mode": "prepared"
+          },
+          {
+            "classLevel": 17,
+            "spellIds": [
+              "srd51:cone-of-cold",
+              "srd51:wall-of-force"
+            ],
+            "mode": "prepared"
+          }
+        ],
+        "choices": [
+          {
+            "key": "artillerist-tool",
+            "level": 3,
+            "count": 1,
+            "options": [
+              "woodcarvers-tools",
+              "alchemists-supplies",
+              "brewers-supplies",
+              "calligraphers-supplies",
+              "carpenters-tools",
+              "cartographers-tools",
+              "cobblers-tools",
+              "cooks-utensils",
+              "glassblowers-tools",
+              "jewelers-tools",
+              "leatherworkers-tools",
+              "masons-tools",
+              "painters-supplies",
+              "potters-tools",
+              "smiths-tools",
+              "tinkers-tools",
+              "weavers-tools"
+            ],
+            "kind": "proficiency",
+            "toolReplacementFor": "woodcarvers-tools"
+          }
+        ],
+        "resources": [
+          {
+            "id": "free-cannon",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "language": "fr",
+        "description": "Spécialisation d’artificier ; aptitudes aux niveaux3,5,9 et15."
+      }
+    },
+    {
+      "id": "tce:artificer:battle-ready",
+      "type": "feature",
+      "name": {
+        "en": "Battle Ready",
+        "fr": "Apte au combat"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 3,
+        "language": "fr",
+        "description": "Maîtrise des armes de guerre. Une arme magique peut utiliser Intelligence pour ses attaques et dégâts.",
+        "reference": "Tasha 2014 / Artificier",
+        "buildEffects": {
+          "proficiencies": [
+            "martial-weapons"
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:artificer:steel-defender",
+      "type": "feature",
+      "name": {
+        "en": "Steel Defender",
+        "fr": "Défenseur d’acier"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 3,
+        "language": "fr",
+        "description": "Artificiel M : CA15, PV2+Intelligence+5×niveau, vitesse12 m ; agit après vous, action bonus pour commander une action autre qu’Esquiver. Attaque : modificateur de sort,1d8+maîtrise force. Réaction pour désavantager une attaque proche contre autrui. Réparation2d6 PV ; réparation interne2d8+maîtrise trois fois par jour. Recréation au repos long ou réanimation selon le coût et le temps de l’aptitude.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:extra-attack-smith",
+      "type": "feature",
+      "name": {
+        "en": "Extra Attack Smith",
+        "fr": "Attaque supplémentaire"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 5,
+        "language": "fr",
+        "description": "Deux attaques par action Attaquer, sans cumul.",
+        "reference": "Tasha 2014 / Artificier",
+        "buildEffects": {
+          "attacksPerAction": 2
+        }
+      }
+    },
+    {
+      "id": "tce:artificer:arcane-jolt",
+      "type": "feature",
+      "name": {
+        "en": "Arcane Jolt",
+        "fr": "Décharge arcanique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 9,
+        "language": "fr",
+        "description": "Une fois par tour, lorsque votre arme magique ou le défenseur touche, ajoutez2d6 force ou rendez2d6 PV à une cible visible à9 m de la victime. Intelligence utilisations, minimum1, par repos long.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:improved-defender",
+      "type": "feature",
+      "name": {
+        "en": "Improved Defender",
+        "fr": "Défenseur amélioré"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "minimumClassLevel": 15,
+        "language": "fr",
+        "description": "Décharge arcanique passe à4d6 ; défenseur +2 CA. Son Attaque déviée inflige aussi1d4+Intelligence force à l’assaillant.",
+        "reference": "Tasha 2014 / Artificier"
+      }
+    },
+    {
+      "id": "tce:artificer:battle-smith",
+      "type": "subclass",
+      "name": {
+        "en": "Battle Smith",
+        "fr": "Forgeron de guerre"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "tce:artificer:battle-ready",
+              "tce:artificer:steel-defender"
+            ]
+          },
+          {
+            "level": 5,
+            "featureIds": [
+              "tce:artificer:extra-attack-smith"
+            ]
+          },
+          {
+            "level": 9,
+            "featureIds": [
+              "tce:artificer:arcane-jolt"
+            ]
+          },
+          {
+            "level": 15,
+            "featureIds": [
+              "tce:artificer:improved-defender"
+            ]
+          }
+        ],
+        "extraSpells": [
+          {
+            "classLevel": 3,
+            "spellIds": [
+              "srd51:shield",
+              "srd51:heroism"
+            ],
+            "mode": "prepared"
+          },
+          {
+            "classLevel": 5,
+            "spellIds": [
+              "srd51:branding-smite",
+              "srd51:warding-bond"
+            ],
+            "mode": "prepared"
+          },
+          {
+            "classLevel": 9,
+            "spellIds": [
+              "phb14:spell:aura-of-vitality",
+              "phb14:spell:conjure-barrage"
+            ],
+            "mode": "prepared"
+          },
+          {
+            "classLevel": 13,
+            "spellIds": [
+              "phb14:spell:aura-of-purity",
+              "srd51:fire-shield"
+            ],
+            "mode": "prepared"
+          },
+          {
+            "classLevel": 17,
+            "spellIds": [
+              "phb14:spell:banishing-smite",
+              "srd51:mass-cure-wounds"
+            ],
+            "mode": "prepared"
+          }
+        ],
+        "choices": [
+          {
+            "key": "battle-smith-tool",
+            "level": 3,
+            "count": 1,
+            "options": [
+              "smiths-tools",
+              "alchemists-supplies",
+              "brewers-supplies",
+              "calligraphers-supplies",
+              "carpenters-tools",
+              "cartographers-tools",
+              "cobblers-tools",
+              "cooks-utensils",
+              "glassblowers-tools",
+              "jewelers-tools",
+              "leatherworkers-tools",
+              "masons-tools",
+              "painters-supplies",
+              "potters-tools",
+              "tinkers-tools",
+              "weavers-tools",
+              "woodcarvers-tools"
+            ],
+            "kind": "proficiency",
+            "toolReplacementFor": "smiths-tools"
+          }
+        ],
+        "resources": [
+          {
+            "id": "arcane-jolt",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              }
+            ]
+          }
+        ],
+        "language": "fr",
+        "description": "Spécialisation d’artificier ; aptitudes aux niveaux3,5,9 et15."
+      }
+    },
+    {
+      "id": "tce:artificer",
+      "type": "class",
+      "name": {
+        "en": "Artificer",
+        "fr": "Artificier"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Artificier, pp10–23",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Combat actions, infused equipment and companion creatures require player/GM adjudication."
+          ]
+        },
+        "classId": "artificer",
+        "hitDie": 8,
+        "saves": [
+          "con",
+          "int"
+        ],
+        "skillChoice": {
+          "count": 2,
+          "options": [
+            "arcana",
+            "sleightOfHand",
+            "history",
+            "investigation",
+            "medicine",
+            "nature",
+            "perception"
+          ]
+        },
+        "casting": {
+          "ability": "int",
+          "progression": "half",
+          "startsAtClassLevel": 1,
+          "preparation": "ability-plus-half-level",
+          "multiclassRounding": "ceil"
+        },
+        "subclassLevel": 3,
+        "subclassIds": [
+          "tce:artificer:alchemist",
+          "tce:artificer:armorer",
+          "tce:artificer:artillerist",
+          "tce:artificer:battle-smith"
+        ],
+        "grants": [
+          {
+            "level": 1,
+            "featureIds": [
+              "tce:artificer:magical-tinkering",
+              "tce:artificer:spellcasting"
+            ]
+          },
+          {
+            "level": 2,
+            "featureIds": [
+              "tce:artificer:infuse-item"
+            ]
+          },
+          {
+            "level": 3,
+            "featureIds": [
+              "tce:artificer:right-tool"
+            ]
+          },
+          {
+            "level": 4,
+            "featureIds": []
+          },
+          {
+            "level": 5,
+            "featureIds": []
+          },
+          {
+            "level": 6,
+            "featureIds": [
+              "tce:artificer:tool-expertise"
+            ]
+          },
+          {
+            "level": 7,
+            "featureIds": [
+              "tce:artificer:flash-of-genius"
+            ]
+          },
+          {
+            "level": 8,
+            "featureIds": []
+          },
+          {
+            "level": 9,
+            "featureIds": []
+          },
+          {
+            "level": 10,
+            "featureIds": [
+              "tce:artificer:magic-item-adept"
+            ]
+          },
+          {
+            "level": 11,
+            "featureIds": [
+              "tce:artificer:spell-storing-item"
+            ]
+          },
+          {
+            "level": 12,
+            "featureIds": []
+          },
+          {
+            "level": 13,
+            "featureIds": []
+          },
+          {
+            "level": 14,
+            "featureIds": [
+              "tce:artificer:magic-item-savant"
+            ]
+          },
+          {
+            "level": 15,
+            "featureIds": []
+          },
+          {
+            "level": 16,
+            "featureIds": []
+          },
+          {
+            "level": 17,
+            "featureIds": []
+          },
+          {
+            "level": 18,
+            "featureIds": [
+              "tce:artificer:magic-item-master"
+            ]
+          },
+          {
+            "level": 19,
+            "featureIds": []
+          },
+          {
+            "level": 20,
+            "featureIds": [
+              "tce:artificer:soul-of-artifice"
+            ]
+          }
+        ],
+        "initialProficiencies": [
+          "light-armor",
+          "medium-armor",
+          "shields",
+          "simple-weapons",
+          "thieves-tools",
+          "tinkers-tools"
+        ],
+        "multiclassProficiencies": [
+          "light-armor",
+          "medium-armor",
+          "shields",
+          "thieves-tools",
+          "tinkers-tools"
+        ],
+        "multiclassPrerequisites": [
+          [
+            {
+              "score": "int",
+              "minimum": 13
+            }
+          ]
+        ],
+        "cantripsKnown": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3,
+          3,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "spellsKnown": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "choices": [
+          {
+            "key": "asi-4",
+            "level": 4,
+            "count": 1,
+            "options": [
+              "asi:str:str",
+              "asi:str:dex",
+              "asi:str:con",
+              "asi:str:int",
+              "asi:str:wis",
+              "asi:str:cha",
+              "asi:dex:dex",
+              "asi:dex:con",
+              "asi:dex:int",
+              "asi:dex:wis",
+              "asi:dex:cha",
+              "asi:con:con",
+              "asi:con:int",
+              "asi:con:wis",
+              "asi:con:cha",
+              "asi:int:int",
+              "asi:int:wis",
+              "asi:int:cha",
+              "asi:wis:wis",
+              "asi:wis:cha",
+              "asi:cha:cha"
+            ],
+            "kind": "asi"
+          },
+          {
+            "key": "asi-8",
+            "level": 8,
+            "count": 1,
+            "options": [
+              "asi:str:str",
+              "asi:str:dex",
+              "asi:str:con",
+              "asi:str:int",
+              "asi:str:wis",
+              "asi:str:cha",
+              "asi:dex:dex",
+              "asi:dex:con",
+              "asi:dex:int",
+              "asi:dex:wis",
+              "asi:dex:cha",
+              "asi:con:con",
+              "asi:con:int",
+              "asi:con:wis",
+              "asi:con:cha",
+              "asi:int:int",
+              "asi:int:wis",
+              "asi:int:cha",
+              "asi:wis:wis",
+              "asi:wis:cha",
+              "asi:cha:cha"
+            ],
+            "kind": "asi"
+          },
+          {
+            "key": "asi-12",
+            "level": 12,
+            "count": 1,
+            "options": [
+              "asi:str:str",
+              "asi:str:dex",
+              "asi:str:con",
+              "asi:str:int",
+              "asi:str:wis",
+              "asi:str:cha",
+              "asi:dex:dex",
+              "asi:dex:con",
+              "asi:dex:int",
+              "asi:dex:wis",
+              "asi:dex:cha",
+              "asi:con:con",
+              "asi:con:int",
+              "asi:con:wis",
+              "asi:con:cha",
+              "asi:int:int",
+              "asi:int:wis",
+              "asi:int:cha",
+              "asi:wis:wis",
+              "asi:wis:cha",
+              "asi:cha:cha"
+            ],
+            "kind": "asi"
+          },
+          {
+            "key": "asi-16",
+            "level": 16,
+            "count": 1,
+            "options": [
+              "asi:str:str",
+              "asi:str:dex",
+              "asi:str:con",
+              "asi:str:int",
+              "asi:str:wis",
+              "asi:str:cha",
+              "asi:dex:dex",
+              "asi:dex:con",
+              "asi:dex:int",
+              "asi:dex:wis",
+              "asi:dex:cha",
+              "asi:con:con",
+              "asi:con:int",
+              "asi:con:wis",
+              "asi:con:cha",
+              "asi:int:int",
+              "asi:int:wis",
+              "asi:int:cha",
+              "asi:wis:wis",
+              "asi:wis:cha",
+              "asi:cha:cha"
+            ],
+            "kind": "asi"
+          },
+          {
+            "key": "asi-19",
+            "level": 19,
+            "count": 1,
+            "options": [
+              "asi:str:str",
+              "asi:str:dex",
+              "asi:str:con",
+              "asi:str:int",
+              "asi:str:wis",
+              "asi:str:cha",
+              "asi:dex:dex",
+              "asi:dex:con",
+              "asi:dex:int",
+              "asi:dex:wis",
+              "asi:dex:cha",
+              "asi:con:con",
+              "asi:con:int",
+              "asi:con:wis",
+              "asi:con:cha",
+              "asi:int:int",
+              "asi:int:wis",
+              "asi:int:cha",
+              "asi:wis:wis",
+              "asi:wis:cha",
+              "asi:cha:cha"
+            ],
+            "kind": "asi"
+          },
+          {
+            "key": "tool",
+            "kind": "proficiency",
+            "level": 1,
+            "count": 1,
+            "options": [
+              "alchemists-supplies",
+              "brewers-supplies",
+              "calligraphers-supplies",
+              "carpenters-tools",
+              "cartographers-tools",
+              "cobblers-tools",
+              "cooks-utensils",
+              "glassblowers-tools",
+              "jewelers-tools",
+              "leatherworkers-tools",
+              "masons-tools",
+              "painters-supplies",
+              "potters-tools",
+              "smiths-tools",
+              "weavers-tools",
+              "woodcarvers-tools"
+            ]
+          },
+          {
+            "key": "infusions",
+            "kind": "feature",
+            "level": 2,
+            "count": 4,
+            "countByLevel": [
+              0,
+              4,
+              4,
+              4,
+              4,
+              6,
+              6,
+              6,
+              6,
+              8,
+              8,
+              8,
+              8,
+              10,
+              10,
+              10,
+              10,
+              12,
+              12,
+              12
+            ],
+            "options": [
+              "tce:artificer:infusion:mind-sharpener",
+              "tce:artificer:infusion:spell-refueling-ring",
+              "tce:artificer:infusion:enhanced-weapon",
+              "tce:artificer:infusion:returning-weapon",
+              "tce:artificer:infusion:radiant-weapon",
+              "tce:artificer:infusion:arcane-propulsion-armor",
+              "tce:artificer:infusion:armor-magical-strength",
+              "tce:artificer:infusion:resistant-armor",
+              "tce:artificer:infusion:boots-winding-path",
+              "tce:artificer:infusion:repulsion-shield",
+              "tce:artificer:infusion:enhanced-defense",
+              "tce:artificer:infusion:enhanced-arcane-focus",
+              "tce:artificer:infusion:helm-awareness",
+              "tce:artificer:infusion:repeating-shot",
+              "tce:artificer:infusion:homunculus-servant",
+              "tce:artificer:replicate:wand-of-magic-detection",
+              "tce:artificer:replicate:wand-of-secrets",
+              "tce:artificer:replicate:cap-of-water-breathing",
+              "tce:artificer:replicate:rope-of-climbing",
+              "tce:artificer:replicate:alchemy-jug",
+              "tce:artificer:replicate:goggles-of-night",
+              "tce:artificer:replicate:sending-stones",
+              "tce:artificer:replicate:bag-of-holding",
+              "tce:artificer:replicate:ring-water-walking",
+              "tce:artificer:replicate:boots-elvenkind",
+              "tce:artificer:replicate:cloak-manta-ray",
+              "tce:artificer:replicate:cloak-elvenkind",
+              "tce:artificer:replicate:pipes-haunting",
+              "tce:artificer:replicate:gloves-thievery",
+              "tce:artificer:replicate:eyes-charming",
+              "tce:artificer:replicate:lantern-revealing",
+              "tce:artificer:replicate:periapt-wound-closure",
+              "tce:artificer:replicate:ring-mind-shielding",
+              "tce:artificer:replicate:ring-jumping",
+              "tce:artificer:replicate:headband-intellect",
+              "tce:artificer:replicate:winged-boots",
+              "tce:artificer:replicate:boots-striding-springing",
+              "tce:artificer:replicate:boots-winterlands",
+              "tce:artificer:replicate:bracers-archery",
+              "tce:artificer:replicate:brooch-shielding",
+              "tce:artificer:replicate:cloak-protection",
+              "tce:artificer:replicate:efficient-quiver",
+              "tce:artificer:replicate:hat-disguise",
+              "tce:artificer:replicate:slippers-spider-climbing",
+              "tce:artificer:replicate:necklace-adaptation",
+              "tce:artificer:replicate:pipes-sewers",
+              "tce:artificer:replicate:gauntlets-ogre-power",
+              "tce:artificer:replicate:gloves-swimming-climbing",
+              "tce:artificer:replicate:gloves-missile-snaring",
+              "tce:artificer:replicate:helm-telepathy",
+              "tce:artificer:replicate:medallion-thoughts",
+              "tce:artificer:replicate:eyes-eagle",
+              "tce:artificer:replicate:amulet-health",
+              "tce:artificer:replicate:ring-free-action",
+              "tce:artificer:replicate:ring-protection",
+              "tce:artificer:replicate:ring-ram",
+              "tce:artificer:replicate:boots-levitation",
+              "tce:artificer:replicate:boots-speed",
+              "tce:artificer:replicate:bracers-defense",
+              "tce:artificer:replicate:cloak-bat",
+              "tce:artificer:replicate:belt-hill-giant-strength",
+              "tce:artificer:replicate:horn-blasting",
+              "tce:artificer:replicate:gem-seeing",
+              "tce:artificer:replicate:dimensional-shackles"
+            ],
+            "filterAvailableFeatures": true
+          }
+        ],
+        "resources": [
+          {
+            "id": "flash-of-genius",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              },
+              {
+                "ability": "int",
+                "minimum": 1
+              }
+            ]
+          }
+        ],
+        "scaling": {
+          "infusedObjects": [
+            0,
+            2,
+            2,
+            2,
+            2,
+            3,
+            3,
+            3,
+            3,
+            4,
+            4,
+            4,
+            4,
+            5,
+            5,
+            5,
+            5,
+            6,
+            6,
+            6
+          ],
+          "attunementLimit": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            4,
+            4,
+            4,
+            4,
+            5,
+            5,
+            5,
+            5,
+            6,
+            6,
+            6
+          ]
+        },
+        "language": "fr",
+        "description": "Artificier2014 : magie d’Intelligence par outils, sorts préparés et influx d’objets. Les choix et capacités sont acquis au niveau indiqué.",
+        "acquisitionPolicy": {
+          "knownReplacementPerClassLevel": 0,
+          "invocationReplacementPerClassLevel": 0,
+          "spellbookLearnedAtFirstLevel": 0,
+          "spellbookLearnedPerClassLevel": 0
+        }
+      }
+    }
+  ]
+}

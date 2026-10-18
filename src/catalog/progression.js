@@ -263,6 +263,11 @@ export function resolveProgression(index, request) {
         continue;
       }
       let options = spec.options;
+      if(spec.filterAvailableFeatures) options=options.filter(id=>{const f=index.get(id);return f?.type==='feature'&&f.data.classId===c.id&&f.data.minimumClassLevel<=L&&(f.data.selectionRequires??[]).every(id=>selected.has(id)||features.has(id));});
+      if(spec.toolReplacementFor){
+        const owned=new Set([...background.proficiencies,...classes.flatMap((cl,n)=>index.class(cl.id).data[n===0?'initialProficiencies':'multiclassProficiencies']),...Object.entries(selections).filter(([id])=>id!==c.id+':'+spec.key&&!id.endsWith(':skills')).flatMap(([,v])=>v)]);
+        options=owned.has(spec.toolReplacementFor)?options.filter(id=>!owned.has(id)):[spec.toolReplacementFor];
+      }
       if (spec.kind === "asi" && campaignOptions.includes("feats"))
         options = options.concat(
           index

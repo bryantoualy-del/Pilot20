@@ -113,6 +113,11 @@ export function buildCharacter(
     buildRules: [],
   };
   // Ancestry/background remain editable; no racial bonuses are silently added to supplied scores.
+  for(const featureId of d.features){
+    const feature=index.get(featureId),effect=feature?.data.buildEffects;if(!effect)continue;
+    d.proficiencies.push(...(effect.proficiencies??[]));
+    if(effect.attacksPerAction)d.modifiers.push({id:featureId+':attacks',stat:'attacksPerAction',operation:'max',value:effect.attacksPerAction,reason:feature.name.en,source:feature.source});
+  }
   for (const [n, c] of definitions.entries()) {
     const e = index.class(c.id),
       data = e.data;
