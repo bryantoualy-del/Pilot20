@@ -23,10 +23,11 @@
     "demo:progression": "node examples/catalog-progression-demo.mjs",
     "build:web": "node scripts/package-web.mjs",
     "dev": "npm run build:web && node scripts/serve-web.mjs",
-    "test:e2e": "node e2e/run.mjs && node e2e/builder-v031.mjs && node e2e/builder-v032.mjs && node e2e/races-quick.mjs",
+    "test:e2e": "node e2e/work4-creator.mjs",
     "benchmark:ux": "node e2e/benchmark-v032.mjs races-manual",
     "benchmark:quick": "node e2e/races-quick.mjs",
-    "dev:lan": "npm run build:web && node scripts/serve-web.mjs --lan"
+    "dev:lan": "npm run build:web && node scripts/serve-web.mjs --lan",
+    "test:e2e:legacy": "node e2e/run.mjs && node e2e/builder-v031.mjs && node e2e/builder-v032.mjs && node e2e/races-quick.mjs"
   },
   "devDependencies": {
     "ajv": "8.17.1",
