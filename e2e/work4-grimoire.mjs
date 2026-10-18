@@ -19,8 +19,8 @@ try{
   const {newDraft,suggestChoices,compileDraft,draftProgression}=await import('/src/creator/model.js');const {spellReference}=await import('/src/catalog/spell-reference.js');
   const library=characterLibrary(storage),drafts=creatorRepository(storage,library),campaigns=campaignRepository(storage,playerCatalogs);
   const config=await campaigns.initialize(),ctx=await campaigns.context(config),out={};
-  for(const [cls,level]of [['wizard',10],['cleric',5],['bard',10],['warlock',11],['artificer',10],['sorcerer',10],['fighter',10]]){
-   let d=newDraft('default','grimoire-'+cls);Object.assign(d,{name:'Grimoire '+cls,mode:'single',classChosen:true,raceId:'srd51:race:human',backgroundId:'srd51:background:acolyte',classes:[{id:cls,level,subclassId:({bard:'xge:bard:glamour',warlock:'xge:warlock:hexblade',sorcerer:'tce:sorcerer:aberrant-mind',fighter:'phb14:fighter:eldritch-knight'})[cls]??ctx.index.class(cls).data.subclassIds[0]}]});
+  for(const [cls,level]of [['wizard',10],['cleric',5],['bard',10],['warlock',11],['artificer',10],['sorcerer',10],['fighter',10],['barbarian',14]]){
+   let d=newDraft('default','grimoire-'+cls);Object.assign(d,{name:'Grimoire '+cls,mode:'single',classChosen:true,raceId:'srd51:race:human',backgroundId:'srd51:background:acolyte',classes:[{id:cls,level,subclassId:({bard:'xge:bard:glamour',warlock:'xge:warlock:hexblade',sorcerer:'tce:sorcerer:aberrant-mind',fighter:'phb14:fighter:eldritch-knight',barbarian:'xge:barbarian:ancestral-guardian'})[cls]??ctx.index.class(cls).data.subclassIds[0]}]});
    d=suggestChoices(ctx,config,d);for(const q of draftProgression(ctx,config,d).choices.filter(q=>q.kind==='prepared'))d.selections[q.id]=q.options.slice(0,q.count);
    d.confirmed=d.reviewed=true;await drafts.save(d);const result=compileDraft(ctx,config,d);if(!result.valid)throw Error(JSON.stringify(result.issues));await drafts.finalize(d,result.character,{expectedDraftRevision:1,spellbook:result.spellbook});
    const book=result.choices.find(q=>q.kind==='spellbook'),prep=result.choices.find(q=>q.kind==='prepared');
@@ -36,6 +36,7 @@ try{
  async function creatorChange(action){const old=await p.locator('.single-body').elementHandle();await action();await p.waitForFunction(e=>!e.isConnected,old);await old.dispose();}
  await open('bard');assert.equal(await p.getByRole('button',{name:'Modifier la préparation',exact:true}).count(),0);results.push('Bard10 has no daily preparation command');
  await open('warlock');assert.equal(await p.getByRole('button',{name:'Modifier la préparation',exact:true}).count(),0);assert.ok((await read('warlock')).spellbook.grants.some(g=>g.acquisition==='arcanum'&&g.route==='arcanum'));results.push('Warlock11 keeps arcanum distinct and has no generic preparation command');
+ await open('barbarian');assert.equal(await p.getByRole('button',{name:'Modifier la préparation',exact:true}).count(),0);assert.equal((await read('barbarian')).spellbook.grants.length,2);assert.ok((await read('barbarian')).spellbook.grants.every(g=>g.castingAbility==='wis'&&g.route==='origin'));results.push('Ancestral Guardian14 exposes Wisdom feature spells without slot preparation');
  await open('wizard');const before=await read('wizard');await p.getByRole('tab',{name:'Catalogue',exact:true}).click();await search(fixtures.wizard.copyName);
  const candidate=p.locator('.grimoire-spell').filter({has:p.locator(`[data-spell-id="${fixtures.wizard.copyId}"]`)});
  const row=p.locator(`.grimoire-spell[data-spell-id="${fixtures.wizard.copyId}"]`);await row.waitFor();await row.getByRole('button',{name:'Inscrire',exact:true}).click();

@@ -2590,6 +2590,1783 @@
           "spellbookLearnedPerClassLevel": 0
         }
       }
+    },
+    {
+      "id": "xge:barbarian:ancestral-guardian:ancestral-protectors",
+      "type": "feature",
+      "name": {
+        "en": "Ancestral Protectors",
+        "fr": "Protecteurs ancestraux"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du gardien ancestral",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 3,
+        "description": "Pendant la rage, la première créature touchée lors de votre tour est gênée jusqu’au début de votre tour suivant : désavantage à ses attaques contre autrui ; les autres cibles qu’elle touche résistent aux dégâts de ces attaques. L’effet cesse avec la rage.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:ancestral-guardian:spirit-shield",
+      "type": "feature",
+      "name": {
+        "en": "Spirit Shield",
+        "fr": "Bouclier spirituel"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du gardien ancestral",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 6,
+        "description": "Pendant votre rage, réaction lorsqu’une autre créature visible à9 m subit des dégâts : réduisez-les de2d6, puis3d6 au niveau10 et4d6 au14.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "reaction",
+          "target": "selected",
+          "maxTargets": 1,
+          "resourceId": "spirit-shield",
+          "amount": 1,
+          "requirements": [
+            "Pendant votre rage, réaction lorsqu’une autre créature visible à9 m subit des dégâts : réduisez-les de2d6, puis3d6 au niveau10 et4d6 au14.",
+            "Les conditions de déclenchement et les résultats doivent être validés."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:ancestral-guardian:consult-the-spirits",
+      "type": "feature",
+      "name": {
+        "en": "Consult The Spirits",
+        "fr": "Consulter les esprits"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du gardien ancestral",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 10,
+        "description": "Lancez Augure ou Clairvoyance avec Sagesse, sans emplacement ni composante matérielle. Clairvoyance manifeste un ancêtre invisible. Un usage partagé entre les deux sorts par repos court ou long ; respectez leur temps d’incantation.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "innateSpells": [
+          {
+            "classLevel": 10,
+            "spellIds": [
+              "srd51:augury",
+              "srd51:clairvoyance"
+            ],
+            "ability": "wis",
+            "resourceId": "consult-the-spirits",
+            "requirements": "Sans emplacement ni composante matérielle ; Sagesse ; respect du temps d’incantation ; les deux sorts partagent un usage par repos court ou long."
+          }
+        ]
+      }
+    },
+    {
+      "id": "xge:barbarian:ancestral-guardian:vengeful-ancestors",
+      "type": "feature",
+      "name": {
+        "en": "Vengeful Ancestors",
+        "fr": "Ancêtres vengeurs"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du gardien ancestral",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 14,
+        "description": "Quand votre Bouclier spirituel réduit les dégâts d’une attaque, l’attaquant subit autant de dégâts de force que les dégâts ainsi évités.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:ancestral-guardian",
+      "type": "subclass",
+      "name": {
+        "en": "Path of the Ancestral Guardian",
+        "fr": "Voie du gardien ancestral"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du gardien ancestral",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "xge:barbarian:ancestral-guardian:ancestral-protectors"
+            ]
+          },
+          {
+            "level": 6,
+            "featureIds": [
+              "xge:barbarian:ancestral-guardian:spirit-shield"
+            ]
+          },
+          {
+            "level": 10,
+            "featureIds": [
+              "xge:barbarian:ancestral-guardian:consult-the-spirits"
+            ]
+          },
+          {
+            "level": 14,
+            "featureIds": [
+              "xge:barbarian:ancestral-guardian:vengeful-ancestors"
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "id": "spirit-shield",
+            "recovery": "none",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          },
+          {
+            "id": "consult-the-spirits",
+            "recovery": "short",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "extraSpells": [],
+        "choices": [],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:storm-herald:storm-aura",
+      "type": "feature",
+      "name": {
+        "en": "Storm Aura",
+        "fr": "Aura de tempête"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du héraut des tempêtes",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 3,
+        "description": "Aura de3 m arrêtée par un abri total. À l’entrée en rage, puis par action bonus pendant celle-ci, produisez l’effet de votre environnement. DD des sauvegardes :8+maîtrise+Constitution. L’environnement peut être changé à chaque niveau de barbare.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "bonus",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "storm-aura",
+          "amount": 1,
+          "requirements": [
+            "Aura de3 m arrêtée par un abri total. À l’entrée en rage, puis par action bonus pendant celle-ci, produisez l’effet de votre environnement. DD des sauvegardes :8+maîtrise+Constitution. L’environnement peut être changé à chaque niveau de barbare.",
+            "Les conditions de déclenchement et les résultats doivent être validés."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:storm-herald:storm-soul",
+      "type": "feature",
+      "name": {
+        "en": "Storm Soul",
+        "fr": "Âme des tempêtes"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du héraut des tempêtes",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 6,
+        "description": "Votre environnement accorde une résistance et une adaptation permanentes, même hors rage. Le choix d’environnement détermine ces effets.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:storm-herald:shielding-storm",
+      "type": "feature",
+      "name": {
+        "en": "Shielding Storm",
+        "fr": "Tempête protectrice"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du héraut des tempêtes",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 10,
+        "description": "Les créatures de votre choix présentes dans votre aura partagent la résistance de votre Âme des tempêtes.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:storm-herald:raging-storm",
+      "type": "feature",
+      "name": {
+        "en": "Raging Storm",
+        "fr": "Tempête déchaînée"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du héraut des tempêtes",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 14,
+        "description": "Désert : réaction après être touché par une créature dans l’aura, sauvegarde de Dextérité ou feu égal à la moitié du niveau de barbare. Mer : réaction après une de vos touches dans l’aura, sauvegarde de Force ou cible à terre. Toundra : à l’activation de l’aura, une cible choisie réussit une sauvegarde de Force ou sa vitesse devient0 jusqu’au début de votre prochain tour.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:storm-herald",
+      "type": "subclass",
+      "name": {
+        "en": "Path of the Storm Herald",
+        "fr": "Voie du héraut des tempêtes"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du héraut des tempêtes",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "xge:barbarian:storm-herald:storm-aura"
+            ]
+          },
+          {
+            "level": 6,
+            "featureIds": [
+              "xge:barbarian:storm-herald:storm-soul"
+            ]
+          },
+          {
+            "level": 10,
+            "featureIds": [
+              "xge:barbarian:storm-herald:shielding-storm"
+            ]
+          },
+          {
+            "level": 14,
+            "featureIds": [
+              "xge:barbarian:storm-herald:raging-storm"
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "id": "storm-aura",
+            "recovery": "none",
+            "maxByLevel": [
+              0,
+              0,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        ],
+        "extraSpells": [],
+        "choices": [
+          {
+            "key": "storm-environment",
+            "level": 3,
+            "kind": "feature",
+            "count": 1,
+            "options": [
+              "xge:barbarian:storm-herald:desert",
+              "xge:barbarian:storm-herald:sea",
+              "xge:barbarian:storm-herald:tundra"
+            ]
+          }
+        ],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:zealot:divine-fury",
+      "type": "feature",
+      "name": {
+        "en": "Divine Fury",
+        "fr": "Fureur divine"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du zélote",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 3,
+        "description": "Pendant la rage, la première créature touchée par une arme à chacun de vos tours subit1d6+la moitié de votre niveau de barbare, arrondie à l’inférieur, en dégâts supplémentaires du type choisi à l’acquisition.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:zealot:warrior-of-the-gods",
+      "type": "feature",
+      "name": {
+        "en": "Warrior Of The Gods",
+        "fr": "Guerrier des dieux"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du zélote",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 3,
+        "description": "Un sort dont le seul effet est de vous ramener à la vie ne demande pas ses composantes matérielles. Cette dispense ne concerne pas un retour à la non-vie.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:zealot:fanatical-focus",
+      "type": "feature",
+      "name": {
+        "en": "Fanatical Focus",
+        "fr": "Obstination fanatique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du zélote",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 6,
+        "description": "Une fois par rage, après une sauvegarde ratée, relancez le dé et utilisez ce nouveau résultat. La disponibilité se renouvelle à l’entrée dans une nouvelle rage.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "usageLimits": [
+          {
+            "count": 1,
+            "per": "rage",
+            "refresh": "enter-rage"
+          }
+        ],
+        "manualMechanics": {
+          "economy": "none",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "fanatical-focus",
+          "amount": 1,
+          "requirements": [
+            "Une fois par rage, après une sauvegarde ratée, relancez le dé et utilisez ce nouveau résultat. La disponibilité se renouvelle à l’entrée dans une nouvelle rage.",
+            "Les conditions de déclenchement et les résultats doivent être validés."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:zealot:zealous-presence",
+      "type": "feature",
+      "name": {
+        "en": "Zealous Presence",
+        "fr": "Présence zélatrice"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du zélote",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 10,
+        "description": "Action bonus : jusqu’à dix autres créatures à18 m qui vous entendent ont l’avantage aux attaques et sauvegardes jusqu’au début de votre prochain tour. Une utilisation par repos long.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "bonus",
+          "target": "selected",
+          "maxTargets": 10,
+          "resourceId": "zealous-presence",
+          "amount": 1,
+          "requirements": [
+            "Action bonus : jusqu’à dix autres créatures à18 m qui vous entendent ont l’avantage aux attaques et sauvegardes jusqu’au début de votre prochain tour. Une utilisation par repos long.",
+            "Les conditions de déclenchement et les résultats doivent être validés."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:zealot:rage-beyond-death",
+      "type": "feature",
+      "name": {
+        "en": "Rage Beyond Death",
+        "fr": "Enragé par-delà la mort"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du zélote",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 14,
+        "description": "Pendant la rage,0 PV ne vous rend pas inconscient. Vous effectuez encore les sauvegardes contre la mort et subissez les conséquences des dégâts à0 PV. La mort due aux échecs de sauvegardes est différée jusqu’à la fin de la rage, et seulement si vous avez encore0 PV.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:zealot",
+      "type": "subclass",
+      "name": {
+        "en": "Path of the Zealot",
+        "fr": "Voie du zélote"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du zélote",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "xge:barbarian:zealot:divine-fury",
+              "xge:barbarian:zealot:warrior-of-the-gods"
+            ]
+          },
+          {
+            "level": 6,
+            "featureIds": [
+              "xge:barbarian:zealot:fanatical-focus"
+            ]
+          },
+          {
+            "level": 10,
+            "featureIds": [
+              "xge:barbarian:zealot:zealous-presence"
+            ]
+          },
+          {
+            "level": 14,
+            "featureIds": [
+              "xge:barbarian:zealot:rage-beyond-death"
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "id": "fanatical-focus",
+            "recovery": "none",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "id": "zealous-presence",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "extraSpells": [],
+        "choices": [
+          {
+            "key": "divine-fury-type",
+            "level": 3,
+            "kind": "feature",
+            "count": 1,
+            "options": [
+              "xge:barbarian:zealot:radiant",
+              "xge:barbarian:zealot:necrotic"
+            ]
+          }
+        ],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:barbarian:beast:form-of-the-beast",
+      "type": "feature",
+      "name": {
+        "en": "Form Of The Beast",
+        "fr": "Forme de la Bête"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Voie de la Bête",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "barbarian",
+        "minimumClassLevel": 3,
+        "description": "À chaque entrée en rage, choisissez une arme naturelle courante de mêlée fondée sur Force. Morsure :1d8 perforant ; une fois par votre tour, une touche rend maîtrise PV si vous aviez moins de la moitié de vos PV avant la touche. Griffes :1d6 tranchant avec une main libre ; une attaque supplémentaire de griffe dans l’action Attaquer, une fois par tour. Queue :1d8 perforant, allonge3 m ; réaction lorsqu’une attaque visible à3 m vous touche, ajoutez1d8 à la CA contre cette attaque.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:barbarian:beast:bestial-soul",
+      "type": "feature",
+      "name": {
+        "en": "Bestial Soul",
+        "fr": "Âme bestiale"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Voie de la Bête",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "barbarian",
+        "minimumClassLevel": 6,
+        "description": "Les armes naturelles de la Forme de la Bête sont magiques contre les résistances et immunités. Après chaque repos court ou long, choisissez jusqu’au repos suivant : nage égale au déplacement et respiration aquatique ; escalade égale au déplacement, plafonds compris sans test ; ou un test d’Athlétisme une fois par tour lors d’un saut, augmentant sa distance de30 cm×résultat.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:barbarian:beast:infectious-fury",
+      "type": "feature",
+      "name": {
+        "en": "Infectious Fury",
+        "fr": "Fureur contagieuse"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Voie de la Bête",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "barbarian",
+        "minimumClassLevel": 10,
+        "description": "Pendant la rage, après une touche d’arme naturelle, imposez une sauvegarde de Sagesse contre8+Constitution+maîtrise. Échec :2d12 psychiques, ou réaction de la cible pour une attaque de mêlée contre une autre créature choisie qu’elle voit. Maîtrise utilisations par repos long.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "none",
+          "target": "selected",
+          "maxTargets": 1,
+          "resourceId": "infectious-fury",
+          "amount": 1,
+          "requirements": [
+            "Pendant la rage, après une touche d’arme naturelle, imposez une sauvegarde de Sagesse contre8+Constitution+maîtrise. Échec :2d12 psychiques, ou réaction de la cible pour une attaque de mêlée contre une autre créature choisie qu’elle voit. Maîtrise utilisations par repos long.",
+            "Les conditions de déclenchement et les résultats doivent être validés."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:barbarian:beast:call-the-hunt",
+      "type": "feature",
+      "name": {
+        "en": "Call The Hunt",
+        "fr": "Hallali"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Voie de la Bête",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "barbarian",
+        "minimumClassLevel": 14,
+        "description": "À l’entrée en rage, jusqu’à Constitution autres créatures visibles à9 m, minimum1, peuvent accepter votre appel. Vous gagnez5 PV temporaires par allié consentant. Pendant la rage, chacun ajoute1d6 aux dégâts d’une touche, une fois à chacun de ses tours. Maîtrise utilisations par repos long.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "none",
+          "target": "selected",
+          "maxTargets": 20,
+          "resourceId": "call-the-hunt",
+          "amount": 1,
+          "requirements": [
+            "À l’entrée en rage, jusqu’à Constitution autres créatures visibles à9 m, minimum1, peuvent accepter votre appel. Vous gagnez5 PV temporaires par allié consentant. Pendant la rage, chacun ajoute1d6 aux dégâts d’une touche, une fois à chacun de ses tours. Maîtrise utilisations par repos long.",
+            "Les conditions de déclenchement et les résultats doivent être validés."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:barbarian:beast",
+      "type": "subclass",
+      "name": {
+        "en": "Path of the Beast",
+        "fr": "Voie de la Bête"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Voie de la Bête",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "barbarian",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "tce:barbarian:beast:form-of-the-beast"
+            ]
+          },
+          {
+            "level": 6,
+            "featureIds": [
+              "tce:barbarian:beast:bestial-soul"
+            ]
+          },
+          {
+            "level": 10,
+            "featureIds": [
+              "tce:barbarian:beast:infectious-fury"
+            ]
+          },
+          {
+            "level": 14,
+            "featureIds": [
+              "tce:barbarian:beast:call-the-hunt"
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "id": "infectious-fury",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              }
+            ]
+          },
+          {
+            "id": "call-the-hunt",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              }
+            ]
+          }
+        ],
+        "extraSpells": [],
+        "choices": [],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:barbarian:wild-magic:magic-awareness",
+      "type": "feature",
+      "name": {
+        "en": "Magic Awareness",
+        "fr": "Conscience magique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Voie de la Magie sauvage",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "barbarian",
+        "minimumClassLevel": 3,
+        "description": "Action : jusqu’à la fin de votre prochain tour, repérez à18 m les sorts et objets magiques sans abri total ; les sorts révèlent leur école. Maîtrise utilisations par repos long.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "action",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "magic-awareness",
+          "amount": 1,
+          "requirements": [
+            "Action : jusqu’à la fin de votre prochain tour, repérez à18 m les sorts et objets magiques sans abri total ; les sorts révèlent leur école. Maîtrise utilisations par repos long.",
+            "Les conditions de déclenchement et les résultats doivent être validés."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:barbarian:wild-magic:wild-surge",
+      "type": "feature",
+      "name": {
+        "en": "Wild Surge",
+        "fr": "Accès sauvage"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Voie de la Magie sauvage",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "barbarian",
+        "minimumClassLevel": 3,
+        "description": "À chaque entrée en rage, lancez1d8 et appliquez la manifestation correspondante jusqu’à la fin de cette rage, sauf durée précisée. DD des sauvegardes :8+Constitution+maîtrise. Les manifestations sont détaillées ci-dessous. 1 : Une fois : les créatures choisies et visibles à9 m réussissent une sauvegarde de Constitution ou prennent1d12 nécrotiques ; vous gagnez séparément1d12 PV temporaires. 2 : Téléportez-vous jusqu’à9 m vers un espace visible et libre. Une action bonus permet de recommencer à chacun de vos tours pendant la rage. 3 : Un esprit apparaît à1,50 m d’une créature visible à9 m. À la fin du tour, explosion à1,50 m : sauvegarde de Dextérité ou1d6 force. Une action bonus permet de convoquer un nouvel esprit à chacun de vos tours. 4 : Une arme tenue inflige force et devient légère et de lancer6/18 m. Si elle quitte votre main, elle y revient à la fin du tour. 5 : Chaque créature qui vous touche par une attaque subit1d6 force. 6 : Vous gagnez+1 CA, ainsi que vos alliés tant qu’ils sont à3 m de vous. 7 : Le sol à4,50 m autour de vous devient difficile pour vos ennemis. 8 : Une autre créature visible à9 m réussit une sauvegarde de Constitution ou prend1d6 radiant et est aveuglée jusqu’au début de votre prochain tour. Une action bonus permet de recommencer à chacun de vos tours.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "randomTable": [
+          {
+            "roll": 1,
+            "description": "Une fois : les créatures choisies et visibles à9 m réussissent une sauvegarde de Constitution ou prennent1d12 nécrotiques ; vous gagnez séparément1d12 PV temporaires."
+          },
+          {
+            "roll": 2,
+            "description": "Téléportez-vous jusqu’à9 m vers un espace visible et libre. Une action bonus permet de recommencer à chacun de vos tours pendant la rage."
+          },
+          {
+            "roll": 3,
+            "description": "Un esprit apparaît à1,50 m d’une créature visible à9 m. À la fin du tour, explosion à1,50 m : sauvegarde de Dextérité ou1d6 force. Une action bonus permet de convoquer un nouvel esprit à chacun de vos tours."
+          },
+          {
+            "roll": 4,
+            "description": "Une arme tenue inflige force et devient légère et de lancer6/18 m. Si elle quitte votre main, elle y revient à la fin du tour."
+          },
+          {
+            "roll": 5,
+            "description": "Chaque créature qui vous touche par une attaque subit1d6 force."
+          },
+          {
+            "roll": 6,
+            "description": "Vous gagnez+1 CA, ainsi que vos alliés tant qu’ils sont à3 m de vous."
+          },
+          {
+            "roll": 7,
+            "description": "Le sol à4,50 m autour de vous devient difficile pour vos ennemis."
+          },
+          {
+            "roll": 8,
+            "description": "Une autre créature visible à9 m réussit une sauvegarde de Constitution ou prend1d6 radiant et est aveuglée jusqu’au début de votre prochain tour. Une action bonus permet de recommencer à chacun de vos tours."
+          }
+        ]
+      }
+    },
+    {
+      "id": "tce:barbarian:wild-magic:bolstering-magic",
+      "type": "feature",
+      "name": {
+        "en": "Bolstering Magic",
+        "fr": "Magie galvanisante"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Voie de la Magie sauvage",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "barbarian",
+        "minimumClassLevel": 6,
+        "description": "Action, touchez une créature, vous compris : pendant10 min elle ajoute1d3 à ses attaques et tests de caractéristique, ou elle récupère un emplacement choisi de niveau au plus égal à1d3. Une créature ne peut bénéficier de cette récupération d’emplacement qu’une fois par repos long. Maîtrise utilisations partagées par repos long.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "action",
+          "target": "selected",
+          "maxTargets": 1,
+          "resourceId": "bolstering-magic",
+          "amount": 1,
+          "requirements": [
+            "Action, touchez une créature, vous compris : pendant10 min elle ajoute1d3 à ses attaques et tests de caractéristique, ou elle récupère un emplacement choisi de niveau au plus égal à1d3. Une créature ne peut bénéficier de cette récupération d’emplacement qu’une fois par repos long. Maîtrise utilisations partagées par repos long.",
+            "Les conditions de déclenchement et les résultats doivent être validés."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:barbarian:wild-magic:unstable-backlash",
+      "type": "feature",
+      "name": {
+        "en": "Unstable Backlash",
+        "fr": "Riposte capricieuse"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Voie de la Magie sauvage",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "barbarian",
+        "minimumClassLevel": 10,
+        "description": "Pendant la rage, après des dégâts subis ou une sauvegarde ratée, une réaction permet de tirer immédiatement une nouvelle manifestation sauvage qui remplace celle en cours.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "reaction",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "unstable-backlash",
+          "amount": 1,
+          "requirements": [
+            "Pendant la rage, après des dégâts subis ou une sauvegarde ratée, une réaction permet de tirer immédiatement une nouvelle manifestation sauvage qui remplace celle en cours.",
+            "Les conditions de déclenchement et les résultats doivent être validés."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:barbarian:wild-magic:controlled-surge",
+      "type": "feature",
+      "name": {
+        "en": "Controlled Surge",
+        "fr": "Sauvagerie contrôlée"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Voie de la Magie sauvage",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "barbarian",
+        "minimumClassLevel": 14,
+        "description": "Lors d’un tirage de manifestation sauvage, lancez deux dés et choisissez le résultat. Si les dés sont identiques, choisissez librement la manifestation.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:barbarian:wild-magic",
+      "type": "subclass",
+      "name": {
+        "en": "Path of Wild Magic",
+        "fr": "Voie de la Magie sauvage"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Voie de la Magie sauvage",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "barbarian",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "tce:barbarian:wild-magic:magic-awareness",
+              "tce:barbarian:wild-magic:wild-surge"
+            ]
+          },
+          {
+            "level": 6,
+            "featureIds": [
+              "tce:barbarian:wild-magic:bolstering-magic"
+            ]
+          },
+          {
+            "level": 10,
+            "featureIds": [
+              "tce:barbarian:wild-magic:unstable-backlash"
+            ]
+          },
+          {
+            "level": 14,
+            "featureIds": [
+              "tce:barbarian:wild-magic:controlled-surge"
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "id": "magic-awareness",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              }
+            ]
+          },
+          {
+            "id": "bolstering-magic",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2
+              }
+            ]
+          },
+          {
+            "id": "unstable-backlash",
+            "recovery": "none",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        ],
+        "extraSpells": [],
+        "choices": [],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:storm-herald:desert",
+      "type": "feature",
+      "name": {
+        "fr": "Désert",
+        "en": "Desert"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du héraut des tempêtes",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 3,
+        "description": "Aura : toutes les autres créatures dans les3 m prennent2 feu, puis3/4/5/6 aux niveaux5/10/15/20. Au niveau6 : résistance feu, protection contre la chaleur extrême, action pour enflammer un objet inflammable non porté.",
+        "language": "fr",
+        "buildEffects": {
+          "minimumClassLevel": 6,
+          "resistances": [
+            "fire"
+          ]
+        },
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional combat effects require adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:storm-herald:sea",
+      "type": "feature",
+      "name": {
+        "fr": "Mer",
+        "en": "Sea"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du héraut des tempêtes",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 3,
+        "description": "Aura : une autre créature visible à3 m effectue une sauvegarde de Dextérité, subissant1d6 foudre ou la moitié si elle réussit ;2d6/3d6/4d6 aux niveaux10/15/20. Au niveau6 : résistance foudre, respiration sous l’eau, nage9 m.",
+        "language": "fr",
+        "buildEffects": {
+          "minimumClassLevel": 6,
+          "resistances": [
+            "lightning"
+          ],
+          "movement": {
+            "swim": 30
+          }
+        },
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional combat effects require adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:storm-herald:tundra",
+      "type": "feature",
+      "name": {
+        "fr": "Toundra",
+        "en": "Tundra"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du héraut des tempêtes",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 3,
+        "description": "Aura : les créatures choisies dans les3 m gagnent2 PV temporaires, puis3/4/5/6 aux niveaux5/10/15/20. Au niveau6 : résistance froid et protection contre le froid extrême ; action pour geler pendant1 min un cube d’eau libre de1,50 m de côté.",
+        "language": "fr",
+        "buildEffects": {
+          "minimumClassLevel": 6,
+          "resistances": [
+            "cold"
+          ]
+        },
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional combat effects require adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:zealot:radiant",
+      "type": "feature",
+      "name": {
+        "fr": "Radiant",
+        "en": "Radiant"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du zélote",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 3,
+        "description": "Votre Fureur divine inflige des dégâts de ce type. Ce choix ne vous accorde aucune résistance.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional combat effects require adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:barbarian:zealot:necrotic",
+      "type": "feature",
+      "name": {
+        "fr": "Nécrotique",
+        "en": "Necrotic"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Voie du zélote",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "barbarian",
+        "minimumClassLevel": 3,
+        "description": "Votre Fureur divine inflige des dégâts de ce type. Ce choix ne vous accorde aucune résistance.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional combat effects require adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:barbarian:primal-knowledge",
+      "type": "feature",
+      "name": {
+        "fr": "Savoir primal",
+        "en": "Primal Knowledge"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Barbare — aptitudes optionnelles",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "barbarian",
+        "minimumClassLevel": 3,
+        "optionalClassFeature": true,
+        "campaignOption": "tce:barbarian:primal-knowledge",
+        "description": "Une compétence supplémentaire de la liste du barbare aux niveaux3 et10.",
+        "language": "fr",
+        "choices": [
+          {
+            "key": "primal-knowledge-3",
+            "level": 3,
+            "kind": "skill",
+            "count": 1,
+            "options": [
+              "animalHandling",
+              "athletics",
+              "intimidation",
+              "nature",
+              "perception",
+              "survival"
+            ]
+          },
+          {
+            "key": "primal-knowledge-10",
+            "level": 10,
+            "kind": "skill",
+            "count": 1,
+            "options": [
+              "animalHandling",
+              "athletics",
+              "intimidation",
+              "nature",
+              "perception",
+              "survival"
+            ]
+          }
+        ],
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional combat effects require adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:barbarian:instinctive-pounce",
+      "type": "feature",
+      "name": {
+        "fr": "Bond instinctif",
+        "en": "Instinctive Pounce"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Barbare — aptitudes optionnelles",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "barbarian",
+        "minimumClassLevel": 7,
+        "optionalClassFeature": true,
+        "campaignOption": "tce:barbarian:instinctive-pounce",
+        "description": "Dans l’action bonus utilisée pour entrer en rage, vous pouvez vous déplacer jusqu’à la moitié de votre vitesse.",
+        "language": "fr",
+        "choices": [],
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional combat effects require adjudication."
+          ]
+        }
+      }
     }
   ]
 }

@@ -112,9 +112,12 @@ export function buildCharacter(
     armorRules: [],
     buildRules: [],
   };
+  const featureMovement={};
   // Ancestry/background remain editable; no racial bonuses are silently added to supplied scores.
   for(const featureId of d.features){
     const feature=index.get(featureId),effect=feature?.data.buildEffects;if(!effect)continue;
+    if((definitions.find(c=>c.id===feature.data.classId)?.level??0)<(effect.minimumClassLevel??1))continue;
+    Object.assign(featureMovement,effect.movement??{});
     d.proficiencies.push(...(effect.proficiencies??[]));
     d.defenses.resistances.push(...(effect.resistances??[]));
     if(effect.attacksPerAction)d.modifiers.push({id:featureId+':attacks',stat:'attacksPerAction',operation:'max',value:effect.attacksPerAction,reason:feature.name.en,source:feature.source});
@@ -302,7 +305,7 @@ export function buildCharacter(
         id: r.id,
         max: r.max,
         recovery: r.recovery,
-        source: index.class(r.classId).source,
+        source: index.get(r.ownerId)?.source??index.class(r.classId).source,
       });
   for (const [cls, spells] of spellClasses)
     for (const record of spells.values()) {
@@ -419,7 +422,7 @@ export function buildCharacter(
       source: o.subrace?.source??o.race.source,
       ...(o.race.source.kind==='reference'?{size:o.size,creatureType:o.creatureType}:{}),
     };
-    d.movement = { walk: o.speed, ignoreHeavyPenalty: o.ignoreHeavyPenalty,...o.movementModes };
+    d.movement = { walk: o.speed, ignoreHeavyPenalty: o.ignoreHeavyPenalty,...o.movementModes,...featureMovement };
     d.defenses.resistances = [
       ...new Set([...d.defenses.resistances, ...o.resistances]),
     ];
@@ -489,7 +492,7 @@ export function buildCharacter(
   for (const spell of o.spells) {
     const e = index.get(spell.id);
     if (!e) continue;
-    const sid = "origin:spell:" + e.id;
+    const sid = spell.featureOwnerId?spell.featureOwnerId+':spell:'+e.id:"origin:spell:" + e.id;
     d.spells.known.push(e.id);
     d.spells.prepared.push(e.id);
     d.features.push(sid);
@@ -497,15 +500,18 @@ export function buildCharacter(
       ability(
         { ...e, id: sid },
         {
-          kind: "racial",
-          cost: spell.level === 1 ? "action" : "none",
+          kind: spell.featureOwnerId?'class':"racial",
+          ...(e.data.concentration?{concentration:{effectId:e.id,start:'activation'}}:{}),
+          ...(spell.resourceId?{resource:{id:spell.resourceId,amount:1}}:{}),
+          cost: spell.featureOwnerId?'none':spell.level === 1 ? "action" : "none",
           combat: {
             version: 1,
             mode: "manual",
             requirements: [
-              "Racial spellcasting uses " +
+              (spell.featureOwnerId?'Feature spellcasting uses ':"Racial spellcasting uses ") +
                 spell.ability +
-                "; verify level, daily uses, components and racial casting level.",
+                "; verify acquisition, uses, components and casting level.",
+              ...(spell.requirements?[spell.requirements]:[]),
             ],
           },
         },
@@ -521,6 +527,7 @@ export function buildCharacter(
       weapon: null,
       source: index.get(originRequest.backgroundId).source,
     });
+  Object.assign(d.movement,featureMovement);
   d.features = [...new Set(d.features)];
   d.spells.known = [...new Set(d.spells.known)];
   d.spells.prepared = [...new Set(d.spells.prepared)];

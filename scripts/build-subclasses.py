@@ -71,6 +71,78 @@ add('phb14','rogue','arcane-trickster','Arcane Trickster','Escroc arcanique',[
  (13,'versatile-trickster','Escroc polyvalent','Action bonus : votre Main du mage distraie une créature à1,50 m d’elle ; avantage à vos attaques contre cette créature jusqu’à la fin du tour.'),
  (17,'spell-thief','Voleur de sorts','Réaction après un sort qui vous cible ou vous inclut : forcez une sauvegarde de caractéristique d’incantation contre votre DD. Échec : vous annulez le sort sur vous, et si son niveau est accessible, vous le volez pour8 h, l’adversaire ne pouvant plus le lancer pendant ce temps. Une utilisation par repos long.')],
  [resource('spell-thief',17,1)],extraSpells=[{'classLevel':3,'mode':'known','spellIds':[spells['Mage Hand']]}])
+# Barbarian paths — original summaries of supplied XGE/TCE rule mechanics.
+pb={'proficiency':True,'minimum':2}
+add('xge','barbarian','ancestral-guardian','Path of the Ancestral Guardian','Voie du gardien ancestral',[
+ (3,'ancestral-protectors','Protecteurs ancestraux','Pendant la rage, la première créature touchée lors de votre tour est gênée jusqu’au début de votre tour suivant : désavantage à ses attaques contre autrui ; les autres cibles qu’elle touche résistent aux dégâts de ces attaques. L’effet cesse avec la rage.'),
+ (6,'spirit-shield','Bouclier spirituel','Pendant votre rage, réaction lorsqu’une autre créature visible à9 m subit des dégâts : réduisez-les de2d6, puis3d6 au niveau10 et4d6 au14.'),
+ (10,'consult-the-spirits','Consulter les esprits','Lancez Augure ou Clairvoyance avec Sagesse, sans emplacement ni composante matérielle. Clairvoyance manifeste un ancêtre invisible. Un usage partagé entre les deux sorts par repos court ou long ; respectez leur temps d’incantation.'),
+ (14,'vengeful-ancestors','Ancêtres vengeurs','Quand votre Bouclier spirituel réduit les dégâts d’une attaque, l’attaquant subit autant de dégâts de force que les dégâts ainsi évités.')],
+ [resource('spirit-shield',6,None,'none'),resource('consult-the-spirits',10,1,'short')])
+add('xge','barbarian','storm-herald','Path of the Storm Herald','Voie du héraut des tempêtes',[
+ (3,'storm-aura','Aura de tempête','Aura de3 m arrêtée par un abri total. À l’entrée en rage, puis par action bonus pendant celle-ci, produisez l’effet de votre environnement. DD des sauvegardes :8+maîtrise+Constitution. L’environnement peut être changé à chaque niveau de barbare.'),
+ (6,'storm-soul','Âme des tempêtes','Votre environnement accorde une résistance et une adaptation permanentes, même hors rage. Le choix d’environnement détermine ces effets.'),
+ (10,'shielding-storm','Tempête protectrice','Les créatures de votre choix présentes dans votre aura partagent la résistance de votre Âme des tempêtes.'),
+ (14,'raging-storm','Tempête déchaînée','Désert : réaction après être touché par une créature dans l’aura, sauvegarde de Dextérité ou feu égal à la moitié du niveau de barbare. Mer : réaction après une de vos touches dans l’aura, sauvegarde de Force ou cible à terre. Toundra : à l’activation de l’aura, une cible choisie réussit une sauvegarde de Force ou sa vitesse devient0 jusqu’au début de votre prochain tour.')],
+ [resource('storm-aura',3,None,'none')],choices=[{'key':'storm-environment','level':3,'kind':'feature','count':1,'options':['xge:barbarian:storm-herald:'+v for v in ['desert','sea','tundra']]}])
+add('xge','barbarian','zealot','Path of the Zealot','Voie du zélote',[
+ (3,'divine-fury','Fureur divine','Pendant la rage, la première créature touchée par une arme à chacun de vos tours subit1d6+la moitié de votre niveau de barbare, arrondie à l’inférieur, en dégâts supplémentaires du type choisi à l’acquisition.'),
+ (3,'warrior-of-the-gods','Guerrier des dieux','Un sort dont le seul effet est de vous ramener à la vie ne demande pas ses composantes matérielles. Cette dispense ne concerne pas un retour à la non-vie.'),
+ (6,'fanatical-focus','Obstination fanatique','Une fois par rage, après une sauvegarde ratée, relancez le dé et utilisez ce nouveau résultat. La disponibilité se renouvelle à l’entrée dans une nouvelle rage.'),
+ (10,'zealous-presence','Présence zélatrice','Action bonus : jusqu’à dix autres créatures à18 m qui vous entendent ont l’avantage aux attaques et sauvegardes jusqu’au début de votre prochain tour. Une utilisation par repos long.'),
+ (14,'rage-beyond-death','Enragé par-delà la mort','Pendant la rage,0 PV ne vous rend pas inconscient. Vous effectuez encore les sauvegardes contre la mort et subissez les conséquences des dégâts à0 PV. La mort due aux échecs de sauvegardes est différée jusqu’à la fin de la rage, et seulement si vous avez encore0 PV.')],
+ [resource('fanatical-focus',6,1,'none'),resource('zealous-presence',10,1)],choices=[{'key':'divine-fury-type','level':3,'kind':'feature','count':1,'options':['xge:barbarian:zealot:radiant','xge:barbarian:zealot:necrotic']}])
+add('tce','barbarian','beast','Path of the Beast','Voie de la Bête',[
+ (3,'form-of-the-beast','Forme de la Bête','À chaque entrée en rage, choisissez une arme naturelle courante de mêlée fondée sur Force. Morsure :1d8 perforant ; une fois par votre tour, une touche rend maîtrise PV si vous aviez moins de la moitié de vos PV avant la touche. Griffes :1d6 tranchant avec une main libre ; une attaque supplémentaire de griffe dans l’action Attaquer, une fois par tour. Queue :1d8 perforant, allonge3 m ; réaction lorsqu’une attaque visible à3 m vous touche, ajoutez1d8 à la CA contre cette attaque.'),
+ (6,'bestial-soul','Âme bestiale','Les armes naturelles de la Forme de la Bête sont magiques contre les résistances et immunités. Après chaque repos court ou long, choisissez jusqu’au repos suivant : nage égale au déplacement et respiration aquatique ; escalade égale au déplacement, plafonds compris sans test ; ou un test d’Athlétisme une fois par tour lors d’un saut, augmentant sa distance de30 cm×résultat.'),
+ (10,'infectious-fury','Fureur contagieuse','Pendant la rage, après une touche d’arme naturelle, imposez une sauvegarde de Sagesse contre8+Constitution+maîtrise. Échec :2d12 psychiques, ou réaction de la cible pour une attaque de mêlée contre une autre créature choisie qu’elle voit. Maîtrise utilisations par repos long.'),
+ (14,'call-the-hunt','Hallali','À l’entrée en rage, jusqu’à Constitution autres créatures visibles à9 m, minimum1, peuvent accepter votre appel. Vous gagnez5 PV temporaires par allié consentant. Pendant la rage, chacun ajoute1d6 aux dégâts d’une touche, une fois à chacun de ses tours. Maîtrise utilisations par repos long.')],
+ [resource('infectious-fury',10,pb),resource('call-the-hunt',14,pb)])
+add('tce','barbarian','wild-magic','Path of Wild Magic','Voie de la Magie sauvage',[
+ (3,'magic-awareness','Conscience magique','Action : jusqu’à la fin de votre prochain tour, repérez à18 m les sorts et objets magiques sans abri total ; les sorts révèlent leur école. Maîtrise utilisations par repos long.'),
+ (3,'wild-surge','Accès sauvage','À chaque entrée en rage, lancez1d8 et appliquez la manifestation correspondante jusqu’à la fin de cette rage, sauf durée précisée. DD des sauvegardes :8+Constitution+maîtrise. Les manifestations sont détaillées ci-dessous.'),
+ (6,'bolstering-magic','Magie galvanisante','Action, touchez une créature, vous compris : pendant10 min elle ajoute1d3 à ses attaques et tests de caractéristique, ou elle récupère un emplacement choisi de niveau au plus égal à1d3. Une créature ne peut bénéficier de cette récupération d’emplacement qu’une fois par repos long. Maîtrise utilisations partagées par repos long.'),
+ (10,'unstable-backlash','Riposte capricieuse','Pendant la rage, après des dégâts subis ou une sauvegarde ratée, une réaction permet de tirer immédiatement une nouvelle manifestation sauvage qui remplace celle en cours.'),
+ (14,'controlled-surge','Sauvagerie contrôlée','Lors d’un tirage de manifestation sauvage, lancez deux dés et choisissez le résultat. Si les dés sont identiques, choisissez librement la manifestation.')],
+ [resource('magic-awareness',3,pb),resource('bolstering-magic',6,pb),resource('unstable-backlash',10,None,'none')])
+def find(fid):return next(i for i in items if i['id']==fid)
+def option(sid,key,en,fr,description,effect=None):
+ owner=find(sid);items.append({'id':sid+':'+key,'type':'feature','name':{'fr':fr,'en':en},'source':owner['source'],'data':{'ruleset':'dnd5e-2014','rulesSourceId':owner['data']['rulesSourceId'],'classId':'barbarian','minimumClassLevel':3,'description':description,'language':'fr',**({'buildEffects':effect} if effect else {}),'automation':{'status':'manual','handler':None,'limits':['Conditional combat effects require adjudication.']}}})
+option('xge:barbarian:storm-herald','desert','Desert','Désert','Aura : toutes les autres créatures dans les3 m prennent2 feu, puis3/4/5/6 aux niveaux5/10/15/20. Au niveau6 : résistance feu, protection contre la chaleur extrême, action pour enflammer un objet inflammable non porté.',{'minimumClassLevel':6,'resistances':['fire']})
+option('xge:barbarian:storm-herald','sea','Sea','Mer','Aura : une autre créature visible à3 m effectue une sauvegarde de Dextérité, subissant1d6 foudre ou la moitié si elle réussit ;2d6/3d6/4d6 aux niveaux10/15/20. Au niveau6 : résistance foudre, respiration sous l’eau, nage9 m.',{'minimumClassLevel':6,'resistances':['lightning'],'movement':{'swim':30}})
+option('xge:barbarian:storm-herald','tundra','Tundra','Toundra','Aura : les créatures choisies dans les3 m gagnent2 PV temporaires, puis3/4/5/6 aux niveaux5/10/15/20. Au niveau6 : résistance froid et protection contre le froid extrême ; action pour geler pendant1 min un cube d’eau libre de1,50 m de côté.',{'minimumClassLevel':6,'resistances':['cold']})
+for key,fr in [('radiant','Radiant'),('necrotic','Nécrotique')]:option('xge:barbarian:zealot',key,key.title(),fr,'Votre Fureur divine inflige des dégâts de ce type. Ce choix ne vous accorde aucune résistance.')
+find('xge:barbarian:ancestral-guardian:consult-the-spirits')['data']['innateSpells']=[{'classLevel':10,'spellIds':[spells['Augury'],spells['Clairvoyance']],'ability':'wis','resourceId':'consult-the-spirits','requirements':'Sans emplacement ni composante matérielle ; Sagesse ; respect du temps d’incantation ; les deux sorts partagent un usage par repos court ou long.'}]
+find('xge:barbarian:zealot:fanatical-focus')['data']['usageLimits']=[{'count':1,'per':'rage','refresh':'enter-rage'}]
+manifestations=[
+ 'Une fois : les créatures choisies et visibles à9 m réussissent une sauvegarde de Constitution ou prennent1d12 nécrotiques ; vous gagnez séparément1d12 PV temporaires.',
+ 'Téléportez-vous jusqu’à9 m vers un espace visible et libre. Une action bonus permet de recommencer à chacun de vos tours pendant la rage.',
+ 'Un esprit apparaît à1,50 m d’une créature visible à9 m. À la fin du tour, explosion à1,50 m : sauvegarde de Dextérité ou1d6 force. Une action bonus permet de convoquer un nouvel esprit à chacun de vos tours.',
+ 'Une arme tenue inflige force et devient légère et de lancer6/18 m. Si elle quitte votre main, elle y revient à la fin du tour.',
+ 'Chaque créature qui vous touche par une attaque subit1d6 force.',
+ 'Vous gagnez+1 CA, ainsi que vos alliés tant qu’ils sont à3 m de vous.',
+ 'Le sol à4,50 m autour de vous devient difficile pour vos ennemis.',
+ 'Une autre créature visible à9 m réussit une sauvegarde de Constitution ou prend1d6 radiant et est aveuglée jusqu’au début de votre prochain tour. Une action bonus permet de recommencer à chacun de vos tours.'
+]
+f=find('tce:barbarian:wild-magic:wild-surge');f['data']['randomTable']=[{'roll':n+1,'description':v}for n,v in enumerate(manifestations)];f['data']['description']+=' '+' '.join(str(n+1)+' : '+v for n,v in enumerate(manifestations))
+for sid,key,economy,target,maxTargets in [
+ ('xge:barbarian:ancestral-guardian','spirit-shield','reaction','selected',1),
+ ('xge:barbarian:storm-herald','storm-aura','bonus','self',1),
+ ('xge:barbarian:zealot','fanatical-focus','none','self',1),
+ ('xge:barbarian:zealot','zealous-presence','bonus','selected',10),
+ ('tce:barbarian:beast','infectious-fury','none','selected',1),
+ ('tce:barbarian:beast','call-the-hunt','none','selected',20),
+ ('tce:barbarian:wild-magic','magic-awareness','action','self',1),
+ ('tce:barbarian:wild-magic','bolstering-magic','action','selected',1),
+ ('tce:barbarian:wild-magic','unstable-backlash','reaction','self',1)]:
+ f=find(sid+':'+key);f['data']['manualMechanics']={'economy':economy,'target':target,'maxTargets':maxTargets,'resourceId':key,'amount':1,'requirements':[f['data']['description'],'Les conditions de déclenchement et les résultats doivent être validés.']}
+# Optional class features are independently enabled, never silently granted.
+for key,fr,level,description,choices in [
+ ('primal-knowledge','Savoir primal',3,'Une compétence supplémentaire de la liste du barbare aux niveaux3 et10.', [{'key':'primal-knowledge-'+str(lv),'level':lv,'kind':'skill','count':1,'options':['animalHandling','athletics','intimidation','nature','perception','survival']}for lv in [3,10]]),
+ ('instinctive-pounce','Bond instinctif',7,'Dans l’action bonus utilisée pour entrer en rage, vous pouvez vous déplacer jusqu’à la moitié de votre vitesse.',[])]:
+ source={**find('tce:barbarian:beast')['source'],'document':'Chaudron des merveilles de Tasha / Barbare — aptitudes optionnelles'};items.append({'id':'tce:barbarian:'+key,'type':'feature','name':{'fr':fr,'en':key.replace('-',' ').title()},'source':source,'data':{'ruleset':'dnd5e-2014','rulesSourceId':'tce','classId':'barbarian','minimumClassLevel':level,'optionalClassFeature':True,'campaignOption':'tce:barbarian:'+key,'description':description,'language':'fr','choices':choices,'automation':{'status':'manual','handler':None,'limits':['Conditional combat effects require adjudication.']}}})
+
+
 for item in items:
  if item['type']=='subclass' and item['id'] in ['phb14:fighter:eldritch-knight','phb14:rogue:arcane-trickster']:
   item['data'].update({'casting':{'ability':'int','progression':'third','startsAtClassLevel':3},'spellListClassId':'wizard','cantripsKnown':table(lambda n:0 if n<3 else 2 if n<10 else 3),'spellsKnown':[0,0,3,4,4,4,5,6,6,7,8,8,9,10,10,11,11,11,12,13],'restrictedSpellSchools':['abjuration','evocation'] if item['data']['classId']=='fighter' else ['enchantment','illusion'],'unrestrictedSpellsKnown':table(lambda n:0 if n<3 else 1 if n<8 else 2 if n<14 else 3 if n<20 else 4),'acquisitionPolicy':{'knownReplacementPerClassLevel':1,'invocationReplacementPerClassLevel':0,'spellbookLearnedAtFirstLevel':0,'spellbookLearnedPerClassLevel':0}})
