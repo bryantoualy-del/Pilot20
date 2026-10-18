@@ -128,6 +128,8 @@ export function buildCharacter(
     d.proficiencies.push(...(effect.proficiencies??[]));
     for(const skill of effect.skills??[])d.skills[skill]=Math.max(d.skills[skill]??0,1);
     d.defenses.immunities.push(...(effect.immunities??[]));
+    for(const skill of effect.expertiseSkills??[])d.skills[skill]=2;
+    if(effect.speedBonus)modify('speed','speed',effect.speedBonus);
     for(const ability of effect.saves??[])if(!d.saveProficiencies.includes(ability))d.saveProficiencies.push(ability);
     for(const[skill,ability]of Object.entries(effect.skillAbilityBonuses??{}))modify('skill-'+skill,'skill.'+skill,Math.floor((d.scores[ability]-10)/2));
     if(effect.initiativeAbility)modify('initiative','initiative',Math.floor((d.scores[effect.initiativeAbility]-10)/2));
@@ -545,6 +547,7 @@ export function buildCharacter(
       source: index.get(originRequest.backgroundId).source,
     });
   Object.assign(d.movement,featureMovement);
+  for(const id of d.features){const n=index.get(id)?.data.buildEffects?.existingMovementBonus??0;for(const key of ['climb','swim'])if(d.movement[key])d.movement[key]+=n;}
   d.features = [...new Set(d.features)];
   d.spells.known = [...new Set(d.spells.known)];
   d.spells.prepared = [...new Set(d.spells.prepared)];

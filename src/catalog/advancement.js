@@ -30,7 +30,7 @@ export function validateAdvancementHistory(index,request,history) {
     if(!removed.length&&!added.length)continue;
     const advancing=old.classId===row.classId,policy=effectiveClassData(index,row.classes.find(c=>c.id===old.classId)).acquisitionPolicy??{};
     const addIssue=code=>issues.push({code,choiceId:old.id,characterLevel:i+1});
-    if(old.kind==='prepared')continue; // A preparation choice is not permanent learning.
+    if(old.kind==='prepared'||old.mutableAtRest)continue; // A preparation choice is not permanent learning.
     if(old.kind==='spellbook') {
      if(removed.length)addIssue('spellbook-forgotten');
      const copied=transcriptions.filter(t=>t.classId===old.classId&&t.characterLevel===i+1).map(t=>t.spellId);

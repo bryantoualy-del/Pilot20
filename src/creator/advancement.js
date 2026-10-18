@@ -15,7 +15,7 @@ export function validateLevelGain(index,request,pending){
  if(total(request.classes)!==total(before.classes)+1||[...new Set([...oldCounts.keys(),...newCounts.keys()])].some(id=>(newCounts.get(id)??0)!==(oldCounts.get(id)??0)+(id===classId?1:0)))return[{code:'level-gain-class-sequence'}];
  const report=resolveProgression(index,{...request,classes:before.classes,selections:before.selections,spellbookTranscriptions:before.spellbookTranscriptions??[],spellGrantReplacements:before.spellGrantReplacements??[]});
  const next=resolveProgression(index,request),budgets=new Map();
- for(const old of report.choices){if(old.kind==='prepared')continue;const after=next.choices.find(q=>q.id===old.id);const prior=before.selections[old.id]??(old.kind==='subclass'?[before.classes.find(c=>c.id===old.classId)?.subclassId].filter(Boolean):[]),now=request.selections[old.id]??(old.kind==='subclass'?[request.classes.find(c=>c.id===old.classId)?.subclassId].filter(Boolean):[]),removed=prior.filter(id=>!now.includes(id));
+ for(const old of report.choices){if(old.kind==='prepared'||old.mutableAtRest)continue;const after=next.choices.find(q=>q.id===old.id);const prior=before.selections[old.id]??(old.kind==='subclass'?[before.classes.find(c=>c.id===old.classId)?.subclassId].filter(Boolean):[]),now=request.selections[old.id]??(old.kind==='subclass'?[request.classes.find(c=>c.id===old.classId)?.subclassId].filter(Boolean):[]),removed=prior.filter(id=>!now.includes(id));
  if(!after){issues.push({code:'level-gain-choice-removed',choiceId:old.id});continue;}
  if(!removed.length)continue;
  const c=request.classes.find(c=>c.id===old.classId),policy=effectiveClassData(index,c).acquisitionPolicy??{},advancing=classId===old.classId;
