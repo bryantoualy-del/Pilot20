@@ -1,3 +1,8 @@
+import {validateInventory} from './equipment-economy.js';
+import {finishAdvancement} from './advancement.js';
+import {sameDefinition} from './revision.js';
+import {validateSpellbook, pinSpellbook} from '../spellbook/model.js';
+import {validateGrantReplacements} from '../catalog/spell-grants.js';
 import { isBuiltInPortrait, GENDERS } from "./appearance.js";
 import { RACE_FAMILIES } from "../catalog/race-discovery.js";
 import { manualRaceVariants } from "./race-selection.js";
@@ -13,7 +18,15 @@ import {
 import { StorageError } from "../persistence/adapters.js";
 import { validateCharacter } from "../character/definition.js";
 export function validateDraft(d) {
-  json(d);
+  json(d);validateInventory(d);if(d.unequippedItems!==undefined)check(Array.isArray(d.unequippedItems)&&d.unequippedItems.length<=500&&d.unequippedItems.every(id),'Stowed equipment');
+  if(d.pactRitualCopies!==undefined){check(Array.isArray(d.pactRitualCopies)&&d.pactRitualCopies.length<=500,'Pact ritual ledger');const seen=new Set();for(const row of d.pactRitualCopies){check(id(row.spellId)&&Number.isInteger(row.characterLevel)&&row.characterLevel>=1&&row.characterLevel<=20&&typeof row.note==='string'&&row.note.trim()&&row.note.length<=500&&!seen.has(row.spellId),'Pact ritual entry');seen.add(row.spellId);}}
+  if(d.featRitualCopies!==undefined){check(Array.isArray(d.featRitualCopies)&&d.featRitualCopies.length<=500,'Ritual copy ledger');const seen=new Set();for(const row of d.featRitualCopies){check(row.featId==='phb14:feat:ritual-caster'&&id(row.spellId)&&Number.isInteger(row.characterLevel)&&row.characterLevel>=1&&row.characterLevel<=20&&typeof row.note==='string'&&row.note.trim()&&row.note.length<=500&&!seen.has(row.spellId),'Ritual copy entry');seen.add(row.spellId);}}
+  if(d.companionNotes!==undefined)check(typeof d.companionNotes==='string'&&d.companionNotes.length<=3000,'Companion notes');
+  if(d.hpMode!==undefined)check(['average','rolled'].includes(d.hpMode),'HP method');
+  if(d.hpRolls!==undefined){check(d.hpRolls&&typeof d.hpRolls==='object'&&!Array.isArray(d.hpRolls)&&Object.keys(d.hpRolls).length<=400,'HP roll map');for(const [key,value]of Object.entries(d.hpRolls))check(id(key)&&Number.isInteger(value)&&value>=1&&value<=12,'HP die result');}
+  if(d.startingEquipmentEnabled!==undefined)check(typeof d.startingEquipmentEnabled==='boolean','Starting equipment flag');
+  if(d.startingEquipmentChoices!==undefined){check(d.startingEquipmentChoices&&typeof d.startingEquipmentChoices==='object'&&!Array.isArray(d.startingEquipmentChoices)&&Object.keys(d.startingEquipmentChoices).length<=100,'Starting equipment decisions');for(const [key,v]of Object.entries(d.startingEquipmentChoices))check(id(key)&&Array.isArray(v)&&v.length<=1&&v.every(id),'Starting equipment choice');}
+  if(d.spellGrantReplacements!==undefined)validateGrantReplacements(d.spellGrantReplacements);
   check(
     d?.kind === "pilot20-creator-draft" &&
       d.schemaVersion === 1 &&
@@ -24,7 +37,7 @@ export function validateDraft(d) {
     "Draft header",
   );
   check(
-    ["quick", "guided", "expert"].includes(d.mode) &&
+    ["single", "quick", "guided", "expert"].includes(d.mode) &&
       typeof d.name === "string" &&
       d.name.length <= 200 &&
       Array.isArray(d.classes) &&
@@ -186,18 +199,22 @@ export function creatorRepository(storage, library) {
     async finalize(
       d,
       character,
-      { expectedCharacterRevision = null, expectedDraftRevision } = {},
+      { expectedCharacterRevision = null, expectedDraftRevision, spellbook, expectedBaseDefinition } = {},
     ) {
       validateDraft(d);
       const old = await storage.get("meta", key(d.id));
       check(old?.revision === expectedDraftRevision, "Draft revision conflict");
+      const existing=await library.get(d.id);
+      if(existing)check(sameDefinition(existing.definition,old.buildBaseline??expectedBaseDefinition),"La fiche contient des modifications manuelles ou une version différente du plan. Enregistrez une copie pour les conserver.");
       const next = {
-        ...structuredClone(d),
+        ...finishAdvancement(d),
+        buildBaseline:structuredClone(character),
         revision: old.revision + 1,
         finalized: true,
       };
       const result = await library.save(character, {
         expectedRevision: expectedCharacterRevision,
+        ...(spellbook ? {spellbook} : {}),
         linkedMeta: [{ key: key(d.id), value: next, expectedValue: old }],
       });
       return { record: result, draft: next };
@@ -232,7 +249,10 @@ export function creatorRepository(storage, library) {
         "Creator export required",
       );
       const d = e.draft ? validateDraft(e.draft) : null;
-      if (e.character) validateCharacter(e.character.definition);
+      if (e.character) {
+        validateCharacter(e.character.definition);
+        if (e.character.spellbook) validateSpellbook(e.character.spellbook, e.character.definition);
+      }
       check(d || e.character, "Empty export");
       if (d && e.character)
         check(d.id === e.character.definition.id, "Export identity");
@@ -254,6 +274,7 @@ export function creatorRepository(storage, library) {
         if (d) d.revision = 1;
         await library.save(definition, {
           prefs: e.character.preferences,
+          ...(e.character.spellbook ? {spellbook: pinSpellbook(e.character.spellbook,definition)} : {}),
           initialArchived: e.character.archived,
           linkedMeta: d
             ? [{ key: key(d.id), value: d, expectedValue: undefined }]

@@ -1,4 +1,8 @@
+import {resolveFeatChoices,featEligible} from './feat-choices.js';
+import {invocationEligible} from './warlock-invocations.js';
 import { resolveOrigins } from "./origins.js";
+import {validateGrantReplacements,resolveSpellGrants} from './spell-grants.js';
+import {canonicalProficiency} from './proficiencies.js';
 import {
   check,
   integer,
@@ -31,6 +35,14 @@ export const listSpells = (
     );
 export const meetsPrerequisites = (scores, anyOf) =>
   anyOf.some((all) => all.every((p) => scores[p.score] >= p.minimum));
+/** A subclass may supply casting; the fighter/rogue class itself remains nonmagical. */
+export function effectiveClassData(index,c){
+ const base=index.class(c.id)?.data,sub=c.subclassId?index.get(c.subclassId):null;
+ if(!base)return base;
+ const out={...base};if(sub?.data.classId===c.id&&c.level>=base.subclassLevel)for(const key of ['casting','cantripsKnown','spellsKnown','spellListClassId','spellListClassIds','unrestrictedSpellsKnown','restrictedSpellSchools','acquisitionPolicy'])if(sub.data[key]!==undefined)out[key]=sub.data[key];
+ for(const f of index.list('feature'))if(f.data.optionalClassFeature&&f.data.classId===c.id&&c.level>=f.data.minimumClassLevel&&(!f.data.subclassId||f.data.subclassId===c.subclassId)&&f.data.acquisitionPolicyOverride)out.acquisitionPolicy={...out.acquisitionPolicy,...f.data.acquisitionPolicyOverride};
+ return out;
+}
 /** Resolves a current build, never silently chooses. All acquisition levels are class levels. */
 export function resolveProgression(index, request) {
   let {
@@ -40,7 +52,9 @@ export function resolveProgression(index, request) {
     campaignOptions = [],
     background = { skills: [], proficiencies: [] },
     spellbookTranscriptions = [],
+    spellGrantReplacements = [],
   } = request;
+  validateGrantReplacements(spellGrantReplacements);
   const origin = resolveOrigins(index, {
     ...request,
     campaignOptions,
@@ -89,10 +103,15 @@ export function resolveProgression(index, request) {
             adjustedScores[a]++;
             adjustedScores[b]++;
           }
-  const features = new Set(origin.featIds ?? []),
-    resources = [],
+  const featResolution=resolveFeatChoices(index,{...request,classes,scores:adjustedScores,selections,campaignOptions},origin);Object.assign(adjustedScores,featResolution.scores);origin.spells.push(...featResolution.spells);
+  const scoresBeforeFeatureIncreases={...adjustedScores},scoreFeatures=new Set(origin.featIds??[]);
+  for(const c of classes){for(const row of [...(index.class(c.id)?.data.grants??[]),...(index.get(c.subclassId)?.data.grants??[])])if(row.level<=c.level)for(const id of row.featureIds)scoreFeatures.add(id);}
+  for(const id of Object.values(selections).flat())if(index.get(id)?.type==='feature')scoreFeatures.add(id);
+  for(const id of scoreFeatures){const f=index.get(id),owner=classes.find(c=>c.id===f?.data.classId),effect=f?.data.buildEffects;if(!owner||owner.level<(f.data.minimumClassLevel??1)||owner.level<(effect?.minimumClassLevel??1))continue;for(const [a,row]of Object.entries(effect?.scoreIncreases??{}))adjustedScores[a]=Math.max(adjustedScores[a],Math.min(row.maximum,adjustedScores[a]+row.amount));}
+  const features = new Set(featResolution.features),
+    resources = [...featResolution.resources],
     choices = [],
-    issues = [...origin.issues],
+    issues = [...origin.issues,...featResolution.issues],
     castingClasses = [],
     scaling = {},
     grantedSpells = [],
@@ -104,10 +123,11 @@ export function resolveProgression(index, request) {
       (f) =>
         f.data.optionalClassFeature &&
         classes.some(
-          (c) => c.id === f.data.classId && c.level >= f.data.minimumClassLevel,
+          (c) => c.id === f.data.classId && c.level >= f.data.minimumClassLevel && (!f.data.subclassId||c.subclassId===f.data.subclassId),
         ),
     );
   const replacementOwners = new Map();
+  for(const swap of spellGrantReplacements)if(!classes.some(c=>c.subclassId===swap.originId))issues.push({code:'invalid-granted-spell-replacement',id:swap.spellId});
   for (const f of optional) {
     for (const key of f.data.suppressesChoices ?? [])
       suppressedChoices.add(f.data.classId + ":" + key);
@@ -143,7 +163,7 @@ export function resolveProgression(index, request) {
   for (const [position, c] of classes.entries()) {
     const entry = index.class(c.id);
     check(entry, "Unknown class: " + c.id);
-    const d = entry.data,
+    const d = effectiveClassData(index,c),
       L = c.level;
     if (
       classes.length > 1 &&
@@ -187,37 +207,34 @@ export function resolveProgression(index, request) {
       Object.entries(d.scaling ?? {}).map(([k, v]) => [k, v[L - 1]]),
     );
     const extraSpells = [
-      ...(sub?.data.extraSpells ?? []),
-      ...[...selected].flatMap((id) => {
+      ...(sub?.data.extraSpells ?? []).map(r=>({...r,ownerId:sub.id})),
+      ...[...new Set([...selected,...optional.filter(f=>f.data.classId===c.id).map(f=>f.id)])].flatMap((id) => {
         const d = index.get(id)?.data;
-        return d?.classId === c.id ? (d.extraSpells ?? []) : [];
+        return d?.classId === c.id ? (d.extraSpells ?? []).map(r=>({...r,ownerId:id})) : [];
       }),
     ].filter((r) => r.classLevel <= L);
-    grantedSpells.push(
-      ...extraSpells
-        .filter((r) => r.mode === "prepared")
-        .flatMap((r) =>
-          r.spellIds.map((id) => ({ id, classId: c.id, mode: "prepared" })),
-        ),
-    );
+    const grants=resolveSpellGrants(index,c,extraSpells,spellGrantReplacements);grantedSpells.push(...grants.rows.filter(r=>r.mode!=='book'||!(selections[c.id+':spellbook']??[]).includes(r.id)));issues.push(...grants.issues);
+    const classSpells=opts=>[...new Map((d.spellListClassIds??[d.spellListClassId??c.id]).flatMap(id=>listSpells(index,id,opts)).map(s=>[s.id,s])).values()];
     const allowedSpells = (minimumLevel = 1) => [
       ...new Set([
-        ...listSpells(index, c.id, {
+        ...classSpells({
           minimumLevel,
           maximumLevel: maxSpell,
-        }).map((s) => s.id),
+        }).map((s) => s.id).filter(id=>!grantedSpells.some(g=>g.classId===c.id&&['known','book'].includes(g.mode)&&g.id===id)),
         ...extraSpells
+          .filter(r=>r.mode!=='known')
           .flatMap((r) => r.spellIds)
-          .filter((id) => index.get(id).data.level >= minimumLevel),
+          .filter((id) => index.get(id).data.level >= minimumLevel&&index.get(id).data.level<=maxSpell),
       ]),
     ];
-    for (const r of [...(d.resources ?? []), ...(sub?.data.resources ?? [])]) {
+    for (const r of [...(d.resources ?? []).map(r=>({...r,ownerId:entry.id})), ...(sub?.data.resources ?? []).map(r=>({...r,ownerId:sub.id}))]) {
       if (suppressedResources.has(c.id + ":" + r.id)) continue;
       let n = r.maxByLevel[L - 1];
       if (n && typeof n === "object")
         n =
-          Math.max(n.minimum, modifier(adjustedScores[n.ability])) +
+          Math.max(n.minimum, n.proficiency?2+Math.floor((classes.reduce((s,c)=>s+c.level,0)-1)/4):modifier(adjustedScores[n.ability])) * (n.multiplier??1) +
           (n.add ?? 0);
+      if(n!==null)n=Math.max(0,n);
       if (n === 0) continue;
       resources.push({
         id: c.id + ":" + r.id,
@@ -225,6 +242,7 @@ export function resolveProgression(index, request) {
         recovery: L >= (r.shortRestFromLevel ?? 21) ? "short" : r.recovery,
         unlimited: n === null,
         classId: c.id,
+        ownerId:r.ownerId,
         ...(r.recharge ? { recharge: r.recharge } : {}),
       });
     }
@@ -242,6 +260,7 @@ export function resolveProgression(index, request) {
       ...optional
         .filter((f) => f.data.classId === c.id)
         .flatMap((f) => f.data.choices ?? []),
+      ...[...selected].filter(id=>(featResolution.featureOwners[id]??index.get(id)?.data.classId)===c.id).flatMap(id=>(index.get(id)?.data.choices??[]).map(q=>({...q,featureOwnerId:id}))),
     ]) {
       if (suppressedChoices.has(c.id + ":" + spec.key)) continue;
       if (
@@ -262,7 +281,19 @@ export function resolveProgression(index, request) {
           addChoice(c.id, spec.key, 1, 1, spec.options, spec.kind);
         continue;
       }
-      let options = spec.options;
+      if(spec.saveReplacementFor&&!index.class(classes[0].id).data.saves.includes(spec.saveReplacementFor))continue;
+      let options = spec.dynamicFeatureKind==='maneuver'?index.list('feature').filter(f=>f.id.includes(':fighter:maneuver:')).map(f=>f.id):spec.spellList?listSpells(index,spec.spellList.classId,{minimumLevel:spec.spellList.minimumLevel,maximumLevel:spec.spellList.maximumLevel}).map(s=>s.id):spec.options;
+      if(spec.filterProficientWeapons){const owned=new Set([...(position===0?d.initialProficiencies:d.multiclassProficiencies),...background.proficiencies,...[...features,...selected].flatMap(id=>index.get(id)?.data.buildEffects?.proficiencies??[])]);options=options.filter(id=>owned.has(id)||index.class(c.id).data.initialProficiencies.includes('martial-weapons')||id.endsWith('s')&&owned.has('simple-weapons')&&['clubs','daggers','handaxes','javelins','light-hammers','maces','quarterstaffs','sickles','spears','light-crossbows','darts','shortbows','slings'].includes(id));}
+      if(spec.kind==='training')options=options.filter(id=>!Object.hasOwn(SKILLS,id)||!proficientSkills.has(id)||(selections[c.id+':'+spec.key]??[]).includes(id));
+      if(spec.replacementSpellList&&L>spec.level)options=[...new Set([...options,...listSpells(index,spec.replacementSpellList,{minimumLevel:1,maximumLevel:maxSpell}).map(s=>s.id)])];
+      if(spec.bonusIfAlreadyKnown&&!(selections[c.id+':cantrips']??[]).includes(spec.bonusIfAlreadyKnown))options=[spec.bonusIfAlreadyKnown];
+      if(spec.kind==='feature')options=options.filter(id=>{const key=index.get(id)?.data.uniqueRuleKey;return !key||!Object.entries(selections).filter(([choice])=>choice!==c.id+':'+spec.key).flatMap(([,values])=>values).some(other=>index.get(other)?.data.uniqueRuleKey===key);});
+      if(spec.kind==='proficiency'&&!spec.filterProficientWeapons&&!spec.toolReplacementFor)options=options.filter(id=>!background.proficiencies.some(p=>canonicalProficiency(p)===canonicalProficiency(id)));
+      if(spec.filterAvailableFeatures) options=options.filter(id=>{const f=index.get(id);return f?.type==='feature'&&f.data.classId===c.id&&f.data.minimumClassLevel<=L&&(f.data.selectionRequires??[]).every(id=>selected.has(id)||features.has(id));});
+      if(spec.toolReplacementFor){
+        const owned=new Set([...background.proficiencies,...classes.flatMap((cl,n)=>index.class(cl.id).data[n===0?'initialProficiencies':'multiclassProficiencies']),...Object.entries(selections).filter(([id])=>id!==c.id+':'+spec.key&&!id.endsWith(':skills')).flatMap(([,v])=>v)].map(canonicalProficiency));
+        options=owned.has(canonicalProficiency(spec.toolReplacementFor))?options.filter(id=>!owned.has(canonicalProficiency(id))):[spec.toolReplacementFor];
+      }
       if (spec.kind === "asi" && campaignOptions.includes("feats"))
         options = options.concat(
           index
@@ -270,7 +301,7 @@ export function resolveProgression(index, request) {
             .filter((f) =>
               (f.data.requiresScores ?? []).every(
                 (p) => adjustedScores[p.score] >= p.minimum,
-              ),
+              ) && featEligible(index,f,{classes,scores:adjustedScores,origin,selections}),
             )
             .map((f) => f.id),
         );
@@ -281,7 +312,7 @@ export function resolveProgression(index, request) {
       if (spec.kind === "expertise")
         options = [
           ...new Set(
-            [...proficientSkills].concat(
+            (spec.expertiseFromChoice?(selections[c.id+':'+spec.expertiseFromChoice]??[]):[...proficientSkills]).concat(
               c.id === "rogue" ? ["thieves-tools"] : [],
             ),
           ),
@@ -295,12 +326,17 @@ export function resolveProgression(index, request) {
         spec.kind,
         {
           ownerId:
-            spec.subclassId ??
+            spec.featureOwnerId??spec.subclassId ??
             (sub?.data.choices?.includes(spec)
               ? sub.id
               : (optional.find((f) => f.data.choices?.includes(spec))?.id ??
                 entry.id)),
           ...(spec.distinctGroup ? { distinctGroup: spec.distinctGroup } : {}),
+          ...(spec.replaceableKnown?{replaceableKnown:true}:{}),
+          ...(spec.mutableAtRest?{mutableAtRest:true}:{}),
+          ...(spec.replacementRule?{replacementRule:spec.replacementRule}:{}),
+          ...(spec.featureResourceId?{featureResourceId:spec.featureResourceId}:{}),
+          ...(spec.requiredOptionsBeforeLevel&&L<spec.requiredOptionsBeforeLevel.level?{requiredOptions:spec.requiredOptionsBeforeLevel.options}:{}),
           ...(spec.adjudication ? { adjudication: spec.adjudication } : {}),
         },
       );
@@ -315,9 +351,7 @@ export function resolveProgression(index, request) {
           .list("feature")
           .filter(
             (f) =>
-              f.data.optionKind === "invocation" &&
-              f.data.minimumClassLevel <= L &&
-              (f.data.selectionRequires ?? []).every((k) => selected.has(k)),
+              invocationEligible(f,{classId:c.id,level:L,selections:selected,features}),
           )
           .map((f) => f.id),
         "feature",
@@ -328,8 +362,9 @@ export function resolveProgression(index, request) {
         "cantrips",
         1,
         d.cantripsKnown[L - 1],
-        listSpells(index, c.id, { maximumLevel: 0 }).map((s) => s.id),
+        classSpells({ maximumLevel: 0 }).filter(s=>!grantedSpells.some(g=>g.classId===c.id&&g.id===s.id)).map((s) => s.id),
         "spell",
+        {...(d.acquisitionPolicy?.cantripReplacementAtLongRest?{mutableAtRest:true}:{})},
       );
     if (d.spellsKnown?.[L - 1]) {
       let count = d.spellsKnown[L - 1];
@@ -339,10 +374,11 @@ export function resolveProgression(index, request) {
         c.id,
         "known-spells",
         d.casting.progression === "half" ? 2 : 1,
-        count,
-        allowedSpells(),
+        count-(d.unrestrictedSpellsKnown?.[L-1]??0),
+        d.restrictedSpellSchools?allowedSpells().filter(id=>d.restrictedSpellSchools.includes(index.get(id).data.school)):allowedSpells(),
         "spell",
       );
+      if(d.unrestrictedSpellsKnown?.[L-1])addChoice(c.id,'known-free-spells',3,d.unrestrictedSpellsKnown[L-1],allowedSpells(),'spell');
     }
     if (c.id === "wizard") {
       const extras = spellbookTranscriptions.filter(
@@ -374,7 +410,7 @@ export function resolveProgression(index, request) {
       );
       const options =
         c.id === "wizard"
-          ? (selections[c.id + ":spellbook"] ?? []).filter(
+          ? [...(selections[c.id + ":spellbook"] ?? []),...grantedSpells.filter(g=>g.classId===c.id&&g.mode==='book').map(g=>g.id)].filter(
               (id) =>
                 !(selections[c.id + ":signature-spells"] ?? []).includes(id),
             )
@@ -382,7 +418,7 @@ export function resolveProgression(index, request) {
               (id) =>
                 !grantedSpells.some((s) => s.classId === c.id && s.id === id),
             );
-      addChoice(c.id, "prepared", 1, count, options, "prepared");
+      addChoice(c.id, "prepared", 1, count, options, "prepared",{minimumCount:0});
     }
     if (c.id === "bard")
       for (const lv of [
@@ -391,18 +427,10 @@ export function resolveProgression(index, request) {
         18,
         ...(sub?.id === "srd51:college-of-lore" ? [6] : []),
       ])
-        if (L >= lv)
-          addChoice(
-            c.id,
-            "magical-secrets-" + lv,
-            lv,
-            2,
-            index
-              .list("spell")
-              .filter((s) => s.data.level <= maxSpell)
-              .map((s) => s.id),
-            "spell",
-          );
+        if (L >= lv){
+          const acquisitionMaximum=Math.max(0,...Object.values(spellSlots([{id:c.id,level:lv,casting:d.casting}]).resources).map(r=>r.slotLevel)),replacementList=new Set(allowedSpells(0));
+          addChoice(c.id,"magical-secrets-"+lv,lv,2,index.list("spell").filter(s=>s.data.level<=acquisitionMaximum||s.data.level<=maxSpell&&replacementList.has(s.id)).map(s=>s.id),"spell",{acquisitionMaximumSpellLevel:acquisitionMaximum});
+        }
     if (c.id === "warlock")
       for (const [lv, spellLevel] of [
         [11, 6],
@@ -416,13 +444,11 @@ export function resolveProgression(index, request) {
             "arcanum-" + spellLevel,
             lv,
             1,
-            listSpells(index, c.id, {
-              minimumLevel: spellLevel,
-              maximumLevel: spellLevel,
-            }).map((s) => s.id),
+            index.list('spell').filter(s=>s.data.level===spellLevel&&(s.data.classIds.includes(c.id)||extraSpells.some(r=>r.mode==='expanded'&&r.spellIds.includes(s.id)))).map(s=>s.id),
             "spell",
           );
   }
+  choices.push(...featResolution.choices);
   // Subclass is explicit in classes. Preserve one consistent source for selection records.
   const effectiveSelections = { ...selections };
   for (const c of classes)
@@ -432,6 +458,8 @@ export function resolveProgression(index, request) {
     featureSelections = new Set(),
     distinctGroups = new Map();
   for (const choice of choices) {
+    if(choice.kind==='prepared'&&effectiveSelections[choice.id]===undefined)effectiveSelections[choice.id]=[];
+    if(choice.requiredOptions)effectiveSelections[choice.id]=[...new Set([...choice.requiredOptions,...(effectiveSelections[choice.id]??[])])];
     const values = effectiveSelections[choice.id];
     if (!values) {
       issues.push({ code: "required-choice", choiceId: choice.id });
@@ -439,7 +467,7 @@ export function resolveProgression(index, request) {
     }
     if (
       !Array.isArray(values) ||
-      values.length !== choice.count ||
+      (values.length < (choice.minimumCount??choice.count) || values.length > choice.count) ||
       new Set(values).size !== values.length ||
       values.some((k) => !choice.options.includes(k))
     ) {
@@ -454,8 +482,8 @@ export function resolveProgression(index, request) {
         seen.add(v);
         distinctGroups.set(choice.distinctGroup, seen);
       }
-    if (choice.kind === "skill")
-      for (const v of values) {
+    if (["skill","training"].includes(choice.kind))
+      for (const v of values.filter(v=>Object.hasOwn(SKILLS,v))) {
         if (skillSelections.has(v))
           issues.push({ code: "duplicate-skill", choiceId: choice.id });
         skillSelections.add(v);
@@ -475,8 +503,13 @@ export function resolveProgression(index, request) {
           issues.push({ code: "duplicate-expertise", choiceId: choice.id });
         expertise.add(v);
       }
-    if (choice.kind === "feature") values.forEach((v) => features.add(v));
+    if (choice.kind === "feature") values.forEach((v) => {features.add(v);if(choice.featureResourceId)featResolution.featureResourceOverrides[v]=choice.classId+':'+choice.featureResourceId;if(choice.ownerId&&featResolution.featureOwners[choice.ownerId])featResolution.featureOwners[v]=choice.classId;});
   }
+  // Validate that above-acquisition Bard-list replacements could fit into actual
+  // level gains. This does not create or certify any missing history.
+  const secretReplacements=[];
+  for(const q of choices.filter(q=>q.id.includes(':magical-secrets-')))for(const id of effectiveSelections[q.id]??[]){const spell=index.get(id);if(spell?.data.level>q.acquisitionMaximumSpellLevel){const cls=classes.find(c=>c.id===q.classId),casting=effectiveClassData(index,cls).casting;let earliest=cls.level+1;for(let lv=q.level+1;lv<=cls.level;lv++)if(Object.values(spellSlots([{id:cls.id,level:lv,casting}]).resources).some(r=>r.slotLevel>=spell.data.level)){earliest=lv;break;}secretReplacements.push({classId:cls.id,choiceId:q.id,earliest});}}
+  for(const cls of classes){let available=cls.level;for(const row of secretReplacements.filter(r=>r.classId===cls.id).sort((a,b)=>b.earliest-a.earliest)){if(row.earliest>available)issues.push({code:'secret-replacement-budget',choiceId:row.choiceId});available--;}}
   const spellsByClass = new Map();
   for (const q of choices.filter((q) => q.kind === "spell"))
     for (const v of effectiveSelections[q.id] ?? []) {
@@ -497,7 +530,7 @@ export function resolveProgression(index, request) {
         continue;
       }
       const [, a, b] = v.split(":");
-      if (adjustedScores[a] > 20 || adjustedScores[b] > 20)
+      if (scoresBeforeFeatureIncreases[a] > 20 || scoresBeforeFeatureIncreases[b] > 20)
         issues.push({ code: "asi-cap", choiceId: choice.id });
     }
   for (const t of spellbookTranscriptions) {
@@ -536,19 +569,20 @@ export function resolveProgression(index, request) {
           featureId: fid,
           otherFeatureId: other,
         });
+  const replacementTags=new Set([...features].flatMap(id=>index.get(id)?.data.replacesByTag??[]));for(const id of [...features])if(replacementTags.has(index.get(id)?.data.replacementTag))features.delete(id);
   for (const fid of [...features])
     for (const replaced of index.get(fid)?.data.replaces ?? [])
       features.delete(replaced);
   for (const fid of features)
     for (const r of index.get(fid)?.data.resources ?? []) {
       const entry = index.get(fid),
-        c = classes.find((c) => c.id === entry.data.classId);
+        c = classes.find((c) => c.id === (featResolution.featureOwners[fid]??entry.data.classId));
       if (suppressedResources.has(c.id + ":" + r.id)) continue;
       let n = r.maxByLevel[c.level - 1];
       if (n && typeof n === "object")
         n =
-          Math.max(n.minimum, modifier(adjustedScores[n.ability])) +
-          (n.add ?? 0);
+          Math.max(n.minimum,n.proficiency?2+Math.floor((classes.reduce((s,c)=>s+c.level,0)-1)/4):modifier(adjustedScores[n.ability]))*(n.multiplier??1)+(n.add??0);
+      if(n!==null)n=Math.max(0,n);
       if (n !== 0)
         resources.push({
           id: c.id + ":" + r.id,
@@ -556,15 +590,26 @@ export function resolveProgression(index, request) {
           recovery: r.recovery,
           unlimited: n === null,
           classId: c.id,
+          ownerId:fid,
           ...(r.recharge ? { recharge: r.recharge } : {}),
         });
     }
+  const resourceAliases={},channels=resources.filter(r=>/^(cleric|paladin):channel$/.test(r.id));
+  if(channels.length>1){const shared=channels[0];shared.max=Math.max(...channels.map(r=>r.max));for(const row of channels){resourceAliases[row.id]=shared.id;if(row!==shared)resources.splice(resources.indexOf(row),1);}}
   check(
     new Set(resources.map((r) => r.id)).size === resources.length,
     "Duplicate resolved resource",
   );
+  let unarmoredDefense=false;for(const c of classes){const id=index.class(c.id)?.data.armorRuleFeatureId;if(id&&features.has(id)){if(unarmoredDefense)features.delete(id);else unarmoredDefense=true;}}
+  const uniqueRules=new Map();for(const id of features){const key=index.get(id)?.data.uniqueRuleKey;if(key){if(uniqueRules.has(key))issues.push({code:'duplicate-feature-rule',featureId:id,otherFeatureId:uniqueRules.get(key),choiceId:choices.find(q=>(effectiveSelections[q.id]??[]).includes(id))?.id});else uniqueRules.set(key,id);}}
+  for(const fid of features){const feature=index.get(fid),owner=classes.find(c=>c.id===(featResolution.featureOwners[fid]??feature?.data.classId));for(const row of feature?.data.innateSpells??[])if(owner&&(featResolution.featureOwners[fid]||owner.level>=row.classLevel))for(const id of row.spellIds)origin.spells.push({id,level:row.classLevel,ability:row.ability,ownerId:fid+(row.ritualOnly?':ritual':feature.data.extraSpells?.some(g=>g.mode!=='expanded'&&g.spellIds.includes(id))?':innate':''),featureOwnerId:fid,...(row.resourceId?{resourceId:owner.id+':'+row.resourceId}:{}),...(row.economy?{economy:row.economy}:{}),...(row.target?{target:row.target}:{}),...(row.maxTargets?{maxTargets:row.maxTargets}:{}),...(row.resourceAmount?{resourceAmount:row.resourceAmount}:{}),...(row.ritualOnly?{ritualOnly:true}:{}),requirements:row.requirements,source:feature.source});}
+  for(const row of request.pactRitualCopies??[]){const s=index.get(row.spellId),owner=classes.find(c=>c.id==='warlock'),fid='srd51:warlock:book-of-ancient-secrets';if(!owner||!features.has(fid))continue;if(!s?.data.ritual||s.data.level<1||s.data.level>Math.ceil(owner.level/2)||!row.note?.trim())issues.push({code:'invalid-pact-ritual-copy',id:row.spellId});else origin.spells.push({id:s.id,level:owner.level,ability:'cha',ownerId:fid,ritualOnly:true,source:index.get(fid).source});}
   return {
     origin,
+    resourceAliases,
+    additionalSaves:featResolution.additionalSaves,
+    featureClassOverrides:featResolution.featureOwners,
+    featureResourceOverrides:featResolution.featureResourceOverrides,
     features: [...features],
     resources,
     choices,
@@ -598,6 +643,8 @@ export function resolveProgression(index, request) {
     issues,
     valid: issues.length === 0,
     scores: adjustedScores,
+    scoresBeforeFeatureIncreases,
+    featureHpBonus:[...features].reduce((n,id)=>{const f=index.get(id),c=classes.find(c=>c.id===f?.data.classId);return n+(f?.data.buildEffects?.hpPerClassLevel??0)*(c?.level??0)+(f?.data.buildEffects?.hpPerCharacterLevel??0)*classes.reduce((n,c)=>n+c.level,0);},0),
     scaling,
     slots: spellSlots(castingClasses),
     limits: [

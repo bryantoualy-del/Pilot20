@@ -5,7 +5,7 @@ import {
 } from "./advancement.js";
 import { check, SKILLS } from "../character/contracts.js";
 import { validateCharacter, validateBuild } from "../character/definition.js";
-import { resolveProgression } from "./progression.js";
+import { resolveProgression,effectiveClassData } from "./progression.js";
 import { ability, compileSpell, attachClassAdapters } from "./adapters.js";
 /** Production constructor. No fixture imports, random rolls, implied subclass or automatic player choices. */
 export function buildCharacter(
@@ -69,7 +69,7 @@ export function buildCharacter(
       level: c.level,
       subclassId: c.subclassId ?? null,
       hitDie: entry.data.hitDie,
-      casting: entry.data.casting,
+      casting: effectiveClassData(index,c).casting,
       source: entry.source,
     };
   });
@@ -96,7 +96,7 @@ export function buildCharacter(
     alignment: null,
     scores: report.scores,
     skills: Object.fromEntries(background.skills.map((k) => [k, 1])),
-    saveProficiencies: first.data.saves,
+    saveProficiencies: [...new Set([...first.data.saves,...(report.additionalSaves??[])])],
     proficiencies: [],
     features: report.features,
     equipment: [],
@@ -112,7 +112,36 @@ export function buildCharacter(
     armorRules: [],
     buildRules: [],
   };
+  const featureMovement={},movementMatchWalk=new Set();
   // Ancestry/background remain editable; no racial bonuses are silently added to supplied scores.
+  for(const featureId of d.features){
+    const feature=index.get(featureId),effect=feature?.data.buildEffects;if(!effect)continue;
+    if((definitions.find(c=>c.id===(report.featureClassOverrides?.[featureId]??feature.data.classId))?.level??(feature.type==='feat'?1:0))<(effect.minimumClassLevel??1))continue;
+    Object.assign(featureMovement,effect.movement??{});for(const mode of effect.movementMatchWalk??[])movementMatchWalk.add(mode);
+    const owner=definitions.find(c=>c.id===(report.featureClassOverrides?.[featureId]??feature.data.classId))??(feature.type==='feat'?definitions[0]:null),pb=2+Math.floor((definitions.reduce((n,c)=>n+c.level,0)-1)/4);
+    const modify=(suffix,stat,value,operation='add',condition=null)=>d.modifiers.push({id:featureId+':'+suffix,stat,value,operation,reason:feature.name.en,source:feature.source,...(condition?{condition}:{})});
+    if(effect.hpPerCharacterLevel)modify('feat-hp','maxHp',effect.hpPerCharacterLevel*definitions.reduce((n,c)=>n+c.level,0));
+    if(effect.initiativeBonus)modify('feat-initiative','initiative',effect.initiativeBonus);
+    for(const[skill,n]of Object.entries(effect.passiveSkillBonuses??{}))modify('passive-'+skill,'passiveBonus.'+skill,n);
+    if(effect.hpPerClassLevel)modify('hp','maxHp',effect.hpPerClassLevel*owner.level);
+    if(effect.naturalArmor)d.armorRules.push({id:featureId+':armor',...structuredClone(effect.naturalArmor),source:feature.source});
+    if(effect.halfProficiency)modify('checks',effect.halfProficiency==='all'?'untrainedCheckBonus':'untrainedPhysicalCheckBonus',effect.halfProficiency==='all'?Math.floor(pb/2):Math.ceil(pb/2),'max');
+    if(effect.defenseStyle)modify('armor','ac',1,'add','wearing-armor');
+    if(effect.rangedWeaponAttackBonus)modify('archery','rangedWeaponAttackBonus',effect.rangedWeaponAttackBonus,'max');
+    d.proficiencies.push(...(effect.proficiencies??[]));
+    for(const skill of effect.skills??[])d.skills[skill]=Math.max(d.skills[skill]??0,1);
+    d.defenses.immunities.push(...(effect.immunities??[]));
+    for(const[ability,row]of Object.entries(effect.checkAbilityBonuses??{}))modify('check-'+ability,'checkBonus.'+ability,Math.max(row.minimum,Math.floor((d.scores[row.ability]-10)/2)));
+    for(const skill of effect.expertiseSkills??[])d.skills[skill]=2;
+    if(effect.unarmoredSpeedByClassLevel)modify('unarmored-speed','speed',effect.unarmoredSpeedByClassLevel[owner.level-1],'add','unarmored-unshielded');
+    if(effect.speedBonus)modify('speed','speed',effect.speedBonus);
+    for(const ability of effect.saves??[])if(!d.saveProficiencies.includes(ability))d.saveProficiencies.push(ability);
+    for(const[skill,ability]of Object.entries(effect.skillAbilityBonuses??{}))modify('skill-'+skill,'skill.'+skill,Math.floor((d.scores[ability]-10)/2));
+    if(effect.initiativeAbility)modify('initiative','initiative',Math.floor((d.scores[effect.initiativeAbility]-10)/2));
+    if(effect.heavyArmorBonus)modify('heavy-armor','ac',effect.heavyArmorBonus,'add','wearing-heavy-armor');
+    d.defenses.resistances.push(...(effect.resistances??[]));
+    if(effect.attacksPerAction)d.modifiers.push({id:featureId+':attacks',stat:'attacksPerAction',operation:'max',value:effect.attacksPerAction,reason:feature.name.en,source:feature.source});
+  }
   for (const [n, c] of definitions.entries()) {
     const e = index.class(c.id),
       data = e.data;
@@ -138,7 +167,7 @@ export function buildCharacter(
         reason: "Class attack progression; does not stack between classes.",
         source: e.source,
       });
-    if (c.id === "barbarian" && d.features.includes(data.armorRuleFeatureId))
+    if (c.id === "barbarian" && d.features.includes(data.armorRuleFeatureId)&&!d.armorRules.some(a=>['barbarian:unarmored','monk:unarmored'].includes(a.id)))
       d.armorRules.push({
         id: "barbarian:unarmored",
         base: 10,
@@ -146,7 +175,7 @@ export function buildCharacter(
         shieldAllowed: true,
         source: e.source,
       });
-    if (c.id === "monk" && d.features.includes(data.armorRuleFeatureId))
+    if (c.id === "monk" && d.features.includes(data.armorRuleFeatureId)&&!d.armorRules.some(a=>['barbarian:unarmored','monk:unarmored'].includes(a.id)))
       d.armorRules.push({
         id: "monk:unarmored",
         base: 10,
@@ -165,6 +194,7 @@ export function buildCharacter(
           : definitions.find((c) => c.id === row.classId).hitDie / 2 + 1,
     }));
   if (hpProgression !== null) {
+    check(hpProgression.length===definitions.reduce((n,c)=>n+c.level,0)&&hpProgression.every((p,i)=>{const cls=definitions.find(c=>c.id===p.classId);return cls&&Number.isInteger(p.hp)&&p.hp>=1&&p.hp<=cls.hitDie&&(i!==0||(p.classId===definitions[0].id&&p.hp===cls.hitDie));}),'HP die results must match class dice and the initial maximum');
     if (advancementHistory.length)
       check(
         hpProgression.length === advancementHistory.length &&
@@ -199,6 +229,7 @@ export function buildCharacter(
         id: chunkId,
         level,
         count,
+        ...(choice.kind==='prepared'&&values.length<choice.count?{minimumCount:0}:{}),
         options: choice.options,
         requires: [],
         incompatible: [],
@@ -223,6 +254,8 @@ export function buildCharacter(
         if (Object.hasOwn(SKILLS, k)) d.skills[k] = 2;
         else d.proficiencies.push("expertise:" + k);
       });
+    if(choice.kind==='save-proficiency')for(const ability of values)if(!d.saveProficiencies.includes(ability))d.saveProficiencies.push(ability);
+    if(choice.kind==='training')for(const id of values){if(Object.hasOwn(SKILLS,id))d.skills[id]=Math.max(d.skills[id]??0,1);else d.proficiencies.push(id);}
     if (choice.kind === "proficiency") d.proficiencies.push(...values);
     if (
       [
@@ -278,9 +311,9 @@ export function buildCharacter(
     };
     spellClasses
       .get(g.classId)
-      .set(g.id, { ...existing, normal: true, prepared: true });
+      .set(g.id, { ...existing, normal: true, prepared: existing.prepared||g.mode==='prepared' });
     d.spells.known.push(g.id);
-    d.spells.prepared.push(g.id);
+    if(g.mode==='prepared'||entry.data.level===0)d.spells.prepared.push(g.id);
   }
   d.features = [...new Set(d.features)];
   d.proficiencies = [
@@ -294,7 +327,7 @@ export function buildCharacter(
         id: r.id,
         max: r.max,
         recovery: r.recovery,
-        source: index.class(r.classId).source,
+        source: index.get(r.ownerId)?.source??index.class(r.classId).source,
       });
   for (const [cls, spells] of spellClasses)
     for (const record of spells.values()) {
@@ -371,9 +404,10 @@ export function buildCharacter(
       const e = index.get(id);
       if (!e || !["feature", "feat"].includes(e.type)) continue;
       const m = e.data.manualMechanics,
-        resourceId = m?.resourceId ? e.data.classId + ":" + m.resourceId : null;
+        rawResourceId = m?.resourceId ? m.resourceId==='pact'?'pact:'+e.data.classId:(report.featureResourceOverrides?.[id]??(report.featureClassOverrides?.[id]??e.data.classId) + ":" + m.resourceId) : null,
+        resourceId=report.resourceAliases?.[rawResourceId]??rawResourceId;
       const resource =
-        resourceId && d.resources.some((r) => r.id === resourceId)
+        resourceId && (d.resources.some((r) => r.id === resourceId)||report.slots.resources[resourceId])
           ? { id: resourceId, amount: m.amount }
           : null;
       if (resourceId && !resource)
@@ -408,9 +442,10 @@ export function buildCharacter(
     d.ancestry = {
       id: o.race.id,
       subraceId: o.subrace?.id ?? null,
-      source: o.race.source,
+      source: o.subrace?.source??o.race.source,
+      ...(o.race.source.kind==='reference'?{size:o.size,creatureType:o.creatureType}:{}),
     };
-    d.movement = { walk: o.speed, ignoreHeavyPenalty: o.ignoreHeavyPenalty };
+    d.movement = { walk: o.speed, ignoreHeavyPenalty: o.ignoreHeavyPenalty,...o.movementModes,...featureMovement };
     d.defenses.resistances = [
       ...new Set([...d.defenses.resistances, ...o.resistances]),
     ];
@@ -444,12 +479,16 @@ export function buildCharacter(
   }
   for (const trait of o.traits) {
     const tid = trait.ownerId + ":" + trait.id;
+    const resourceId=trait.resource?tid+':uses':null;
+    if(resourceId)d.resources.push({id:resourceId,max:trait.resource.proficiency?2+Math.floor((definitions.reduce((n,c)=>n+c.level,0)-1)/4):trait.resource.max,recovery:trait.resource.recovery,source:trait.source});
     d.features.push(tid);
     d.abilities.push(
       ability(
         { id: tid, name: trait.name, source: trait.source, type: "race" },
         {
           kind: "racial",
+          ...(trait.activation??{}),
+          ...(resourceId?{resource:{id:resourceId,amount:1}}:{}),
           combat: {
             version: 1,
             mode: "manual",
@@ -476,7 +515,7 @@ export function buildCharacter(
   for (const spell of o.spells) {
     const e = index.get(spell.id);
     if (!e) continue;
-    const sid = "origin:spell:" + e.id;
+    const sid = spell.featureOwnerId?spell.featureOwnerId+':spell:'+e.id:"origin:spell:" + e.id;
     d.spells.known.push(e.id);
     d.spells.prepared.push(e.id);
     d.features.push(sid);
@@ -484,15 +523,20 @@ export function buildCharacter(
       ability(
         { ...e, id: sid },
         {
-          kind: "racial",
-          cost: spell.level === 1 ? "action" : "none",
+          kind: spell.featureOwnerId?'class':"racial",
+          ...(spell.target?{target:spell.target}:{}),...(spell.maxTargets?{maxTargets:spell.maxTargets}:{}),
+          ...(e.data.concentration?{concentration:{effectId:e.id,start:'activation'}}:{}),
+          ...(spell.resourceId&&!report.resources.some(r=>r.id===spell.resourceId&&r.unlimited)?{resource:{id:spell.resourceId,amount:spell.resourceAmount??1}}:{}),
+          cost: spell.featureOwnerId?spell.economy??'none':spell.level === 1 ? "action" : "none",
           combat: {
             version: 1,
             mode: "manual",
+            ...(spell.featureOwnerId?{externalRequirements:['featureEligibilityValidated']}:{}),
             requirements: [
-              "Racial spellcasting uses " +
+              (spell.featureOwnerId?'Feature spellcasting uses ':"Racial spellcasting uses ") +
                 spell.ability +
-                "; verify level, daily uses, components and racial casting level.",
+                "; verify acquisition, uses, components and casting level.",
+              ...(spell.requirements?[spell.requirements]:[]),
             ],
           },
         },
@@ -508,6 +552,8 @@ export function buildCharacter(
       weapon: null,
       source: index.get(originRequest.backgroundId).source,
     });
+  Object.assign(d.movement,featureMovement);for(const mode of movementMatchWalk){d.movement[mode]=d.movement.walk;d.movement[mode+'MatchesWalk']=true;}
+  for(const id of d.features){const n=index.get(id)?.data.buildEffects?.existingMovementBonus??0;for(const key of ['climb','swim'])if(d.movement[key])d.movement[key]+=n;}
   d.features = [...new Set(d.features)];
   d.spells.known = [...new Set(d.spells.known)];
   d.spells.prepared = [...new Set(d.spells.prepared)];

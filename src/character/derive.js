@@ -95,9 +95,10 @@ export function derive(d) {
   check(report.valid, "Incomplete build: " + JSON.stringify(report.issues));
   const level = d.classes.reduce((n, c) => n + c.level, 0),
     pb = proficiencyBonus(level),
-    stats = { level, proficiency: pb, attacksPerAction: 1 };
+    stats = { level, proficiency: pb, attacksPerAction: 1,untrainedCheckBonus:0,untrainedPhysicalCheckBonus:0,rangedWeaponAttackBonus:0 };
   for (const c of d.classes) stats["class." + c.id] = c.level;
-  for (const k of ABILITIES) stats["mod." + k] = modifier(d.scores[k]);
+  for (const k of ABILITIES){stats["mod." + k] = modifier(d.scores[k]);stats["checkBonus."+k]=0;}
+  for(const k of Object.keys(SKILLS))stats['passiveBonus.'+k]=0;
   const skills = {},
     saves = {},
     casting = {};
@@ -154,7 +155,8 @@ export function derive(d) {
     }
   const trace = [];
   for (const m of d.modifiers) {
-    keys(m, ["id", "stat", "operation", "value", "reason", "source"]);
+    keys(m, ["id", "stat", "operation", "value", "reason", "source","condition"],["id", "stat", "operation", "value", "reason", "source"]);
+    if(m.condition!==undefined){check(['wearing-armor','wearing-heavy-armor','unarmored-unshielded'].includes(m.condition),'Modifier condition');if(m.condition==='unarmored-unshielded'?(worn||shield):(!worn||m.condition==='wearing-heavy-armor'&&!worn.armor.heavy))continue;}
     source(m.source);
     const allowed = [
       "ac",
@@ -162,7 +164,10 @@ export function derive(d) {
       "speed",
       "initiative",
       "attacksPerAction",
+      "untrainedCheckBonus","untrainedPhysicalCheckBonus","rangedWeaponAttackBonus",
       ...ABILITIES.map((k) => "save." + k),
+      ...ABILITIES.map(k=>"checkBonus."+k),
+      ...Object.keys(SKILLS).map(k=>"passiveBonus."+k),
       ...Object.keys(SKILLS).map((k) => "skill." + k),
       ...d.classes.flatMap((c) => ["spellAttack." + c.id, "spellDC." + c.id]),
     ];
@@ -193,6 +198,10 @@ export function derive(d) {
       source: structuredClone(m.source),
     });
   }
+  const halfBonus=ability=>Math.max(stats.untrainedCheckBonus,['str','dex','con'].includes(ability)?stats.untrainedPhysicalCheckBonus:0);
+  for(const [skill,ability]of Object.entries(SKILLS))stats['skill.'+skill]+=(d.skills[skill]?0:halfBonus(ability))+stats['checkBonus.'+ability];
+  stats.initiative+=(d.proficiencies.includes('initiative')?pb:halfBonus('dex'))+stats['checkBonus.dex'];
+  const checks=Object.fromEntries(ABILITIES.map(a=>[a,stats['mod.'+a]+halfBonus(a)+stats['checkBonus.'+a]]));
   check(
     integer(stats.maxHp, 1) &&
       integer(stats.ac, 0, 100) &&
@@ -212,7 +221,7 @@ export function derive(d) {
   for (const w of d.equipment.filter((e) => e.kind === "weapon")) {
     const m = stats["mod." + w.weapon.ability];
     stats["weaponAttack." + w.id] =
-      m + (w.weapon.proficient ? pb : 0) + w.weapon.bonus;
+      m + (w.weapon.proficient ? pb : 0) + w.weapon.bonus+(w.weapon.ranged?stats.rangedWeaponAttackBonus:0);
     stats["weaponDamage." + w.id] = m + w.weapon.bonus;
     weapons[w.id] = {
       attack: stats["weaponAttack." + w.id],
@@ -233,12 +242,15 @@ export function derive(d) {
     proficiency: pb,
     modifiers: Object.fromEntries(ABILITIES.map((k) => [k, stats["mod." + k]])),
     skills,
+    passives:Object.fromEntries(Object.keys(SKILLS).map(k=>[k,10+skills[k]+stats['passiveBonus.'+k]])),
     saves,
+    checks,
     casting,
     weapons,
     ac: stats.ac,
     maxHp: stats.maxHp,
     speed: stats.speed,
+    movement:{walk:stats.speed,...(d.movement.climb!==undefined?{climb:d.movement.climbMatchesWalk?stats.speed:d.movement.climb}:{}),...(d.movement.swim!==undefined?{swim:d.movement.swimMatchesWalk?stats.speed:d.movement.swim}:{}),...(d.movement.fly!==undefined?{fly:d.movement.fly}:{})},
     initiative: stats.initiative,
     attacksPerAction: stats.attacksPerAction,
     acOptions,

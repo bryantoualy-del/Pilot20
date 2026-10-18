@@ -11,7 +11,8 @@
           "enum": [
             "srd",
             "homebrew",
-            "private"
+            "private",
+            "reference"
           ]
         },
         "document": {
@@ -520,6 +521,9 @@
         },
         "source": {
           "$ref": "#/$defs/source"
+        },
+        "condition": {
+          "const": "wearing-armor"
         }
       },
       "required": [
@@ -747,6 +751,9 @@
                       "prototype"
                     ]
                   }
+                },
+                "ranged": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -762,6 +769,31 @@
               "type": "null"
             }
           ]
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "name": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "fr",
+            "en"
+          ],
+          "properties": {
+            "fr": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 10000
+            },
+            "en": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 10000
+            }
+          }
         }
       },
       "required": [
@@ -863,6 +895,20 @@
             },
             "source": {
               "$ref": "#/$defs/source"
+            },
+            "size": {
+              "enum": [
+                "small",
+                "medium"
+              ]
+            },
+            "creatureType": {
+              "enum": [
+                "humanoid",
+                "fey",
+                "construct",
+                "undead"
+              ]
             }
           },
           "required": [
@@ -1186,6 +1232,11 @@
                   }
                 },
                 "uniqueItems": true
+              },
+              "minimumCount": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 20
               }
             },
             "required": [
@@ -1282,6 +1333,24 @@
               "maximum": 200
             },
             "ignoreHeavyPenalty": {
+              "type": "boolean"
+            },
+            "climb": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 200
+            },
+            "swim": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 200
+            },
+            "fly": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 200
+            },
+            "climbMatchesWalk": {
               "type": "boolean"
             }
           },

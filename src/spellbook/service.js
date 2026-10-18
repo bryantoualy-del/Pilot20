@@ -1,0 +1,71 @@
+import {sameDefinition} from '../creator/revision.js';
+import {check} from '../character/contracts.js';
+import {compileDraft,draftProgression} from '../creator/model.js';
+import {migrateLegacySpellbook} from './model.js';
+
+const magicKinds=new Set(['spell','spellbook','prepared','ritual-spell','spell-mastery','signature-spell']);
+export function grimoireView(context,config,draft,record){
+  const book=record.spellbook??migrateLegacySpellbook(record.definition);
+  const report=draft?draftProgression(context,config,draft):null;
+  return {book,report,choices:(report?.choices??[]).filter(q=>magicKinds.has(q.kind)),classIds:record.definition.classes.filter(c=>c.casting).map(c=>c.id),editable:!!draft?.finalized};
+}
+function updateCurrentHistory(draft){
+  if(draft.advancementHistory?.length)draft.advancementHistory.at(-1).selections=structuredClone(draft.selections);
+}
+/** A preparation is staged as a complete set; an intermediate uncheck never mutates the saved character. */
+export function stagePreparation(context,config,input,{classId,spellIds}){
+  const d=structuredClone(input),report=draftProgression(context,config,d);
+  const q=report.choices.find(q=>q.classId===classId&&q.kind==='prepared');
+  check(q,'This class does not prepare spells');
+  check(Array.isArray(spellIds)&&new Set(spellIds).size===spellIds.length&&spellIds.length<=(q.count)&&spellIds.length>=(q.minimumCount??q.count)&&spellIds.every(id=>q.options.includes(id)),'Invalid preparation');
+  d.selections[q.id]=[...spellIds];d.confirmed=true;updateCurrentHistory(d);return d;
+}
+/** Copying is explicit acquisition, distinct from the daily preparation and level-up allowance. */
+export function stageWizardCopy(context,config,input,{spellId,confirmedCopy=false,note=''}){
+  const d=structuredClone(input),report=draftProgression(context,config,d);
+  const q=report.choices.find(q=>q.classId==='wizard'&&q.kind==='spellbook');
+  check(q&&q.options.includes(spellId)&&context.index.get(spellId)?.data.level>0,'Spell cannot be copied into this book');
+  check(!(d.selections[q.id]??[]).includes(spellId),'Spell already in book');
+  check(confirmedCopy===true&&typeof note==='string'&&note.trim().length>0&&note.length<=500,'Confirm copy eligibility, time and material cost');
+  d.spellbookTranscriptions??=[];
+  d.spellbookTranscriptions.push({classId:'wizard',spellId,characterLevel:d.classes.reduce((n,c)=>n+c.level,0),reason:note.trim()});
+  d.selections[q.id]=[...(d.selections[q.id]??[]),spellId];d.confirmed=true;updateCurrentHistory(d);return d;
+}
+export function ritualCopyOptions(context,config,draft,bookId='auto'){
+ if(!draft)return[];const report=draftProgression(context,config,draft),featId='phb14:feat:ritual-caster',pactId='srd51:warlock:book-of-ancient-secrets';
+ const feat=report.features?.includes(featId),pact=report.features?.includes(pactId),all=[];
+ if(feat&&bookId!=='pact'){const cls=draft.selections[featId+':spell-class']?.[0],owned=new Set([...(draft.selections[featId+':rituals']??[]),...(draft.featRitualCopies??[]).filter(r=>r.featId===featId).map(r=>r.spellId)]),cap=Math.ceil(draft.classes.reduce((n,c)=>n+c.level,0)/2);all.push(...context.index.list('spell').filter(s=>s.data.ritual&&s.data.level>0&&s.data.level<=cap&&s.data.classIds.includes(cls)&&!owned.has(s.id)).map(s=>s.id));}
+ if(pact&&bookId!=='feat'){const cap=Math.ceil(draft.classes.find(c=>c.id==='warlock').level/2),owned=new Set([...(draft.selections['warlock:ancient-rituals']??[]),...(draft.pactRitualCopies??[]).map(r=>r.spellId)]);all.push(...context.index.list('spell').filter(s=>s.data.ritual&&s.data.level>0&&s.data.level<=cap&&!owned.has(s.id)).map(s=>s.id));}return[...new Set(all)];
+}
+export function stageRitualCopy(context,config,input,{spellId,confirmedCopy=false,note='',bookId='auto'}){
+ const destination=bookId==='auto'?(ritualCopyOptions(context,config,input,'feat').includes(spellId)?'feat':'pact'):bookId;
+ check(['feat','pact'].includes(destination)&&ritualCopyOptions(context,config,input,destination).includes(spellId),'Ritual cannot be copied into this book');check(confirmedCopy===true&&typeof note==='string'&&note.trim()&&note.length<=500,'Confirm ritual access, time and material cost');
+ const d=structuredClone(input),row={spellId,characterLevel:d.classes.reduce((n,c)=>n+c.level,0),note:note.trim()};if(destination==='feat'){d.featRitualCopies??=[];d.featRitualCopies.push({featId:'phb14:feat:ritual-caster',...row});}else{d.pactRitualCopies??=[];d.pactRitualCopies.push(row);}d.confirmed=true;return d;
+}
+export function stageCantripRest(context,config,input,{classId='wizard',removeId,spellId,confirmedRest=false}){
+ const d=structuredClone(input),report=draftProgression(context,config,d),q=report.choices.find(q=>q.id===classId+':cantrips');
+ check(q?.mutableAtRest&&confirmedRest,'This replacement requires Cantrip Formulas and a completed long rest');
+ const owned=d.selections[q.id]??[];check(owned.includes(removeId)&&q.options.includes(spellId)&&!owned.includes(spellId),'Invalid cantrip replacement');
+ d.selections[q.id]=owned.map(id=>id===removeId?spellId:id);d.restSpellChanges??=[];d.restSpellChanges.push({classId,removeId,spellId,recordedAt:new Date().toISOString(),reason:'cantrip-formulas-long-rest'});d.confirmed=true;updateCurrentHistory(d);return d;
+}
+function comparable(character){const c=structuredClone(character);c.revision=1;return JSON.stringify(c);}
+/** Reuse the production compiler and the creator's atomic definition/book/draft transaction. */
+export function grimoireService({library,drafts,campaigns}){
+  return {
+    async apply(characterId,command,{expectedCharacterRevision,expectedDraftRevision}){
+      const [record,draft]=await Promise.all([library.get(characterId),drafts.get(characterId)]);
+      check(record&&draft,'Open the character in the creator before modifying its spell choices');
+      check(record.definition.revision===expectedCharacterRevision&&draft.revision===expectedDraftRevision,'Revision conflict');
+      check(draft.finalized,'Finish or review the open character edit first');
+      const config=await campaigns.get(draft.campaignId),context=await campaigns.context(config);
+      const before=compileDraft(context,config,{...draft,confirmed:true});
+      // External manual definition changes must never be discarded by rebuilding from an older draft.
+      check(before.valid&&sameDefinition(before.character,record.definition),'Character differs from its build plan; review it before changing spells');
+      const next=command.type==='prepare'?stagePreparation(context,config,draft,command):command.type==='copy'?stageWizardCopy(context,config,draft,command):command.type==='ritual-copy'?stageRitualCopy(context,config,draft,command):command.type==='rest-cantrip'?stageCantripRest(context,config,draft,command):null;
+      check(next,'Unknown grimoire operation');
+      const result=compileDraft(context,config,next);check(result.valid,'Spell choices need review');
+      result.character.revision=expectedCharacterRevision+1;next.status=result.status;
+      return drafts.finalize(next,result.character,{expectedCharacterRevision,expectedDraftRevision,spellbook:result.spellbook});
+    },
+  };
+}

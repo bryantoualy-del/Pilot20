@@ -1,5 +1,6 @@
-/** Local fallback until RPG Connect assets and their licence are verified. No external art copied. */
+/** Local monochrome class symbols; no network asset dependency. */
 export const CLASS_ICONS = {
+  artificer: "⚙",
   fighter: "⚔",
   barbarian: "◆",
   bard: "♫",

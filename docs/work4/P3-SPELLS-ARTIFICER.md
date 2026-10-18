@@ -1,0 +1,15 @@
+# Work4 — Sorts étendus et Artificier
+
+Le catalogue du joueur contient477 sorts sélectionnables :319 SRD,95 Xanathar,21 Tasha et42 Manuel2014 hors SRD. Les identifiants SRD restent identiques ; les116 identifiants du Work2 sont conservés. Les42 ajouts PHB portent des identifiants `phb14:spell:*`, propriétés vérifiées sur AideDD2014 le18 octobre2026. Les références restent distinctes des définitions utilisables.
+
+Les158 nouveaux sorts embarquent des résumés français originaux, les propriétés de lancement, concentration, rituel, listes de classes et références. Ce sont des descriptions de consultation avec résolution manuelle : aucun moteur de combat exhaustif n’est revendiqué. Les profils détaillés des créatures convoquées et certaines exceptions exigent encore la référence de règle. Les textes et illustrations des PDF ne sont pas incorporés. La provenance `reference`/`Pilot20-original-summary` décrit les expressions originales de Pilot20 ; elle n’attribue aucune licence aux ouvrages cités.
+
+Les nouveaux personnages autorisent aussi le PHB2014, conformément à l’extension de périmètre validée. Les réglages des campagnes existantes sont conservés ; le PHB peut y être activé dans les sources. Les listes supplémentaires de Tasha sont facultatives, indépendantes par classe et n’accordent automatiquement aucun sort connu/préparé.
+
+L’Artificier fonctionne du niveau1 au20 : d8, compétences/outils/sauvegardes, Intelligence, préparation selon la moitié du niveau, sorts mineurs, emplacements dès1 et contribution multiclassée arrondie au supérieur. Alchimiste, Armurier, Artilleur et Forgeron de guerre ont leurs capacités aux niveaux3/5/9/15, ressources et sorts toujours préparés hors quota. Les deux spécialisations martiales obtiennent deux attaques au niveau5. Les influx connus sont filtrés par prérequis de niveau, avec64 options comprenant les répliques des tables.
+
+Les influx ne sont pas des objets automatiquement équipés. Les affectations d’objets, harmonisations réelles, compagnons et effets de combat restent des états distincts à gérer par le futur Companion. La réplique libre d’un autre objet magique courant hors potion/parchemin n’a pas encore d’éditeur dédié. Un changement d’influx lors d’une progression enregistrée doit encore recevoir son contrôle historique spécifique. Ces limites ne doivent pas être présentées comme une prise en charge exhaustive de l’Artificier.
+
+Tests : `tests/extended-content.test.js` vérifie toutes les étapes1–20 des quatre spécialisations, quotas, niveaux d’accès, sorts accordés, attaques, emplacements, options Tasha, préparation transactionnelle et export/import. `e2e/work4-grimoire.mjs` ajoute une fixture synthétique Artificier10, consultation locale d’un sort Xanathar et référence repliée. Les fixtures ne remplacent pas les personnages réels de la Compagnie Créole. Exécuter la CI complète avant de déclarer les contrôles navigateur réussis.
+
+Ce lot ne termine pas encore l’intégration des autres sous-classes, races, historiques et dons du périmètre Work4. Il ne fusionne aucune PR et ne déploie pas de version publique.

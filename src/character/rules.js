@@ -99,9 +99,9 @@ export function compileAbilities(d,stats,resources) {
 }
 
 export function validateRuleData(d) {
-  const refs=['level','proficiency','attacksPerAction','maxHp','ac','speed','initiative',
-    ...ABILITIES.flatMap(k=>['mod.'+k,'save.'+k]),
-    ...Object.keys(SKILLS).map(k=>'skill.'+k),
+  const refs=['level','proficiency','attacksPerAction','maxHp','ac','speed','initiative','untrainedCheckBonus','untrainedPhysicalCheckBonus','rangedWeaponAttackBonus',
+    ...ABILITIES.flatMap(k=>['mod.'+k,'save.'+k,'checkBonus.'+k]),
+    ...Object.keys(SKILLS).flatMap(k=>['skill.'+k,'passiveBonus.'+k]),
     ...d.classes.flatMap(c=>['class.'+c.id,'spellAttack.'+c.id,'spellDC.'+c.id]),
     ...d.equipment.filter(e=>e.weapon!==null).flatMap(e=>['weaponAttack.'+e.id,'weaponDamage.'+e.id])];
   const stats=Object.fromEntries(refs.map(k=>[k,1]));
@@ -120,7 +120,7 @@ export function validateRuleData(d) {
     }
   }
   for(const m of d.modifiers) {
-    keys(m,['id','stat','operation','value','reason','source']);source(m.source);
+    keys(m,['id','stat','operation','value','reason','source','condition'],['id','stat','operation','value','reason','source']);if(m.condition!==undefined)check(['wearing-armor','wearing-heavy-armor','unarmored-unshielded'].includes(m.condition),'Modifier condition');source(m.source);
     check(id(m.id) && refs.includes(m.stat) && !m.stat.startsWith('class.') && !m.stat.startsWith('mod.') && ['add','set','max'].includes(m.operation) && typeof m.reason==='string' && m.reason.trim(),'Modifier shape');
     expression(m.value,stats);
   }

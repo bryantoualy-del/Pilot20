@@ -1,3 +1,4 @@
+import {choiceLabels,languageLabels,extraTrainingLabels} from './choice-labels.js';
 import { renderQuick } from "./quick.js";
 import { appearanceControls } from "./appearance.js";
 import {
@@ -60,13 +61,21 @@ const colors = {
   wizard: "#7fadd1",
 };
 const choiceTitles = {
+  'swords-fighting-style':['Style de combat du Collège des épées','College of Swords fighting style'],
+  'storm-environment':['Environnement de tempête','Storm environment'],
+  'divine-fury-type':['Dégâts de Fureur divine','Divine Fury damage'],
+  'primal-knowledge-3':['Savoir primal · 3','Primal Knowledge · 3'],
+  'primal-knowledge-10':['Savoir primal · 10','Primal Knowledge · 10'],
   skills: ["Compétences", "Skills"],
   instruments: ["Instruments", "Instruments"],
   tool: ["Outil", "Tool"],
+  infusions: ["Influx connus", "Infusions known"],
+  "armor-model": ["Modèle d’armure", "Armor model"],
   "fighting-style": ["Style de combat", "Fighting style"],
   "additional-style": ["Style supplémentaire", "Additional style"],
   cantrips: ["Tours de magie", "Cantrips"],
   "known-spells": ["Sorts connus", "Known spells"],
+  "known-free-spells": ["Sorts au choix — toutes écoles", "Spells of any school"],
   prepared: ["Sorts préparés", "Prepared spells"],
   spellbook: ["Grimoire", "Spellbook"],
   invocations: ["Invocations", "Invocations"],
@@ -92,16 +101,45 @@ export function optionName(value, a) {
   }
   if (Object.hasOwn(SKILLS, value) || ABILITIES.includes(value))
     return a.label(value);
+  if(a.context.index.class(value))return a.cls(value);
+  if(value.startsWith('language:')){const key=value.slice(9);return a.state.locale==='fr'?languageLabels[key]??human(key):human(key);}
+  const weapon=Object.values(WEAPONS).find(w=>w.proficiency===value);if(weapon)return weapon.name[a.state.locale];
+  if(extraTrainingLabels[value])return extraTrainingLabels[value][a.state.locale==='fr'?0:1];
   const terms = {
+    'two-one':['+2 à une caractéristique, +1 à une autre','+2 to one ability, +1 to another'],
+    'three-ones':['+1 à trois caractéristiques différentes','+1 to three different abilities'],
+    small:['Petite','Small'],medium:['Moyenne','Medium'],
+    defiance:['Défiance','Defiance'],craftiness:['Astuce','Craftiness'],'draconic-sorcery':['Sorcellerie draconique','Draconic sorcery'],
+    artisan:['Outils d’artisan','Artisan’s tools'],navigator:['Outils de navigateur','Navigator’s tools'],language:['Langue supplémentaire','Additional language'],
     drum: ["Tambour", "Drum"],
     flute: ["Flûte", "Flute"],
     lute: ["Luth", "Lute"],
     "thieves-tools": ["Outils de voleur", "Thieves’ tools"],
+    'tinkers-tools':['Outils de bricoleur','Tinker’s tools'],
+    'alchemists-supplies':['Matériel d’alchimiste','Alchemist’s supplies'],
+    'brewers-supplies':['Matériel de brasseur','Brewer’s supplies'],
+    'calligraphers-supplies':['Matériel de calligraphe','Calligrapher’s supplies'],
+    'carpenters-tools':['Outils de charpentier','Carpenter’s tools'],
+    'cartographers-tools':['Outils de cartographe','Cartographer’s tools'],
+    'cobblers-tools':['Outils de cordonnier','Cobbler’s tools'],
+    'cooks-utensils':['Ustensiles de cuisinier','Cook’s utensils'],
+    'glassblowers-tools':['Outils de souffleur de verre','Glassblower’s tools'],
+    'jewelers-tools':['Outils de joaillier','Jeweler’s tools'],
+    'leatherworkers-tools':['Outils de travail du cuir','Leatherworker’s tools'],
+    'masons-tools':['Outils de maçon','Mason’s tools'],
+    'painters-supplies':['Matériel de peintre','Painter’s supplies'],
+    'potters-tools':['Outils de potier','Potter’s tools'],
+    'smiths-tools':['Outils de forgeron','Smith’s tools'],
+    'weavers-tools':['Outils de tisserand','Weaver’s tools'],
+    'woodcarvers-tools':['Outils de menuisier','Woodcarver’s tools'],
     common: ["Commun", "Common"],
   };
   return terms[value]?.[a.state.locale === "fr" ? 0 : 1] ?? human(value);
 }
 export function choiceName(q, a) {
+  const owner=a.context.installed.get(q.ownerId),key=owner?.type==='feat'?q.id.split(':').at(-1):q.id.slice(q.classId.length+1),label=choiceLabels[key]?.[a.state.locale==='fr'?0:1];
+  if(owner?.type==='feat')return a.name(owner)+(label?' · '+label:'');
+  if(label)return label;
   const suffix = q.id.slice(q.classId.length + 1),
     lang = a.state.locale === "fr" ? 0 : 1;
   if (suffix.startsWith("asi-"))
@@ -125,6 +163,23 @@ export function issueMessage(issue, report, a) {
     title = q ? choiceName(q, a) : "",
     fr = a.state.locale === "fr";
   const messages = {
+    'feat-prerequisite':fr?'Les prérequis de ce don ne sont pas remplis. Vérifiez race, caractéristiques et maîtrises.':'This feat’s prerequisites are not met. Review ancestry, scores and training.',
+    'feat-score-cap':fr?'Ce don dépasserait20 dans cette caractéristique. Choisissez une autre caractéristique autorisée.':'This feat would exceed20 in that ability. Choose another allowed ability.',
+    'duplicate-feat':fr?'Ce don n’est pas répétable. Choisissez un autre don.':'This feat cannot be taken more than once.',
+    'creator-companion':fr?'Renseignez le nom, le FP et la référence du compagnon éligible.':'Enter the eligible companion name, CR and profile reference.',
+    'secret-replacement-budget':fr?'Ces Secrets demanderaient plusieurs remplacements au même niveau. Choisissez un autre sort ou vérifiez la progression.':'These Secrets would require multiple replacements at one level. Choose another spell or review progression.',
+    'asi-versatility-limit':fr?'Ce remplacement de Polyvalence bardique demande un niveau de barde avec ASI et un seul changement autorisé.':'Bardic Versatility requires a bard ASI level and permits only one replacement.',
+    'duplicate-feature-rule':fr?'Ce style de combat est déjà acquis. Choisissez un autre style.':'This fighting style is already known. Choose another style.',
+    'hp-roll':fr?'Renseignez un résultat valide pour chaque dé de vie.':'Enter a valid result for every Hit Die.',
+    'hp-method':fr?'Choisissez une méthode de points de vie.':'Choose a hit point method.',
+    'hp-chronology':fr?'Vérifiez l’ordre des niveaux avant de calculer les points de vie.':'Review the level order before calculating hit points.',
+    'equipment-conflict':fr?'Plusieurs armures ou boucliers sont équipés. Rangez le matériel en trop à l’étape Équipement.':'Multiple armors or shields are equipped. Stow extras in Equipment.',
+    'wealth-rolls':fr?'Saisissez tous les dés de richesse (d4) à l’étape Équipement.':'Enter all starting-wealth d4 results in Equipment.',
+    'wealth-overspent':fr?'Vos achats dépassent les fonds initiaux. Revoyez votre inventaire.':'Purchases exceed starting funds. Review your inventory.',
+    'starting-equipment-choice':fr?'Choisissez votre équipement pour continuer.':'Choose your equipment to continue.',
+    'starting-equipment-class':fr?'L’équipement de départ de cette classe nécessite une vérification.':'Review the starting equipment for this class.',
+    'invalid-granted-spell-replacement':fr?'Vérifiez le niveau, l’école et l’origine du sort remplacé ; un seul remplacement est permis par niveau.':'Review the exchanged spell’s level, school and origin; only one exchange is allowed per level.',
+    'duplicate-granted-spell':fr?'Deux octrois donnent le même sort. Choisissez un autre remplacement.':'Two grants provide the same spell. Choose another exchange.',
     "creator-name": a.t("requiredName"),
     "creator-origin": a.t("requiredOrigin"),
     "creator-background-skills": fr
@@ -2096,6 +2151,7 @@ export async function renderEditor(main, d, a) {
               const saved = await a.drafts.finalize(d, result.character, {
                 expectedCharacterRevision,
                 expectedDraftRevision: d.revision,
+                spellbook: result.spellbook,
               });
               Object.assign(d, saved.draft);
               await a.nav("companion", d.id);

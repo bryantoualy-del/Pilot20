@@ -1,5 +1,11 @@
+import {economy,compileInventory} from './equipment-economy.js';
+import {validateLevelGain} from './advancement.js';
+import {hitPointPlan} from './hit-points.js';
+import {startingEquipment,compileStartingEquipment,startingProficiencies} from './starting-equipment.js';
+import {spellbookFromBuild} from '../spellbook/model.js';
 import {
   EQUIPMENT,
+  ARMORS,
   WEAPONS,
   weaponProfile,
   SRD_SOURCE,
@@ -13,7 +19,6 @@ import {
 } from "../campaign/sources.js";
 import {
   derive,
-  averageHpProgression,
   hitPointTotal,
 } from "../character/derive.js";
 import { validateCharacter, validateBuild } from "../character/definition.js";
@@ -23,7 +28,11 @@ export const newDraft = (campaignId = "default", id = crypto.randomUUID()) => ({
   id,
   campaignId,
   revision: 1,
-  mode: "quick",
+  mode: "single",
+  classChosen: false,
+  startingEquipmentVersion:2,
+  equipmentMethod:'kit',
+  inventoryLedger:[],
   name: "",
   portrait: "",
   gender: "",
@@ -40,7 +49,7 @@ export const newDraft = (campaignId = "default", id = crypto.randomUUID()) => ({
   shield: false,
   reviewed: false,
   confirmed: false,
-  step: "origin",
+  step: "identity",
   scoresAreBase: true,
   scoreMethod: "manual",
   originSelections: {},
@@ -71,7 +80,13 @@ export function buildRequest(d) {
     scores: structuredClone(d.scores),
     selections: structuredClone(d.selections),
     background: structuredClone(d.background),
-    advancementHistory: structuredClone(d.advancementHistory ?? []),
+    advancementHistory: [...structuredClone(d.advancementHistory??[]),...(d.pendingAdvancement&&d.advancementHistory?.length?[{classId:d.pendingAdvancement.classId,classes:structuredClone(d.classes),selections:structuredClone(d.selections)}]:[])],
+    spellbookTranscriptions: structuredClone(d.spellbookTranscriptions ?? []),
+    pactRitualCopies:structuredClone(d.pactRitualCopies??[]),
+    featRitualCopies:structuredClone(d.featRitualCopies??[]),
+    spellGrantReplacements:structuredClone(d.spellGrantReplacements??[]),
+    hpMode:d.hpMode??'average',
+    hpProgression:null,
   };
 }
 export function draftProgression(context, config, d) {
@@ -91,22 +106,21 @@ export function draftProgression(context, config, d) {
       })),
       campaignOptions: config.enabledOptions,
     });
+    const gear=startingEquipment(d,startingProficiencies(context.index,d,report)),hp=hitPointPlan(context.index,d);
     return {
       ...report,
-      hpPreview:
+      startingEquipment:gear,
+      economy:economy(d),
+      hitPoints:hp,
+      hpPreview:hp.valid?
         hitPointTotal(
-          averageHpProgression(
-            d.classes.map((c) => ({
-              ...c,
-              hitDie: context.index.class(c.id).data.hitDie,
-            })),
-          ),
+          hp.progression,
           report.scores,
-        ) +
+        ) + (report.featureHpBonus??0) +
         (report.origin?.hpPerLevel ?? 0) *
-          d.classes.reduce((n, c) => n + c.level, 0),
+          d.classes.reduce((n, c) => n + c.level, 0):null,
       valid:
-        report.valid &&
+        report.valid && gear.valid && hp.valid && economy(d).valid &&
         unavailable.valid &&
         !d.classes.some(
           (c) =>
@@ -114,8 +128,12 @@ export function draftProgression(context, config, d) {
             c.level < (context.index.class(c.id)?.data.subclassLevel ?? 99),
         ),
       issues: [
+        ...((d.selections['ranger:beast-companion']??[]).includes('phb14:ranger:companion:other')&&!d.companionNotes?.trim()?[{code:'creator-companion',choiceId:'ranger:beast-companion'}]:[]),
         ...unavailable.issues,
         ...report.issues,
+        ...gear.issues,
+        ...economy(d).issues,
+        ...hp.issues,
         ...d.classes
           .filter(
             (c) =>
@@ -138,6 +156,10 @@ export function draftProgression(context, config, d) {
 /** UI orchestration only: all progression and statistics are produced by existing authorities. */
 export function compileDraft(context, config, d) {
   const issues = [];
+  if((d.selections['ranger:beast-companion']??[]).includes('phb14:ranger:companion:other')&&!d.companionNotes?.trim())return{valid:false,character:null,issues:[{code:'creator-companion',choiceId:'ranger:beast-companion'}],status:'draft'};
+  if(d.pendingAdvancement){const transition=validateLevelGain(context.index,{...buildRequest(d),campaignOptions:config.enabledOptions},d.pendingAdvancement);if(transition.length)return{valid:false,character:null,issues:transition,status:'draft'};}
+  const hp=hitPointPlan(context.index,d);
+  if(!hp.valid)return {valid:false,character:null,issues:hp.issues,status:'draft'};
   if (!d.name.trim()) issues.push({ code: "creator-name" });
   if (
     (!d.raceId && !d.origin.trim()) ||
@@ -149,7 +171,7 @@ export function compileDraft(context, config, d) {
   if (!d.confirmed) issues.push({ code: "creator-confirmation" });
   let r;
   try {
-    r = buildCampaignCharacter(context, buildRequest(d), config);
+    r = buildCampaignCharacter(context,{...buildRequest(d),hpProgression:d.hpMode==='rolled'?hp.progression:null},config);
   } catch {
     r = {
       valid: false,
@@ -162,6 +184,13 @@ export function compileDraft(context, config, d) {
   if (!r.character || issues.length)
     return { ...r, valid: false, character: null, issues, status: "draft" };
   const c = r.character;
+  const gear=startingEquipment(d,c.proficiencies);
+  if(!gear.valid)return {...r,character:null,valid:false,issues:gear.issues,status:'draft'};
+  if(d.startingEquipmentEnabled===true)for(const item of r.origin?.equipment??[]){const row=c.equipment.find(e=>e.id==='background:'+item.id);if(row&&item.name){row.name=structuredClone(item.name);row.quantity=1;}}
+  const money=economy(d);if(!money.valid)return{...r,character:null,valid:false,issues:money.issues,status:'draft'};
+  if(money.wealth||gear.backgroundItems)c.equipment=c.equipment.filter(e=>!e.id.startsWith('background:'));
+  if(!money.wealth&&gear.backgroundItems)for(const item of gear.backgroundItems){const weapon=weaponProfile(item.id,c.scores,c.proficiencies);c.equipment.push({id:'background:'+item.id,name:item.name,quantity:item.quantity,kind:weapon?'weapon':'item',weapon,armor:null,equipped:!!weapon,source:SRD_SOURCE});}
+  c.equipment.push(...compileStartingEquipment(d,c),...compileInventory(d,c));
   if ((d.customOriginRequiresReview || d.background.customized) && !d.reviewed)
     issues.push({ code: "creator-custom-review" });
   if (issues.length)
@@ -181,6 +210,7 @@ export function compileDraft(context, config, d) {
       d.languages,
       d.traits,
       d.equipmentNotes,
+      d.companionNotes,
       d.background.feature,
     ]
       .filter(Boolean)
@@ -227,6 +257,13 @@ export function compileDraft(context, config, d) {
       source: SRD_SOURCE,
     });
   }
+  if(c.features.includes('phb14:feat:medium-armor-master'))for(const e of c.equipment.filter(e=>e.kind==='armor')){const type=ARMORS[e.id.split(':').at(-1)]?.category;if(type==='medium')e.armor.dexCap=3;}
+  if(c.features.includes('srd51:monk:martial-arts')&&!c.equipment.some(e=>e.equipped&&['armor','shield'].includes(e.kind))){
+    const die=r.scaling.monk.martialArtsDie,kensei=new Set(Object.entries(d.selections).filter(([key])=>(key.startsWith('monk:kensei-')&&key!=='monk:kensei-art'||key==='monk:dedicated-weapon')).flatMap(([,v])=>v));
+    for(const e of c.equipment.filter(e=>e.weapon)){const id=e.id.split(':').at(-1),w=WEAPONS[id];if(!w)continue;const monkWeapon=w.category==='simple'&&!w.ranged&&!['greatclub'].includes(id)||id==='shortsword'||kensei.has(w.proficiency);if(!monkWeapon)continue;if(c.scores.dex>c.scores.str)e.weapon.ability='dex';const m=/^1d(\d+)$/.exec(e.weapon.dice);if(m&&Number(m[1])<die)e.weapon.dice='1d'+die;}
+  }
+  for(const item of c.equipment)if((d.unequippedItems??[]).includes(item.id))item.equipped=false;
+  if(['armor','shield'].some(kind=>c.equipment.filter(e=>e.equipped&&e.kind===kind).length>1))return{...r,valid:false,character:null,equipmentPreview:c.equipment,issues:[{code:'equipment-conflict'}],status:'draft'};
   validateCharacter(c);
   check(validateBuild(c).valid, "Creator modifiers invalid");
   const stats = derive(c);
@@ -234,6 +271,7 @@ export function compileDraft(context, config, d) {
     ...r,
     character: c,
     stats,
+    spellbook: spellbookFromBuild(context.index, c, r, d),
     valid: true,
     issues: [],
     status: d.reviewed ? "ready" : "review",
@@ -262,7 +300,7 @@ const priorities = {
 };
 export function templateScores(classId) {
   return Object.fromEntries(
-    (priorities[classId] ?? ABILITIES).map((k, i) => [
+    (priorities[classId] ?? (classId==='artificer'?['int','con','dex','wis','str','cha']:ABILITIES)).map((k, i) => [
       k,
       [15, 14, 13, 12, 10, 8][i],
     ]),
@@ -339,8 +377,16 @@ export function suggestChoices(
 ) {
   const d = structuredClone(input);
   for (let pass = 0; pass < 5; pass++) {
-    const r = draftProgression(context, config, d),
-      usedSkills = new Set(r.origin?.background.skills ?? d.background.skills),
+    // Resolve dependent ancestry decisions before proposing ASIs. Native flexible
+    // bonuses can appear only after their distribution has been selected.
+    for(let n=0;n<100;n++){
+      const q=(draftProgression(context,config,d).origin?.choices??[]).find(q=>!d.originSelections?.[q.id]?.length&&q.options.length>=q.count);
+      if(!q)break;
+      d.originSelections??={};d.originSelections[q.id]=q.options.slice(0,q.count);
+    }
+    const r = draftProgression(context, config, d);
+    for(const q of r.startingEquipment?.choices??[])if(!d.startingEquipmentChoices?.[q.id]?.length){d.startingEquipmentChoices??={};d.startingEquipmentChoices[q.id]=[q.options[0].id];}
+    const usedSkills = new Set(r.origin?.background.skills ?? d.background.skills),
       usedExpertise = new Set(),
       features = new Set(),
       spells = new Map(),
@@ -355,7 +401,8 @@ export function suggestChoices(
         d.originSelections[q.id] = current.options.slice(0, current.count);
       }
     }
-    for (const q of r.choices) {
+    for (const planned of r.choices) {
+      const q=['proficiency','expertise'].includes(planned.kind)&&!d.selections[planned.id]?.length?(draftProgression(context,config,d).choices.find(q=>q.id===planned.id)??planned):planned;
       if (
         q.kind === "subclass" ||
         (preserveIdentity &&
@@ -376,22 +423,15 @@ export function suggestChoices(
       if (!current.length) {
         let options = q.options.filter(
           (v) =>
-            (q.kind !== "skill" || !usedSkills.has(v)) &&
+            (!["skill","training"].includes(q.kind) || !usedSkills.has(v)) &&
             (q.kind !== "expertise" || !usedExpertise.has(v)) &&
-            (q.kind !== "feature" || !features.has(v)) &&
+            (q.kind !== "feature" || !features.has(v)&&![...features].some(id=>{const key=context.index.get(v)?.data.uniqueRuleKey;return key&&context.index.get(id)?.data.uniqueRuleKey===key;})) &&
             (q.kind !== "spell" || !spellSet.has(v)) &&
             (!q.distinctGroup || !group.has(v)),
         );
         if (q.kind === "asi") {
-          const scores = { ...d.scores };
-          for (const values of Object.values(d.selections))
-            for (const v of values)
-              if (v.startsWith("asi:")) {
-                const [, a, b] = v.split(":");
-                scores[a]++;
-                scores[b]++;
-              }
-          const priority = priorities[q.classId] ?? ABILITIES;
+          const preview=draftProgression(context,config,d),scores={...(preview.scoresBeforeFeatureIncreases??preview.scores)};
+          const priority = priorities[q.classId] ?? (q.classId==='artificer'?['int','con','dex','wis','str','cha']:ABILITIES);
           options = options
             .filter((v) => {
               if (!v.startsWith("asi:")) return false;
@@ -427,7 +467,7 @@ export function suggestChoices(
         d.selections[q.id] = options.slice(0, q.count);
       }
       const values = d.selections[q.id] ?? [];
-      if (q.kind === "skill") values.forEach((v) => usedSkills.add(v));
+      if (["skill","training"].includes(q.kind)) values.filter(v=>Object.hasOwn(SKILLS,v)).forEach((v) => usedSkills.add(v));
       if (q.kind === "expertise") values.forEach((v) => usedExpertise.add(v));
       if (q.kind === "feature") values.forEach((v) => features.add(v));
       if (q.kind === "spell") {
@@ -485,4 +525,14 @@ export function restoreDecision(d, position) {
     d[key][old.choiceId] = [...old.values];
   }
   d.confirmed = d.reviewed = d.finalized = false;
+}
+/** A class change parks its previous choices for explicit restoration. */
+export function changePrimaryClass(d,nextClassId){
+ const previous=d.classes[0],firstChoice=d.classChosen===false,untouchedStandard=d.scoreMethod==='standard'&&Object.entries(templateScores(previous.id)).every(([key,value])=>d.scores[key]===value);
+ if(firstChoice&&untouchedStandard)d.scores=templateScores(nextClassId);
+ if(previous.id===nextClassId){d.classChosen=true;return;}
+ if(previous.subclassId)retainDecision(d,'subclass',previous.id);
+ for(const key of Object.keys(d.selections))if(key.startsWith(previous.id+':'))retainDecision(d,'class',key);
+ d.classes[0]={id:nextClassId,level:previous.level,subclassId:null};d.classChosen=true;
+ d.confirmed=d.reviewed=d.finalized=false;
 }

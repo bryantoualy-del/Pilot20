@@ -1,3 +1,5 @@
+import {renderGrimoire} from "./grimoire.js";
+import {playerCatalogs} from "../../src/catalog/player-catalogs.js";
 import { localizedName } from "../../src/catalog/localization.js";
 import { stepNames } from "./i18n.js";
 import { openIndexedDB } from "../../src/persistence/adapters.js";
@@ -8,7 +10,8 @@ import { validateSavedPlan } from "../../src/campaign/sources.js";
 import { frNames } from "./translations.js";
 import { messages, labels, classNames } from "./i18n.js";
 import { el, button, field, select, check, badge, download } from "./dom.js";
-import { renderEditor, newDraft } from "./editor.js";
+import { renderCreator as renderEditor } from "./creator.js";
+import { newDraft } from "../../src/creator/model.js";
 import { renderCompanion } from "./companion.js";
 const root = document.querySelector("#app"),
   dialog = document.querySelector("#dialog");
@@ -132,7 +135,7 @@ async function nav(route, id = null) {
   await saveQueue;
   state.route = route;
   state.id = id;
-  if (id && ["creator", "companion"].includes(route)) {
+  if (id && ["creator", "companion", "grimoire"].includes(route)) {
     const d = await drafts.get(id);
     if (d) {
       state.campaignId = d.campaignId;
@@ -304,11 +307,13 @@ async function render() {
       await renderEditor(main, d, api());
     } else await nav("library");
   }
+  if (state.route === "grimoire") await renderGrimoire(main, state.id, api());
   if (state.route === "companion") await renderCompanion(main, state.id, api());
   updateOffline();
 }
 async function start() {
   const d = newDraft(state.campaignId);
+  d.startingEquipmentEnabled=true;d.startingEquipmentChoices={};d.scoreMethod='standard';
   await autosave(d);
   await nav("creator", d.id);
 }
@@ -486,7 +491,8 @@ async function libraryScreen(main, all) {
         el(
           "div",
           { class: "row" },
-          button(t("open"), () => nav("companion", c.id), "primary"),
+          button(state.locale === "fr" ? "Grimoire" : "Spellbook", () => nav("grimoire", c.id), "primary"),
+          button(t("open"), () => nav("companion", c.id)),
           button(t("edit"), () =>
             d ? nav("creator", c.id) : notice(t("noPlan")),
           ),
@@ -714,18 +720,7 @@ let cacheReady = false;
 try {
   storage = await openIndexedDB();
   library = characterLibrary(storage);
-  campaigns = campaignRepository(
-    storage,
-    await Promise.all(
-      ["classes", "spells", "origins"].map(async (n) => {
-        const r = await fetch(
-          new URL("../../src/catalog/data/" + n + ".json", import.meta.url),
-        );
-        if (!r.ok) throw Error("catalog");
-        return r.json();
-      }),
-    ),
-  );
+  campaigns = campaignRepository(storage,playerCatalogs);
   drafts = creatorRepository(storage, library);
   state.locale = (await storage.get("meta", "creator:locale")) ?? "fr";
   state.campaignId =

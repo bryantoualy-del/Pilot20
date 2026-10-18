@@ -1,0 +1,2029 @@
+{
+  "kind": "catalog",
+  "schemaVersion": 3,
+  "ruleset": "dnd5e-2014",
+  "id": "pilot20:origins-extended",
+  "items": [
+    {
+      "id": "phb14:background:charlatan",
+      "type": "background",
+      "name": {
+        "fr": "Charlatan",
+        "en": "Charlatan"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Une fausse identité avec documents, relations et déguisements ; vous pouvez aussi imiter un écrit dont vous avez un exemple.",
+          "en": "Charlatan background; 2014 rules."
+        },
+        "description": "Une fausse identité avec documents, relations et déguisements ; vous pouvez aussi imiter un écrit dont vous avez un exemple.",
+        "language": "fr",
+        "skills": [
+          "deception",
+          "sleightOfHand"
+        ],
+        "proficiencies": [
+          "disguise-kit",
+          "forgery-kit"
+        ],
+        "languages": [],
+        "choices": [],
+        "equipment": [
+          {
+            "id": "charlatan-gear",
+            "name": {
+              "fr": "Vêtements de qualité, accessoires de déguisement et instrument de tricherie au choix",
+              "en": "Vêtements de qualité, accessoires de déguisement et instrument de tricherie au choix"
+            }
+          },
+          {
+            "id": "charlatan-pouch",
+            "name": {
+              "fr": "Bourse : 15 po",
+              "en": "Pouch: 15 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "charlatan-feature",
+          "name": {
+            "fr": "Charlatan — capacité d’historique",
+            "en": "Charlatan background feature"
+          },
+          "description": "Une fausse identité avec documents, relations et déguisements ; vous pouvez aussi imiter un écrit dont vous avez un exemple.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "phb14:background:criminal",
+      "type": "background",
+      "name": {
+        "fr": "Criminel",
+        "en": "Criminal"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Un contact fiable facilite vos échanges avec le milieu criminel, même à distance.",
+          "en": "Criminal background; 2014 rules."
+        },
+        "description": "Un contact fiable facilite vos échanges avec le milieu criminel, même à distance.",
+        "language": "fr",
+        "skills": [
+          "deception",
+          "stealth"
+        ],
+        "proficiencies": [
+          "thieves-tools"
+        ],
+        "languages": [],
+        "choices": [
+          {
+            "key": "gaming-set",
+            "kind": "proficiency",
+            "count": 1,
+            "options": [
+              "dice-set",
+              "dragonchess-set",
+              "playing-card-set",
+              "three-dragon-ante-set"
+            ],
+            "label": {
+              "fr": "Jeu maîtrisé",
+              "en": "Gaming Set"
+            }
+          }
+        ],
+        "equipment": [
+          {
+            "id": "criminal-gear",
+            "name": {
+              "fr": "Pied-de-biche, vêtements ordinaires sombres avec capuche",
+              "en": "Pied-de-biche, vêtements ordinaires sombres avec capuche"
+            }
+          },
+          {
+            "id": "criminal-pouch",
+            "name": {
+              "fr": "Bourse : 15 po",
+              "en": "Pouch: 15 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "criminal-feature",
+          "name": {
+            "fr": "Criminel — capacité d’historique",
+            "en": "Criminal background feature"
+          },
+          "description": "Un contact fiable facilite vos échanges avec le milieu criminel, même à distance.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "phb14:background:entertainer",
+      "type": "background",
+      "name": {
+        "fr": "Artiste",
+        "en": "Entertainer"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Vous trouvez généralement le gîte et le couvert en échange de spectacles ; votre réputation peut ouvrir des portes auprès de votre public.",
+          "en": "Entertainer background; 2014 rules."
+        },
+        "description": "Vous trouvez généralement le gîte et le couvert en échange de spectacles ; votre réputation peut ouvrir des portes auprès de votre public.",
+        "language": "fr",
+        "skills": [
+          "acrobatics",
+          "performance"
+        ],
+        "proficiencies": [
+          "disguise-kit"
+        ],
+        "languages": [],
+        "choices": [
+          {
+            "key": "instrument",
+            "kind": "proficiency",
+            "count": 1,
+            "options": [
+              "bagpipes",
+              "drum",
+              "dulcimer",
+              "flute",
+              "lute",
+              "lyre",
+              "horn",
+              "pan-flute",
+              "shawm",
+              "viol"
+            ],
+            "label": {
+              "fr": "Instrument maîtrisé",
+              "en": "Instrument"
+            }
+          }
+        ],
+        "equipment": [
+          {
+            "id": "entertainer-gear",
+            "name": {
+              "fr": "Instrument de musique, présent d’un admirateur, costume",
+              "en": "Instrument de musique, présent d’un admirateur, costume"
+            }
+          },
+          {
+            "id": "entertainer-pouch",
+            "name": {
+              "fr": "Bourse : 15 po",
+              "en": "Pouch: 15 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "entertainer-feature",
+          "name": {
+            "fr": "Artiste — capacité d’historique",
+            "en": "Entertainer background feature"
+          },
+          "description": "Vous trouvez généralement le gîte et le couvert en échange de spectacles ; votre réputation peut ouvrir des portes auprès de votre public.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "phb14:background:folk-hero",
+      "type": "background",
+      "name": {
+        "fr": "Héros du peuple",
+        "en": "Folk Hero"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Les gens du commun vous aident à vous abriter ou vous cacher, tant que vous ne les mettez pas en danger.",
+          "en": "Folk Hero background; 2014 rules."
+        },
+        "description": "Les gens du commun vous aident à vous abriter ou vous cacher, tant que vous ne les mettez pas en danger.",
+        "language": "fr",
+        "skills": [
+          "animalHandling",
+          "survival"
+        ],
+        "proficiencies": [
+          "land-vehicles"
+        ],
+        "languages": [],
+        "choices": [
+          {
+            "key": "artisan-tool",
+            "kind": "proficiency",
+            "count": 1,
+            "options": [
+              "alchemists-supplies",
+              "brewers-supplies",
+              "calligraphers-supplies",
+              "carpenters-tools",
+              "cartographers-tools",
+              "cobblers-tools",
+              "cooks-utensils",
+              "glassblowers-tools",
+              "jewelers-tools",
+              "leatherworkers-tools",
+              "masons-tools",
+              "painters-supplies",
+              "potters-tools",
+              "smiths-tools",
+              "tinkers-tools",
+              "weavers-tools",
+              "woodcarvers-tools"
+            ],
+            "label": {
+              "fr": "Outils d’artisan",
+              "en": "Artisan Tool"
+            }
+          }
+        ],
+        "equipment": [
+          {
+            "id": "folk-hero-gear",
+            "name": {
+              "fr": "Outils d’artisan, pelle, pot en fer et vêtements ordinaires",
+              "en": "Outils d’artisan, pelle, pot en fer et vêtements ordinaires"
+            }
+          },
+          {
+            "id": "folk-hero-pouch",
+            "name": {
+              "fr": "Bourse : 10 po",
+              "en": "Pouch: 10 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "folk-hero-feature",
+          "name": {
+            "fr": "Héros du peuple — capacité d’historique",
+            "en": "Folk Hero background feature"
+          },
+          "description": "Les gens du commun vous aident à vous abriter ou vous cacher, tant que vous ne les mettez pas en danger.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "phb14:background:guild-artisan",
+      "type": "background",
+      "name": {
+        "fr": "Artisan de guilde",
+        "en": "Guild Artisan"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "La guilde offre contacts, soutien matériel et parfois juridique ; ses cotisations et obligations restent à respecter.",
+          "en": "Guild Artisan background; 2014 rules."
+        },
+        "description": "La guilde offre contacts, soutien matériel et parfois juridique ; ses cotisations et obligations restent à respecter.",
+        "language": "fr",
+        "skills": [
+          "insight",
+          "persuasion"
+        ],
+        "proficiencies": [],
+        "languages": [],
+        "choices": [
+          {
+            "key": "artisan-tool",
+            "kind": "proficiency",
+            "count": 1,
+            "options": [
+              "alchemists-supplies",
+              "brewers-supplies",
+              "calligraphers-supplies",
+              "carpenters-tools",
+              "cartographers-tools",
+              "cobblers-tools",
+              "cooks-utensils",
+              "glassblowers-tools",
+              "jewelers-tools",
+              "leatherworkers-tools",
+              "masons-tools",
+              "painters-supplies",
+              "potters-tools",
+              "smiths-tools",
+              "tinkers-tools",
+              "weavers-tools",
+              "woodcarvers-tools"
+            ],
+            "label": {
+              "fr": "Outils d’artisan",
+              "en": "Artisan Tool"
+            }
+          },
+          {
+            "key": "language",
+            "kind": "language",
+            "count": 1,
+            "options": [
+              "common",
+              "dwarvish",
+              "elvish",
+              "giant",
+              "gnomish",
+              "goblin",
+              "halfling",
+              "orc",
+              "abyssal",
+              "celestial",
+              "draconic",
+              "deep-speech",
+              "infernal",
+              "primordial",
+              "sylvan",
+              "undercommon"
+            ],
+            "label": {
+              "fr": "Langue supplémentaire",
+              "en": "Language"
+            }
+          }
+        ],
+        "equipment": [
+          {
+            "id": "guild-artisan-gear",
+            "name": {
+              "fr": "Outils d’artisan, lettre d’introduction de guilde, vêtements de voyage",
+              "en": "Outils d’artisan, lettre d’introduction de guilde, vêtements de voyage"
+            }
+          },
+          {
+            "id": "guild-artisan-pouch",
+            "name": {
+              "fr": "Bourse : 15 po",
+              "en": "Pouch: 15 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "guild-artisan-feature",
+          "name": {
+            "fr": "Artisan de guilde — capacité d’historique",
+            "en": "Guild Artisan background feature"
+          },
+          "description": "La guilde offre contacts, soutien matériel et parfois juridique ; ses cotisations et obligations restent à respecter.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "phb14:background:hermit",
+      "type": "background",
+      "name": {
+        "fr": "Ermite",
+        "en": "Hermit"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Votre isolement vous a révélé une découverte importante, à définir avec le MJ en lien avec la campagne.",
+          "en": "Hermit background; 2014 rules."
+        },
+        "description": "Votre isolement vous a révélé une découverte importante, à définir avec le MJ en lien avec la campagne.",
+        "language": "fr",
+        "skills": [
+          "medicine",
+          "religion"
+        ],
+        "proficiencies": [
+          "herbalism-kit"
+        ],
+        "languages": [],
+        "choices": [
+          {
+            "key": "language",
+            "kind": "language",
+            "count": 1,
+            "options": [
+              "common",
+              "dwarvish",
+              "elvish",
+              "giant",
+              "gnomish",
+              "goblin",
+              "halfling",
+              "orc",
+              "abyssal",
+              "celestial",
+              "draconic",
+              "deep-speech",
+              "infernal",
+              "primordial",
+              "sylvan",
+              "undercommon"
+            ],
+            "label": {
+              "fr": "Langue supplémentaire",
+              "en": "Language"
+            }
+          }
+        ],
+        "equipment": [
+          {
+            "id": "hermit-gear",
+            "name": {
+              "fr": "Étui de notes ou prières, couverture d’hiver, vêtements ordinaires et matériel d’herboriste",
+              "en": "Étui de notes ou prières, couverture d’hiver, vêtements ordinaires et matériel d’herboriste"
+            }
+          },
+          {
+            "id": "hermit-pouch",
+            "name": {
+              "fr": "Bourse : 5 po",
+              "en": "Pouch: 5 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "hermit-feature",
+          "name": {
+            "fr": "Ermite — capacité d’historique",
+            "en": "Hermit background feature"
+          },
+          "description": "Votre isolement vous a révélé une découverte importante, à définir avec le MJ en lien avec la campagne.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "phb14:background:noble",
+      "type": "background",
+      "name": {
+        "fr": "Noble",
+        "en": "Noble"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Votre rang facilite l’accueil et l’accès à la haute société ; une audience avec un noble local peut être obtenue.",
+          "en": "Noble background; 2014 rules."
+        },
+        "description": "Votre rang facilite l’accueil et l’accès à la haute société ; une audience avec un noble local peut être obtenue.",
+        "language": "fr",
+        "skills": [
+          "history",
+          "persuasion"
+        ],
+        "proficiencies": [],
+        "languages": [],
+        "choices": [
+          {
+            "key": "gaming-set",
+            "kind": "proficiency",
+            "count": 1,
+            "options": [
+              "dice-set",
+              "dragonchess-set",
+              "playing-card-set",
+              "three-dragon-ante-set"
+            ],
+            "label": {
+              "fr": "Jeu maîtrisé",
+              "en": "Gaming Set"
+            }
+          },
+          {
+            "key": "language",
+            "kind": "language",
+            "count": 1,
+            "options": [
+              "common",
+              "dwarvish",
+              "elvish",
+              "giant",
+              "gnomish",
+              "goblin",
+              "halfling",
+              "orc",
+              "abyssal",
+              "celestial",
+              "draconic",
+              "deep-speech",
+              "infernal",
+              "primordial",
+              "sylvan",
+              "undercommon"
+            ],
+            "label": {
+              "fr": "Langue supplémentaire",
+              "en": "Language"
+            }
+          }
+        ],
+        "equipment": [
+          {
+            "id": "noble-gear",
+            "name": {
+              "fr": "Vêtements de qualité, chevalière et document de lignée",
+              "en": "Vêtements de qualité, chevalière et document de lignée"
+            }
+          },
+          {
+            "id": "noble-pouch",
+            "name": {
+              "fr": "Bourse : 25 po",
+              "en": "Pouch: 25 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "noble-feature",
+          "name": {
+            "fr": "Noble — capacité d’historique",
+            "en": "Noble background feature"
+          },
+          "description": "Votre rang facilite l’accueil et l’accès à la haute société ; une audience avec un noble local peut être obtenue.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "phb14:background:outlander",
+      "type": "background",
+      "name": {
+        "fr": "Sauvageon",
+        "en": "Outlander"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Vous mémorisez bien les cartes et paysages ; dans un environnement qui le permet, vous trouvez nourriture et eau pour vous et cinq autres personnes.",
+          "en": "Outlander background; 2014 rules."
+        },
+        "description": "Vous mémorisez bien les cartes et paysages ; dans un environnement qui le permet, vous trouvez nourriture et eau pour vous et cinq autres personnes.",
+        "language": "fr",
+        "skills": [
+          "athletics",
+          "survival"
+        ],
+        "proficiencies": [],
+        "languages": [],
+        "choices": [
+          {
+            "key": "instrument",
+            "kind": "proficiency",
+            "count": 1,
+            "options": [
+              "bagpipes",
+              "drum",
+              "dulcimer",
+              "flute",
+              "lute",
+              "lyre",
+              "horn",
+              "pan-flute",
+              "shawm",
+              "viol"
+            ],
+            "label": {
+              "fr": "Instrument maîtrisé",
+              "en": "Instrument"
+            }
+          },
+          {
+            "key": "language",
+            "kind": "language",
+            "count": 1,
+            "options": [
+              "common",
+              "dwarvish",
+              "elvish",
+              "giant",
+              "gnomish",
+              "goblin",
+              "halfling",
+              "orc",
+              "abyssal",
+              "celestial",
+              "draconic",
+              "deep-speech",
+              "infernal",
+              "primordial",
+              "sylvan",
+              "undercommon"
+            ],
+            "label": {
+              "fr": "Langue supplémentaire",
+              "en": "Language"
+            }
+          }
+        ],
+        "equipment": [
+          {
+            "id": "outlander-gear",
+            "name": {
+              "fr": "Bâton, piège de chasse, trophée animal et vêtements de voyage",
+              "en": "Bâton, piège de chasse, trophée animal et vêtements de voyage"
+            }
+          },
+          {
+            "id": "outlander-pouch",
+            "name": {
+              "fr": "Bourse : 10 po",
+              "en": "Pouch: 10 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "outlander-feature",
+          "name": {
+            "fr": "Sauvageon — capacité d’historique",
+            "en": "Outlander background feature"
+          },
+          "description": "Vous mémorisez bien les cartes et paysages ; dans un environnement qui le permet, vous trouvez nourriture et eau pour vous et cinq autres personnes.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "phb14:background:sage",
+      "type": "background",
+      "name": {
+        "fr": "Sage",
+        "en": "Sage"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Lorsque vous ignorez une information, vous savez souvent où ou auprès de qui la chercher ; la réponse n’est pas forcément facile d’accès.",
+          "en": "Sage background; 2014 rules."
+        },
+        "description": "Lorsque vous ignorez une information, vous savez souvent où ou auprès de qui la chercher ; la réponse n’est pas forcément facile d’accès.",
+        "language": "fr",
+        "skills": [
+          "arcana",
+          "history"
+        ],
+        "proficiencies": [],
+        "languages": [],
+        "choices": [
+          {
+            "key": "languages",
+            "kind": "language",
+            "count": 2,
+            "options": [
+              "common",
+              "dwarvish",
+              "elvish",
+              "giant",
+              "gnomish",
+              "goblin",
+              "halfling",
+              "orc",
+              "abyssal",
+              "celestial",
+              "draconic",
+              "deep-speech",
+              "infernal",
+              "primordial",
+              "sylvan",
+              "undercommon"
+            ],
+            "label": {
+              "fr": "Langues supplémentaires",
+              "en": "Languages"
+            }
+          }
+        ],
+        "equipment": [
+          {
+            "id": "sage-gear",
+            "name": {
+              "fr": "Encre, plume, petit couteau, lettre d’une question irrésolue et vêtements ordinaires",
+              "en": "Encre, plume, petit couteau, lettre d’une question irrésolue et vêtements ordinaires"
+            }
+          },
+          {
+            "id": "sage-pouch",
+            "name": {
+              "fr": "Bourse : 10 po",
+              "en": "Pouch: 10 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "sage-feature",
+          "name": {
+            "fr": "Sage — capacité d’historique",
+            "en": "Sage background feature"
+          },
+          "description": "Lorsque vous ignorez une information, vous savez souvent où ou auprès de qui la chercher ; la réponse n’est pas forcément facile d’accès.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "phb14:background:sailor",
+      "type": "background",
+      "name": {
+        "fr": "Marin",
+        "en": "Sailor"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Vos relations permettent généralement un passage en mer pour le groupe, avec service à bord et itinéraire à négocier.",
+          "en": "Sailor background; 2014 rules."
+        },
+        "description": "Vos relations permettent généralement un passage en mer pour le groupe, avec service à bord et itinéraire à négocier.",
+        "language": "fr",
+        "skills": [
+          "athletics",
+          "perception"
+        ],
+        "proficiencies": [
+          "navigators-tools",
+          "water-vehicles"
+        ],
+        "languages": [],
+        "choices": [],
+        "equipment": [
+          {
+            "id": "sailor-gear",
+            "name": {
+              "fr": "Gourdin, corde de soie15 m, porte-bonheur et vêtements ordinaires",
+              "en": "Gourdin, corde de soie15 m, porte-bonheur et vêtements ordinaires"
+            }
+          },
+          {
+            "id": "sailor-pouch",
+            "name": {
+              "fr": "Bourse : 10 po",
+              "en": "Pouch: 10 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "sailor-feature",
+          "name": {
+            "fr": "Marin — capacité d’historique",
+            "en": "Sailor background feature"
+          },
+          "description": "Vos relations permettent généralement un passage en mer pour le groupe, avec service à bord et itinéraire à négocier.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "phb14:background:soldier",
+      "type": "background",
+      "name": {
+        "fr": "Soldat",
+        "en": "Soldier"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Votre grade militaire donne une autorité et un accès appropriés auprès des membres de votre ancienne organisation.",
+          "en": "Soldier background; 2014 rules."
+        },
+        "description": "Votre grade militaire donne une autorité et un accès appropriés auprès des membres de votre ancienne organisation.",
+        "language": "fr",
+        "skills": [
+          "athletics",
+          "intimidation"
+        ],
+        "proficiencies": [
+          "land-vehicles"
+        ],
+        "languages": [],
+        "choices": [
+          {
+            "key": "gaming-set",
+            "kind": "proficiency",
+            "count": 1,
+            "options": [
+              "dice-set",
+              "dragonchess-set",
+              "playing-card-set",
+              "three-dragon-ante-set"
+            ],
+            "label": {
+              "fr": "Jeu maîtrisé",
+              "en": "Gaming Set"
+            }
+          }
+        ],
+        "equipment": [
+          {
+            "id": "soldier-gear",
+            "name": {
+              "fr": "Insigne de grade, trophée d’un ennemi, jeu et vêtements ordinaires",
+              "en": "Insigne de grade, trophée d’un ennemi, jeu et vêtements ordinaires"
+            }
+          },
+          {
+            "id": "soldier-pouch",
+            "name": {
+              "fr": "Bourse : 10 po",
+              "en": "Pouch: 10 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "soldier-feature",
+          "name": {
+            "fr": "Soldat — capacité d’historique",
+            "en": "Soldier background feature"
+          },
+          "description": "Votre grade militaire donne une autorité et un accès appropriés auprès des membres de votre ancienne organisation.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "phb14:background:urchin",
+      "type": "background",
+      "name": {
+        "fr": "Enfant des rues",
+        "en": "Urchin"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Votre connaissance des villes permet au groupe de parcourir les trajets urbains entre deux lieux deux fois plus vite, hors combat.",
+          "en": "Urchin background; 2014 rules."
+        },
+        "description": "Votre connaissance des villes permet au groupe de parcourir les trajets urbains entre deux lieux deux fois plus vite, hors combat.",
+        "language": "fr",
+        "skills": [
+          "sleightOfHand",
+          "stealth"
+        ],
+        "proficiencies": [
+          "disguise-kit",
+          "thieves-tools"
+        ],
+        "languages": [],
+        "choices": [],
+        "equipment": [
+          {
+            "id": "urchin-gear",
+            "name": {
+              "fr": "Petit couteau, carte de la ville, souris, souvenir familial et vêtements ordinaires",
+              "en": "Petit couteau, carte de la ville, souris, souvenir familial et vêtements ordinaires"
+            }
+          },
+          {
+            "id": "urchin-pouch",
+            "name": {
+              "fr": "Bourse : 10 po",
+              "en": "Pouch: 10 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "urchin-feature",
+          "name": {
+            "fr": "Enfant des rues — capacité d’historique",
+            "en": "Urchin background feature"
+          },
+          "description": "Votre connaissance des villes permet au groupe de parcourir les trajets urbains entre deux lieux deux fois plus vite, hors combat.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "phb14:background:spy",
+      "type": "background",
+      "name": {
+        "fr": "Criminel (Espion)",
+        "en": "Spy"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Un réseau d’espionnage plutôt qu’un contact criminel sert de relais à vos messages et missions.",
+          "en": "Criminal background; 2014 rules."
+        },
+        "description": "Un réseau d’espionnage plutôt qu’un contact criminel sert de relais à vos messages et missions.",
+        "language": "fr",
+        "skills": [
+          "deception",
+          "stealth"
+        ],
+        "proficiencies": [
+          "thieves-tools"
+        ],
+        "languages": [],
+        "choices": [
+          {
+            "key": "gaming-set",
+            "kind": "proficiency",
+            "count": 1,
+            "options": [
+              "dice-set",
+              "dragonchess-set",
+              "playing-card-set",
+              "three-dragon-ante-set"
+            ],
+            "label": {
+              "fr": "Jeu maîtrisé",
+              "en": "Gaming Set"
+            }
+          }
+        ],
+        "equipment": [
+          {
+            "id": "criminal-gear",
+            "name": {
+              "fr": "Pied-de-biche, vêtements ordinaires sombres avec capuche",
+              "en": "Pied-de-biche, vêtements ordinaires sombres avec capuche"
+            }
+          },
+          {
+            "id": "criminal-pouch",
+            "name": {
+              "fr": "Bourse : 15 po",
+              "en": "Pouch: 15 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "spy-feature",
+          "name": {
+            "fr": "Criminel (Espion) — capacité",
+            "en": "Spy feature"
+          },
+          "description": "Un réseau d’espionnage plutôt qu’un contact criminel sert de relais à vos messages et missions.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "phb14:background:gladiator",
+      "type": "background",
+      "name": {
+        "fr": "Artiste (Gladiateur)",
+        "en": "Gladiator"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Vos prouesses martiales font office de spectacles. Un lieu accueillant ce type de combats peut vous héberger ; une arme inhabituelle et peu coûteuse remplace l’instrument dans votre équipement.",
+          "en": "Entertainer background; 2014 rules."
+        },
+        "description": "Vos prouesses martiales font office de spectacles. Un lieu accueillant ce type de combats peut vous héberger ; une arme inhabituelle et peu coûteuse remplace l’instrument dans votre équipement.",
+        "language": "fr",
+        "skills": [
+          "acrobatics",
+          "performance"
+        ],
+        "proficiencies": [
+          "disguise-kit"
+        ],
+        "languages": [],
+        "choices": [
+          {
+            "key": "instrument",
+            "kind": "proficiency",
+            "count": 1,
+            "options": [
+              "bagpipes",
+              "drum",
+              "dulcimer",
+              "flute",
+              "lute",
+              "lyre",
+              "horn",
+              "pan-flute",
+              "shawm",
+              "viol"
+            ],
+            "label": {
+              "fr": "Instrument maîtrisé",
+              "en": "Instrument"
+            }
+          }
+        ],
+        "equipment": [
+          {
+            "id": "entertainer-gear",
+            "name": {
+              "fr": "Instrument de musique, présent d’un admirateur, costume",
+              "en": "Instrument de musique, présent d’un admirateur, costume"
+            }
+          },
+          {
+            "id": "entertainer-pouch",
+            "name": {
+              "fr": "Bourse : 15 po",
+              "en": "Pouch: 15 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "gladiator-feature",
+          "name": {
+            "fr": "Artiste (Gladiateur) — capacité",
+            "en": "Gladiator feature"
+          },
+          "description": "Vos prouesses martiales font office de spectacles. Un lieu accueillant ce type de combats peut vous héberger ; une arme inhabituelle et peu coûteuse remplace l’instrument dans votre équipement.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "phb14:background:guild-merchant",
+      "type": "background",
+      "name": {
+        "fr": "Négociant de guilde",
+        "en": "Guild Merchant"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Variante marchande d’Artisan de guilde, avec soutien et obligations de guilde. Une langue supplémentaire peut remplacer l’outil ; une mule et une charrette peuvent remplacer les outils de l’équipement.",
+          "en": "Guild Artisan background; 2014 rules."
+        },
+        "description": "Variante marchande d’Artisan de guilde, avec soutien et obligations de guilde. Une langue supplémentaire peut remplacer l’outil ; une mule et une charrette peuvent remplacer les outils de l’équipement.",
+        "language": "fr",
+        "skills": [
+          "insight",
+          "persuasion"
+        ],
+        "proficiencies": [],
+        "languages": [],
+        "choices": [
+          {
+            "key": "trade-training",
+            "kind": "ancestry-option",
+            "count": 1,
+            "options": [
+              "artisan",
+              "navigator",
+              "language"
+            ],
+            "label": {
+              "fr": "Formation de négociant",
+              "en": "Trade Training"
+            }
+          },
+          {
+            "key": "artisan-tool",
+            "kind": "proficiency",
+            "count": 1,
+            "options": [
+              "alchemists-supplies",
+              "brewers-supplies",
+              "calligraphers-supplies",
+              "carpenters-tools",
+              "cartographers-tools",
+              "cobblers-tools",
+              "cooks-utensils",
+              "glassblowers-tools",
+              "jewelers-tools",
+              "leatherworkers-tools",
+              "masons-tools",
+              "painters-supplies",
+              "potters-tools",
+              "smiths-tools",
+              "tinkers-tools",
+              "weavers-tools",
+              "woodcarvers-tools"
+            ],
+            "label": {
+              "fr": "Outils d’artisan",
+              "en": "Artisan Tool"
+            },
+            "requiresChoice": {
+              "key": "trade-training",
+              "optionId": "artisan"
+            }
+          },
+          {
+            "key": "navigator-tool",
+            "kind": "proficiency",
+            "count": 1,
+            "options": [
+              "navigators-tools"
+            ],
+            "label": {
+              "fr": "Outils de navigateur",
+              "en": "Navigator Tool"
+            },
+            "requiresChoice": {
+              "key": "trade-training",
+              "optionId": "navigator"
+            }
+          },
+          {
+            "key": "trade-language",
+            "kind": "language",
+            "count": 1,
+            "options": [
+              "common",
+              "dwarvish",
+              "elvish",
+              "giant",
+              "gnomish",
+              "goblin",
+              "halfling",
+              "orc",
+              "abyssal",
+              "celestial",
+              "draconic",
+              "deep-speech",
+              "infernal",
+              "primordial",
+              "sylvan",
+              "undercommon"
+            ],
+            "label": {
+              "fr": "Langue du commerce",
+              "en": "Trade Language"
+            },
+            "requiresChoice": {
+              "key": "trade-training",
+              "optionId": "language"
+            }
+          },
+          {
+            "key": "language",
+            "kind": "language",
+            "count": 1,
+            "options": [
+              "common",
+              "dwarvish",
+              "elvish",
+              "giant",
+              "gnomish",
+              "goblin",
+              "halfling",
+              "orc",
+              "abyssal",
+              "celestial",
+              "draconic",
+              "deep-speech",
+              "infernal",
+              "primordial",
+              "sylvan",
+              "undercommon"
+            ],
+            "label": {
+              "fr": "Langue supplémentaire",
+              "en": "Language"
+            }
+          }
+        ],
+        "equipment": [
+          {
+            "id": "guild-artisan-gear",
+            "name": {
+              "fr": "Outils d’artisan, lettre d’introduction de guilde, vêtements de voyage",
+              "en": "Outils d’artisan, lettre d’introduction de guilde, vêtements de voyage"
+            }
+          },
+          {
+            "id": "guild-artisan-pouch",
+            "name": {
+              "fr": "Bourse : 15 po",
+              "en": "Pouch: 15 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "guild-merchant-feature",
+          "name": {
+            "fr": "Négociant de guilde — capacité",
+            "en": "Guild Merchant feature"
+          },
+          "description": "Variante marchande d’Artisan de guilde, avec soutien et obligations de guilde. Une langue supplémentaire peut remplacer l’outil ; une mule et une charrette peuvent remplacer les outils de l’équipement.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "phb14:background:knight",
+      "type": "background",
+      "name": {
+        "fr": "Chevalier",
+        "en": "Knight"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Trois serviteurs loyaux et non combattants vous accompagnent, dont un écuyer. Ils s’occupent de tâches ordinaires et ne prennent pas de risques évidents pour vous.",
+          "en": "Noble background; 2014 rules."
+        },
+        "description": "Trois serviteurs loyaux et non combattants vous accompagnent, dont un écuyer. Ils s’occupent de tâches ordinaires et ne prennent pas de risques évidents pour vous.",
+        "language": "fr",
+        "skills": [
+          "history",
+          "persuasion"
+        ],
+        "proficiencies": [],
+        "languages": [],
+        "choices": [
+          {
+            "key": "gaming-set",
+            "kind": "proficiency",
+            "count": 1,
+            "options": [
+              "dice-set",
+              "dragonchess-set",
+              "playing-card-set",
+              "three-dragon-ante-set"
+            ],
+            "label": {
+              "fr": "Jeu maîtrisé",
+              "en": "Gaming Set"
+            }
+          },
+          {
+            "key": "language",
+            "kind": "language",
+            "count": 1,
+            "options": [
+              "common",
+              "dwarvish",
+              "elvish",
+              "giant",
+              "gnomish",
+              "goblin",
+              "halfling",
+              "orc",
+              "abyssal",
+              "celestial",
+              "draconic",
+              "deep-speech",
+              "infernal",
+              "primordial",
+              "sylvan",
+              "undercommon"
+            ],
+            "label": {
+              "fr": "Langue supplémentaire",
+              "en": "Language"
+            }
+          }
+        ],
+        "equipment": [
+          {
+            "id": "noble-gear",
+            "name": {
+              "fr": "Vêtements de qualité, chevalière et document de lignée",
+              "en": "Vêtements de qualité, chevalière et document de lignée"
+            }
+          },
+          {
+            "id": "noble-pouch",
+            "name": {
+              "fr": "Bourse : 25 po",
+              "en": "Pouch: 25 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "knight-feature",
+          "name": {
+            "fr": "Chevalier — capacité",
+            "en": "Knight feature"
+          },
+          "description": "Trois serviteurs loyaux et non combattants vous accompagnent, dont un écuyer. Ils s’occupent de tâches ordinaires et ne prennent pas de risques évidents pour vous.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "phb14:background:pirate",
+      "type": "background",
+      "name": {
+        "fr": "Pirate",
+        "en": "Pirate"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "summary": {
+          "fr": "Votre réputation intimide les gens : de petites infractions peuvent rester sans dénonciation par peur. Ce n’est pas une immunité juridique ni un contrôle des réactions du MJ.",
+          "en": "Sailor background; 2014 rules."
+        },
+        "description": "Votre réputation intimide les gens : de petites infractions peuvent rester sans dénonciation par peur. Ce n’est pas une immunité juridique ni un contrôle des réactions du MJ.",
+        "language": "fr",
+        "skills": [
+          "athletics",
+          "perception"
+        ],
+        "proficiencies": [
+          "navigators-tools",
+          "water-vehicles"
+        ],
+        "languages": [],
+        "choices": [],
+        "equipment": [
+          {
+            "id": "sailor-gear",
+            "name": {
+              "fr": "Gourdin, corde de soie15 m, porte-bonheur et vêtements ordinaires",
+              "en": "Gourdin, corde de soie15 m, porte-bonheur et vêtements ordinaires"
+            }
+          },
+          {
+            "id": "sailor-pouch",
+            "name": {
+              "fr": "Bourse : 10 po",
+              "en": "Pouch: 10 gp"
+            }
+          }
+        ],
+        "feature": {
+          "id": "pirate-feature",
+          "name": {
+            "fr": "Pirate — capacité",
+            "en": "Pirate feature"
+          },
+          "description": "Votre réputation intimide les gens : de petites infractions peuvent rester sans dénonciation par peur. Ce n’est pas une immunité juridique ni un contrôle des réactions du MJ.",
+          "automation": "manual"
+        }
+      }
+    },
+    {
+      "id": "ravenloft:race:dhampir",
+      "type": "race",
+      "name": {
+        "fr": "Dhampire",
+        "en": "Dhampir"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Van Richten’s Guide to Ravenloft2021",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/vrgtr"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "ravenloft",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "bonuses": {},
+        "flexibleAbilityBoosts": true,
+        "languages": [
+          "common"
+        ],
+        "speed": 35,
+        "size": "medium",
+        "sizes": [
+          "small",
+          "medium"
+        ],
+        "creatureType": "humanoid",
+        "movementModes": {
+          "climb": 35,
+          "climbMatchesWalk": true
+        },
+        "skills": [],
+        "proficiencies": [],
+        "choices": [
+          {
+            "key": "language",
+            "kind": "language",
+            "count": 1,
+            "options": [
+              "common",
+              "dwarvish",
+              "elvish",
+              "giant",
+              "gnomish",
+              "goblin",
+              "halfling",
+              "orc",
+              "abyssal",
+              "celestial",
+              "draconic",
+              "deep-speech",
+              "infernal",
+              "primordial",
+              "sylvan",
+              "undercommon"
+            ],
+            "label": {
+              "fr": "Langue supplémentaire",
+              "en": "Language"
+            }
+          },
+          {
+            "key": "ancestral-skills",
+            "kind": "skill",
+            "count": 2,
+            "options": [
+              "acrobatics",
+              "animalHandling",
+              "arcana",
+              "athletics",
+              "deception",
+              "history",
+              "insight",
+              "intimidation",
+              "investigation",
+              "medicine",
+              "nature",
+              "perception",
+              "performance",
+              "persuasion",
+              "religion",
+              "sleightOfHand",
+              "stealth",
+              "survival"
+            ],
+            "label": {
+              "fr": "Héritage ancestral — compétences",
+              "en": "Ancestral Skills"
+            }
+          }
+        ],
+        "subraces": [],
+        "traits": [
+          {
+            "id": "darkvision",
+            "name": {
+              "fr": "Vision dans le noir18 m",
+              "en": "Darkvision60 ft."
+            },
+            "description": "Pénombre comme lumière vive ; obscurité comme pénombre, en nuances de gris.",
+            "automation": "manual"
+          },
+          {
+            "id": "deathless-nature",
+            "name": {
+              "fr": "Nature immortelle",
+              "en": "Deathless Nature"
+            },
+            "description": "Vous n’avez pas besoin de respirer.",
+            "automation": "manual"
+          },
+          {
+            "id": "spider-climb",
+            "name": {
+              "fr": "Pattes d’araignée",
+              "en": "Spider Climb"
+            },
+            "description": "Votre vitesse d’escalade égale votre vitesse au sol.",
+            "automation": "manual"
+          },
+          {
+            "id": "spider-climb-hands-free",
+            "name": {
+              "fr": "Escalade mains libres",
+              "en": "Hands-free spider climb"
+            },
+            "description": "Vous pouvez marcher sur les murs et plafonds en gardant les mains libres.",
+            "automation": "manual",
+            "minimumCharacterLevel": 3
+          },
+          {
+            "id": "vampiric-bite",
+            "name": {
+              "fr": "Morsure vampirique",
+              "en": "Vampiric Bite"
+            },
+            "description": "Arme naturelle courante maîtrisée : Constitution remplace Force pour l’attaque et les dégâts ;1d4 perforant+Constitution. Avantage aux attaques de morsure lorsque vous avez perdu au moins la moitié de vos PV.",
+            "automation": "manual",
+            "activation": {
+              "cost": "action",
+              "target": "selected",
+              "maxTargets": 1
+            }
+          },
+          {
+            "id": "bite-empowerment",
+            "name": {
+              "fr": "Renforcement par la morsure",
+              "en": "Bite empowerment"
+            },
+            "description": "Après une morsure touchant une cible ni artificielle ni morte-vivante : récupérez les dégâts perforants infligés en PV, ou ajoutez-les au prochain test de caractéristique ou jet d’attaque. Bonus de maîtrise utilisations par repos long.",
+            "automation": "manual",
+            "resource": {
+              "proficiency": true,
+              "recovery": "long"
+            }
+          }
+        ],
+        "description": "Lignée Van Richten2021 pour règles2014. Les deux compétences correspondent à une création initiale ; une transformation conservant l’héritage d’une race précédente exige la vérification de cet héritage.",
+        "language": "fr"
+      }
+    },
+    {
+      "id": "volo:race:kobold",
+      "type": "race",
+      "name": {
+        "fr": "Kobold (Volo2016)",
+        "en": "Kobold (Volo2016)"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Volo’s Guide to Monsters2016, errata2020",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/vgTM"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "volo",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "bonuses": {
+          "dex": 2
+        },
+        "languages": [
+          "common",
+          "draconic"
+        ],
+        "speed": 30,
+        "size": "small",
+        "creatureType": "humanoid",
+        "skills": [],
+        "proficiencies": [],
+        "choices": [],
+        "subraces": [],
+        "traits": [
+          {
+            "id": "darkvision",
+            "name": {
+              "fr": "Vision dans le noir18 m",
+              "en": "Darkvision60 ft."
+            },
+            "description": "Pénombre comme lumière vive, obscurité comme pénombre.",
+            "automation": "manual"
+          },
+          {
+            "id": "sunlight-sensitivity",
+            "name": {
+              "fr": "Sensibilité au soleil",
+              "en": "Sunlight Sensitivity"
+            },
+            "description": "Désavantage aux attaques et tests visuels de Perception si vous ou la cible observée êtes directement au soleil.",
+            "automation": "manual"
+          },
+          {
+            "id": "pack-tactics",
+            "name": {
+              "fr": "Tactique de groupe",
+              "en": "Pack Tactics"
+            },
+            "description": "Avantage à une attaque si un allié non neutralisé se trouve à1,50 m de la cible.",
+            "automation": "manual"
+          },
+          {
+            "id": "grovel-cower-beg",
+            "name": {
+              "fr": "Implorer, ramper et supplier",
+              "en": "Grovel, Cower, and Beg"
+            },
+            "description": "Action : vos alliés ont l’avantage contre les ennemis qui vous voient à3 m de vous, jusqu’à la fin de votre prochain tour. Une utilisation par repos court ou long.",
+            "automation": "manual",
+            "resource": {
+              "max": 1,
+              "recovery": "short"
+            },
+            "activation": {
+              "cost": "action",
+              "target": "self",
+              "maxTargets": 1
+            }
+          }
+        ],
+        "description": "Version2016 avec errata2020 : aucun malus de Force. Ne mélange pas les traits avec la version2022.",
+        "language": "fr"
+      }
+    },
+    {
+      "id": "motm:race:kobold",
+      "type": "race",
+      "name": {
+        "fr": "Kobold (MotM2022)",
+        "en": "Kobold (MotM2022)"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Monsters of the Multiverse2022",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/motm"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "motm",
+        "automation": {
+          "status": "partial",
+          "handler": null,
+          "limits": [
+            "Conditional traits require player/GM adjudication."
+          ]
+        },
+        "bonuses": {},
+        "flexibleAbilityBoosts": true,
+        "languages": [
+          "common"
+        ],
+        "speed": 30,
+        "size": "small",
+        "creatureType": "humanoid",
+        "skills": [],
+        "proficiencies": [],
+        "choices": [
+          {
+            "key": "language",
+            "kind": "language",
+            "count": 1,
+            "options": [
+              "common",
+              "dwarvish",
+              "elvish",
+              "giant",
+              "gnomish",
+              "goblin",
+              "halfling",
+              "orc",
+              "abyssal",
+              "celestial",
+              "draconic",
+              "deep-speech",
+              "infernal",
+              "primordial",
+              "sylvan",
+              "undercommon"
+            ],
+            "label": {
+              "fr": "Langue supplémentaire",
+              "en": "Language"
+            }
+          },
+          {
+            "key": "legacy",
+            "kind": "ancestry-option",
+            "count": 1,
+            "options": [
+              "defiance",
+              "craftiness",
+              "draconic-sorcery"
+            ],
+            "label": {
+              "fr": "Héritage kobold",
+              "en": "Legacy"
+            }
+          },
+          {
+            "key": "craftiness-skill",
+            "kind": "skill",
+            "count": 1,
+            "options": [
+              "arcana",
+              "investigation",
+              "medicine",
+              "sleightOfHand",
+              "survival"
+            ],
+            "label": {
+              "fr": "Compétence d’Astuce",
+              "en": "Craftiness Skill"
+            },
+            "requiresChoice": {
+              "key": "legacy",
+              "optionId": "craftiness"
+            }
+          },
+          {
+            "key": "draconic-ability",
+            "kind": "ancestry-option",
+            "count": 1,
+            "options": [
+              "int",
+              "wis",
+              "cha"
+            ],
+            "label": {
+              "fr": "Caractéristique de Sorcellerie draconique",
+              "en": "Draconic Ability"
+            },
+            "requiresChoice": {
+              "key": "legacy",
+              "optionId": "draconic-sorcery"
+            }
+          },
+          {
+            "key": "draconic-cantrip",
+            "kind": "racial-spell",
+            "count": 1,
+            "options": [],
+            "label": {
+              "fr": "Sort mineur de Sorcellerie draconique",
+              "en": "Draconic Cantrip"
+            },
+            "classId": "sorcerer",
+            "abilityChoiceKey": "draconic-ability",
+            "requiresChoice": {
+              "key": "legacy",
+              "optionId": "draconic-sorcery"
+            }
+          }
+        ],
+        "subraces": [],
+        "traits": [
+          {
+            "id": "darkvision",
+            "name": {
+              "fr": "Vision dans le noir18 m",
+              "en": "Darkvision60 ft."
+            },
+            "description": "Pénombre comme lumière vive, obscurité comme pénombre.",
+            "automation": "manual"
+          },
+          {
+            "id": "draconic-cry",
+            "name": {
+              "fr": "Cri draconique",
+              "en": "Draconic Cry"
+            },
+            "description": "Action bonus : jusqu’au début de votre prochain tour, vous et vos alliés êtes avantagés aux attaques contre les ennemis à3 m qui peuvent vous entendre. Bonus de maîtrise utilisations par repos long.",
+            "automation": "manual",
+            "resource": {
+              "proficiency": true,
+              "recovery": "long"
+            },
+            "activation": {
+              "cost": "bonus",
+              "target": "self",
+              "maxTargets": 1
+            }
+          },
+          {
+            "id": "defiance",
+            "name": {
+              "fr": "Défiance",
+              "en": "Defiance"
+            },
+            "description": "Avantage aux sauvegardes pour éviter ou terminer l’état effrayé.",
+            "automation": "manual",
+            "requiresChoice": {
+              "key": "legacy",
+              "optionId": "defiance"
+            }
+          }
+        ],
+        "description": "Version2022 compatible avec les règles2014. Aucune Tactique de groupe ni Sensibilité au soleil ajoutée depuis Volo.",
+        "language": "fr"
+      }
+    }
+  ]
+}

@@ -1,6 +1,7 @@
+import {replacementPermission,pactRetooling,forcedInvocationReplacement} from './replacement-policy.js';
 /** Level-up audit, separate from combat. Only declarative snapshots, never inferred player choices. */
 import {check,keys,json,id,integer} from '../character/contracts.js';
-import {resolveProgression} from './progression.js';
+import {resolveProgression,effectiveClassData} from './progression.js';
 const difference=(a,b)=>a.filter(v=>!b.includes(v));
 const equal=(a,b)=>a.length===b.length&&a.every(v=>b.includes(v));
 export function validateAdvancementHistory(index,request,history) {
@@ -15,7 +16,8 @@ export function validateAdvancementHistory(index,request,history) {
   if(!counts.has(row.classId))order.push(row.classId);counts.set(row.classId,(counts.get(row.classId)??0)+1);
   if(row.classes.length!==order.length||row.classes.some((c,j)=>c.id!==order[j]||c.level!==counts.get(c.id)))issues.push({code:'history-class-sequence',characterLevel:i+1});
   const transcriptions=(request.spellbookTranscriptions??[]).filter(t=>t.characterLevel<=i+1);
-  const report=resolveProgression(index,{...request,classes:row.classes,selections:row.selections,spellbookTranscriptions:transcriptions});
+  const grantReplacements=(request.spellGrantReplacements??[]).filter(r=>r.classLevel<=(row.classes.find(c=>c.subclassId===r.originId)?.level??0));
+  const report=resolveProgression(index,{...request,classes:row.classes,selections:row.selections,spellbookTranscriptions:transcriptions,pactRitualCopies:(request.pactRitualCopies??[]).filter(r=>r.characterLevel<=i+1),spellGrantReplacements:grantReplacements,featRitualCopies:(request.featRitualCopies??[]).filter(r=>r.characterLevel<=i+1)});
   for(const error of report.issues)issues.push({...error,characterLevel:i+1});
   const changedSubclasses=previous?row.classes.filter(c=>previous.classes.find(p=>p.id===c.id)?.subclassId&&previous.classes.find(p=>p.id===c.id).subclassId!==c.subclassId):[];
   const retraining=changedSubclasses.length>0&&(request.campaignOptions??[]).includes('subclass-retraining')&&!!row.adjudication;
@@ -25,11 +27,11 @@ export function validateAdvancementHistory(index,request,history) {
    for(const old of previous.report.choices) {
     const next=report.choices.find(c=>c.id===old.id),before=previous.report.selections[old.id]??[],after=report.selections[old.id]??[];
     const removed=difference(before,after),added=difference(after,before);
-    if(!next){if(!retraining)issues.push({code:'historical-choice-disappeared',choiceId:old.id,characterLevel:i+1});continue;}
+    if(!next){if(pactRetooling(index,row.classes,row.classId,previous.report.selections,report.selections)&&old.classId==='warlock'&&['warlock:tome-cantrips','warlock:ancient-rituals'].includes(old.id))continue;if(!retraining)issues.push({code:'historical-choice-disappeared',choiceId:old.id,characterLevel:i+1});continue;}
     if(!removed.length&&!added.length)continue;
-    const advancing=old.classId===row.classId,policy=index.class(old.classId).data.acquisitionPolicy??{};
+    const advancing=old.classId===row.classId,policy=effectiveClassData(index,row.classes.find(c=>c.id===old.classId)).acquisitionPolicy??{};
     const addIssue=code=>issues.push({code,choiceId:old.id,characterLevel:i+1});
-    if(old.kind==='prepared')continue; // A preparation choice is not permanent learning.
+    if(old.kind==='prepared'||old.mutableAtRest)continue; // A preparation choice is not permanent learning.
     if(old.kind==='spellbook') {
      if(removed.length)addIssue('spellbook-forgotten');
      const copied=transcriptions.filter(t=>t.classId===old.classId&&t.characterLevel===i+1).map(t=>t.spellId);
@@ -37,15 +39,16 @@ export function validateAdvancementHistory(index,request,history) {
      if(added.length!==(advancing?(policy.spellbookLearnedPerClassLevel??0):0)+copied.length)addIssue('spellbook-acquisition-count');
      continue;
     }
-    const learned=old.id.endsWith(':known-spells')||old.id.includes(':magical-secrets-');
+    const learned=old.replaceableKnown||old.id.endsWith(':known-spells')||old.id.endsWith(':known-free-spells')||old.id.includes(':magical-secrets-');
     const invocation=old.id.endsWith(':invocations');
     if(learned||invocation) {
-     const key=old.classId+(invocation?':invocation':':known');budgets.set(key,(budgets.get(key)??0)+removed.length);
+     const key=old.classId+(invocation?':invocation':':known');const counted=invocation?removed.filter(id=>next.options.includes(id)||!forcedInvocationReplacement(index,row.classes,row.classId,previous.report.selections,report.selections,id)).length:removed.length;budgets.set(key,(budgets.get(key)??0)+counted);
      const cap=invocation?policy.invocationReplacementPerClassLevel??0:policy.knownReplacementPerClassLevel??0;
      if((!advancing&&(removed.length||added.length))||budgets.get(key)>cap)addIssue('replacement-limit');
      if(old.id.includes(':magical-secrets-')&&removed.length&&added.some(id=>!index.get(id)?.data.classIds?.includes(old.classId)))addIssue('secret-replacement-class-list');
      continue;
     }
+    const permit=replacementPermission(index,row.classes,row.classId,old);if(permit&&removed.length){budgets.set(permit.key,(budgets.get(permit.key)??0)+removed.length);if(removed.length>permit.choiceMaximum||budgets.get(permit.key)>permit.maximum)addIssue(permit.key.endsWith(':asi-versatility')?'asi-versatility-limit':'replacement-limit');continue;}
     // Count increases (new cantrip / metamagic / etc.) are allowed only when that class advances.
     if(removed.length||!advancing)addIssue('historical-choice-changed');
    }

@@ -1,7 +1,12 @@
+import {spellReference} from './spell-reference.js';
+export function spellSchool(school,locale='fr') {
+  return locale==='fr'?({abjuration:'Abjuration',conjuration:'Invocation',divination:'Divination',enchantment:'Enchantement',evocation:'Évocation',illusion:'Illusion',necromancy:'Nécromancie',transmutation:'Transmutation'})[school]??school:school;
+}
 /** Stable IDs remain language independent. A missing French label is explicit, never presented as a verified translation. */
 export function localizedName(entry, locale = "fr", verified = {}) {
   if (!entry) return "";
   if (locale === "en") return entry.name.en;
+  if (entry.type === "spell" && spellReference(entry.id)) return spellReference(entry.id).name.fr;
   const name = verified[entry.id] ?? entry.name.fr;
   if (name && name !== entry.name.en) return name;
   if (name && entry.type !== "spell") return name;
@@ -9,6 +14,9 @@ export function localizedName(entry, locale = "fr", verified = {}) {
 }
 export function spellTerms(entry, locale = "fr") {
   const d = entry.data;
+  const reference = spellReference(entry.id);
+  if(locale==='fr' && d.language==='fr') return {level:d.level,school:spellSchool(d.school,locale),castingTime:d.castingTime,range:d.range,components:d.components,duration:d.duration};
+  if(locale === "fr" && reference) return {level:reference.level,school:reference.schoolFr,castingTime:reference.casting.time,range:reference.casting.range,components:reference.casting.components + (reference.casting.material ? " ("+reference.casting.material+")" : ""),duration:reference.casting.duration};
   if (locale === "en")
     return {
       level: d.level,

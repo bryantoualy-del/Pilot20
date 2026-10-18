@@ -61,6 +61,7 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       "Private content cannot be distributed",
     );
     check(i.data && i.data.ruleset === c.ruleset, "Entry ruleset");
+    if(i.source.kind==='reference') check(['xge','tce','phb14','ravenloft','volo','motm'].includes(i.data.rulesSourceId),'Referenced 2014 source');
     const a = i.data.automation;
     keys(a, ["status", "handler", "limits"]);
     check(
@@ -83,6 +84,46 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       "Unsupported reason",
     );
     const d = i.data;
+    if(i.type==='subclass'&&d.casting){
+      keys(d.casting,['ability','progression','startsAtClassLevel'],['ability','progression']);
+      check(ABILITIES.includes(d.casting.ability)&&d.casting.progression==='third'&&d.casting.startsAtClassLevel===3,'Subclass casting');
+      check(id(d.spellListClassId),'Subclass spell list');
+      for(const key of ['cantripsKnown','spellsKnown','unrestrictedSpellsKnown'])check(d[key]?.length===20&&d[key].every(n=>integer(n,0,100)),'Subclass known progression');
+      check(Array.isArray(d.restrictedSpellSchools)&&d.restrictedSpellSchools.length===2,'Subclass spell schools');
+    }
+    if(d.buildEffects){
+      keys(d.buildEffects,['proficiencies','attacksPerAction','resistances','minimumClassLevel','movement','scoreIncreases','hpPerClassLevel','naturalArmor','halfProficiency','defenseStyle','rangedWeaponAttackBonus','skills','immunities','heavyArmorBonus','initiativeAbility','saves','skillAbilityBonuses','expertiseSkills','speedBonus','existingMovementBonus','checkAbilityBonuses','unarmoredSpeedByClassLevel','initiativeBonus','hpPerCharacterLevel','passiveSkillBonuses','mediumArmorDexCap','movementMatchWalk'],[]);
+      check(['feature','feat'].includes(i.type),'Build effects belong to features or feats');
+      const e=d.buildEffects;
+      if(e.movementMatchWalk)check(Array.isArray(e.movementMatchWalk)&&e.movementMatchWalk.every(k=>['climb','swim'].includes(k)),'Movement matches walk');
+      for(const key of ['initiativeBonus','hpPerCharacterLevel','mediumArmorDexCap'])if(e[key]!==undefined)check(integer(e[key],0,20),'Feat statistic');
+      if(e.passiveSkillBonuses)for(const[k,v]of Object.entries(e.passiveSkillBonuses))check(Object.hasOwn(SKILLS,k)&&integer(v,0,20),'Passive skill bonus');
+      if(e.unarmoredSpeedByClassLevel)check(e.unarmoredSpeedByClassLevel.length===20&&e.unarmoredSpeedByClassLevel.every(n=>integer(n,0,100)),'Unarmored movement');
+      if(e.checkAbilityBonuses)for(const [ability,row]of Object.entries(e.checkAbilityBonuses))check(ABILITIES.includes(ability)&&ABILITIES.includes(row.ability)&&integer(row.minimum,0,5),'Feature check ability bonus');
+      if(e.expertiseSkills)check(Array.isArray(e.expertiseSkills)&&e.expertiseSkills.every(k=>Object.hasOwn(SKILLS,k)),'Feature expertise');
+      for(const key of ['speedBonus','existingMovementBonus'])if(e[key]!==undefined)check(integer(e[key],0,60),'Feature speed bonus');
+      if(e.saves)check(Array.isArray(e.saves)&&e.saves.every(a=>ABILITIES.includes(a)),'Feature saves');
+      if(e.skillAbilityBonuses)for(const [skill,ability]of Object.entries(e.skillAbilityBonuses))check(Object.hasOwn(SKILLS,skill)&&ABILITIES.includes(ability),'Feature skill bonus');
+      if(e.initiativeAbility)check(ABILITIES.includes(e.initiativeAbility),'Initiative ability');
+      if(e.skills)check(Array.isArray(e.skills)&&e.skills.every(s=>Object.hasOwn(SKILLS,s)),'Feature skills');
+      if(e.immunities)list(e.immunities,'Feature immunities');
+      if(e.heavyArmorBonus!==undefined)check(integer(e.heavyArmorBonus,1,5),'Heavy armor bonus');
+      if(e.scoreIncreases){keys(e.scoreIncreases,ABILITIES,[]);for(const row of Object.values(e.scoreIncreases)){keys(row,['amount','maximum']);check(integer(row.amount,1,10)&&integer(row.maximum,20,30),'Feature score increase');}}
+      if(e.hpPerClassLevel!==undefined)check(integer(e.hpPerClassLevel,1,5),'Feature HP');
+      if(e.naturalArmor){keys(e.naturalArmor,['base','abilities','shieldAllowed']);check(integer(e.naturalArmor.base,10,20)&&Array.isArray(e.naturalArmor.abilities)&&e.naturalArmor.abilities.every(a=>ABILITIES.includes(a))&&typeof e.naturalArmor.shieldAllowed==='boolean','Feature armor');}
+      if(e.halfProficiency!==undefined)check(['all','physical'].includes(e.halfProficiency),'Feature check proficiency');
+      if(e.defenseStyle!==undefined)check(e.defenseStyle===true,'Defense style');
+      if(e.rangedWeaponAttackBonus!==undefined)check(integer(e.rangedWeaponAttackBonus,1,10),'Ranged weapon bonus');
+      if(d.buildEffects.minimumClassLevel!==undefined)check(integer(d.buildEffects.minimumClassLevel,1,20),'Build effect level');
+      if(d.buildEffects.movement){keys(d.buildEffects.movement,['climb','swim','fly'],[]);for(const v of Object.values(d.buildEffects.movement))check(integer(v,0,200),'Build effect movement');}
+      if(d.buildEffects.proficiencies)list(d.buildEffects.proficiencies,'Feature proficiencies');
+      if(d.buildEffects.attacksPerAction!==undefined)check(integer(d.buildEffects.attacksPerAction,1,4),'Feature attacks');
+      if(d.buildEffects.resistances)check(d.buildEffects.resistances.every(t=>['acid','cold','fire','force','lightning','necrotic','poison','psychic','radiant','thunder','bludgeoning','piercing','slashing'].includes(t)),'Feature resistances');
+    }
+    if(d.innateSpells){check(i.type==='feature'&&Array.isArray(d.innateSpells),'Feature spellcasting');for(const row of d.innateSpells){keys(row,['classLevel','spellIds','ability','resourceId','requirements','economy','target','maxTargets','requiresActiveFeature','resourceAmount','ritualOnly','additionalResourceId'],['classLevel','spellIds','ability','resourceId','requirements']);check(integer(row.classLevel,1,20)&&ABILITIES.includes(row.ability)&&(row.resourceId===null||id(row.resourceId))&&typeof row.requirements==='string'&&row.requirements.length<=2000,'Feature spellcasting policy');if(row.additionalResourceId!==undefined)check(id(row.additionalResourceId),'Additional spell cost');if(row.resourceAmount!==undefined)check(integer(row.resourceAmount,1,20),'Feature spell resource amount');if(row.ritualOnly!==undefined)check(row.ritualOnly===true,'Feature ritual route');if(row.economy!==undefined)check(['none','action','bonus','reaction'].includes(row.economy),'Feature spell economy');if(row.target!==undefined)check(['self','selected'].includes(row.target),'Feature spell target');if(row.maxTargets!==undefined)check(integer(row.maxTargets,1,20),'Feature spell target count');if(row.requiresActiveFeature!==undefined)check(id(row.requiresActiveFeature),'Feature spell activation condition');list(row.spellIds,'Feature spells');}}
+    if(d.acquisitionPolicyOverride){check(i.type==='feature'&&d.optionalClassFeature===true,'Optional acquisition policy');keys(d.acquisitionPolicyOverride,['cantripReplacementAtASI','expertiseReplacementAtASI','sharedASIReplacementLimit','metamagicReplacementAtASI','fightingStyleReplacementAtASI','maneuverReplacementAtASI','pactReplacementAtASI','arcanumReplacementAtASI','cantripReplacementAtLongRest'],[]);for(const v of Object.values(d.acquisitionPolicyOverride))check(integer(v,0,1),'ASI replacement budget');}
+    if(d.uniqueRuleKey!==undefined)check(id(d.uniqueRuleKey),'Unique rule key');
+    if(d.spellGrantReplacement){keys(d.spellGrantReplacement,['schools','classIds']);list(d.spellGrantReplacement.schools,'Spell replacement schools');list(d.spellGrantReplacement.classIds,'Spell replacement lists');}
     for (const field of ["aliases", "reviewNotes"])
       if (d[field] !== undefined)
         check(
@@ -91,10 +132,20 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
             d[field].every((v) => typeof v === "string" && v.length <= 2000),
           "Safe display metadata",
         );
+    if(d.selectionRequiresAny!==undefined)list(d.selectionRequiresAny,'Alternative prerequisites');
     if (d.incompatible !== undefined)
       list(d.incompatible, "Incompatible entries");
     if (["race", "background"].includes(i.type)) {
       for (const owner of [d, ...(d.subraces ?? [])]) {
+        if(owner.source){source(owner.source);check(distribution!=='public'||owner.source.kind!=='private','Private subrace cannot be distributed');if(owner.source.kind==='reference')check(['xge','tce','phb14','ravenloft','volo','motm'].includes(owner.rulesSourceId),'Referenced subrace source');}
+        if(owner.flexibleAbilityBoosts!==undefined)check(owner.flexibleAbilityBoosts===true,'Flexible racial bonuses');
+        if(owner.sizes)check(Array.isArray(owner.sizes)&&owner.sizes.length>0&&owner.sizes.every(s=>['small','medium'].includes(s)),'Racial size choices');
+        if(owner.movementModes){keys(owner.movementModes,['climb','swim','fly','climbMatchesWalk'],[]);for(const key of ['climb','swim','fly'])if(owner.movementModes[key]!==undefined)check(integer(owner.movementModes[key],0,200),'Racial movement');if(owner.movementModes.climbMatchesWalk!==undefined)check(typeof owner.movementModes.climbMatchesWalk==='boolean','Racial climbing policy');}
+        for(const t of owner.traits??[]){
+          if(t.activation){keys(t.activation,['cost','target','maxTargets']);check(['none','action','bonus','reaction'].includes(t.activation.cost)&&['self','selected','none'].includes(t.activation.target)&&integer(t.activation.maxTargets,1,20),'Racial activation');}
+          if(t.resource){keys(t.resource,['max','proficiency','recovery'],['recovery']);check(['short','long','none'].includes(t.resource.recovery)&&((t.resource.proficiency===true&&t.resource.max===undefined)||(t.resource.proficiency===undefined&&integer(t.resource.max,1,100))),'Racial resource');}
+          if(t.minimumCharacterLevel!==undefined)check(integer(t.minimumCharacterLevel,1,20),'Racial acquisition level');
+        }
         if (owner !== d)
           check(
             id(owner.id) && owner.name?.fr && owner.name?.en,
@@ -122,6 +173,7 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
                   "score",
                   "racial-spell",
                   "draconic",
+                  "ancestry-option",
                 ].includes(q.kind),
               "Origin choice",
             );
@@ -233,9 +285,10 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
             v === null ||
               integer(v, 0, 1000) ||
               (v &&
-                ABILITIES.includes(v.ability) &&
-                integer(v.minimum, 0, 30) &&
-                (v.add === undefined || integer(v.add, 0, 30))),
+                (ABILITIES.includes(v.ability) || v.proficiency===true) &&
+                integer(v.minimum, -5, 30) &&
+                (v.multiplier===undefined || integer(v.multiplier,1,10)) &&
+                (v.add === undefined || integer(v.add, 0, 60))),
             "Resource maximum",
           );
       }
@@ -253,6 +306,8 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
               "spell-mastery",
               "signature-spell",
               "ritual-spell",
+              "training",
+              "save-proficiency",
             ].includes(q.kind),
           "Choice contract",
         );
@@ -327,6 +382,8 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
               "spell-mastery",
               "signature-spell",
               "ritual-spell",
+              "training",
+              "save-proficiency",
             ].includes(q.kind),
           "Extension choice contract",
         );
@@ -417,8 +474,7 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
         ["action", "bonus", "reaction", "none"].includes(m.economy) &&
           ["self", "selected"].includes(m.target) &&
           integer(m.maxTargets, 1, 20) &&
-          id(m.resourceId) &&
-          integer(m.amount, 1, 100),
+          (m.resourceId===null?m.amount===0:id(m.resourceId)&&integer(m.amount,1,100)),
         "Manual mechanics",
       );
       check(
@@ -442,9 +498,10 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
             v === null ||
               integer(v, 0, 1000) ||
               (v &&
-                ABILITIES.includes(v.ability) &&
-                integer(v.minimum, 0, 30) &&
-                (v.add === undefined || integer(v.add, 0, 30))),
+                (ABILITIES.includes(v.ability) || v.proficiency===true) &&
+                integer(v.minimum, -5, 30) &&
+                (v.multiplier===undefined || integer(v.multiplier,1,10)) &&
+                (v.add === undefined || integer(v.add, 0, 60))),
             "Resource maximum",
           );
         if (r.recharge) {
@@ -498,7 +555,7 @@ export function createCatalogIndex(
     check(!packIds.has(p.id), "Duplicate pack ID");
     packIds.add(p.id);
     if (
-      p.items.some((i) => i.source.kind !== "srd") &&
+      p.items.some((i) => !["srd","reference"].includes(i.source.kind)) &&
       !enabledPackIds.includes(p.id)
     )
       continue;
@@ -532,6 +589,7 @@ export function createCatalogIndex(
             d[field].every((v) => typeof v === "string" && v.length <= 2000),
           "Safe display metadata",
         );
+    if(d.selectionRequiresAny!==undefined)list(d.selectionRequiresAny,'Alternative prerequisites');
     if (d.incompatible !== undefined)
       list(d.incompatible, "Incompatible entries");
     if (["feature", "subclass"].includes(i.type))
@@ -573,10 +631,11 @@ export function createCatalogIndex(
         for (const ref of q.options)
           check(entries.get(ref)?.type === "spell", "Choice spell reference");
     }
+    for(const row of d.innateSpells??[])for(const ref of row.spellIds)check(entries.get(ref)?.type==='spell','Feature spell reference');
     for (const row of d.extraSpells ?? []) {
       check(
         integer(row.classLevel, 1, 20) &&
-          ["prepared", "expanded"].includes(row.mode),
+          ["prepared", "known", "expanded", "book"].includes(row.mode),
         "Extra spell grant",
       );
       list(row.spellIds, "Extra spells");

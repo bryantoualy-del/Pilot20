@@ -1,0 +1,214 @@
+"""Original summaries and acquisition tables verified against supplied 2014 XGE/TCE PDFs."""
+import json,re,pathlib
+root=pathlib.Path(__file__).resolve().parents[1];items=[]
+def table(f):return [f(n) for n in range(1,21)]
+def resource(key,level,value,recovery='long'):return {'id':key,'recovery':recovery,'maxByLevel':table(lambda n:0 if n<level else value(n) if callable(value) else value)}
+def add(src,cls,key,en,fr,rows,resources=[],extraSpells=[],choices=[]):
+ sid=src+':'+cls+':'+key;source={'kind':'reference','document':{'xge':'Guide complet de Xanathar','tce':'Chaudron des merveilles de Tasha','phb14':'Manuel des joueurs2014'}[src]+' / '+fr,'license':'Pilot20-original-summary','url':'https://www.dndbeyond.com/sources/dnd/phb-2014' if src=='phb14' else 'https://dnd.wizards.com/products/'+('xanathars-guide-everything' if src=='xge' else 'tashas-cauldron-everything')};grants={}
+ for level,fkey,title,note,*effects in rows:
+  fid=sid+':'+fkey;grants.setdefault(level,[]).append(fid)
+  items.append({'id':fid,'type':'feature','name':{'en':fkey.replace('-',' ').title(),'fr':title},'source':source,'data':{'ruleset':'dnd5e-2014','rulesSourceId':src,'classId':cls,'minimumClassLevel':level,'description':note,'language':'fr',**({'buildEffects':effects[0]} if effects else {}),'automation':{'status':'manual','handler':None,'limits':['Conditional actions and combat resolution remain player/GM adjudication.']}}})
+ items.append({'id':sid,'type':'subclass','name':{'en':en,'fr':fr},'source':source,'data':{'ruleset':'dnd5e-2014','rulesSourceId':src,'classId':cls,'grants':[{'level':lv,'featureIds':ids} for lv,ids in grants.items()],'resources':resources,'extraSpells':extraSpells,'choices':choices,'description':'Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.','language':'fr','automation':{'status':'manual','handler':None,'limits':['Conditional actions and combat resolution remain player/GM adjudication.']}}})
+spells={x['name']['en']:x['id'] for x in json.load(open(root/'src/catalog/data/spells.json'))['items']}
+spells.update({x['name']['en']:x['id'] for x in json.load(open(root/'src/catalog/data/spell-reference-2014.json'))})
+for x in json.load(open(root/'src/catalog/data/phb-spell-facts.json')):spells[x['name_en']]='phb14:spell:'+re.sub('[^a-z0-9]+','-',x['name_en'].lower()).strip('-')
+def extra(names,levels,mode):return [{'classLevel':lv,'mode':mode,'spellIds':[spells[s] for s in names[n*2:n*2+2]]} for n,lv in enumerate(levels)]
+add('xge','warlock','hexblade','The Hexblade','Magelame',[
+ (1,'hexblades-curse','Malédiction du Magelame','Action bonus, cible visible à9 m,1 minute. Ajoutez le bonus de maîtrise aux dégâts contre elle ; critiques sur19–20. À sa mort, récupérez niveau d’occultiste+Charisme PV, minimum1. Fin anticipée si vous êtes neutralisé ou mourez.'),
+ (1,'hex-warrior','Guerrier des maléfices','Maîtrise des armures intermédiaires, boucliers et armes de guerre. Après un repos long, choisissez une arme maîtrisée sans propriété à deux mains : Charisme peut remplacer Force/Dextérité à ses attaques et dégâts. S’étend à toute arme du Pacte de la lame.',{'proficiencies':['medium-armor','shields','martial-weapons']}),
+ (6,'accursed-specter','Spectre maudit','Quand vous tuez un humanoïde, vous pouvez asservir son spectre jusqu’au prochain repos long. Il reçoit moitié de votre niveau d’occultiste en PV temporaires et un bonus d’attaque égal à Charisme, minimum0. Une création par repos long ; initiative et profil propres au spectre.'),
+ (10,'armor-of-hexes','Armure de maléfices','Si la cible de votre malédiction du Magelame vous touche, votre réaction permet un d6 :4 ou plus transforme la touche en échec.'),
+ (14,'master-of-hexes','Maître des maléfices','À la mort d’une cible maudite, vous pouvez transférer la malédiction à une autre cible visible à9 m sans récupérer les PV de la première. Impossible si vous êtes neutralisé.')],
+ [resource('hexblades-curse',1,1,'short'),resource('accursed-specter',6,1)],extra(['Shield','Wrathful Smite','Blur','Branding Smite','Elemental Weapon','Blink','Phantasmal Killer','Staggering Smite','Cone of Cold','Banishing Smite'],[1,3,5,7,9],'expanded'))
+add('xge','bard','glamour','College of Glamour','Collège de la séduction',[
+ (3,'mantle-of-inspiration','Apparence inspirante','Action bonus et une Inspiration bardique : jusqu’à Charisme créatures, minimum1, visibles à18 m et pouvant vous voir reçoivent5 PV temporaires, puis peuvent utiliser leur réaction pour se déplacer sans attaque d’opportunité. PV temporaires8 au niveau5,11 au10,14 au15.'),
+ (3,'enthralling-performance','Représentation envoûtante','Après1 minute de représentation, jusqu’à Charisme humanoïdes, minimum1, à18 m ayant assisté à toute la prestation font une sauvegarde de Sagesse contre votre DD. Sur échec, charme d’1 h sans imposer la violence ; il cesse si la cible est blessée ou vous voit nuire à ses alliés. Une utilisation par repos court ou long.'),
+ (6,'mantle-of-majesty','Apparence majestueuse','Action bonus : injonction sans emplacement et apparence féerique maintenue par concentration1 minute. Vos actions bonus suivantes permettent une nouvelle injonction gratuite ; une cible déjà charmée par vous rate automatiquement sa sauvegarde contre ces injonctions. Une activation par repos long.'),
+ (14,'unbreakable-majesty','Majesté inébranlable','Action bonus,1 minute. Lorsqu’une créature tente de vous attaquer pour la première fois d’un tour : sauvegarde de Charisme contre votre DD. Échec : autre cible ou attaque perdue ; réussite : elle peut attaquer mais sera désavantagée contre vos sorts pendant votre prochain tour. Une activation par repos court ou long.')],
+ [resource('enthralling-performance',3,1,'short'),resource('mantle-of-majesty',6,1),resource('unbreakable-majesty',14,1,'short')])
+add('tce','bard','eloquence','College of Eloquence','Collège de l’Éloquence',[
+ (3,'silver-tongue','Faconde','Pour vos tests de Charisme (Persuasion ou Tromperie), un d20 inférieur à10 compte comme10.'),
+ (3,'unsettling-words','Paroles déstabilisantes','Action bonus et une Inspiration bardique : une cible visible à18 m soustrait le dé à sa prochaine sauvegarde avant le début de votre prochain tour.'),
+ (6,'unfailing-inspiration','Inspiration indéfectible','Une créature qui utilise votre dé d’Inspiration bardique mais rate malgré tout son test, attaque ou sauvegarde conserve le dé.'),
+ (6,'universal-speech','Discours universel','Une action permet à Charisme créatures, minimum1, à18 m de vous comprendre pendant1 h, quelle que soit la langue. Une utilisation gratuite par repos long ; un emplacement permet de recommencer.'),
+ (14,'infectious-inspiration','Inspiration contagieuse','Réaction après la réussite d’une créature grâce à votre Inspiration : accordez sans dépense un dé à une autre créature que vous-même, qui vous entend à18 m. Charisme utilisations, minimum1, par repos long.')],
+ [resource('universal-speech',6,1),resource('infectious-inspiration',14,{'ability':'cha','minimum':1})])
+add('tce','rogue','soulknife','Soulknife','Âme acérée',[
+ (3,'psionic-power','Pouvoir psionique','Réserve de dés égale au double du bonus de maîtrise : d6, puis d8 au niveau5, d10 au11 et d12 au17 de roublard. Repos long : tous ; action bonus une fois par repos court : un dé. Savoir-faire : ajoutez un dé à un test raté de compétence/outil maîtrisé, dépensé seulement si cela réussit. Murmures : action pour relier jusqu’à maîtrise créatures visibles pendant un nombre d’heures égal au dé, portée télépathique1,5 km ; premier usage par repos long gratuit, suivants un dé.'),
+ (3,'psychic-blades','Lames psychiques','Pendant l’action Attaquer, une main libre manifeste une arme courante magique, finesse/lancer18 m, infligeant1d6 psychique+caractéristique. Après cette attaque, une action bonus peut manifester une seconde lame dans l’autre main libre ; dégâts1d4+caractéristique. Les lames disparaissent après l’attaque.'),
+ (9,'soul-blades','Lames spirituelles','Lame chercheuse : un dé psionique ajouté à une attaque de lame ratée, dépensé seulement si elle touche. Téléportation : action bonus, dépensez et lancez un dé ; téléportez-vous vers un espace visible et libre à3 m×résultat au plus.'),
+ (13,'psychic-veil','Voile psychique','Action pour devenir invisible1 h avec l’équipement porté. Infliger des dégâts ou imposer une sauvegarde termine l’effet. Une utilisation gratuite par repos long ; un dé psionique permet de recommencer.'),
+ (17,'rend-mind','Rupture spirituelle','Lorsqu’une lame inflige des dégâts de Sournoise : sauvegarde de Sagesse, DD8+maîtrise+Dextérité, contre étourdissement1 minute. Nouveaux jets à la fin des tours. Une utilisation gratuite par repos long ; trois dés psioniques permettent de recommencer.')],
+ [resource('psionic-energy',3,{'proficiency':True,'minimum':2,'multiplier':2}),resource('psionic-recovery',3,1,'short'),resource('psychic-whispers-free',3,1),resource('psychic-veil-free',13,1),resource('rend-mind-free',17,1)])
+add('tce','sorcerer','aberrant-mind','Aberrant Mind','Aberrance',[
+ (1,'psionic-spells','Sorts psioniques','Apprenez les sorts de la table sans les compter dans le quota d’ensorceleur. À chaque niveau d’ensorceleur, un de ces sorts peut être remplacé par un sort du même niveau de divination ou d’enchantement issu des listes d’ensorceleur, magicien ou occultiste.'),
+ (1,'telepathic-speech','Discours télépathique','Action bonus : lien avec une créature visible à9 m pendant un nombre de minutes égal au niveau d’ensorceleur. Distance maximale1,5 km×Charisme, minimum1,5 km. Chacun doit comprendre la langue mentale de l’autre. Un nouveau lien, votre mort ou votre neutralisation termine le précédent.'),
+ (6,'psionic-sorcery','Magie psionique','Les sorts de niveau1 ou plus acquis par Sorts psioniques peuvent coûter autant de points de sorcellerie que leur niveau au lieu d’un emplacement. Cette méthode retire les composantes verbales et somatiques, et toutes les matérielles sauf celles consommées.'),
+ (6,'psychic-defenses','Défenses psychiques','Résistance psychique et avantage aux sauvegardes contre charme et peur.',{'resistances':['psychic']}),
+ (14,'revelation-in-flesh','Révélation incarnée','Action bonus,10 minutes : dépensez un ou plusieurs points de sorcellerie, un par bénéfice : voir l’invisible à18 m sans abri total, vol stationnaire égal à votre vitesse, nage au double de votre vitesse avec respiration aquatique, ou corps fluide passant dans2,5 cm et échappant aux entraves/agrippement non magiques pour1,50 m de mouvement.'),
+ (18,'warping-implosion','Distorsion implosive','Action : téléportation de36 m vers un espace visible libre. Les créatures à9 m du départ font une sauvegarde de Force contre3d10 force et traction vers le départ ; réussite : moitié sans traction. Une utilisation gratuite par repos long, ou5 points pour recommencer.')],
+ [resource('warping-implosion-free',18,1)],extra(['Arms of Hadar','Dissonant Whispers','Calm Emotions','Detect Thoughts','Hunger of Hadar','Sending','Black Tentacles','Summon Aberration','Telepathic Bond','Telekinesis'],[1,3,5,7,9],'known')+[{'classLevel':1,'mode':'known','spellIds':[spells['Mind Sliver']]}])
+add('tce','sorcerer','clockwork-soul','Clockwork Soul','Âme mécanique',[
+ (1,'clockwork-magic','Magie mécanique','Apprenez les sorts de la table hors quota d’ensorceleur. À chaque niveau d’ensorceleur, un de ces sorts peut être remplacé par une abjuration ou transmutation de même niveau issue des listes d’ensorceleur, magicien ou occultiste.'),
+ (1,'restore-balance','Équilibre restauré','Réaction lorsqu’une créature visible à18 m va lancer un d20 avec avantage ou désavantage : annulez cet avantage ou désavantage. Bonus de maîtrise utilisations par repos long.'),
+ (6,'bastion-of-law','Bastion de loi','Action et1–5 points de sorcellerie : protégez une créature visible à9 m avec autant de d8. Lorsqu’elle subit des dégâts, elle peut dépenser des dés pour les réduire de leur somme. Fin au repos long ou à votre nouvelle utilisation.'),
+ (14,'trance-of-order','Transe harmonique','Action bonus,1 minute : pas d’avantage aux attaques contre vous ; vos d20 d’attaque, test ou sauvegarde inférieurs à10 comptent comme10. Une utilisation gratuite par repos long, ou5 points pour recommencer.'),
+ (18,'clockwork-cavalcade','Chevauchée mécanique','Action : esprits de l’ordre dans un cube de9 m depuis vous. Répartissez jusqu’à100 PV de soins, réparez les objets entièrement inclus et terminez les sorts de niveau6 ou moins sur les créatures/objets choisis. Une utilisation gratuite par repos long, ou7 points pour recommencer.')],
+ [resource('restore-balance',1,{'proficiency':True,'minimum':2}),resource('trance-of-order-free',14,1),resource('clockwork-cavalcade-free',18,1)],extra(['Alarm','Protection from Evil and Good','Aid','Lesser Restoration','Dispel Magic','Protection from Energy','Freedom of Movement','Summon Construct','Greater Restoration','Wall of Force'],[1,3,5,7,9],'known'))
+for item in items:
+ if item['type']=='subclass' and item['id'] in ['tce:sorcerer:aberrant-mind','tce:sorcerer:clockwork-soul']:item['data']['spellGrantReplacement']={'schools':['divination','enchantment'] if item['id'].endswith('aberrant-mind') else ['abjuration','transmutation'],'classIds':['sorcerer','wizard','warlock']}
+add('phb14','fighter','eldritch-knight','Eldritch Knight','Chevalier occulte',[
+ (3,'spellcasting','Sorts','Magie de magicien mémorisée, fondée sur Intelligence, sans grimoire ni préparation quotidienne. Deux sorts mineurs au niveau3, trois au10. Sorts connus surtout d’abjuration ou d’évocation ; un choix libre au niveau3, puis aux niveaux8,14 et20. Un remplacement de sort connu par niveau de guerrier, en respectant son groupe.'),
+ (3,'weapon-bond','Lien avec une arme','Un rituel d’1 h lie une arme ; deux armes liées au plus. Impossible de vous en désarmer tant que vous n’êtes pas neutralisé. Une action bonus rappelle une arme liée depuis le même plan.'),
+ (7,'war-magic','Magie de guerre','Après avoir utilisé votre action pour lancer un sort mineur, une action bonus permet une attaque d’arme.'),
+ (10,'eldritch-strike','Frappe occulte','Une cible touchée par votre arme est désavantagée à sa prochaine sauvegarde contre un de vos sorts lancé avant la fin de votre prochain tour.'),
+ (15,'arcane-charge','Charge arcanique','Lorsque vous utilisez Fougue, vous pouvez vous téléporter jusqu’à9 m vers un espace visible et libre, avant ou après l’action supplémentaire.'),
+ (18,'improved-war-magic','Magie de guerre améliorée','L’action bonus d’attaque d’arme est aussi possible après votre action utilisée pour un sort de niveau1 ou plus.')])
+add('phb14','rogue','arcane-trickster','Arcane Trickster','Escroc arcanique',[
+ (3,'spellcasting','Sorts','Magie de magicien mémorisée fondée sur Intelligence. Main du mage et deux autres sorts mineurs ; un sort mineur de plus au niveau10. Sorts connus surtout d’enchantement ou d’illusion, avec choix libres aux niveaux3,8,14 et20. Un remplacement par niveau de roublard, selon son groupe.'),
+ (3,'mage-hand-legerdemain','Main du mage prestidigitatrice','Main du mage peut être invisible ; elle manipule contenants et outils de voleur à distance. Une action bonus d’Action rusée peut la contrôler. Les tâches furtives emploient les tests opposés appropriés.'),
+ (9,'magical-ambush','Embuscade magique','Si vous êtes caché d’une créature au moment où vous lui lancez un sort, elle subit le désavantage aux sauvegardes contre ce sort pendant ce tour.'),
+ (13,'versatile-trickster','Escroc polyvalent','Action bonus : votre Main du mage distraie une créature à1,50 m d’elle ; avantage à vos attaques contre cette créature jusqu’à la fin du tour.'),
+ (17,'spell-thief','Voleur de sorts','Réaction après un sort qui vous cible ou vous inclut : forcez une sauvegarde de caractéristique d’incantation contre votre DD. Échec : vous annulez le sort sur vous, et si son niveau est accessible, vous le volez pour8 h, l’adversaire ne pouvant plus le lancer pendant ce temps. Une utilisation par repos long.')],
+ [resource('spell-thief',17,1)],extraSpells=[{'classLevel':3,'mode':'known','spellIds':[spells['Mage Hand']]}])
+# Barbarian paths — original summaries of supplied XGE/TCE rule mechanics.
+pb={'proficiency':True,'minimum':2}
+add('xge','barbarian','ancestral-guardian','Path of the Ancestral Guardian','Voie du gardien ancestral',[
+ (3,'ancestral-protectors','Protecteurs ancestraux','Pendant la rage, la première créature touchée lors de votre tour est gênée jusqu’au début de votre tour suivant : désavantage à ses attaques contre autrui ; les autres cibles qu’elle touche résistent aux dégâts de ces attaques. L’effet cesse avec la rage.'),
+ (6,'spirit-shield','Bouclier spirituel','Pendant votre rage, réaction lorsqu’une autre créature visible à9 m subit des dégâts : réduisez-les de2d6, puis3d6 au niveau10 et4d6 au14.'),
+ (10,'consult-the-spirits','Consulter les esprits','Lancez Augure ou Clairvoyance avec Sagesse, sans emplacement ni composante matérielle. Clairvoyance manifeste un ancêtre invisible. Un usage partagé entre les deux sorts par repos court ou long ; respectez leur temps d’incantation.'),
+ (14,'vengeful-ancestors','Ancêtres vengeurs','Quand votre Bouclier spirituel réduit les dégâts d’une attaque, l’attaquant subit autant de dégâts de force que les dégâts ainsi évités.')],
+ [resource('spirit-shield',6,None,'none'),resource('consult-the-spirits',10,1,'short')])
+add('xge','barbarian','storm-herald','Path of the Storm Herald','Voie du héraut des tempêtes',[
+ (3,'storm-aura','Aura de tempête','Aura de3 m arrêtée par un abri total. À l’entrée en rage, puis par action bonus pendant celle-ci, produisez l’effet de votre environnement. DD des sauvegardes :8+maîtrise+Constitution. L’environnement peut être changé à chaque niveau de barbare.'),
+ (6,'storm-soul','Âme des tempêtes','Votre environnement accorde une résistance et une adaptation permanentes, même hors rage. Le choix d’environnement détermine ces effets.'),
+ (10,'shielding-storm','Tempête protectrice','Les créatures de votre choix présentes dans votre aura partagent la résistance de votre Âme des tempêtes.'),
+ (14,'raging-storm','Tempête déchaînée','Désert : réaction après être touché par une créature dans l’aura, sauvegarde de Dextérité ou feu égal à la moitié du niveau de barbare. Mer : réaction après une de vos touches dans l’aura, sauvegarde de Force ou cible à terre. Toundra : à l’activation de l’aura, une cible choisie réussit une sauvegarde de Force ou sa vitesse devient0 jusqu’au début de votre prochain tour.')],
+ [resource('storm-aura',3,None,'none')],choices=[{'key':'storm-environment','level':3,'kind':'feature','count':1,'options':['xge:barbarian:storm-herald:'+v for v in ['desert','sea','tundra']]}])
+add('xge','barbarian','zealot','Path of the Zealot','Voie du zélote',[
+ (3,'divine-fury','Fureur divine','Pendant la rage, la première créature touchée par une arme à chacun de vos tours subit1d6+la moitié de votre niveau de barbare, arrondie à l’inférieur, en dégâts supplémentaires du type choisi à l’acquisition.'),
+ (3,'warrior-of-the-gods','Guerrier des dieux','Un sort dont le seul effet est de vous ramener à la vie ne demande pas ses composantes matérielles. Cette dispense ne concerne pas un retour à la non-vie.'),
+ (6,'fanatical-focus','Obstination fanatique','Une fois par rage, après une sauvegarde ratée, relancez le dé et utilisez ce nouveau résultat. La disponibilité se renouvelle à l’entrée dans une nouvelle rage.'),
+ (10,'zealous-presence','Présence zélatrice','Action bonus : jusqu’à dix autres créatures à18 m qui vous entendent ont l’avantage aux attaques et sauvegardes jusqu’au début de votre prochain tour. Une utilisation par repos long.'),
+ (14,'rage-beyond-death','Enragé par-delà la mort','Pendant la rage,0 PV ne vous rend pas inconscient. Vous effectuez encore les sauvegardes contre la mort et subissez les conséquences des dégâts à0 PV. La mort due aux échecs de sauvegardes est différée jusqu’à la fin de la rage, et seulement si vous avez encore0 PV.')],
+ [resource('fanatical-focus',6,1,'none'),resource('zealous-presence',10,1)],choices=[{'key':'divine-fury-type','level':3,'kind':'feature','count':1,'options':['xge:barbarian:zealot:radiant','xge:barbarian:zealot:necrotic']}])
+add('tce','barbarian','beast','Path of the Beast','Voie de la Bête',[
+ (3,'form-of-the-beast','Forme de la Bête','À chaque entrée en rage, choisissez une arme naturelle courante de mêlée fondée sur Force. Morsure :1d8 perforant ; une fois par votre tour, une touche rend maîtrise PV si vous aviez moins de la moitié de vos PV avant la touche. Griffes :1d6 tranchant avec une main libre ; une attaque supplémentaire de griffe dans l’action Attaquer, une fois par tour. Queue :1d8 perforant, allonge3 m ; réaction lorsqu’une attaque visible à3 m vous touche, ajoutez1d8 à la CA contre cette attaque.'),
+ (6,'bestial-soul','Âme bestiale','Les armes naturelles de la Forme de la Bête sont magiques contre les résistances et immunités. Après chaque repos court ou long, choisissez jusqu’au repos suivant : nage égale au déplacement et respiration aquatique ; escalade égale au déplacement, plafonds compris sans test ; ou un test d’Athlétisme une fois par tour lors d’un saut, augmentant sa distance de30 cm×résultat.'),
+ (10,'infectious-fury','Fureur contagieuse','Pendant la rage, après une touche d’arme naturelle, imposez une sauvegarde de Sagesse contre8+Constitution+maîtrise. Échec :2d12 psychiques, ou réaction de la cible pour une attaque de mêlée contre une autre créature choisie qu’elle voit. Maîtrise utilisations par repos long.'),
+ (14,'call-the-hunt','Hallali','À l’entrée en rage, jusqu’à Constitution autres créatures visibles à9 m, minimum1, peuvent accepter votre appel. Vous gagnez5 PV temporaires par allié consentant. Pendant la rage, chacun ajoute1d6 aux dégâts d’une touche, une fois à chacun de ses tours. Maîtrise utilisations par repos long.')],
+ [resource('infectious-fury',10,pb),resource('call-the-hunt',14,pb)])
+add('tce','barbarian','wild-magic','Path of Wild Magic','Voie de la Magie sauvage',[
+ (3,'magic-awareness','Conscience magique','Action : jusqu’à la fin de votre prochain tour, repérez à18 m les sorts et objets magiques sans abri total ; les sorts révèlent leur école. Maîtrise utilisations par repos long.'),
+ (3,'wild-surge','Accès sauvage','À chaque entrée en rage, lancez1d8 et appliquez la manifestation correspondante jusqu’à la fin de cette rage, sauf durée précisée. DD des sauvegardes :8+Constitution+maîtrise. Les manifestations sont détaillées ci-dessous.'),
+ (6,'bolstering-magic','Magie galvanisante','Action, touchez une créature, vous compris : pendant10 min elle ajoute1d3 à ses attaques et tests de caractéristique, ou elle récupère un emplacement choisi de niveau au plus égal à1d3. Une créature ne peut bénéficier de cette récupération d’emplacement qu’une fois par repos long. Maîtrise utilisations partagées par repos long.'),
+ (10,'unstable-backlash','Riposte capricieuse','Pendant la rage, après des dégâts subis ou une sauvegarde ratée, une réaction permet de tirer immédiatement une nouvelle manifestation sauvage qui remplace celle en cours.'),
+ (14,'controlled-surge','Sauvagerie contrôlée','Lors d’un tirage de manifestation sauvage, lancez deux dés et choisissez le résultat. Si les dés sont identiques, choisissez librement la manifestation.')],
+ [resource('magic-awareness',3,pb),resource('bolstering-magic',6,pb),resource('unstable-backlash',10,None,'none')])
+def find(fid):return next(i for i in items if i['id']==fid)
+def option(sid,key,en,fr,description,effect=None):
+ owner=find(sid);items.append({'id':sid+':'+key,'type':'feature','name':{'fr':fr,'en':en},'source':owner['source'],'data':{'ruleset':'dnd5e-2014','rulesSourceId':owner['data']['rulesSourceId'],'classId':'barbarian','minimumClassLevel':3,'description':description,'language':'fr',**({'buildEffects':effect} if effect else {}),'automation':{'status':'manual','handler':None,'limits':['Conditional combat effects require adjudication.']}}})
+option('xge:barbarian:storm-herald','desert','Desert','Désert','Aura : toutes les autres créatures dans les3 m prennent2 feu, puis3/4/5/6 aux niveaux5/10/15/20. Au niveau6 : résistance feu, protection contre la chaleur extrême, action pour enflammer un objet inflammable non porté.',{'minimumClassLevel':6,'resistances':['fire']})
+option('xge:barbarian:storm-herald','sea','Sea','Mer','Aura : une autre créature visible à3 m effectue une sauvegarde de Dextérité, subissant1d6 foudre ou la moitié si elle réussit ;2d6/3d6/4d6 aux niveaux10/15/20. Au niveau6 : résistance foudre, respiration sous l’eau, nage9 m.',{'minimumClassLevel':6,'resistances':['lightning'],'movement':{'swim':30}})
+option('xge:barbarian:storm-herald','tundra','Tundra','Toundra','Aura : les créatures choisies dans les3 m gagnent2 PV temporaires, puis3/4/5/6 aux niveaux5/10/15/20. Au niveau6 : résistance froid et protection contre le froid extrême ; action pour geler pendant1 min un cube d’eau libre de1,50 m de côté.',{'minimumClassLevel':6,'resistances':['cold']})
+for key,fr in [('radiant','Radiant'),('necrotic','Nécrotique')]:option('xge:barbarian:zealot',key,key.title(),fr,'Votre Fureur divine inflige des dégâts de ce type. Ce choix ne vous accorde aucune résistance.')
+find('xge:barbarian:ancestral-guardian:consult-the-spirits')['data']['innateSpells']=[{'classLevel':10,'spellIds':[spells['Augury'],spells['Clairvoyance']],'ability':'wis','resourceId':'consult-the-spirits','requirements':'Sans emplacement ni composante matérielle ; Sagesse ; respect du temps d’incantation ; les deux sorts partagent un usage par repos court ou long.'}]
+find('xge:barbarian:zealot:fanatical-focus')['data']['usageLimits']=[{'count':1,'per':'rage','refresh':'enter-rage'}]
+manifestations=[
+ 'Une fois : les créatures choisies et visibles à9 m réussissent une sauvegarde de Constitution ou prennent1d12 nécrotiques ; vous gagnez séparément1d12 PV temporaires.',
+ 'Téléportez-vous jusqu’à9 m vers un espace visible et libre. Une action bonus permet de recommencer à chacun de vos tours pendant la rage.',
+ 'Un esprit apparaît à1,50 m d’une créature visible à9 m. À la fin du tour, explosion à1,50 m : sauvegarde de Dextérité ou1d6 force. Une action bonus permet de convoquer un nouvel esprit à chacun de vos tours.',
+ 'Une arme tenue inflige force et devient légère et de lancer6/18 m. Si elle quitte votre main, elle y revient à la fin du tour.',
+ 'Chaque créature qui vous touche par une attaque subit1d6 force.',
+ 'Vous gagnez+1 CA, ainsi que vos alliés tant qu’ils sont à3 m de vous.',
+ 'Le sol à4,50 m autour de vous devient difficile pour vos ennemis.',
+ 'Une autre créature visible à9 m réussit une sauvegarde de Constitution ou prend1d6 radiant et est aveuglée jusqu’au début de votre prochain tour. Une action bonus permet de recommencer à chacun de vos tours.'
+]
+f=find('tce:barbarian:wild-magic:wild-surge');f['data']['randomTable']=[{'roll':n+1,'description':v}for n,v in enumerate(manifestations)];f['data']['description']+=' '+' '.join(str(n+1)+' : '+v for n,v in enumerate(manifestations))
+for sid,key,economy,target,maxTargets in [
+ ('xge:barbarian:ancestral-guardian','spirit-shield','reaction','selected',1),
+ ('xge:barbarian:storm-herald','storm-aura','bonus','self',1),
+ ('xge:barbarian:zealot','fanatical-focus','none','self',1),
+ ('xge:barbarian:zealot','zealous-presence','bonus','selected',10),
+ ('tce:barbarian:beast','infectious-fury','none','selected',1),
+ ('tce:barbarian:beast','call-the-hunt','none','selected',20),
+ ('tce:barbarian:wild-magic','magic-awareness','action','self',1),
+ ('tce:barbarian:wild-magic','bolstering-magic','action','selected',1),
+ ('tce:barbarian:wild-magic','unstable-backlash','reaction','self',1)]:
+ f=find(sid+':'+key);f['data']['manualMechanics']={'economy':economy,'target':target,'maxTargets':maxTargets,'resourceId':key,'amount':1,'requirements':[f['data']['description'],'Les conditions de déclenchement et les résultats doivent être validés.']}
+# Optional class features are independently enabled, never silently granted.
+for key,fr,level,description,choices in [
+ ('primal-knowledge','Savoir primal',3,'Une compétence supplémentaire de la liste du barbare aux niveaux3 et10.', [{'key':'primal-knowledge-'+str(lv),'level':lv,'kind':'skill','count':1,'options':['animalHandling','athletics','intimidation','nature','perception','survival']}for lv in [3,10]]),
+ ('instinctive-pounce','Bond instinctif',7,'Dans l’action bonus utilisée pour entrer en rage, vous pouvez vous déplacer jusqu’à la moitié de votre vitesse.',[])]:
+ source={**find('tce:barbarian:beast')['source'],'document':'Chaudron des merveilles de Tasha / Barbare — aptitudes optionnelles'};items.append({'id':'tce:barbarian:'+key,'type':'feature','name':{'fr':fr,'en':key.replace('-',' ').title()},'source':source,'data':{'ruleset':'dnd5e-2014','rulesSourceId':'tce','classId':'barbarian','minimumClassLevel':level,'optionalClassFeature':True,'campaignOption':'tce:barbarian:'+key,'description':description,'language':'fr','choices':choices,'automation':{'status':'manual','handler':None,'limits':['Conditional combat effects require adjudication.']}}})
+
+
+# Remaining colleges in the PHB/XGE/TCE scope. No generic preparation is introduced.
+add('phb14','bard','valor','College of Valor','Collège de la vaillance',[
+ (3,'bonus-proficiencies','Maîtrises supplémentaires','Maîtrise des armures intermédiaires, boucliers et armes de guerre.',{'proficiencies':['medium-armor','shields','martial-weapons']}),
+ (3,'combat-inspiration','Inspiration martiale','Une créature portant votre dé d’Inspiration peut l’ajouter à un jet de dégâts d’arme. Après une attaque contre elle mais avant de savoir si elle touche, elle peut aussi utiliser sa réaction pour ajouter le dé à sa CA contre cette attaque. Le dé est consommé ; aucune seconde Inspiration n’est dépensée.'),
+ (6,'extra-attack','Attaque supplémentaire','L’action Attaquer permet deux attaques au lieu d’une.',{'attacksPerAction':2}),
+ (14,'battle-magic','Magie de combat','Après avoir lancé un sort de barde par votre action, vous pouvez effectuer une attaque d’arme par action bonus.')],
+ [resource('battle-magic',14,None,'none')])
+add('xge','bard','swords','College of Swords','Collège des épées',[
+ (3,'bonus-proficiencies','Maîtrises supplémentaires','Maîtrise des armures intermédiaires et du cimeterre. Une arme de mêlée courante ou de guerre que vous maîtrisez peut servir de focaliseur pour vos sorts de barde.',{'proficiencies':['medium-armor','scimitars']}),
+ (3,'fighting-style','Style de combat','Choisissez Duel ou Combat à deux armes. Vous ne pouvez acquérir deux fois le même style.'),
+ (3,'blade-flourish','Moulinet','L’action Attaquer à votre tour augmente votre vitesse au sol de3 m jusqu’à la fin du tour. Après une touche d’arme dans cette action, dépensez une Inspiration pour un seul moulinet par tour : défensif, dégâts supplémentaires du dé et même bonus à la CA jusqu’au début de votre prochain tour ; tranchant, dégâts du dé à la cible et aux autres créatures choisies visibles à1,50 m de vous ; mobile, dégâts du dé et repoussement de1,50 m+30 cm×dé, puis déplacement jusqu’à votre vitesse par réaction pour finir à1,50 m de la cible.'),
+ (6,'extra-attack','Attaque supplémentaire','L’action Attaquer permet deux attaques au lieu d’une.',{'attacksPerAction':2}),
+ (14,'masters-flourish','Moulinet de maître','Lors d’un moulinet, vous pouvez utiliser1d6 au lieu de dépenser une Inspiration bardique. Cette option ne donne pas un second moulinet pendant le même tour.')],
+ [resource('masters-flourish',14,None,'none')],choices=[{'key':'swords-fighting-style','level':3,'kind':'feature','count':1,'options':['srd51:fighter:dueling','srd51:fighter:two-weapon-fighting']}])
+add('xge','bard','whispers','College of Whispers','Collège des murmures',[
+ (3,'psychic-blades','Lames psychiques','Une fois par round, pendant votre tour, après une touche d’arme : dépensez une Inspiration pour ajouter2d6 psychiques. Ce supplément devient3d6 au niveau5,5d6 au10 et8d6 au15.'),
+ (3,'words-of-terror','Mots de terreur','Après au moins1 min de conversation avec un humanoïde isolé, il réussit une sauvegarde de Sagesse contre votre DD ou vous craint, ou craint une autre créature choisie. Durée1 h, interrompue si la cible ou ses alliés sont attaqués ou blessés. Une utilisation par repos court ou long.'),
+ (6,'mantle-of-whispers','Voile de murmures','Réaction quand un humanoïde meurt à9 m : capturez son ombre jusqu’à son utilisation ou votre prochain repos long. Une action consomme l’ombre pour une apparence du défunt vivant pendant1 h, terminable par action bonus. Vous connaissez ses informations ordinaires, pas ses secrets ;+5 à Tromperie opposée à Perspicacité pour ce déguisement. Une capture par repos court ou long.'),
+ (14,'shadow-lore','Savoir des ombres','Action : murmure à une créature à9 m. Sauvegarde de Sagesse contre votre DD, automatiquement réussie si elle ne vous entend pas ou ne partage pas de langue. Échec : charme8 h, obéissance par peur d’un secret, sans risquer sa vie ni combattre sans inclination préalable. Vous ou vos alliés attaquant, blessant ou imposant une sauvegarde terminez l’effet. Une utilisation par repos long.')],
+ [resource('words-of-terror',3,1,'short'),resource('mantle-of-whispers',6,1,'short'),resource('shadow-lore',14,1)])
+add('tce','bard','creation','College of Creation','Collège de la Création',[
+ (3,'mote-of-potential','Grain de potentiel','Un dé d’Inspiration accordé peut porter un grain qui dure jusqu’à la perte du dé. Sur un test de caractéristique, le bénéficiaire relance le dé d’Inspiration et choisit le résultat. Sur une attaque, la cible et les créatures choisies visibles à1,50 m d’elle réussissent une sauvegarde de Constitution contre votre DD ou prennent des dégâts de tonnerre égaux au dé. Sur une sauvegarde, le bénéficiaire gagne dé+Charisme PV temporaires, minimum1.'),
+ (3,'performance-of-creation','Créativité concrète','Action : créez un objet non magique à3 m sur une surface ou dans un liquide pouvant le soutenir. Taille M maximum, valeur au plus20×niveau de barde po, durée égale à maîtrise heures. Un seul objet actif ; une nouvelle création remplace l’ancien. Taille G au niveau6 puis TG au14. Un usage gratuit par repos long, sinon un emplacement de niveau2 ou plus.'),
+ (6,'animating-performance','Prestation dansante','Action : animez un objet non magique de taille G ou moins visible à9 m pendant1 h, jusqu’à0 PV ou votre mort. Il agit juste après vous à la même initiative ; déplacement et réaction libres, action Esquiver sauf ordre par votre action bonus. L’action bonus d’Inspiration peut aussi transmettre cet ordre. Un seul objet animé ; un nouveau remplace l’ancien. Un usage gratuit par repos long, sinon un emplacement de niveau3 ou plus.'),
+ (14,'creative-crescendo','Crescendo créatif','Créativité concrète peut maintenir Charisme objets, minimum2, sans plafond de valeur. Un seul peut avoir votre taille maximale ; les autres sont P ou TP. Quand la limite serait dépassée, choisissez l’objet précédent qui disparaît.')],
+ [resource('performance-of-creation',3,1),resource('animating-performance',6,1)])
+for sid,key,economy,resourceId,target,maxTargets in [
+ ('phb14:bard:valor','battle-magic','bonus','battle-magic','selected',1),
+ ('xge:bard:swords','blade-flourish','none','inspiration','selected',20),
+ ('xge:bard:swords','masters-flourish','none','masters-flourish','selected',20),
+ ('xge:bard:whispers','psychic-blades','none','inspiration','selected',1),
+ ('xge:bard:whispers','words-of-terror','none','words-of-terror','selected',1),
+ ('xge:bard:whispers','mantle-of-whispers','reaction','mantle-of-whispers','self',1),
+ ('xge:bard:whispers','shadow-lore','action','shadow-lore','selected',1),
+ ('tce:bard:creation','performance-of-creation','action','performance-of-creation','self',1),
+ ('tce:bard:creation','animating-performance','action','animating-performance','selected',1)]:
+ f=find(sid+':'+key);f['data']['manualMechanics']={'economy':economy,'target':target,'maxTargets':maxTargets,'resourceId':resourceId,'amount':1,'requirements':[f['data']['description'],'Valider les déclencheurs, cibles et effets particuliers.']}
+find('xge:bard:whispers:psychic-blades')['data']['usageLimits']=[{'count':1,'per':'round','requires':'own-turn-and-weapon-hit'}]
+find('xge:bard:swords:blade-flourish')['data']['usageLimits']=[{'count':1,'per':'turn','group':'blade-flourish'}]
+find('xge:bard:swords:masters-flourish')['data']['usageLimits']=[{'count':1,'per':'turn','group':'blade-flourish'}]
+creation=find('tce:bard:creation:performance-of-creation')['data'];creation['alternateCost']={'slotMinimum':2,'replacesFreeUse':True};creation['creationRules']=[{'classLevel':3,'maximumSize':'medium','maximumGoldMultiplier':20,'maximumActive':1,'durationHours':'proficiency'},{'classLevel':6,'maximumSize':'large'},{'classLevel':14,'maximumSize':'huge','maximumGoldMultiplier':None,'maximumActive':{'ability':'cha','minimum':2},'maximumSizedObjects':1,'otherObjectsMaximumSize':'small'}]
+animation=find('tce:bard:creation:animating-performance')['data'];animation['alternateCost']={'slotMinimum':3,'replacesFreeUse':True};animation['companionProfile']={'id':'tce:bard:creation:dancing-item','name':{'fr':'Objet dansant','en':'Dancing Item'},'creatureType':'construct','maximumSize':'large','armorClass':16,'hitPoints':{'base':10,'perClassLevel':5,'classId':'bard'},'movement':{'walk':30,'fly':30,'hover':True},'scores':{'str':18,'dex':14,'con':16,'int':4,'wis':10,'cha':6},'damageImmunities':['poison','psychic'],'conditionImmunities':['charmed','frightened','poisoned','exhaustion'],'senses':{'darkvision':60,'passivePerception':10},'proficiency':'owner','attack':{'ability':'spell-attack-of-owner','reach':5,'dice':'1d10','damageType':'force','bonus':'proficiency-of-owner'},'form':'immutable','speedAura':{'range':10,'change':10,'choices':['increase','decrease'],'requiresNotIncapacitated':True,'duration':'end-of-affected-turn'},'defaultAction':'dodge','commandEconomy':'bonus','commandAlsoWith':'bardic-inspiration','independentWhenOwner':'incapacitated','maximumActive':1,'durationHours':1}
+find('tce:bard:eloquence:silver-tongue')['name']['fr']='Faconde'
+for key,fr,en,level,note,policy in [
+ ('magical-inspiration','Inspiration magique','Magical Inspiration',2,'Un bénéficiaire de votre Inspiration qui lance un sort de dégâts ou de soins peut consommer le dé pour augmenter les dégâts ou PV rendus d’une seule cible affectée. Aucune seconde dépense d’Inspiration par le barde.',None),
+ ('bardic-versatility','Polyvalence bardique','Bardic Versatility',4,'À un niveau de barde donnant une ASI, remplacez soit une compétence d’Expertise par une autre compétence maîtrisée sans Expertise, soit un sort mineur de Sorts par un autre sort mineur de barde. Un seul de ces deux changements est permis à ce niveau.',{'cantripReplacementAtASI':1,'expertiseReplacementAtASI':1,'sharedASIReplacementLimit':1})]:
+ source={**find('tce:bard:creation')['source'],'document':'Chaudron des merveilles de Tasha / Barde — aptitudes optionnelles'};items.append({'id':'tce:bard:'+key,'type':'feature','name':{'fr':fr,'en':en},'source':source,'data':{'ruleset':'dnd5e-2014','rulesSourceId':'tce','classId':'bard','minimumClassLevel':level,'optionalClassFeature':True,'campaignOption':'tce:bard:'+key,'description':note,'language':'fr',**({'acquisitionPolicyOverride':policy}if policy else{}),'automation':{'status':'manual','handler':None,'limits':['Conditional spell and combat outcomes require adjudication.']}}})
+
+
+# Connect resource/economy contracts of the previously installed colleges too.
+for sid,key,economy,resourceId,target,maxTargets,concentration in [
+ ('xge:bard:glamour','mantle-of-inspiration','bonus','inspiration','selected',20,False),
+ ('xge:bard:glamour','enthralling-performance','none','enthralling-performance','selected',20,False),
+ ('xge:bard:glamour','mantle-of-majesty','bonus','mantle-of-majesty','self',1,True),
+ ('xge:bard:glamour','unbreakable-majesty','bonus','unbreakable-majesty','self',1,False),
+ ('tce:bard:eloquence','unsettling-words','bonus','inspiration','selected',1,False),
+ ('tce:bard:eloquence','universal-speech','action','universal-speech','selected',20,False),
+ ('tce:bard:eloquence','infectious-inspiration','reaction','infectious-inspiration','selected',1,False)]:
+ f=find(sid+':'+key);f['data']['manualMechanics']={'economy':economy,'target':target,'maxTargets':maxTargets,'resourceId':resourceId,'amount':1,'requirements':[f['data']['description'],'Valider les limites de cible, portée et déclenchement.'],**({'concentration':True}if concentration else{})}
+find('tce:bard:eloquence:universal-speech')['data']['alternateCost']={'slotMinimum':1,'replacesFreeUse':True}
+find('tce:bard:eloquence:silver-tongue')['data']['checkRules']=[{'skills':['persuasion','deception'],'minimumD20':10}]
+find('xge:bard:glamour:mantle-of-majesty')['data']['innateSpells']=[{'classLevel':6,'spellIds':[spells['Command']],'ability':'cha','resourceId':None,'economy':'bonus','target':'selected','maxTargets':1,'requiresActiveFeature':'xge:bard:glamour:mantle-of-majesty','requirements':'Seulement pendant Apparence majestueuse active et sa concentration, pendant1 min. Injonction par action bonus sans emplacement. L’usage par repos long est payé à l’activation de l’Apparence, pas à chaque Injonction.'}]
+
+
+for item in items:
+ if item['type']=='subclass' and item['id'] in ['phb14:fighter:eldritch-knight','phb14:rogue:arcane-trickster']:
+  item['data'].update({'casting':{'ability':'int','progression':'third','startsAtClassLevel':3},'spellListClassId':'wizard','cantripsKnown':table(lambda n:0 if n<3 else 2 if n<10 else 3),'spellsKnown':[0,0,3,4,4,4,5,6,6,7,8,8,9,10,10,11,11,11,12,13],'restrictedSpellSchools':['abjuration','evocation'] if item['data']['classId']=='fighter' else ['enchantment','illusion'],'unrestrictedSpellsKnown':table(lambda n:0 if n<3 else 1 if n<8 else 2 if n<14 else 3 if n<20 else 4),'acquisitionPolicy':{'knownReplacementPerClassLevel':1,'invocationReplacementPerClassLevel':0,'spellbookLearnedAtFirstLevel':0,'spellbookLearnedPerClassLevel':0}})
+(root/'src/catalog/data/subclasses-extended.json').write_text(json.dumps({'kind':'catalog','schemaVersion':3,'ruleset':'dnd5e-2014','id':'pilot20:subclasses-extended-2014','items':items},ensure_ascii=False,indent=2)+'\n')
+print(len([i for i in items if i['type']=='subclass']),'subclasses,',len(items),'definitions')

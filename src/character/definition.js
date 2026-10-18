@@ -10,7 +10,8 @@ export function validateCharacter(d) {
   if(d.castingModifiers!==undefined) {check(Array.isArray(d.castingModifiers) && d.castingModifiers.length<=20,'Character casting modifiers');ids(d.castingModifiers.map(r=>r.id));d.castingModifiers.forEach(validateCastingModifier);}
   check(d.kind==='character' && d.schemaVersion===2 && d.ruleset==='dnd5e-2014' && id(d.id) && integer(d.revision,1),'Character header');
   keys(d.identity,['name','portrait','description','gender'],['name','portrait','description']);if(d.identity.gender!==undefined)check(['','femme','homme'].includes(d.identity.gender),'Identity gender'); check(text(d.identity.name) && d.identity.name.trim() && text(d.identity.portrait) && text(d.identity.description),'Identity');
-  keys(d.ancestry,['id','subraceId','source']); check(id(d.ancestry.id) && (d.ancestry.subraceId===null || id(d.ancestry.subraceId)),'Ancestry');source(d.ancestry.source);
+  keys(d.ancestry,['id','subraceId','source','size','creatureType'],['id','subraceId','source']); check(id(d.ancestry.id) && (d.ancestry.subraceId===null || id(d.ancestry.subraceId)),'Ancestry');source(d.ancestry.source);
+  if(d.ancestry.size!==undefined)check(['small','medium'].includes(d.ancestry.size),'Ancestry size');if(d.ancestry.creatureType!==undefined)check(['humanoid','fey','construct','undead'].includes(d.ancestry.creatureType),'Ancestry creature type');
   check(text(d.background) && (d.alignment===null || text(d.alignment)),'Background');
   keys(d.scores,ABILITIES);check(ABILITIES.every(k=>integer(d.scores[k],1,30)),'Ability scores');
   check(Array.isArray(d.classes) && d.classes.length>0,'Classes');
@@ -28,10 +29,12 @@ export function validateCharacter(d) {
   check(Array.isArray(d.equipment),'Equipment');
   ids(d.equipment.map(e=>e.id));
   for(const e of d.equipment) {
-    keys(e,['id','kind','equipped','source','armor','weapon']);
+    keys(e,['id','kind','equipped','source','armor','weapon','name','quantity'],['id','kind','equipped','source','armor','weapon']);
+    if(e.name!==undefined){keys(e.name,['fr','en']);check(Object.values(e.name).every(v=>text(v)&&v.trim()),'Equipment names');}
+    if(e.quantity!==undefined)check(integer(e.quantity,1,10000),'Equipment quantity');
     check(id(e.id) && ['weapon','armor','shield','item'].includes(e.kind) && typeof e.equipped==='boolean','Equipment item');source(e.source);
     if(e.armor!==null) {keys(e.armor,['base','dexCap','bonus','minStrength','heavy']);check(integer(e.armor.base,0,30) && (e.armor.dexCap===null || integer(e.armor.dexCap,0,10)) && integer(e.armor.bonus,-5,10) && integer(e.armor.minStrength,0,30) && typeof e.armor.heavy==='boolean','Armor');}
-    if(e.weapon!==null) {keys(e.weapon,['ability','proficient','bonus','dice','damageType']);check(ABILITIES.includes(e.weapon.ability) && typeof e.weapon.proficient==='boolean' && integer(e.weapon.bonus,-5,10) && text(e.weapon.dice) && id(e.weapon.damageType),'Weapon');}
+    if(e.weapon!==null) {keys(e.weapon,['ability','proficient','bonus','dice','damageType','ranged'],['ability','proficient','bonus','dice','damageType']);if(e.weapon.ranged!==undefined)check(typeof e.weapon.ranged==='boolean','Ranged weapon metadata');check(ABILITIES.includes(e.weapon.ability) && typeof e.weapon.proficient==='boolean' && integer(e.weapon.bonus,-5,10) && text(e.weapon.dice) && id(e.weapon.damageType),'Weapon');}
     check((e.kind==='weapon')===(e.weapon!==null) && (['armor','shield'].includes(e.kind))===(e.armor!==null),'Equipment profile mismatch');
   }
   keys(d.spells,['known','prepared']);ids(d.spells.known);ids(d.spells.prepared);
@@ -41,13 +44,15 @@ export function validateCharacter(d) {
   ids(d.choices.map(c=>c.id));ids(d.choiceRules.map(c=>c.id));
   for(const c of d.choices) {keys(c,['id','level','optionIds','note']);check(id(c.id) && integer(c.level,1,20) && text(c.note),'Choice');ids(c.optionIds);}
   for(const r of d.choiceRules) {
-    keys(r,['id','level','count','options','requires','incompatible']);
+    keys(r,['id','level','count','options','requires','incompatible','minimumCount'],['id','level','count','options','requires','incompatible']);
+    if(r.minimumCount!==undefined)check(integer(r.minimumCount,0,r.count),'Minimum choices');
     check(id(r.id) && integer(r.level,1,20) && integer(r.count,1,20),'Choice rule');ids(r.options);ids(r.requires);ids(r.incompatible);
   }
   check(Array.isArray(d.resources) && Array.isArray(d.abilities) && Array.isArray(d.modifiers),'Rule arrays');
   ids(d.resources.map(r=>r.id));ids(d.abilities.map(a=>a.id));ids(d.modifiers.map(m=>m.id));
   keys(d.defenses,['resistances','immunities','vulnerabilities']);for(const v of Object.values(d.defenses)) ids(v);
-  keys(d.movement,['walk','ignoreHeavyPenalty']);check(integer(d.movement.walk,0,200) && typeof d.movement.ignoreHeavyPenalty==='boolean','Movement');
+  keys(d.movement,['walk','ignoreHeavyPenalty','climb','swim','fly','climbMatchesWalk','swimMatchesWalk'],['walk','ignoreHeavyPenalty']);check(integer(d.movement.walk,0,200) && typeof d.movement.ignoreHeavyPenalty==='boolean','Movement');
+  for(const key of ['climb','swim','fly'])if(d.movement[key]!==undefined)check(integer(d.movement[key],0,200),'Movement mode');if(d.movement.climbMatchesWalk!==undefined)check(typeof d.movement.climbMatchesWalk==='boolean','Climb speed policy');
   check(Array.isArray(d.armorRules),'Armor rules');
   for(const a of d.armorRules) {keys(a,['id','base','abilities','shieldAllowed','source']);check(id(a.id) && integer(a.base,0,30) && typeof a.shieldAllowed==='boolean','AC rule');ids(a.abilities);check(a.abilities.every(k=>ABILITIES.includes(k)),'AC abilities');source(a.source);}
   check(Array.isArray(d.buildRules),'Build requirements');ids(d.buildRules.map(r=>r.id));
@@ -77,7 +82,7 @@ export function validateBuild(d) {
   for(const r of d.choiceRules) {
     if(r.level>level) continue;
     const c=d.choices.find(c=>c.id===r.id);
-    if(!c || c.optionIds.length!==r.count) add('required-choice','choices.'+r.id);
+    if(!c || c.optionIds.length<(r.minimumCount??r.count)||c.optionIds.length>r.count) add('required-choice','choices.'+r.id);
     else if(c.level!==r.level || c.optionIds.some(k=>!r.options.includes(k))) add('invalid-choice','choices.'+r.id);
     if(c && r.requires.some(k=>!selected.has(k))) add('prerequisite','choices.'+r.id);
     if(c && r.incompatible.some(k=>selected.has(k))) add('incompatible','choices.'+r.id);

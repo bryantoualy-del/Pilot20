@@ -468,6 +468,7 @@ export function weaponProfile(id, scores, proficiencies) {
       : w.ranged
         ? "dex"
         : "str",
+    ranged:w.ranged,
     proficient:
       proficiencies.includes(w.proficiency) ||
       proficiencies.includes(w.category + "-weapons"),

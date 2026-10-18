@@ -1,0 +1,881 @@
+[
+  {
+    "slug": "amis",
+    "name_fr": "Amis",
+    "name_en": "Friends",
+    "level": 0,
+    "source_label": "Player´s Handbook (BR+)",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=amis",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=amis",
+    "verificationRef": "turn5view0",
+    "school": "enchantement",
+    "castingTime": "1 action",
+    "range": "personnelle",
+    "components": "S, M (une petite quantité de maquillage appliquée sur le visage durant l'incantation)",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "bard",
+      "sorcerer",
+      "wizard",
+      "warlock"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "arme-elementaire",
+    "name_fr": "Arme élémentaire",
+    "name_en": "Elemental Weapon",
+    "level": 3,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=arme-elementaire",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=arme-elementaire",
+    "verificationRef": "turn5view1",
+    "school": "transmutation",
+    "castingTime": "1 action",
+    "range": "contact",
+    "components": "V, S",
+    "duration": "concentration, jusqu'à 1 heure",
+    "ritual": false,
+    "classIds": [
+      "paladin"
+    ],
+    "optionalTashaClassIds": [
+      "druid",
+      "ranger"
+    ]
+  },
+  {
+    "slug": "armure-d-agathys",
+    "name_fr": "Armure d'Agathys",
+    "name_en": "Armor of Agathys",
+    "level": 1,
+    "source_label": "Player´s Handbook (BR+)",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=armure-d-agathys",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=armure-d-agathys",
+    "verificationRef": "turn5view2",
+    "school": "abjuration",
+    "castingTime": "1 action",
+    "range": "personnelle",
+    "components": "V, S, M (une coupe d'eau)",
+    "duration": "1 heure",
+    "ritual": false,
+    "classIds": [
+      "warlock"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "aura-de-purete",
+    "name_fr": "Aura de pureté",
+    "name_en": "Aura of Purity",
+    "level": 4,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=aura-de-purete",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=aura-de-purete",
+    "verificationRef": "turn5view3",
+    "school": "abjuration",
+    "castingTime": "1 action",
+    "range": "personnelle (rayon de 9 mètres)",
+    "components": "V",
+    "duration": "concentration, jusqu'à 10 minutes",
+    "ritual": false,
+    "classIds": [
+      "paladin"
+    ],
+    "optionalTashaClassIds": [
+      "cleric"
+    ]
+  },
+  {
+    "slug": "aura-de-vie",
+    "name_fr": "Aura de vie",
+    "name_en": "Aura of Life",
+    "level": 4,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=aura-de-vie",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=aura-de-vie",
+    "verificationRef": "turn5view4",
+    "school": "abjuration",
+    "castingTime": "1 action",
+    "range": "personnelle (rayon de 9 mètres)",
+    "components": "V",
+    "duration": "concentration, jusqu'à 10 minutes",
+    "ritual": false,
+    "classIds": [
+      "paladin"
+    ],
+    "optionalTashaClassIds": [
+      "cleric"
+    ]
+  },
+  {
+    "slug": "aura-de-vitalite",
+    "name_fr": "Aura de vitalité",
+    "name_en": "Aura of Vitality",
+    "level": 3,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=aura-de-vitalite",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=aura-de-vitalite",
+    "verificationRef": "turn5view5",
+    "school": "évocation",
+    "castingTime": "1 action",
+    "range": "personnelle (rayon de 9 mètres)",
+    "components": "V",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "paladin"
+    ],
+    "optionalTashaClassIds": [
+      "cleric",
+      "druid"
+    ]
+  },
+  {
+    "slug": "aura-du-croise",
+    "name_fr": "Aura du croisé",
+    "name_en": "Crusader's Mantle",
+    "level": 3,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=aura-du-croise",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=aura-du-croise",
+    "verificationRef": "turn5view6",
+    "school": "évocation",
+    "castingTime": "1 action",
+    "range": "personnelle",
+    "components": "V",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "paladin"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "carquois-magique",
+    "name_fr": "Carquois magique",
+    "name_en": "Swift Quiver",
+    "level": 5,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=carquois-magique",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=carquois-magique",
+    "verificationRef": "turn5view7",
+    "school": "transmutation",
+    "castingTime": "1 action bonus",
+    "range": "contact",
+    "components": "V, S, M (un carquois contenant au moins une munition)",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "ranger"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "cercle-de-pouvoir",
+    "name_fr": "Cercle de pouvoir",
+    "name_en": "Circle of Power",
+    "level": 5,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=cercle-de-pouvoir",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=cercle-de-pouvoir",
+    "verificationRef": "turn5view8",
+    "school": "abjuration",
+    "castingTime": "1 action",
+    "range": "personnelle (rayon de 9 mètres)",
+    "components": "V",
+    "duration": "concentration, jusqu'à 10 minutes",
+    "ritual": false,
+    "classIds": [
+      "paladin"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "chatiment-aveuglant",
+    "name_fr": "Châtiment aveuglant",
+    "name_en": "Blinding Smite",
+    "level": 3,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=chatiment-aveuglant",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=chatiment-aveuglant",
+    "verificationRef": "turn5view9",
+    "school": "évocation",
+    "castingTime": "1 action bonus",
+    "range": "personnelle",
+    "components": "V",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "paladin"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "chatiment-calcinant",
+    "name_fr": "Châtiment calcinant",
+    "name_en": "Searing Smite",
+    "level": 1,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=chatiment-calcinant",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=chatiment-calcinant",
+    "verificationRef": "turn6view0",
+    "school": "évocation",
+    "castingTime": "1 action bonus",
+    "range": "personnelle",
+    "components": "V",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "paladin"
+    ],
+    "optionalTashaClassIds": [
+      "ranger"
+    ]
+  },
+  {
+    "slug": "chatiment-courrouce",
+    "name_fr": "Châtiment courroucé",
+    "name_en": "Wrathful Smite",
+    "level": 1,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=chatiment-courrouce",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=chatiment-courrouce",
+    "verificationRef": "turn6view1",
+    "school": "évocation",
+    "castingTime": "1 action bonus",
+    "range": "personnelle",
+    "components": "V",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "paladin"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "chatiment-debilitant",
+    "name_fr": "Châtiment débilitant",
+    "name_en": "Staggering Smite",
+    "level": 4,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=chatiment-debilitant",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=chatiment-debilitant",
+    "verificationRef": "turn6view2",
+    "school": "évocation",
+    "castingTime": "1 action bonus",
+    "range": "personnelle",
+    "components": "V",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "paladin"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "chatiment-du-ban",
+    "name_fr": "Châtiment du ban",
+    "name_en": "Banishing Smite",
+    "level": 5,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=chatiment-du-ban",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=chatiment-du-ban",
+    "verificationRef": "turn6view3",
+    "school": "abjuration",
+    "castingTime": "1 action bonus",
+    "range": "personnelle",
+    "components": "V",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "paladin"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "chatiment-tonitruant",
+    "name_fr": "Châtiment tonitruant",
+    "name_en": "Thunderous Smite",
+    "level": 1,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=chatiment-tonitruant",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=chatiment-tonitruant",
+    "verificationRef": "turn6view4",
+    "school": "évocation",
+    "castingTime": "1 action bonus",
+    "range": "personnelle",
+    "components": "V",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "paladin"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "cordon-de-fleches",
+    "name_fr": "Cordon de flèches",
+    "name_en": "Cordon of Arrows",
+    "level": 2,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=cordon-de-fleches",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=cordon-de-fleches",
+    "verificationRef": "turn6view5",
+    "school": "transmutation",
+    "castingTime": "1 action",
+    "range": "1,50 mètre",
+    "components": "V, S, M (quatre ou plus flèches ou carreaux)",
+    "duration": "8 heures",
+    "ritual": false,
+    "classIds": [
+      "ranger"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "duel-force",
+    "name_fr": "Duel forcé",
+    "name_en": "Compelled Duel",
+    "level": 1,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=duel-force",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=duel-force",
+    "verificationRef": "turn6view7",
+    "school": "enchantement",
+    "castingTime": "1 action bonus",
+    "range": "9 mètres",
+    "components": "V",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "paladin"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "fleche-de-foudre",
+    "name_fr": "Flèche de foudre",
+    "name_en": "Lightning Arrow",
+    "level": 3,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=fleche-de-foudre",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=fleche-de-foudre",
+    "verificationRef": "turn6view8",
+    "school": "transmutation",
+    "castingTime": "1 action bonus",
+    "range": "personnelle",
+    "components": "V, S",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "ranger"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "fouet-epineux",
+    "name_fr": "Fouet épineux",
+    "name_en": "Thorn Whip",
+    "level": 0,
+    "source_label": "Player´s Handbook (BR+)",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=fouet-epineux",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=fouet-epineux",
+    "verificationRef": "turn6view10",
+    "school": "transmutation",
+    "castingTime": "1 action",
+    "range": "9 mètres",
+    "components": "V, S, M (la tige d'une plante avec des épines)",
+    "duration": "instantanée",
+    "ritual": false,
+    "classIds": [
+      "druid"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "frappe-piegeuse",
+    "name_fr": "Frappe piégeuse",
+    "name_en": "Ensnaring Strike",
+    "level": 1,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=frappe-piegeuse",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=frappe-piegeuse",
+    "verificationRef": "turn6view11",
+    "school": "invocation",
+    "castingTime": "1 action bonus",
+    "range": "personnelle",
+    "components": "V",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "ranger"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "grele-d-epines",
+    "name_fr": "Grêle d'épines",
+    "name_en": "Hail of Thorns",
+    "level": 1,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=grele-d-epines",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=grele-d-epines",
+    "verificationRef": "turn7view0",
+    "school": "invocation",
+    "castingTime": "1 action bonus",
+    "range": "personnelle",
+    "components": "V",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "ranger"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "invocation-de-projectiles",
+    "name_fr": "Invocation de projectiles",
+    "name_en": "Conjure Barrage",
+    "level": 3,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=invocation-de-projectiles",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=invocation-de-projectiles",
+    "verificationRef": "turn7view1",
+    "school": "invocation",
+    "castingTime": "1 action",
+    "range": "personnelle (cône de 18 mètres)",
+    "components": "V, S, M (une pièce de munition ou une arme de lancer)",
+    "duration": "instantanée",
+    "ritual": false,
+    "classIds": [
+      "ranger"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "liane-avide",
+    "name_fr": "Liane avide",
+    "name_en": "Grasping Vine",
+    "level": 4,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=liane-avide",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=liane-avide",
+    "verificationRef": "turn7view3",
+    "school": "invocation",
+    "castingTime": "1 action bonus",
+    "range": "9 mètres",
+    "components": "V, S",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "druid",
+      "ranger"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "malefice",
+    "name_fr": "Maléfice",
+    "name_en": "Hex",
+    "level": 1,
+    "source_label": "Player´s Handbook (BR+)",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=malefice",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=malefice",
+    "verificationRef": "turn7view4",
+    "school": "enchantement",
+    "castingTime": "1 action bonus",
+    "range": "27 mètres",
+    "components": "V, S, M (l'œil pétrifié d'un triton)",
+    "duration": "concentration, jusqu'à 1 heure",
+    "ritual": false,
+    "classIds": [
+      "warlock"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "mot-de-pouvoir-guerisseur",
+    "name_fr": "Mot de pouvoir guérisseur",
+    "name_en": "Power Word Heal",
+    "level": 9,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=mot-de-pouvoir-guerisseur",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=mot-de-pouvoir-guerisseur",
+    "verificationRef": "turn7view6",
+    "school": "évocation",
+    "castingTime": "1 action",
+    "range": "contact",
+    "components": "V, S",
+    "duration": "instantanée",
+    "ritual": false,
+    "classIds": [
+      "bard"
+    ],
+    "optionalTashaClassIds": [
+      "cleric"
+    ]
+  },
+  {
+    "slug": "murmures-dissonants",
+    "name_fr": "Murmures dissonants",
+    "name_en": "Dissonant Whispers",
+    "level": 1,
+    "source_label": "Player´s Handbook (BR+)",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=murmures-dissonants",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=murmures-dissonants",
+    "verificationRef": "turn7view7",
+    "school": "enchantement",
+    "castingTime": "1 action",
+    "range": "18 mètres",
+    "components": "V",
+    "duration": "instantanée",
+    "ritual": false,
+    "classIds": [
+      "bard"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "nuee-de-dagues",
+    "name_fr": "Nuée de dagues",
+    "name_en": "Cloud of Daggers",
+    "level": 2,
+    "source_label": "Player´s Handbook (BR+)",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=nuee-de-dagues",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=nuee-de-dagues",
+    "verificationRef": "turn7view8",
+    "school": "invocation",
+    "castingTime": "1 action",
+    "range": "18 mètres",
+    "components": "V, S, M (un tesson de verre)",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "bard",
+      "sorcerer",
+      "wizard",
+      "warlock"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "orbe-chromatique",
+    "name_fr": "Orbe chromatique",
+    "name_en": "Chromatic Orb",
+    "level": 1,
+    "source_label": "Player´s Handbook (BR+)",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=orbe-chromatique",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=orbe-chromatique",
+    "verificationRef": "turn7view9",
+    "school": "évocation",
+    "castingTime": "1 action",
+    "range": "27 mètres",
+    "components": "V, S, M (un diamant valant au moins 50 po)",
+    "duration": "instantanée",
+    "ritual": false,
+    "classIds": [
+      "sorcerer",
+      "wizard"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "portail-magique",
+    "name_fr": "Portail magique",
+    "name_en": "Arcane Gate",
+    "level": 6,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=portail-magique",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=portail-magique",
+    "verificationRef": "turn7view10",
+    "school": "invocation",
+    "castingTime": "1 action",
+    "range": "150 mètres",
+    "components": "V, S",
+    "duration": "concentration, jusqu'à 10 minutes",
+    "ritual": false,
+    "classIds": [
+      "sorcerer",
+      "wizard",
+      "warlock"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "protection-contre-les-armes",
+    "name_fr": "Protection contre les armes",
+    "name_en": "Blade Ward",
+    "level": 0,
+    "source_label": "Player´s Handbook (BR+)",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=protection-contre-les-armes",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=protection-contre-les-armes",
+    "verificationRef": "turn7view11",
+    "school": "abjuration",
+    "castingTime": "1 action",
+    "range": "personnelle",
+    "components": "V, S",
+    "duration": "1 round",
+    "ritual": false,
+    "classIds": [
+      "bard",
+      "sorcerer",
+      "wizard",
+      "warlock"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "rayon-empoisonne",
+    "name_fr": "Rayon empoisonné",
+    "name_en": "Ray of Sickness",
+    "level": 1,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=rayon-empoisonne",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=rayon-empoisonne",
+    "verificationRef": "turn8view0",
+    "school": "nécromancie",
+    "castingTime": "1 action",
+    "range": "18 mètres",
+    "components": "V, S",
+    "duration": "instantanée",
+    "ritual": false,
+    "classIds": [
+      "sorcerer",
+      "wizard"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "sens-animal",
+    "name_fr": "Sens animal",
+    "name_en": "Beast Sense",
+    "level": 2,
+    "source_label": "Player´s Handbook (BR+)",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=sens-animal",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=sens-animal",
+    "verificationRef": "turn8view1",
+    "school": "divination",
+    "castingTime": "1 action",
+    "range": "contact",
+    "components": "S",
+    "duration": "concentration, jusqu'à 1 heure",
+    "ritual": true,
+    "classIds": [
+      "druid",
+      "ranger"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "telepathie",
+    "name_fr": "Télépathie",
+    "name_en": "Telepathy",
+    "level": 8,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=telepathie",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=telepathie",
+    "verificationRef": "turn8view2",
+    "school": "évocation",
+    "castingTime": "1 action",
+    "range": "illimitée",
+    "components": "V, S, M (une paire d'anneaux d'argent liés)",
+    "duration": "24 heures",
+    "ritual": false,
+    "classIds": [
+      "wizard"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "tentacules-de-hadar",
+    "name_fr": "Tentacules de Hadar",
+    "name_en": "Arms of Hadar",
+    "level": 1,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=tentacules-de-hadar",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=tentacules-de-hadar",
+    "verificationRef": "turn8view3",
+    "school": "invocation",
+    "castingTime": "1 action",
+    "range": "personnelle (rayon de 3 mètres)",
+    "components": "V, S",
+    "duration": "instantanée",
+    "ritual": false,
+    "classIds": [
+      "warlock"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "trait-ensorcele",
+    "name_fr": "Trait ensorcelé",
+    "name_en": "Witch Bolt",
+    "level": 1,
+    "source_label": "Player´s Handbook (BR+)",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=trait-ensorcele",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=trait-ensorcele",
+    "verificationRef": "turn8view4",
+    "school": "évocation",
+    "castingTime": "1 action",
+    "range": "9 mètres",
+    "components": "V, S, M (la branche d'un arbre qui a été frappé par la foudre)",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "sorcerer",
+      "wizard",
+      "warlock"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "tsunami",
+    "name_fr": "Tsunami",
+    "name_en": "Tsunami",
+    "level": 8,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=tsunami",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=tsunami",
+    "verificationRef": "turn8view5",
+    "school": "invocation",
+    "castingTime": "1 minute",
+    "range": "champ de vision",
+    "components": "V, S",
+    "duration": "concentration, jusqu'à 6 rounds",
+    "ritual": false,
+    "classIds": [
+      "druid"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "vague-destructrice",
+    "name_fr": "Vague destructrice",
+    "name_en": "Destructive Wave",
+    "level": 5,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=vague-destructrice",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=vague-destructrice",
+    "verificationRef": "turn8view6",
+    "school": "évocation",
+    "castingTime": "1 action",
+    "range": "personnelle (rayon de 9 mètres)",
+    "components": "V",
+    "duration": "instantanée",
+    "ritual": false,
+    "classIds": [
+      "paladin"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "voracite-de-hadar",
+    "name_fr": "Voracité de Hadar",
+    "name_en": "Hunger of Hadar",
+    "level": 3,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=voracite-de-hadar",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vf=voracite-de-hadar",
+    "verificationRef": "turn8view7",
+    "school": "invocation",
+    "castingTime": "1 action",
+    "range": "45 mètres",
+    "components": "V, S, M (un tentacule de pieuvre mariné)",
+    "duration": "concentration, jusqu'à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "warlock"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "couronne-du-dement",
+    "name_fr": "Couronne du dément",
+    "name_en": "Crown of Madness",
+    "level": 2,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=couronne-du-dement",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vo=crown-of-madness",
+    "verificationRef": "turn9view0",
+    "school": "enchantment",
+    "castingTime": "1 action",
+    "range": "36 mètres",
+    "components": "V, S",
+    "duration": "concentration, jusqu’à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "bard",
+      "sorcerer",
+      "warlock",
+      "wizard"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "force-fantasmagorique",
+    "name_fr": "Force fantasmagorique",
+    "name_en": "Phantasmal Force",
+    "level": 2,
+    "source_label": "Player´s Handbook (BR+)",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=force-fantasmagorique",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vo=phantasmal-force",
+    "verificationRef": "turn9view1",
+    "school": "illusion",
+    "castingTime": "1 action",
+    "range": "18 mètres",
+    "components": "V, S, M (un peu de laine)",
+    "duration": "concentration, jusqu’à 1 minute",
+    "ritual": false,
+    "classIds": [
+      "bard",
+      "sorcerer",
+      "wizard"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "invocation-de-volee",
+    "name_fr": "Invocation de volée",
+    "name_en": "Conjure Volley",
+    "level": 5,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=invocation-de-volee",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vo=conjure-volley",
+    "verificationRef": "turn9view2",
+    "school": "conjuration",
+    "castingTime": "1 action",
+    "range": "45 mètres",
+    "components": "V, S, M (une munition ou une arme de lancer)",
+    "duration": "instantanée",
+    "ritual": false,
+    "classIds": [
+      "ranger"
+    ],
+    "optionalTashaClassIds": []
+  },
+  {
+    "slug": "mort-simulee",
+    "name_fr": "Mort simulée",
+    "name_en": "Feign Death",
+    "level": 3,
+    "source_label": "Player´s Handbook",
+    "url": "https://www.aidedd.org/dnd/sorts.php?vf=mort-simulee",
+    "verifiedUrl": "https://www.aidedd.org/dnd/sorts.php?vo=feign-death",
+    "verificationRef": "turn9view3",
+    "school": "necromancy",
+    "castingTime": "1 action",
+    "range": "contact",
+    "components": "V, S, M (une pincée de terre de cimetière)",
+    "duration": "1 heure",
+    "ritual": true,
+    "classIds": [
+      "bard",
+      "cleric",
+      "druid",
+      "wizard"
+    ],
+    "optionalTashaClassIds": []
+  }
+]

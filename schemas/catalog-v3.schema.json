@@ -38,7 +38,9 @@
               "progression",
               "effect",
               "source",
-              "feat"
+              "feat",
+              "race",
+              "background"
             ]
           },
           "name": {
@@ -69,7 +71,8 @@
                 "enum": [
                   "srd",
                   "private",
-                  "homebrew"
+                  "homebrew",
+                  "reference"
                 ]
               },
               "document": {
