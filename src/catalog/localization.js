@@ -15,6 +15,7 @@ export function localizedName(entry, locale = "fr", verified = {}) {
 export function spellTerms(entry, locale = "fr") {
   const d = entry.data;
   const reference = spellReference(entry.id);
+  if(locale==='fr' && d.language==='fr') return {level:d.level,school:spellSchool(d.school,locale),castingTime:d.castingTime,range:d.range,components:d.components,duration:d.duration};
   if(locale === "fr" && reference) return {level:reference.level,school:reference.schoolFr,castingTime:reference.casting.time,range:reference.casting.range,components:reference.casting.components + (reference.casting.material ? " ("+reference.casting.material+")" : ""),duration:reference.casting.duration};
   if (locale === "en")
     return {

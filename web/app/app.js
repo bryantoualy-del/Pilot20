@@ -1,4 +1,5 @@
 import {renderGrimoire} from "./grimoire.js";
+import {playerCatalogs} from "../../src/catalog/player-catalogs.js";
 import { localizedName } from "../../src/catalog/localization.js";
 import { stepNames } from "./i18n.js";
 import { openIndexedDB } from "../../src/persistence/adapters.js";
@@ -718,18 +719,7 @@ let cacheReady = false;
 try {
   storage = await openIndexedDB();
   library = characterLibrary(storage);
-  campaigns = campaignRepository(
-    storage,
-    await Promise.all(
-      ["classes", "spells", "origins"].map(async (n) => {
-        const r = await fetch(
-          new URL("../../src/catalog/data/" + n + ".json", import.meta.url),
-        );
-        if (!r.ok) throw Error("catalog");
-        return r.json();
-      }),
-    ),
-  );
+  campaigns = campaignRepository(storage,playerCatalogs);
   drafts = creatorRepository(storage, library);
   state.locale = (await storage.get("meta", "creator:locale")) ?? "fr";
   state.campaignId =

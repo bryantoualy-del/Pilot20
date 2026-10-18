@@ -266,7 +266,7 @@ const priorities = {
 };
 export function templateScores(classId) {
   return Object.fromEntries(
-    (priorities[classId] ?? ABILITIES).map((k, i) => [
+    (priorities[classId] ?? (classId==='artificer'?['int','con','dex','wis','str','cha']:ABILITIES)).map((k, i) => [
       k,
       [15, 14, 13, 12, 10, 8][i],
     ]),
@@ -359,7 +359,8 @@ export function suggestChoices(
         d.originSelections[q.id] = current.options.slice(0, current.count);
       }
     }
-    for (const q of r.choices) {
+    for (const planned of r.choices) {
+      const q=planned.kind==='proficiency'&&!d.selections[planned.id]?.length?(draftProgression(context,config,d).choices.find(q=>q.id===planned.id)??planned):planned;
       if (
         q.kind === "subclass" ||
         (preserveIdentity &&
@@ -387,15 +388,8 @@ export function suggestChoices(
             (!q.distinctGroup || !group.has(v)),
         );
         if (q.kind === "asi") {
-          const scores = { ...d.scores };
-          for (const values of Object.values(d.selections))
-            for (const v of values)
-              if (v.startsWith("asi:")) {
-                const [, a, b] = v.split(":");
-                scores[a]++;
-                scores[b]++;
-              }
-          const priority = priorities[q.classId] ?? ABILITIES;
+          const scores = { ...draftProgression(context,config,d).scores };
+          const priority = priorities[q.classId] ?? (q.classId==='artificer'?['int','con','dex','wis','str','cha']:ABILITIES);
           options = options
             .filter((v) => {
               if (!v.startsWith("asi:")) return false;

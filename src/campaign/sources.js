@@ -39,7 +39,7 @@ export function defaultCampaign(campaignId = "default") {
     id: campaignId,
     revision: 1,
     ruleset: "dnd5e-2014",
-    enabledSourceIds: ["srd51", "xge", "tce"],
+    enabledSourceIds: ["srd51", "xge", "tce", "phb14"],
     enabledOptions: [],
   };
 }
@@ -122,8 +122,8 @@ export function campaignCatalog(publicPacks, privatePacks, campaign) {
   validateCampaign(campaign);
   check(
     Array.isArray(publicPacks) &&
-      publicPacks.every((p) => p.items.every((i) => i.source.kind === "srd")),
-    "Only SRD in public packs",
+      publicPacks.every((p) => p.items.every((i) => ['srd','reference'].includes(i.source.kind))),
+    "Only SRD and original referenced summaries in built-in catalogues",
   );
   const wrappers = privatePacks.map((p) =>
     parsePrivatePack(JSON.stringify(p), { authorized: true }),
@@ -145,7 +145,7 @@ export function campaignCatalog(publicPacks, privatePacks, campaign) {
       p.items.map((i) => [
         i.id,
         n < publicPacks.length
-          ? "srd51"
+          ? i.source.kind==='reference'?i.data.rulesSourceId:"srd51"
           : wrappers[n - publicPacks.length].sourceId,
       ]),
     ),
@@ -158,6 +158,7 @@ export function campaignCatalog(publicPacks, privatePacks, campaign) {
         (!i.data.campaignOption ||
           campaign.enabledOptions.includes(i.data.campaignOption)),
     );
+  for(const entry of items)if(entry.type==='spell'&&campaign.enabledSourceIds.includes('tce'))entry.data.classIds=[...new Set([...entry.data.classIds,...(entry.data.optionalTashaClassIds??[]).filter(id=>campaign.enabledOptions.includes('tce:additional-spells:'+id))])];
   // Remove dependent definitions rather than offering incomplete or dangling builds.
   let changed = true;
   while (changed) {

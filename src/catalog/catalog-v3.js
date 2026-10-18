@@ -61,6 +61,7 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       "Private content cannot be distributed",
     );
     check(i.data && i.data.ruleset === c.ruleset, "Entry ruleset");
+    if(i.source.kind==='reference') check(['xge','tce','phb14','ravenloft','volo','motm'].includes(i.data.rulesSourceId),'Referenced 2014 source');
     const a = i.data.automation;
     keys(a, ["status", "handler", "limits"]);
     check(
@@ -83,6 +84,12 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       "Unsupported reason",
     );
     const d = i.data;
+    if(d.buildEffects){
+      keys(d.buildEffects,['proficiencies','attacksPerAction'],[]);
+      check(i.type==='feature','Build effects belong to features');
+      if(d.buildEffects.proficiencies)list(d.buildEffects.proficiencies,'Feature proficiencies');
+      if(d.buildEffects.attacksPerAction!==undefined)check(integer(d.buildEffects.attacksPerAction,1,4),'Feature attacks');
+    }
     for (const field of ["aliases", "reviewNotes"])
       if (d[field] !== undefined)
         check(
@@ -498,7 +505,7 @@ export function createCatalogIndex(
     check(!packIds.has(p.id), "Duplicate pack ID");
     packIds.add(p.id);
     if (
-      p.items.some((i) => i.source.kind !== "srd") &&
+      p.items.some((i) => !["srd","reference"].includes(i.source.kind)) &&
       !enabledPackIds.includes(p.id)
     )
       continue;

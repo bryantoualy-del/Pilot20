@@ -13,11 +13,11 @@ try{
  const fixtures=await p.evaluate(async()=>{
   const {openIndexedDB}=await import('/src/persistence/adapters.js'),storage=await openIndexedDB();
   const {characterLibrary}=await import('/src/persistence/library.js'),{creatorRepository}=await import('/src/creator/repository.js');
-  const {campaignRepository}=await import('/src/campaign/repository.js'),{classCatalog,spellCatalog,originCatalog}=await import('/src/catalog/srd51-catalog.js');
+  const {campaignRepository}=await import('/src/campaign/repository.js'),{playerCatalogs}=await import('/src/catalog/player-catalogs.js');
   const {newDraft,suggestChoices,compileDraft,draftProgression}=await import('/src/creator/model.js');const {spellReference}=await import('/src/catalog/spell-reference.js');
-  const library=characterLibrary(storage),drafts=creatorRepository(storage,library),campaigns=campaignRepository(storage,[classCatalog,spellCatalog,originCatalog]);
+  const library=characterLibrary(storage),drafts=creatorRepository(storage,library),campaigns=campaignRepository(storage,playerCatalogs);
   const config=await campaigns.initialize(),ctx=await campaigns.context(config),out={};
-  for(const [cls,level]of [['wizard',10],['cleric',5],['bard',10],['warlock',11]]){
+  for(const [cls,level]of [['wizard',10],['cleric',5],['bard',10],['warlock',11],['artificer',10]]){
    let d=newDraft('default','grimoire-'+cls);Object.assign(d,{name:'Grimoire '+cls,mode:'single',classChosen:true,raceId:'srd51:race:human',backgroundId:'srd51:background:acolyte',classes:[{id:cls,level,subclassId:ctx.index.class(cls).data.subclassIds[0]}]});
    d=suggestChoices(ctx,config,d);for(const q of draftProgression(ctx,config,d).choices.filter(q=>q.kind==='prepared'))d.selections[q.id]=q.options.slice(0,q.count);
    d.confirmed=d.reviewed=true;await drafts.save(d);const result=compileDraft(ctx,config,d);if(!result.valid)throw Error(JSON.stringify(result.issues));await drafts.finalize(d,result.character,{expectedDraftRevision:1,spellbook:result.spellbook});
@@ -70,6 +70,11 @@ try{
  const imported=await importPage.evaluate(async()=>{const {openIndexedDB}=await import('/src/persistence/adapters.js');const s=await openIndexedDB();try{return await s.get('characters','grimoire-wizard');}finally{s.close();}});
  assert.deepEqual(imported.definition.spells,after.definition.spells);assert.deepEqual(imported.spellbook.grants,after.spellbook.grants);assert.deepEqual(imported.spellbook.preparedGrantIds,after.spellbook.preparedGrantIds);assert.equal(imported.spellbook.characterRevision,1);
  results.push('UI export and import into a fresh browser context preserve copied spells, grants and preparation');await importedContext.close();
+ await open('artificer');assert.equal(await p.getByRole('button',{name:'Modifier la préparation',exact:true}).count(),1);
+ const art=await read('artificer');assert.equal(art.definition.classes[0].casting.multiclassRounding,'ceil');assert.ok(art.spellbook.grants.some(g=>g.preparation==='always'&&g.classId==='artificer'));
+ await p.getByRole('tab',{name:'Catalogue',exact:true}).click();await search('catapulte');const catapult=p.locator('.grimoire-spell').filter({has:p.getByRole('button',{name:'Catapulte',exact:true})});await catapult.waitFor();await catapult.getByRole('button',{name:'Catapulte',exact:true}).click();
+ assert.ok((await p.locator('#dialog').textContent()).includes('Projette un objet'));assert.equal(await p.locator('#dialog details').filter({has:p.getByText('Référence',{exact:true})}).getAttribute('open'),null);await p.locator('#dialog').evaluate(e=>e.close());
+ results.push('Artificer10 has daily preparation and fixed subclass grants; an XGE spell has local French effects and a collapsed reference');
  assert.deepEqual(errors,[]);await context.close();
 }finally{await writeFile('artifacts/e2e-work4-grimoire-results.json',JSON.stringify({results,metrics,errors,physicalSafari:false},null,2));if(browser)await browser.close();server.kill();}
 console.log(results);

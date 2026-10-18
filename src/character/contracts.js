@@ -17,8 +17,9 @@ export const text = v => typeof v==='string' && v.length<=10000;
 export function ids(v) {check(Array.isArray(v) && v.every(id) && new Set(v).size===v.length,'Unique IDs');}
 export function source(s) {
   keys(s,['kind','document','license','url']);
-  check(['srd','homebrew','private'].includes(s.kind) && text(s.document) && text(s.license) && text(s.url),'Provenance');
+  check(['srd','reference','homebrew','private'].includes(s.kind) && text(s.document) && text(s.license) && text(s.url),'Provenance');
   if(s.kind==='srd') check(s.document==='SRD-5.1' && s.license==='CC-BY-4.0','2014 SRD license');
+  if(s.kind==='reference') check(s.license==='Pilot20-original-summary' && s.document.trim() && /^https:\/\//.test(s.url),'Original summary provenance');
 }
 export function preferences(p) {
   json(p); keys(p,['kind','schemaVersion','characterId','locale','theme','colors','panels','favorites','shortcuts','hidden']);

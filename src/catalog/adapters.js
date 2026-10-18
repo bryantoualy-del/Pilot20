@@ -26,7 +26,7 @@ export function compileSpell(entry,classId,character,{arcanumLevel=null}={}) {
  const casting=character.classes.find(c=>c.id===classId).casting;
  const access=['cleric','druid','paladin','wizard'].includes(classId)||casting.preparation?'prepared':'known';
  const spell={id:entry.id,classId,level:d.level,access};
- const cost=d.castingTime.startsWith('1 bonus action')?'bonus':d.castingTime.startsWith('1 reaction')?'reaction':d.castingTime==='1 action'?'action':'none';
+ const cost=/^1 (?:bonus action|action bonus)/.test(d.castingTime)?'bonus':/^1 r[eé]action/.test(d.castingTime)?'reaction':d.castingTime==='1 action'?'action':'none';
  const a=ability(entry,{id:classId+':'+entry.id,cost,target:'selected',maxTargets:f?(f.maxTargets??1):20,combat:profile({mode:'manual',requirements:['Player/GM resolves effect, components, targets, casting time and duration.'],spell})});
  // Manual concentration starts only on explicit declaration; long durations require GM expiry.
  if(d.concentration)a.concentration={effectId:entry.id,start:'activation'};
