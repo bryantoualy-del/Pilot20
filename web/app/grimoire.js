@@ -11,7 +11,7 @@ export async function renderGrimoire(main,characterId,a){
  const draft=await a.drafts.get(characterId),view=grimoireView(a.context,a.config,draft,record);
  const w=(fr,en)=>a.state.locale==='fr'?fr:en,metaKey='grimoire:view:'+characterId;
  const persisted=await a.storage.get('meta',metaKey);
- const ui={tab:'mine',classId:view.classIds[0]??'all',query:'',level:'all',school:'all',favorites:false,concentration:false,ritual:false,source:'all',...persisted};
+ const ui={tab:'mine',classId:view.book.grants.some(g=>g.classId===null)?'all':view.classIds[0]??'all',query:'',level:'all',school:'all',favorites:false,concentration:false,ritual:false,source:'all',...persisted};
  if(!['all',...view.classIds].includes(ui.classId))ui.classId=view.classIds[0]??'all';
  let editing=false,staged=[],page=0;
  const service=grimoireService({library:a.library,drafts:a.drafts,campaigns:a.campaigns});
@@ -31,13 +31,13 @@ export async function renderGrimoire(main,characterId,a){
    document.querySelector('#dialog')?.close();await a.render();
   }catch(e){a.notice(w('Impossible d’enregistrer ces choix. Vérifiez la fiche et les sources, puis rouvrez le Grimoire.','These choices could not be saved. Review the character and sources, then reopen the spellbook.'));console.error(e);}
  }
- function copy(entry,ritual=false){
+ function copy(entry,ritual=false,bookId='auto'){
   let confirmed=false;
-  const save=button(w('Confirmer la copie','Confirm copy'),()=>apply({type:ritual?'ritual-copy':'copy',spellId:entry.id,confirmedCopy:confirmed,note:w('Le joueur confirme l’accès au sort et le respect du temps et du coût de copie.','Player confirms spell access, copying time and material cost.')}),'primary');save.disabled=true;
-  a.modal(el('section',{},el('h2',{},w('Inscrire dans votre livre','Add to your spellbook')),el('p',{},a.name(entry)),el('p',{},w('Cette copie ajoute le sort à votre livre sans modifier votre préparation.','Copying adds this spell to your book without changing preparation.')),check(w('J’ai accès à ce sort et j’ai respecté le temps et le coût de copie applicables.','I have access to this spell and have met the applicable copying time and cost.'),false,e=>{confirmed=e.target.checked;save.disabled=!confirmed;}),save));
+  const save=button(w('Confirmer la copie','Confirm copy'),()=>apply({type:ritual?'ritual-copy':'copy',spellId:entry.id,confirmedCopy:confirmed,bookId,note:w('Le joueur confirme l’accès au sort et le respect du temps et du coût de copie.','Player confirms spell access, copying time and material cost.')}),'primary');save.disabled=true;
+  a.modal(el('section',{},el('h2',{},w('Inscrire dans votre livre','Add to your spellbook')),el('p',{},a.name(entry)+(bookId==='pact'?w(' · Livre des ombres',' · Book of Shadows'):bookId==='feat'?w(' · Livre de rituels',' · Ritual book'):'')),el('p',{},w('Cette copie ajoute le sort à votre livre sans modifier votre préparation.','Copying adds this spell to your book without changing preparation.')),check(w('J’ai accès à ce sort et j’ai respecté le temps et le coût de copie applicables.','I have access to this spell and have met the applicable copying time and cost.'),false,e=>{confirmed=e.target.checked;save.disabled=!confirmed;}),save));
  }
  async function draw(){
-  const ritualOptions=ritualCopyOptions(a.context,a.config,draft);
+  const ritualBooks={feat:ritualCopyOptions(a.context,a.config,draft,'feat'),pact:ritualCopyOptions(a.context,a.config,draft,'pact')},ritualOptions=[...new Set([...ritualBooks.feat,...ritualBooks.pact])];
   const currentGrants=grants(),selected=new Set(view.book.preparedGrantIds),q=prepared();
   const header=el('div',{class:'section-head'},el('div',{},el('p',{class:'eyebrow'},record.definition.identity.name),el('h1',{},w('Votre grimoire','Your spellbook'))),button(w('Modifier le personnage','Edit character'),()=>a.nav('creator',characterId)));
   const tabs=el('div',{class:'grimoire-tabs',role:'tablist','aria-label':w('Vue du Grimoire','Spellbook view')});
@@ -91,10 +91,10 @@ export async function renderGrimoire(main,characterId,a){
     const own=currentGrants.filter(g=>g.spellId===entry.id),always=own.some(g=>g.preparation==='always'),isPrepared=always||own.some(g=>selected.has(g.id));
     const row=el('article',{class:'grimoire-spell','data-spell-id':entry.id},el('div',{},button(a.name(entry),()=>showEntryDetails(entry,a),'spell-title'),el('small',{},(entry.data.level===0?w('Sort mineur','Cantrip'):w('Niveau ','Level ')+entry.data.level)+(entry.data.concentration?' · '+a.t('concentration'):'')+(entry.data.ritual?' · '+a.t('ritual'):''))));
     if(own.length)row.append(el('div',{class:'grimoire-badges'},badge(always?own.every(g=>g.classId===null)?w('Octroyé par une capacité','Granted by a feature'):w('Toujours préparé','Always prepared'):isPrepared?w('Préparé','Prepared'):own.some(g=>['book','copy'].includes(g.acquisition))?w('Inscrit','In book'):w('Connu','Known')),own.length>1?badge(w('Plusieurs origines','Multiple origins')):null));
-    if(own.length)row.append(el('details',{},el('summary',{},w('Origines','Origins')),own.map(g=>{if(g.classId)return el('p',{},view.choices.find(q=>q.id===g.originId)?a.cls(g.classId)+' · '+choiceName(view.choices.find(q=>q.id===g.originId),a):a.cls(g.classId)+' · '+w('Octroi automatique','Automatic grant'));const owner=a.context.installed.get(g.originId);return el('p',{},owner?button(a.name(owner),()=>showEntryDetails(owner,a),'subtle'):w('Autre origine à vérifier','Other origin to review'),g.castingAbility?' · '+a.label(g.castingAbility):'');})));
+    if(own.length)row.append(el('details',{},el('summary',{},w('Origines','Origins')),own.map(g=>{if(g.classId)return el('p',{},view.choices.find(q=>q.id===g.originId)?a.cls(g.classId)+' · '+choiceName(view.choices.find(q=>q.id===g.originId),a):a.cls(g.classId)+' · '+w('Octroi automatique','Automatic grant'));const owner=a.context.installed.get(g.originId)??a.context.installed.get(g.originId.replace(/:ritual$/,''));return el('p',{},owner?button(a.name(owner),()=>showEntryDetails(owner,a),'subtle'):w('Autre origine à vérifier','Other origin to review'),g.castingAbility?' · '+a.label(g.castingAbility):'');})));
     if(editing&&q.options.includes(entry.id))row.append(check(w('Préparer','Prepare'),staged.includes(entry.id),e=>{staged=e.target.checked?[...staged,entry.id]:staged.filter(id=>id!==entry.id);draw();},{disabled:!staged.includes(entry.id)&&staged.length>=q.count}));
     if(!editing&&ui.classId==='wizard'&&view.editable&&!record.definition.spells.known.includes(entry.id)&&wizardBook()?.options.includes(entry.id)&&entry.data.level>0)row.append(button(w('Inscrire','Copy to book'),()=>copy(entry)));
-    if(!editing&&view.editable&&ritualOptions.includes(entry.id))row.append(button(w('Copier comme rituel','Copy as a ritual'),()=>copy(entry,true)));
+    if(!editing&&view.editable)for(const bookId of ['feat','pact'])if(ritualBooks[bookId].includes(entry.id))row.append(button(bookId==='pact'?w('Copier dans le Livre des ombres','Copy to Book of Shadows'):w('Copier dans le livre de rituels','Copy to ritual book'),()=>copy(entry,true,bookId)));
     row.append(button(record.preferences.favorites.includes(entry.id)?'★':'☆',()=>toggleFavorite(entry.id),'favorite'));
     row.querySelector('.favorite').setAttribute('aria-label',(record.preferences.favorites.includes(entry.id)?w('Retirer des favoris : ','Remove favorite: '):w('Ajouter aux favoris : ','Favorite: '))+a.name(entry));
     list.append(row);

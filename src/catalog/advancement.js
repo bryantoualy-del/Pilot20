@@ -17,7 +17,7 @@ export function validateAdvancementHistory(index,request,history) {
   if(row.classes.length!==order.length||row.classes.some((c,j)=>c.id!==order[j]||c.level!==counts.get(c.id)))issues.push({code:'history-class-sequence',characterLevel:i+1});
   const transcriptions=(request.spellbookTranscriptions??[]).filter(t=>t.characterLevel<=i+1);
   const grantReplacements=(request.spellGrantReplacements??[]).filter(r=>r.classLevel<=(row.classes.find(c=>c.subclassId===r.originId)?.level??0));
-  const report=resolveProgression(index,{...request,classes:row.classes,selections:row.selections,spellbookTranscriptions:transcriptions,spellGrantReplacements:grantReplacements,featRitualCopies:(request.featRitualCopies??[]).filter(r=>r.characterLevel<=i+1)});
+  const report=resolveProgression(index,{...request,classes:row.classes,selections:row.selections,spellbookTranscriptions:transcriptions,pactRitualCopies:(request.pactRitualCopies??[]).filter(r=>r.characterLevel<=i+1),spellGrantReplacements:grantReplacements,featRitualCopies:(request.featRitualCopies??[]).filter(r=>r.characterLevel<=i+1)});
   for(const error of report.issues)issues.push({...error,characterLevel:i+1});
   const changedSubclasses=previous?row.classes.filter(c=>previous.classes.find(p=>p.id===c.id)?.subclassId&&previous.classes.find(p=>p.id===c.id).subclassId!==c.subclassId):[];
   const retraining=changedSubclasses.length>0&&(request.campaignOptions??[]).includes('subclass-retraining')&&!!row.adjudication;
