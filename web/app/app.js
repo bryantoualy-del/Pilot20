@@ -30,7 +30,8 @@ let storage,
   drafts,
   config,
   context,
-  saveQueue = Promise.resolve();
+  saveQueue = Promise.resolve(),
+  lastSaveError = null;
 const revisions = new Map();
 const t = (k) => messages[state.locale][k] ?? k;
 const name = (i) => localizedName(i, state.locale, frNames);
@@ -110,6 +111,7 @@ function autosave(d) {
     const expected = revisions.has(d.id) ? revisions.get(d.id) : null;
     snapshot.revision = expected === null ? 1 : expected + 1;
     await drafts.save(snapshot, { expectedRevision: expected });
+    lastSaveError = null;
     revisions.set(d.id, snapshot.revision);
     d.revision = snapshot.revision;
     document.querySelector("#draft-save-state")?.replaceChildren(
@@ -122,6 +124,7 @@ function autosave(d) {
     );
   });
   saveQueue = promise.catch((e) => {
+    lastSaveError = e;
     document
       .querySelector("#draft-save-state")
       ?.replaceChildren(
@@ -199,7 +202,7 @@ async function render() {
         button(
           t(route),
           () => nav(route),
-          state.route === route ? "active" : "",
+          (state.route === route || route === 'library' && state.route === 'creator') ? "active" : "",
         ),
       ),
     ),
@@ -220,7 +223,7 @@ async function render() {
       { "aria-label": "Langue / Language" },
     ),
   );
-  const main = el("main", {});
+  const main = el("main", {class:state.route==='creator'?'creator-page':''});
   root.replaceChildren(
     header,
     main,
@@ -717,7 +720,17 @@ try {
   await campaigns.initialize(state.campaignId);
   await render();
   if ("serviceWorker" in navigator) {
-    const reg = await navigator.serviceWorker.register("../sw.js");
+    const hadController=!!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{
+      if(!hadController||document.querySelector('#app-update'))return;
+      const apply=button(state.locale==='fr'?'Actualiser':'Refresh',async()=>{
+        apply.disabled=true;
+        try{await saveQueue;if(lastSaveError)throw lastSaveError;location.reload();}catch(e){apply.disabled=false;fail(e);}
+      },'primary');
+      document.body.append(el('aside',{id:'app-update',role:'status'},el('span',{},state.locale==='fr'?'Une nouvelle version est prête.':'A new version is ready.'),apply));
+    });
+    const reg = await navigator.serviceWorker.register("../sw.js",{updateViaCache:'none'});
+    reg.update().catch(()=>{});
     await navigator.serviceWorker.ready;
     const worker = reg.active ?? reg.waiting ?? reg.installing;
     worker?.postMessage({ type: "status" });

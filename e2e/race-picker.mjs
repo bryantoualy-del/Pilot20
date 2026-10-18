@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium, webkit } from 'playwright';
 import { spawn } from 'node:child_process';
+import { mkdir } from 'node:fs/promises';
 const port=Number(process.env.PILOT20_E2E_PORT??4180);
 const server=spawn(process.execPath,['scripts/serve-web.mjs'],{env:{...process.env,PORT:String(port)},stdio:'pipe'});
 let browser;
@@ -17,6 +18,24 @@ try {
   await changed(async()=>{await p.locator('#character-name').fill('Lignée test');await p.locator('#character-name').blur();});
   await changed(()=>p.locator('.single-actions .primary').click());
   assert.ok(await p.locator('.single-races button').count()>=44);
+  assert.equal(await p.getByRole('progressbar').getAttribute('value'),'2');
+  // Every installed family uses the transparent icon set, including label aliases.
+  const icons=await p.locator('.single-races').evaluate(async grid=>{
+    return Promise.all([...grid.querySelectorAll('button')].map(async b=>{
+      const img=b.querySelector('img');if(!img)return {name:b.textContent,ok:false};
+      img.loading='eager';try{await img.decode();}catch{}
+      return {name:b.textContent,ok:img.naturalWidth>0&&img.getAttribute('src').includes('/work4/races/')};
+    }));
+  });
+  assert.deepEqual(icons.filter(i=>!i.ok),[],'all racial cards must load an icon, not a portrait');
+  const paper=await p.locator('.single-actions').evaluate(e=>({bar:getComputedStyle(e).backgroundColor,page:getComputedStyle(document.body).backgroundColor,gap:e.getBoundingClientRect().top-e.previousElementSibling.getBoundingClientRect().bottom}));
+  assert.equal(paper.bar,paper.page);assert.ok(paper.gap<=8,'no empty band before navigation');
+  await mkdir('docs/screenshots/appearance',{recursive:true});
+  await p.screenshot({path:'docs/screenshots/appearance/races-phone.png',fullPage:true});
+  await p.setViewportSize({width:1180,height:820});
+  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  await p.screenshot({path:'docs/screenshots/appearance/races-desktop.png',fullPage:true});
+  await p.setViewportSize({width:390,height:844});
   assert.equal(await p.getByText('Autres races et origine personnalisée',{exact:true}).count(),0);
   const search=p.getByRole('searchbox',{name:'Rechercher une race',exact:true});
   await search.fill('aasimar');assert.equal(await p.locator('.single-races button').count(),1);
