@@ -143,6 +143,70 @@ for key,fr,level,description,choices in [
  source={**find('tce:barbarian:beast')['source'],'document':'Chaudron des merveilles de Tasha / Barbare — aptitudes optionnelles'};items.append({'id':'tce:barbarian:'+key,'type':'feature','name':{'fr':fr,'en':key.replace('-',' ').title()},'source':source,'data':{'ruleset':'dnd5e-2014','rulesSourceId':'tce','classId':'barbarian','minimumClassLevel':level,'optionalClassFeature':True,'campaignOption':'tce:barbarian:'+key,'description':description,'language':'fr','choices':choices,'automation':{'status':'manual','handler':None,'limits':['Conditional combat effects require adjudication.']}}})
 
 
+# Remaining colleges in the PHB/XGE/TCE scope. No generic preparation is introduced.
+add('phb14','bard','valor','College of Valor','Collège de la vaillance',[
+ (3,'bonus-proficiencies','Maîtrises supplémentaires','Maîtrise des armures intermédiaires, boucliers et armes de guerre.',{'proficiencies':['medium-armor','shields','martial-weapons']}),
+ (3,'combat-inspiration','Inspiration martiale','Une créature portant votre dé d’Inspiration peut l’ajouter à un jet de dégâts d’arme. Après une attaque contre elle mais avant de savoir si elle touche, elle peut aussi utiliser sa réaction pour ajouter le dé à sa CA contre cette attaque. Le dé est consommé ; aucune seconde Inspiration n’est dépensée.'),
+ (6,'extra-attack','Attaque supplémentaire','L’action Attaquer permet deux attaques au lieu d’une.',{'attacksPerAction':2}),
+ (14,'battle-magic','Magie de combat','Après avoir lancé un sort de barde par votre action, vous pouvez effectuer une attaque d’arme par action bonus.')],
+ [resource('battle-magic',14,None,'none')])
+add('xge','bard','swords','College of Swords','Collège des épées',[
+ (3,'bonus-proficiencies','Maîtrises supplémentaires','Maîtrise des armures intermédiaires et du cimeterre. Une arme de mêlée courante ou de guerre que vous maîtrisez peut servir de focaliseur pour vos sorts de barde.',{'proficiencies':['medium-armor','scimitars']}),
+ (3,'fighting-style','Style de combat','Choisissez Duel ou Combat à deux armes. Vous ne pouvez acquérir deux fois le même style.'),
+ (3,'blade-flourish','Moulinet','L’action Attaquer à votre tour augmente votre vitesse au sol de3 m jusqu’à la fin du tour. Après une touche d’arme dans cette action, dépensez une Inspiration pour un seul moulinet par tour : défensif, dégâts supplémentaires du dé et même bonus à la CA jusqu’au début de votre prochain tour ; tranchant, dégâts du dé à la cible et aux autres créatures choisies visibles à1,50 m de vous ; mobile, dégâts du dé et repoussement de1,50 m+30 cm×dé, puis déplacement jusqu’à votre vitesse par réaction pour finir à1,50 m de la cible.'),
+ (6,'extra-attack','Attaque supplémentaire','L’action Attaquer permet deux attaques au lieu d’une.',{'attacksPerAction':2}),
+ (14,'masters-flourish','Moulinet de maître','Lors d’un moulinet, vous pouvez utiliser1d6 au lieu de dépenser une Inspiration bardique. Cette option ne donne pas un second moulinet pendant le même tour.')],
+ [resource('masters-flourish',14,None,'none')],choices=[{'key':'swords-fighting-style','level':3,'kind':'feature','count':1,'options':['srd51:fighter:dueling','srd51:fighter:two-weapon-fighting']}])
+add('xge','bard','whispers','College of Whispers','Collège des murmures',[
+ (3,'psychic-blades','Lames psychiques','Une fois par round, pendant votre tour, après une touche d’arme : dépensez une Inspiration pour ajouter2d6 psychiques. Ce supplément devient3d6 au niveau5,5d6 au10 et8d6 au15.'),
+ (3,'words-of-terror','Mots de terreur','Après au moins1 min de conversation avec un humanoïde isolé, il réussit une sauvegarde de Sagesse contre votre DD ou vous craint, ou craint une autre créature choisie. Durée1 h, interrompue si la cible ou ses alliés sont attaqués ou blessés. Une utilisation par repos court ou long.'),
+ (6,'mantle-of-whispers','Voile de murmures','Réaction quand un humanoïde meurt à9 m : capturez son ombre jusqu’à son utilisation ou votre prochain repos long. Une action consomme l’ombre pour une apparence du défunt vivant pendant1 h, terminable par action bonus. Vous connaissez ses informations ordinaires, pas ses secrets ;+5 à Tromperie opposée à Perspicacité pour ce déguisement. Une capture par repos court ou long.'),
+ (14,'shadow-lore','Savoir des ombres','Action : murmure à une créature à9 m. Sauvegarde de Sagesse contre votre DD, automatiquement réussie si elle ne vous entend pas ou ne partage pas de langue. Échec : charme8 h, obéissance par peur d’un secret, sans risquer sa vie ni combattre sans inclination préalable. Vous ou vos alliés attaquant, blessant ou imposant une sauvegarde terminez l’effet. Une utilisation par repos long.')],
+ [resource('words-of-terror',3,1,'short'),resource('mantle-of-whispers',6,1,'short'),resource('shadow-lore',14,1)])
+add('tce','bard','creation','College of Creation','Collège de la Création',[
+ (3,'mote-of-potential','Grain de potentiel','Un dé d’Inspiration accordé peut porter un grain qui dure jusqu’à la perte du dé. Sur un test de caractéristique, le bénéficiaire relance le dé d’Inspiration et choisit le résultat. Sur une attaque, la cible et les créatures choisies visibles à1,50 m d’elle réussissent une sauvegarde de Constitution contre votre DD ou prennent des dégâts de tonnerre égaux au dé. Sur une sauvegarde, le bénéficiaire gagne dé+Charisme PV temporaires, minimum1.'),
+ (3,'performance-of-creation','Créativité concrète','Action : créez un objet non magique à3 m sur une surface ou dans un liquide pouvant le soutenir. Taille M maximum, valeur au plus20×niveau de barde po, durée égale à maîtrise heures. Un seul objet actif ; une nouvelle création remplace l’ancien. Taille G au niveau6 puis TG au14. Un usage gratuit par repos long, sinon un emplacement de niveau2 ou plus.'),
+ (6,'animating-performance','Prestation dansante','Action : animez un objet non magique de taille G ou moins visible à9 m pendant1 h, jusqu’à0 PV ou votre mort. Il agit juste après vous à la même initiative ; déplacement et réaction libres, action Esquiver sauf ordre par votre action bonus. L’action bonus d’Inspiration peut aussi transmettre cet ordre. Un seul objet animé ; un nouveau remplace l’ancien. Un usage gratuit par repos long, sinon un emplacement de niveau3 ou plus.'),
+ (14,'creative-crescendo','Crescendo créatif','Créativité concrète peut maintenir Charisme objets, minimum2, sans plafond de valeur. Un seul peut avoir votre taille maximale ; les autres sont P ou TP. Quand la limite serait dépassée, choisissez l’objet précédent qui disparaît.')],
+ [resource('performance-of-creation',3,1),resource('animating-performance',6,1)])
+for sid,key,economy,resourceId,target,maxTargets in [
+ ('phb14:bard:valor','battle-magic','bonus','battle-magic','selected',1),
+ ('xge:bard:swords','blade-flourish','none','inspiration','selected',20),
+ ('xge:bard:swords','masters-flourish','none','masters-flourish','selected',20),
+ ('xge:bard:whispers','psychic-blades','none','inspiration','selected',1),
+ ('xge:bard:whispers','words-of-terror','none','words-of-terror','selected',1),
+ ('xge:bard:whispers','mantle-of-whispers','reaction','mantle-of-whispers','self',1),
+ ('xge:bard:whispers','shadow-lore','action','shadow-lore','selected',1),
+ ('tce:bard:creation','performance-of-creation','action','performance-of-creation','self',1),
+ ('tce:bard:creation','animating-performance','action','animating-performance','selected',1)]:
+ f=find(sid+':'+key);f['data']['manualMechanics']={'economy':economy,'target':target,'maxTargets':maxTargets,'resourceId':resourceId,'amount':1,'requirements':[f['data']['description'],'Valider les déclencheurs, cibles et effets particuliers.']}
+find('xge:bard:whispers:psychic-blades')['data']['usageLimits']=[{'count':1,'per':'round','requires':'own-turn-and-weapon-hit'}]
+find('xge:bard:swords:blade-flourish')['data']['usageLimits']=[{'count':1,'per':'turn','group':'blade-flourish'}]
+find('xge:bard:swords:masters-flourish')['data']['usageLimits']=[{'count':1,'per':'turn','group':'blade-flourish'}]
+creation=find('tce:bard:creation:performance-of-creation')['data'];creation['alternateCost']={'slotMinimum':2,'replacesFreeUse':True};creation['creationRules']=[{'classLevel':3,'maximumSize':'medium','maximumGoldMultiplier':20,'maximumActive':1,'durationHours':'proficiency'},{'classLevel':6,'maximumSize':'large'},{'classLevel':14,'maximumSize':'huge','maximumGoldMultiplier':None,'maximumActive':{'ability':'cha','minimum':2},'maximumSizedObjects':1,'otherObjectsMaximumSize':'small'}]
+animation=find('tce:bard:creation:animating-performance')['data'];animation['alternateCost']={'slotMinimum':3,'replacesFreeUse':True};animation['companionProfile']={'id':'tce:bard:creation:dancing-item','name':{'fr':'Objet dansant','en':'Dancing Item'},'creatureType':'construct','maximumSize':'large','armorClass':16,'hitPoints':{'base':10,'perClassLevel':5,'classId':'bard'},'movement':{'walk':30,'fly':30,'hover':True},'scores':{'str':18,'dex':14,'con':16,'int':4,'wis':10,'cha':6},'damageImmunities':['poison','psychic'],'conditionImmunities':['charmed','frightened','poisoned','exhaustion'],'senses':{'darkvision':60,'passivePerception':10},'proficiency':'owner','attack':{'ability':'spell-attack-of-owner','reach':5,'dice':'1d10','damageType':'force','bonus':'proficiency-of-owner'},'form':'immutable','speedAura':{'range':10,'change':10,'choices':['increase','decrease'],'requiresNotIncapacitated':True,'duration':'end-of-affected-turn'},'defaultAction':'dodge','commandEconomy':'bonus','commandAlsoWith':'bardic-inspiration','independentWhenOwner':'incapacitated','maximumActive':1,'durationHours':1}
+find('tce:bard:eloquence:silver-tongue')['name']['fr']='Faconde'
+for key,fr,en,level,note,policy in [
+ ('magical-inspiration','Inspiration magique','Magical Inspiration',2,'Un bénéficiaire de votre Inspiration qui lance un sort de dégâts ou de soins peut consommer le dé pour augmenter les dégâts ou PV rendus d’une seule cible affectée. Aucune seconde dépense d’Inspiration par le barde.',None),
+ ('bardic-versatility','Polyvalence bardique','Bardic Versatility',4,'À un niveau de barde donnant une ASI, remplacez soit une compétence d’Expertise par une autre compétence maîtrisée sans Expertise, soit un sort mineur de Sorts par un autre sort mineur de barde. Un seul de ces deux changements est permis à ce niveau.',{'cantripReplacementAtASI':1,'expertiseReplacementAtASI':1,'sharedASIReplacementLimit':1})]:
+ source={**find('tce:bard:creation')['source'],'document':'Chaudron des merveilles de Tasha / Barde — aptitudes optionnelles'};items.append({'id':'tce:bard:'+key,'type':'feature','name':{'fr':fr,'en':en},'source':source,'data':{'ruleset':'dnd5e-2014','rulesSourceId':'tce','classId':'bard','minimumClassLevel':level,'optionalClassFeature':True,'campaignOption':'tce:bard:'+key,'description':note,'language':'fr',**({'acquisitionPolicyOverride':policy}if policy else{}),'automation':{'status':'manual','handler':None,'limits':['Conditional spell and combat outcomes require adjudication.']}}})
+
+
+# Connect resource/economy contracts of the previously installed colleges too.
+for sid,key,economy,resourceId,target,maxTargets,concentration in [
+ ('xge:bard:glamour','mantle-of-inspiration','bonus','inspiration','selected',20,False),
+ ('xge:bard:glamour','enthralling-performance','none','enthralling-performance','selected',20,False),
+ ('xge:bard:glamour','mantle-of-majesty','bonus','mantle-of-majesty','self',1,True),
+ ('xge:bard:glamour','unbreakable-majesty','bonus','unbreakable-majesty','self',1,False),
+ ('tce:bard:eloquence','unsettling-words','bonus','inspiration','selected',1,False),
+ ('tce:bard:eloquence','universal-speech','action','universal-speech','selected',20,False),
+ ('tce:bard:eloquence','infectious-inspiration','reaction','infectious-inspiration','selected',1,False)]:
+ f=find(sid+':'+key);f['data']['manualMechanics']={'economy':economy,'target':target,'maxTargets':maxTargets,'resourceId':resourceId,'amount':1,'requirements':[f['data']['description'],'Valider les limites de cible, portée et déclenchement.'],**({'concentration':True}if concentration else{})}
+find('tce:bard:eloquence:universal-speech')['data']['alternateCost']={'slotMinimum':1,'replacesFreeUse':True}
+find('tce:bard:eloquence:silver-tongue')['data']['checkRules']=[{'skills':['persuasion','deception'],'minimumD20':10}]
+find('xge:bard:glamour:mantle-of-majesty')['data']['innateSpells']=[{'classLevel':6,'spellIds':[spells['Command']],'ability':'cha','resourceId':None,'economy':'bonus','target':'selected','maxTargets':1,'requiresActiveFeature':'xge:bard:glamour:mantle-of-majesty','requirements':'Seulement pendant Apparence majestueuse active et sa concentration, pendant1 min. Injonction par action bonus sans emplacement. L’usage par repos long est payé à l’activation de l’Apparence, pas à chaque Injonction.'}]
+
+
 for item in items:
  if item['type']=='subclass' and item['id'] in ['phb14:fighter:eldritch-knight','phb14:rogue:arcane-trickster']:
   item['data'].update({'casting':{'ability':'int','progression':'third','startsAtClassLevel':3},'spellListClassId':'wizard','cantripsKnown':table(lambda n:0 if n<3 else 2 if n<10 else 3),'spellsKnown':[0,0,3,4,4,4,5,6,6,7,8,8,9,10,10,11,11,11,12,13],'restrictedSpellSchools':['abjuration','evocation'] if item['data']['classId']=='fighter' else ['enchantment','illusion'],'unrestrictedSpellsKnown':table(lambda n:0 if n<3 else 1 if n<8 else 2 if n<14 else 3 if n<20 else 4),'acquisitionPolicy':{'knownReplacementPerClassLevel':1,'invocationReplacementPerClassLevel':0,'spellbookLearnedAtFirstLevel':0,'spellbookLearnedPerClassLevel':0}})

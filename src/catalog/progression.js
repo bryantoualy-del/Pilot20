@@ -36,8 +36,10 @@ export const meetsPrerequisites = (scores, anyOf) =>
 /** A subclass may supply casting; the fighter/rogue class itself remains nonmagical. */
 export function effectiveClassData(index,c){
  const base=index.class(c.id)?.data,sub=c.subclassId?index.get(c.subclassId):null;
- if(!base||sub?.data.classId!==c.id||c.level<base.subclassLevel)return base;
- const out={...base};for(const key of ['casting','cantripsKnown','spellsKnown','spellListClassId','unrestrictedSpellsKnown','restrictedSpellSchools','acquisitionPolicy'])if(sub.data[key]!==undefined)out[key]=sub.data[key];return out;
+ if(!base)return base;
+ const out={...base};if(sub?.data.classId===c.id&&c.level>=base.subclassLevel)for(const key of ['casting','cantripsKnown','spellsKnown','spellListClassId','unrestrictedSpellsKnown','restrictedSpellSchools','acquisitionPolicy'])if(sub.data[key]!==undefined)out[key]=sub.data[key];
+ for(const f of index.list('feature'))if(f.data.optionalClassFeature&&f.data.classId===c.id&&c.level>=f.data.minimumClassLevel&&f.data.acquisitionPolicyOverride)out.acquisitionPolicy={...out.acquisitionPolicy,...f.data.acquisitionPolicyOverride};
+ return out;
 }
 /** Resolves a current build, never silently chooses. All acquisition levels are class levels. */
 export function resolveProgression(index, request) {
@@ -274,7 +276,7 @@ export function resolveProgression(index, request) {
         continue;
       }
       let options = spec.options;
-      if(spec.kind==='feature')options=options.filter(id=>{const key=index.get(id)?.data.uniqueRuleKey;return !key||![...selected].some(other=>other!==id&&index.get(other)?.data.uniqueRuleKey===key);});
+      if(spec.kind==='feature')options=options.filter(id=>{const key=index.get(id)?.data.uniqueRuleKey;return !key||!Object.entries(selections).filter(([choice])=>choice!==c.id+':'+spec.key).flatMap(([,values])=>values).some(other=>index.get(other)?.data.uniqueRuleKey===key);});
       if(spec.kind==='proficiency'&&!spec.toolReplacementFor)options=options.filter(id=>!background.proficiencies.some(p=>canonicalProficiency(p)===canonicalProficiency(id)));
       if(spec.filterAvailableFeatures) options=options.filter(id=>{const f=index.get(id);return f?.type==='feature'&&f.data.classId===c.id&&f.data.minimumClassLevel<=L&&(f.data.selectionRequires??[]).every(id=>selected.has(id)||features.has(id));});
       if(spec.toolReplacementFor){
@@ -410,18 +412,10 @@ export function resolveProgression(index, request) {
         18,
         ...(sub?.id === "srd51:college-of-lore" ? [6] : []),
       ])
-        if (L >= lv)
-          addChoice(
-            c.id,
-            "magical-secrets-" + lv,
-            lv,
-            2,
-            index
-              .list("spell")
-              .filter((s) => s.data.level <= maxSpell)
-              .map((s) => s.id),
-            "spell",
-          );
+        if (L >= lv){
+          const acquisitionMaximum=Math.max(0,...Object.values(spellSlots([{id:c.id,level:lv,casting:d.casting}]).resources).map(r=>r.slotLevel)),replacementList=new Set(allowedSpells(0));
+          addChoice(c.id,"magical-secrets-"+lv,lv,2,index.list("spell").filter(s=>s.data.level<=acquisitionMaximum||s.data.level<=maxSpell&&replacementList.has(s.id)).map(s=>s.id),"spell",{acquisitionMaximumSpellLevel:acquisitionMaximum});
+        }
     if (c.id === "warlock")
       for (const [lv, spellLevel] of [
         [11, 6],
@@ -497,6 +491,11 @@ export function resolveProgression(index, request) {
       }
     if (choice.kind === "feature") values.forEach((v) => features.add(v));
   }
+  // Validate that above-acquisition Bard-list replacements could fit into actual
+  // level gains. This does not create or certify any missing history.
+  const secretReplacements=[];
+  for(const q of choices.filter(q=>q.id.includes(':magical-secrets-')))for(const id of effectiveSelections[q.id]??[]){const spell=index.get(id);if(spell?.data.level>q.acquisitionMaximumSpellLevel){const cls=classes.find(c=>c.id===q.classId),casting=effectiveClassData(index,cls).casting;let earliest=cls.level+1;for(let lv=q.level+1;lv<=cls.level;lv++)if(Object.values(spellSlots([{id:cls.id,level:lv,casting}]).resources).some(r=>r.slotLevel>=spell.data.level)){earliest=lv;break;}secretReplacements.push({classId:cls.id,choiceId:q.id,earliest});}}
+  for(const cls of classes){let available=cls.level;for(const row of secretReplacements.filter(r=>r.classId===cls.id).sort((a,b)=>b.earliest-a.earliest)){if(row.earliest>available)issues.push({code:'secret-replacement-budget',choiceId:row.choiceId});available--;}}
   const spellsByClass = new Map();
   for (const q of choices.filter((q) => q.kind === "spell"))
     for (const v of effectiveSelections[q.id] ?? []) {
@@ -585,7 +584,7 @@ export function resolveProgression(index, request) {
   );
   let unarmoredDefense=false;for(const c of classes){const id=index.class(c.id)?.data.armorRuleFeatureId;if(id&&features.has(id)){if(unarmoredDefense)features.delete(id);else unarmoredDefense=true;}}
   const uniqueRules=new Map();for(const id of features){const key=index.get(id)?.data.uniqueRuleKey;if(key){if(uniqueRules.has(key))issues.push({code:'duplicate-feature-rule',featureId:id,otherFeatureId:uniqueRules.get(key),choiceId:choices.find(q=>(effectiveSelections[q.id]??[]).includes(id))?.id});else uniqueRules.set(key,id);}}
-  for(const fid of features){const feature=index.get(fid),owner=classes.find(c=>c.id===feature?.data.classId);for(const row of feature?.data.innateSpells??[])if(owner&&owner.level>=row.classLevel)for(const id of row.spellIds)origin.spells.push({id,level:row.classLevel,ability:row.ability,ownerId:fid,featureOwnerId:fid,resourceId:owner.id+':'+row.resourceId,requirements:row.requirements,source:feature.source});}
+  for(const fid of features){const feature=index.get(fid),owner=classes.find(c=>c.id===feature?.data.classId);for(const row of feature?.data.innateSpells??[])if(owner&&owner.level>=row.classLevel)for(const id of row.spellIds)origin.spells.push({id,level:row.classLevel,ability:row.ability,ownerId:fid,featureOwnerId:fid,...(row.resourceId?{resourceId:owner.id+':'+row.resourceId}:{}),...(row.economy?{economy:row.economy}:{}),...(row.target?{target:row.target}:{}),...(row.maxTargets?{maxTargets:row.maxTargets}:{}),requirements:row.requirements,source:feature.source});}
   return {
     origin,
     features: [...features],
