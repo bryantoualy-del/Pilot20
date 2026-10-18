@@ -23,6 +23,7 @@
     "demo:progression": "node examples/catalog-progression-demo.mjs",
     "build:web": "node scripts/package-web.mjs",
     "dev": "npm run build:web && node scripts/serve-web.mjs",
+    "test:e2e:appearance": "node e2e/appearance.mjs",
     "test:e2e:race-picker": "node e2e/race-picker.mjs",
     "test:e2e": "node e2e/work4-creator.mjs && node e2e/work4-grimoire.mjs && node e2e/work4-final.mjs",
     "benchmark:ux": "node e2e/benchmark-v032.mjs races-manual",
