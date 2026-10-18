@@ -1647,3 +1647,11 @@ textarea[rows="14"] {
 
 .single-classes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:16px 0}.single-classes button{display:flex;align-items:center;gap:10px;text-align:left;min-height:60px;min-width:0;padding:12px;background:#1b2a3d;border:1px solid #71839a;border-radius:8px;font-size:16px}.single-classes button:focus-visible{outline:3px solid #e2b77b;outline-offset:2px}.single-class-symbol{font:26px/1 Georgia,serif;min-width:28px;text-align:center;color:#e2b77b}.single-classes button span:last-child{min-width:0;overflow-wrap:normal}.single-classes button.selected{border-color:#e2b77b;background:#283950}
 @media(max-width:600px){.single-classes{grid-template-columns:repeat(2,minmax(0,1fr))}.single-classes button{padding:10px;font-size:15px}}
+
+/* Keep inventory actions readable beside long item names on narrow screens. */
+.inventory-editor .single-option{gap:8px 12px;margin:8px 0;padding:8px 12px;flex-wrap:wrap}
+.inventory-editor .single-option>span{flex:1 1 200px}
+.inventory-editor .single-option>.check{flex:0 0 auto;white-space:nowrap}
+.inventory-editor .single-option>small{flex-basis:100%}
+.inventory-editor .single-option>button{margin-left:auto}
+@media(max-width:600px){.inventory-editor .single-option>span{flex-basis:100%}}
