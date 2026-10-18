@@ -99,7 +99,7 @@ export function spellbookFromBuild(index, character, report, request) {
     }
   }
   for (const g of report.grantedSpells) {
-    const grant=add(g.id,g.ownerId??g.classId+':automatic',g.classId,'granted',g.mode==='prepared'?'always':'none');
+    const grant=add(g.id,g.ownerId??g.classId+':automatic',g.classId,g.mode==='book'?'book':'granted',g.mode==='prepared'?'always':'none');
     if(g.classLevel)grant.acquiredAt.classLevel=g.classLevel;
     if(g.ownerId&&index.get(g.ownerId))grant.source=index.get(g.ownerId).source;
   }

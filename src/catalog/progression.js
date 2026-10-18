@@ -211,13 +211,13 @@ export function resolveProgression(index, request) {
         return d?.classId === c.id ? (d.extraSpells ?? []).map(r=>({...r,ownerId:id})) : [];
       }),
     ].filter((r) => r.classLevel <= L);
-    const grants=resolveSpellGrants(index,c,extraSpells,spellGrantReplacements);grantedSpells.push(...grants.rows);issues.push(...grants.issues);
+    const grants=resolveSpellGrants(index,c,extraSpells,spellGrantReplacements);grantedSpells.push(...grants.rows.filter(r=>r.mode!=='book'||!(selections[c.id+':spellbook']??[]).includes(r.id)));issues.push(...grants.issues);
     const allowedSpells = (minimumLevel = 1) => [
       ...new Set([
         ...listSpells(index, d.spellListClassId??c.id, {
           minimumLevel,
           maximumLevel: maxSpell,
-        }).map((s) => s.id).filter(id=>!grantedSpells.some(g=>g.classId===c.id&&g.mode==='known'&&g.id===id)),
+        }).map((s) => s.id).filter(id=>!grantedSpells.some(g=>g.classId===c.id&&['known','book'].includes(g.mode)&&g.id===id)),
         ...extraSpells
           .filter(r=>r.mode!=='known')
           .flatMap((r) => r.spellIds)
@@ -231,6 +231,7 @@ export function resolveProgression(index, request) {
         n =
           Math.max(n.minimum, n.proficiency?2+Math.floor((classes.reduce((s,c)=>s+c.level,0)-1)/4):modifier(adjustedScores[n.ability])) * (n.multiplier??1) +
           (n.add ?? 0);
+      if(n!==null)n=Math.max(0,n);
       if (n === 0) continue;
       resources.push({
         id: c.id + ":" + r.id,
@@ -277,6 +278,7 @@ export function resolveProgression(index, request) {
         continue;
       }
       let options = spec.spellList?listSpells(index,spec.spellList.classId,{minimumLevel:spec.spellList.minimumLevel,maximumLevel:spec.spellList.maximumLevel}).map(s=>s.id):spec.options;
+      if(spec.bonusIfAlreadyKnown&&!(selections[c.id+':cantrips']??[]).includes(spec.bonusIfAlreadyKnown))options=[spec.bonusIfAlreadyKnown];
       if(spec.kind==='feature')options=options.filter(id=>{const key=index.get(id)?.data.uniqueRuleKey;return !key||!Object.entries(selections).filter(([choice])=>choice!==c.id+':'+spec.key).flatMap(([,values])=>values).some(other=>index.get(other)?.data.uniqueRuleKey===key);});
       if(spec.kind==='proficiency'&&!spec.toolReplacementFor)options=options.filter(id=>!background.proficiencies.some(p=>canonicalProficiency(p)===canonicalProficiency(id)));
       if(spec.filterAvailableFeatures) options=options.filter(id=>{const f=index.get(id);return f?.type==='feature'&&f.data.classId===c.id&&f.data.minimumClassLevel<=L&&(f.data.selectionRequires??[]).every(id=>selected.has(id)||features.has(id));});
@@ -394,7 +396,7 @@ export function resolveProgression(index, request) {
       );
       const options =
         c.id === "wizard"
-          ? (selections[c.id + ":spellbook"] ?? []).filter(
+          ? [...(selections[c.id + ":spellbook"] ?? []),...grantedSpells.filter(g=>g.classId===c.id&&g.mode==='book').map(g=>g.id)].filter(
               (id) =>
                 !(selections[c.id + ":signature-spells"] ?? []).includes(id),
             )
@@ -566,6 +568,7 @@ export function resolveProgression(index, request) {
       if (n && typeof n === "object")
         n =
           Math.max(n.minimum,n.proficiency?2+Math.floor((classes.reduce((s,c)=>s+c.level,0)-1)/4):modifier(adjustedScores[n.ability]))*(n.multiplier??1)+(n.add??0);
+      if(n!==null)n=Math.max(0,n);
       if (n !== 0)
         resources.push({
           id: c.id + ":" + r.id,
