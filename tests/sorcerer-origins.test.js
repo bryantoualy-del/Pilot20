@@ -1,0 +1,13 @@
+import test from 'node:test';import assert from 'node:assert/strict';import{playerCatalogs}from '../src/catalog/player-catalogs.js';import{campaignCatalog,defaultCampaign}from '../src/campaign/sources.js';import{newDraft,suggestChoices,compileDraft,draftProgression}from '../src/creator/model.js';
+const config=defaultCampaign(),ctx=campaignCatalog(playerCatalogs,[],config);
+function build(subclassId,level){let d=Object.assign(newDraft(),{name:'Origine synthétique',raceId:'srd51:race:human',backgroundId:'srd51:background:acolyte',classes:[{id:'sorcerer',level,subclassId}],classChosen:true});d=suggestChoices(ctx,config,d);d.reviewed=d.confirmed=true;const r=compileDraft(ctx,config,d);assert.equal(r.valid,true,subclassId+' '+level+JSON.stringify(r.issues));return{d,r};}
+test('all seven sorcerer origins compile at their actual feature tiers without daily preparation',()=>{
+ const subs=ctx.index.class('sorcerer').data.subclassIds;assert.equal(subs.length,7);for(const sub of subs)for(const level of [1,3,6,14,18,20]){const{r}=build(sub,level);assert.equal(r.choices.some(q=>q.kind==='prepared'),false);for(const row of ctx.index.get(sub).data.grants)for(const id of row.featureIds)assert.equal(r.character.features.includes(id),row.level<=level);}
+});
+test('Divine Soul learns Cleric spells using Charisma, including cantrips and its distinct extra affinity spell',()=>{
+ const{r}=build('xge:sorcerer:divine-soul',5);assert.ok(r.choices.find(q=>q.id==='sorcerer:cantrips').options.includes('srd51:guidance'));assert.ok(r.choices.find(q=>q.id==='sorcerer:known-spells').options.includes('srd51:revivify'));assert.equal(r.character.classes[0].casting.ability,'cha');assert.equal(r.selections['sorcerer:divine-affinity'].length,1);assert.equal(r.stats.resources['sorcerer:favored-by-gods'].recovery,'short');
+});
+test('Shadow knows Darkness outside its quota; Storm persistent resistances and flight unlock only at their levels',()=>{
+ const s=build('xge:sorcerer:shadow-magic',3).r;assert.ok(s.spellbook.grants.some(g=>g.spellId==='srd51:darkness'&&g.acquisition==='granted'));assert.ok(!s.choices.find(q=>q.id==='sorcerer:known-spells').options.includes('srd51:darkness'));
+ assert.ok(!build('xge:sorcerer:storm-sorcery',3).r.character.defenses.resistances.includes('lightning'));assert.ok(build('xge:sorcerer:storm-sorcery',6).r.character.defenses.resistances.includes('lightning'));const storm=build('xge:sorcerer:storm-sorcery',18).r;assert.ok(storm.character.defenses.immunities.includes('lightning'));assert.equal(storm.character.movement.fly,60);const wild=build('phb14:sorcerer:wild-magic',6).r;assert.equal(wild.character.abilities.find(a=>a.id==='phb14:sorcerer:wild-magic:bend-luck').resource.amount,2);
+});

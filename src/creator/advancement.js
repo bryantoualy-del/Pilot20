@@ -19,7 +19,7 @@ export function validateLevelGain(index,request,pending){
  if(!after){issues.push({code:'level-gain-choice-removed',choiceId:old.id});continue;}
  if(!removed.length)continue;
  const c=request.classes.find(c=>c.id===old.classId),policy=effectiveClassData(index,c).acquisitionPolicy??{},advancing=classId===old.classId;
- const invocation=old.id.endsWith(':invocations'),known=old.id.endsWith(':known-spells')||old.id.endsWith(':known-free-spells')||old.id.includes(':magical-secrets-');
+ const invocation=old.id.endsWith(':invocations'),known=old.replaceableKnown||old.id.endsWith(':known-spells')||old.id.endsWith(':known-free-spells')||old.id.includes(':magical-secrets-');
  if(invocation||known){const key=old.classId+(invocation?':invocation':':known'),cap=invocation?policy.invocationReplacementPerClassLevel??0:policy.knownReplacementPerClassLevel??0;budgets.set(key,(budgets.get(key)??0)+removed.length);if(!advancing||budgets.get(key)>cap)issues.push({code:'replacement-limit',choiceId:old.id});if(old.id.includes(':magical-secrets-')&&now.filter(id=>!prior.includes(id)).some(id=>!index.get(id)?.data.classIds.includes(old.classId)))issues.push({code:'secret-replacement-class-list',choiceId:old.id});continue;}
  const kind=old.id===old.classId+':cantrips'?'cantrip':old.kind==='expertise'?'expertise':null;
  if(kind&&advancing&&next.choices.some(q=>q.classId===classId&&q.kind==='asi'&&q.level===c.level)){const cap=policy[kind+'ReplacementAtASI']??0,key=classId+':versatility';budgets.set(key,(budgets.get(key)??0)+removed.length);if(removed.length<=cap&&budgets.get(key)<=(policy.sharedASIReplacementLimit??cap))continue;}
