@@ -4,7 +4,7 @@ const config=defaultCampaign(),ctx=campaignCatalog(playerCatalogs,[],config);
 function input(sub,level){return Object.assign(newDraft(),{name:'Barbare — recette synthétique',raceId:'srd51:race:human',backgroundId:'srd51:background:acolyte',classes:[{id:'barbarian',level,subclassId:sub}],classChosen:true});}
 function build(d,c=config,x=ctx){d=suggestChoices(x,c,d);d.reviewed=d.confirmed=true;const r=compileDraft(x,c,d);assert.equal(r.valid,true,JSON.stringify(r.issues));return{d,r,stats:derive(r.character)};}
 test('five XGE/TCE paths acquire each grant at its actual class level',()=>{
- const paths=ctx.index.class('barbarian').data.subclassIds.filter(id=>!id.startsWith('srd51:'));assert.equal(paths.length,5);
+ const paths=ctx.index.class('barbarian').data.subclassIds.filter(id=>['xge','tce'].includes(ctx.index.get(id).data.rulesSourceId));assert.equal(paths.length,5);
  for(const sub of paths)for(const level of [3,6,10,14,20]){const{r}=build(input(sub,level));for(const row of ctx.index.get(sub).data.grants)for(const id of row.featureIds)assert.equal(r.character.features.includes(id),row.level<=level);assert.ok(r.choices.every(q=>q.kind!=='prepared'));}
 });
 test('Storm Herald persistent environment applies resistance only from level6 and sea swimming independently of rage',()=>{
