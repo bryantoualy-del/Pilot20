@@ -1,5 +1,6 @@
+import {spellSummariesFr} from './spell-summaries-fr.js';
 /** Original concise explanations; these do not replace a spell's full validated rules. */
-export const spellNotesFr={
+export const spellNotesFr={...spellSummariesFr,
  'srd51:fireball':'Une explosion dans une sphère de 6 m de rayon inflige 8d6 dégâts de feu. Chaque créature effectue une sauvegarde de Dextérité ; une réussite divise les dégâts par deux. Chaque niveau d’emplacement au-delà du troisième ajoute 1d6.',
  'srd51:lightning-bolt':'Une ligne de foudre de 30 m sur 1,50 m inflige 8d6 dégâts. Une sauvegarde de Dextérité réussie réduit ces dégâts de moitié. Ajoutez 1d6 par niveau d’emplacement au-delà du troisième.',
  'srd51:healing-word':'Une créature visible à 18 m récupère 1d4 points de vie, plus votre modificateur d’incantation. Le sort utilise une action bonus ; chaque niveau d’emplacement supplémentaire ajoute 1d4. Il ne soigne ni les morts-vivants ni les artificiels.',
