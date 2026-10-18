@@ -4,6 +4,7 @@ import {startingEquipment,compileStartingEquipment,startingProficiencies} from '
 import {spellbookFromBuild} from '../spellbook/model.js';
 import {
   EQUIPMENT,
+  ARMORS,
   WEAPONS,
   weaponProfile,
   SRD_SOURCE,
@@ -77,6 +78,7 @@ export function buildRequest(d) {
     background: structuredClone(d.background),
     advancementHistory: [...structuredClone(d.advancementHistory??[]),...(d.pendingAdvancement&&d.advancementHistory?.length?[{classId:d.pendingAdvancement.classId,classes:structuredClone(d.classes),selections:structuredClone(d.selections)}]:[])],
     spellbookTranscriptions: structuredClone(d.spellbookTranscriptions ?? []),
+    featRitualCopies:structuredClone(d.featRitualCopies??[]),
     spellGrantReplacements:structuredClone(d.spellGrantReplacements??[]),
     hpMode:d.hpMode??'average',
     hpProgression:null,
@@ -245,6 +247,7 @@ export function compileDraft(context, config, d) {
       source: SRD_SOURCE,
     });
   }
+  if(c.features.includes('phb14:feat:medium-armor-master'))for(const e of c.equipment.filter(e=>e.kind==='armor')){const type=ARMORS[e.id.split(':').at(-1)]?.category;if(type==='medium')e.armor.dexCap=3;}
   if(c.features.includes('srd51:monk:martial-arts')&&!c.equipment.some(e=>e.equipped&&['armor','shield'].includes(e.kind))){
     const die=r.scaling.monk.martialArtsDie,kensei=new Set(Object.entries(d.selections).filter(([key])=>key.startsWith('monk:kensei-')&&key!=='monk:kensei-art').flatMap(([,v])=>v));
     for(const e of c.equipment.filter(e=>e.weapon)){const id=e.id.split(':').at(-1),w=WEAPONS[id];if(!w)continue;const monkWeapon=w.category==='simple'&&!w.ranged&&!['greatclub'].includes(id)||id==='shortsword'||kensei.has(w.proficiency);if(!monkWeapon)continue;if(c.scores.dex>c.scores.str)e.weapon.ability='dex';const m=/^1d(\d+)$/.exec(e.weapon.dice);if(m&&Number(m[1])<die)e.weapon.dice='1d'+die;}
@@ -408,7 +411,7 @@ export function suggestChoices(
       if (!current.length) {
         let options = q.options.filter(
           (v) =>
-            (q.kind !== "skill" || !usedSkills.has(v)) &&
+            (!["skill","training"].includes(q.kind) || !usedSkills.has(v)) &&
             (q.kind !== "expertise" || !usedExpertise.has(v)) &&
             (q.kind !== "feature" || !features.has(v)&&![...features].some(id=>{const key=context.index.get(v)?.data.uniqueRuleKey;return key&&context.index.get(id)?.data.uniqueRuleKey===key;})) &&
             (q.kind !== "spell" || !spellSet.has(v)) &&
@@ -452,7 +455,7 @@ export function suggestChoices(
         d.selections[q.id] = options.slice(0, q.count);
       }
       const values = d.selections[q.id] ?? [];
-      if (q.kind === "skill") values.forEach((v) => usedSkills.add(v));
+      if (["skill","training"].includes(q.kind)) values.filter(v=>Object.hasOwn(SKILLS,v)).forEach((v) => usedSkills.add(v));
       if (q.kind === "expertise") values.forEach((v) => usedExpertise.add(v));
       if (q.kind === "feature") values.forEach((v) => features.add(v));
       if (q.kind === "spell") {

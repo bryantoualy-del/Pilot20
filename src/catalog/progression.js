@@ -1,3 +1,4 @@
+import {resolveFeatChoices,featEligible} from './feat-choices.js';
 import {invocationEligible} from './warlock-invocations.js';
 import { resolveOrigins } from "./origins.js";
 import {validateGrantReplacements,resolveSpellGrants} from './spell-grants.js';
@@ -102,14 +103,15 @@ export function resolveProgression(index, request) {
             adjustedScores[a]++;
             adjustedScores[b]++;
           }
+  const featResolution=resolveFeatChoices(index,{...request,classes,scores:adjustedScores,selections,campaignOptions},origin);Object.assign(adjustedScores,featResolution.scores);origin.spells.push(...featResolution.spells);
   const scoresBeforeFeatureIncreases={...adjustedScores},scoreFeatures=new Set(origin.featIds??[]);
   for(const c of classes){for(const row of [...(index.class(c.id)?.data.grants??[]),...(index.get(c.subclassId)?.data.grants??[])])if(row.level<=c.level)for(const id of row.featureIds)scoreFeatures.add(id);}
   for(const id of Object.values(selections).flat())if(index.get(id)?.type==='feature')scoreFeatures.add(id);
   for(const id of scoreFeatures){const f=index.get(id),owner=classes.find(c=>c.id===f?.data.classId),effect=f?.data.buildEffects;if(!owner||owner.level<(f.data.minimumClassLevel??1)||owner.level<(effect?.minimumClassLevel??1))continue;for(const [a,row]of Object.entries(effect?.scoreIncreases??{}))adjustedScores[a]=Math.max(adjustedScores[a],Math.min(row.maximum,adjustedScores[a]+row.amount));}
-  const features = new Set(origin.featIds ?? []),
-    resources = [],
+  const features = new Set(featResolution.features),
+    resources = [...featResolution.resources],
     choices = [],
-    issues = [...origin.issues],
+    issues = [...origin.issues,...featResolution.issues],
     castingClasses = [],
     scaling = {},
     grantedSpells = [],
@@ -297,7 +299,7 @@ export function resolveProgression(index, request) {
             .filter((f) =>
               (f.data.requiresScores ?? []).every(
                 (p) => adjustedScores[p.score] >= p.minimum,
-              ),
+              ) && featEligible(index,f,{classes,scores:adjustedScores,origin,selections}),
             )
             .map((f) => f.id),
         );
@@ -442,6 +444,7 @@ export function resolveProgression(index, request) {
             "spell",
           );
   }
+  choices.push(...featResolution.choices);
   // Subclass is explicit in classes. Preserve one consistent source for selection records.
   const effectiveSelections = { ...selections };
   for (const c of classes)
@@ -475,8 +478,8 @@ export function resolveProgression(index, request) {
         seen.add(v);
         distinctGroups.set(choice.distinctGroup, seen);
       }
-    if (choice.kind === "skill")
-      for (const v of values) {
+    if (["skill","training"].includes(choice.kind))
+      for (const v of values.filter(v=>Object.hasOwn(SKILLS,v))) {
         if (skillSelections.has(v))
           issues.push({ code: "duplicate-skill", choiceId: choice.id });
         skillSelections.add(v);
@@ -568,7 +571,7 @@ export function resolveProgression(index, request) {
   for (const fid of features)
     for (const r of index.get(fid)?.data.resources ?? []) {
       const entry = index.get(fid),
-        c = classes.find((c) => c.id === entry.data.classId);
+        c = classes.find((c) => c.id === (featResolution.featureOwners[fid]??entry.data.classId));
       if (suppressedResources.has(c.id + ":" + r.id)) continue;
       let n = r.maxByLevel[c.level - 1];
       if (n && typeof n === "object")
@@ -592,9 +595,12 @@ export function resolveProgression(index, request) {
   );
   let unarmoredDefense=false;for(const c of classes){const id=index.class(c.id)?.data.armorRuleFeatureId;if(id&&features.has(id)){if(unarmoredDefense)features.delete(id);else unarmoredDefense=true;}}
   const uniqueRules=new Map();for(const id of features){const key=index.get(id)?.data.uniqueRuleKey;if(key){if(uniqueRules.has(key))issues.push({code:'duplicate-feature-rule',featureId:id,otherFeatureId:uniqueRules.get(key),choiceId:choices.find(q=>(effectiveSelections[q.id]??[]).includes(id))?.id});else uniqueRules.set(key,id);}}
-  for(const fid of features){const feature=index.get(fid),owner=classes.find(c=>c.id===feature?.data.classId);for(const row of feature?.data.innateSpells??[])if(owner&&owner.level>=row.classLevel)for(const id of row.spellIds)origin.spells.push({id,level:row.classLevel,ability:row.ability,ownerId:fid,featureOwnerId:fid,...(row.resourceId?{resourceId:owner.id+':'+row.resourceId}:{}),...(row.economy?{economy:row.economy}:{}),...(row.target?{target:row.target}:{}),...(row.maxTargets?{maxTargets:row.maxTargets}:{}),...(row.resourceAmount?{resourceAmount:row.resourceAmount}:{}),...(row.ritualOnly?{ritualOnly:true}:{}),requirements:row.requirements,source:feature.source});}
+  for(const fid of features){const feature=index.get(fid),owner=classes.find(c=>c.id===(featResolution.featureOwners[fid]??feature?.data.classId));for(const row of feature?.data.innateSpells??[])if(owner&&(featResolution.featureOwners[fid]||owner.level>=row.classLevel))for(const id of row.spellIds)origin.spells.push({id,level:row.classLevel,ability:row.ability,ownerId:fid,featureOwnerId:fid,...(row.resourceId?{resourceId:owner.id+':'+row.resourceId}:{}),...(row.economy?{economy:row.economy}:{}),...(row.target?{target:row.target}:{}),...(row.maxTargets?{maxTargets:row.maxTargets}:{}),...(row.resourceAmount?{resourceAmount:row.resourceAmount}:{}),...(row.ritualOnly?{ritualOnly:true}:{}),requirements:row.requirements,source:feature.source});}
   return {
     origin,
+    additionalSaves:featResolution.additionalSaves,
+    featureClassOverrides:featResolution.featureOwners,
+    featureResourceOverrides:featResolution.featureResourceOverrides,
     features: [...features],
     resources,
     choices,
@@ -629,7 +635,7 @@ export function resolveProgression(index, request) {
     valid: issues.length === 0,
     scores: adjustedScores,
     scoresBeforeFeatureIncreases,
-    featureHpBonus:[...features].reduce((n,id)=>{const f=index.get(id),c=classes.find(c=>c.id===f?.data.classId);return n+(f?.data.buildEffects?.hpPerClassLevel??0)*(c?.level??0);},0),
+    featureHpBonus:[...features].reduce((n,id)=>{const f=index.get(id),c=classes.find(c=>c.id===f?.data.classId);return n+(f?.data.buildEffects?.hpPerClassLevel??0)*(c?.level??0)+(f?.data.buildEffects?.hpPerCharacterLevel??0)*classes.reduce((n,c)=>n+c.level,0);},0),
     scaling,
     slots: spellSlots(castingClasses),
     limits: [

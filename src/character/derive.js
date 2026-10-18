@@ -98,6 +98,7 @@ export function derive(d) {
     stats = { level, proficiency: pb, attacksPerAction: 1,untrainedCheckBonus:0,untrainedPhysicalCheckBonus:0,rangedWeaponAttackBonus:0 };
   for (const c of d.classes) stats["class." + c.id] = c.level;
   for (const k of ABILITIES){stats["mod." + k] = modifier(d.scores[k]);stats["checkBonus."+k]=0;}
+  for(const k of Object.keys(SKILLS))stats['passiveBonus.'+k]=0;
   const skills = {},
     saves = {},
     casting = {};
@@ -166,6 +167,7 @@ export function derive(d) {
       "untrainedCheckBonus","untrainedPhysicalCheckBonus","rangedWeaponAttackBonus",
       ...ABILITIES.map((k) => "save." + k),
       ...ABILITIES.map(k=>"checkBonus."+k),
+      ...Object.keys(SKILLS).map(k=>"passiveBonus."+k),
       ...Object.keys(SKILLS).map((k) => "skill." + k),
       ...d.classes.flatMap((c) => ["spellAttack." + c.id, "spellDC." + c.id]),
     ];
@@ -240,6 +242,7 @@ export function derive(d) {
     proficiency: pb,
     modifiers: Object.fromEntries(ABILITIES.map((k) => [k, stats["mod." + k]])),
     skills,
+    passives:Object.fromEntries(Object.keys(SKILLS).map(k=>[k,10+skills[k]+stats['passiveBonus.'+k]])),
     saves,
     checks,
     casting,

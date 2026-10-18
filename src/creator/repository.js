@@ -18,6 +18,7 @@ import { StorageError } from "../persistence/adapters.js";
 import { validateCharacter } from "../character/definition.js";
 export function validateDraft(d) {
   json(d);
+  if(d.featRitualCopies!==undefined){check(Array.isArray(d.featRitualCopies)&&d.featRitualCopies.length<=500,'Ritual copy ledger');const seen=new Set();for(const row of d.featRitualCopies){check(row.featId==='phb14:feat:ritual-caster'&&id(row.spellId)&&Number.isInteger(row.characterLevel)&&row.characterLevel>=1&&row.characterLevel<=20&&typeof row.note==='string'&&row.note.trim()&&row.note.length<=500&&!seen.has(row.spellId),'Ritual copy entry');seen.add(row.spellId);}}
   if(d.companionNotes!==undefined)check(typeof d.companionNotes==='string'&&d.companionNotes.length<=3000,'Companion notes');
   if(d.hpMode!==undefined)check(['average','rolled'].includes(d.hpMode),'HP method');
   if(d.hpRolls!==undefined){check(d.hpRolls&&typeof d.hpRolls==='object'&&!Array.isArray(d.hpRolls)&&Object.keys(d.hpRolls).length<=400,'HP roll map');for(const [key,value]of Object.entries(d.hpRolls))check(id(key)&&Number.isInteger(value)&&value>=1&&value<=12,'HP die result');}

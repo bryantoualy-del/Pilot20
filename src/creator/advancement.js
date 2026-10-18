@@ -13,7 +13,7 @@ export function validateLevelGain(index,request,pending){
  if(!pending)return[];const issues=[],before=pending.before,classId=pending.classId;
  const oldCounts=new Map(before.classes.map(c=>[c.id,c.level])),newCounts=new Map(request.classes.map(c=>[c.id,c.level]));
  if(total(request.classes)!==total(before.classes)+1||[...new Set([...oldCounts.keys(),...newCounts.keys()])].some(id=>(newCounts.get(id)??0)!==(oldCounts.get(id)??0)+(id===classId?1:0)))return[{code:'level-gain-class-sequence'}];
- const report=resolveProgression(index,{...request,classes:before.classes,selections:before.selections,spellbookTranscriptions:before.spellbookTranscriptions??[],spellGrantReplacements:before.spellGrantReplacements??[]});
+ const report=resolveProgression(index,{...request,classes:before.classes,selections:before.selections,spellbookTranscriptions:before.spellbookTranscriptions??[],spellGrantReplacements:before.spellGrantReplacements??[],featRitualCopies:before.featRitualCopies??[]});
  const next=resolveProgression(index,request),budgets=new Map();
  for(const old of report.choices){if(old.kind==='prepared'||old.mutableAtRest)continue;const after=next.choices.find(q=>q.id===old.id);const prior=before.selections[old.id]??(old.kind==='subclass'?[before.classes.find(c=>c.id===old.classId)?.subclassId].filter(Boolean):[]),now=request.selections[old.id]??(old.kind==='subclass'?[request.classes.find(c=>c.id===old.classId)?.subclassId].filter(Boolean):[]),removed=prior.filter(id=>!now.includes(id));
  if(!after){issues.push({code:'level-gain-choice-removed',choiceId:old.id});continue;}

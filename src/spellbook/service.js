@@ -31,6 +31,15 @@ export function stageWizardCopy(context,config,input,{spellId,confirmedCopy=fals
   d.spellbookTranscriptions.push({classId:'wizard',spellId,characterLevel:d.classes.reduce((n,c)=>n+c.level,0),reason:note.trim()});
   d.selections[q.id]=[...(d.selections[q.id]??[]),spellId];d.confirmed=true;updateCurrentHistory(d);return d;
 }
+export function ritualCopyOptions(context,config,draft){
+ if(!draft)return[];const report=draftProgression(context,config,draft),featId='phb14:feat:ritual-caster';if(!report.features?.includes(featId))return[];
+ const cls=draft.selections[featId+':spell-class']?.[0],owned=new Set([...(draft.selections[featId+':rituals']??[]),...(draft.featRitualCopies??[]).filter(r=>r.featId===featId).map(r=>r.spellId)]),cap=Math.ceil(draft.classes.reduce((n,c)=>n+c.level,0)/2);
+ return context.index.list('spell').filter(s=>s.data.ritual&&s.data.level>0&&s.data.level<=cap&&s.data.classIds.includes(cls)&&!owned.has(s.id)).map(s=>s.id);
+}
+export function stageRitualCopy(context,config,input,{spellId,confirmedCopy=false,note=''}){
+ check(ritualCopyOptions(context,config,input).includes(spellId),'Ritual cannot be copied into this book');check(confirmedCopy===true&&typeof note==='string'&&note.trim()&&note.length<=500,'Confirm ritual access, time and material cost');
+ const d=structuredClone(input);d.featRitualCopies??=[];d.featRitualCopies.push({featId:'phb14:feat:ritual-caster',spellId,characterLevel:d.classes.reduce((n,c)=>n+c.level,0),note:note.trim()});d.confirmed=true;return d;
+}
 function comparable(character){const c=structuredClone(character);c.revision=1;return JSON.stringify(c);}
 /** Reuse the production compiler and the creator's atomic definition/book/draft transaction. */
 export function grimoireService({library,drafts,campaigns}){
@@ -44,7 +53,7 @@ export function grimoireService({library,drafts,campaigns}){
       const before=compileDraft(context,config,{...draft,confirmed:true});
       // External manual definition changes must never be discarded by rebuilding from an older draft.
       check(before.valid&&sameDefinition(before.character,record.definition),'Character differs from its build plan; review it before changing spells');
-      const next=command.type==='prepare'?stagePreparation(context,config,draft,command):command.type==='copy'?stageWizardCopy(context,config,draft,command):null;
+      const next=command.type==='prepare'?stagePreparation(context,config,draft,command):command.type==='copy'?stageWizardCopy(context,config,draft,command):command.type==='ritual-copy'?stageRitualCopy(context,config,draft,command):null;
       check(next,'Unknown grimoire operation');
       const result=compileDraft(context,config,next);check(result.valid,'Spell choices need review');
       result.character.revision=expectedCharacterRevision+1;next.status=result.status;
