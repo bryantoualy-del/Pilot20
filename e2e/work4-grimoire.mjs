@@ -56,6 +56,10 @@ try{
  await open('cleric');await p.getByRole('button',{name:'Modifier la préparation',exact:true}).click();await search(fixtures.cleric.autoName);
  const auto=p.locator(`.grimoire-spell[data-spell-id="${fixtures.cleric.autoId}"]`);await auto.waitFor();assert.equal(await auto.getByRole('checkbox',{name:'Préparer',exact:true}).count(),0);assert.ok((await auto.textContent()).includes('Toujours préparé'));
  const counter=await p.locator('.grimoire-status').textContent();await search('unmatchable search');assert.equal(await p.locator('.grimoire-status').textContent(),counter);results.push('Cleric domain spells stay always prepared outside the editable quota; search does not change counters');
+ const clericBefore=await read('cleric');await search(fixtures.cleric.removeName);await p.locator(`.grimoire-spell[data-spell-id="${fixtures.cleric.removeId}"]`).getByRole('checkbox',{name:'Préparer',exact:true}).uncheck();
+ assert.equal(await p.getByRole('button',{name:'Enregistrer la préparation',exact:true}).isEnabled(),true);await p.getByRole('button',{name:'Enregistrer la préparation',exact:true}).click();
+ await p.locator('.grimoire[data-character-id="grimoire-cleric"][data-character-revision="2"]').waitFor();const clericAfter=await read('cleric');assert.equal(clericAfter.definition.spells.prepared.length,clericBefore.definition.spells.prepared.length-1);assert.ok(clericAfter.definition.spells.prepared.includes(fixtures.cleric.autoId));results.push('Cleric may save fewer than the daily maximum without removing domain spells');
+
  await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();await p.reload();await open('wizard');const reopened=await read('wizard');assert.deepEqual(reopened.spellbook,after.spellbook);results.push('Library reopening retains the exact spellbook and preparation metadata');
  await p.waitForFunction(()=>navigator.serviceWorker.controller!==null);
  // WebKit offline emulation bug #42775: interrupt the actual origin server instead.

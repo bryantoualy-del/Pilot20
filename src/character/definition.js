@@ -44,7 +44,8 @@ export function validateCharacter(d) {
   ids(d.choices.map(c=>c.id));ids(d.choiceRules.map(c=>c.id));
   for(const c of d.choices) {keys(c,['id','level','optionIds','note']);check(id(c.id) && integer(c.level,1,20) && text(c.note),'Choice');ids(c.optionIds);}
   for(const r of d.choiceRules) {
-    keys(r,['id','level','count','options','requires','incompatible']);
+    keys(r,['id','level','count','options','requires','incompatible','minimumCount'],['id','level','count','options','requires','incompatible']);
+    if(r.minimumCount!==undefined)check(integer(r.minimumCount,0,r.count),'Minimum choices');
     check(id(r.id) && integer(r.level,1,20) && integer(r.count,1,20),'Choice rule');ids(r.options);ids(r.requires);ids(r.incompatible);
   }
   check(Array.isArray(d.resources) && Array.isArray(d.abilities) && Array.isArray(d.modifiers),'Rule arrays');
@@ -81,7 +82,7 @@ export function validateBuild(d) {
   for(const r of d.choiceRules) {
     if(r.level>level) continue;
     const c=d.choices.find(c=>c.id===r.id);
-    if(!c || c.optionIds.length!==r.count) add('required-choice','choices.'+r.id);
+    if(!c || c.optionIds.length<(r.minimumCount??r.count)||c.optionIds.length>r.count) add('required-choice','choices.'+r.id);
     else if(c.level!==r.level || c.optionIds.some(k=>!r.options.includes(k))) add('invalid-choice','choices.'+r.id);
     if(c && r.requires.some(k=>!selected.has(k))) add('prerequisite','choices.'+r.id);
     if(c && r.incompatible.some(k=>selected.has(k))) add('incompatible','choices.'+r.id);

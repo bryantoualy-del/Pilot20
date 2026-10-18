@@ -60,8 +60,8 @@ export async function renderGrimoire(main,characterId,a){
    const prep=el('div',{class:'grimoire-preparation'});
    if(!editing)prep.append(button(w('Modifier la préparation','Change preparation'),()=>{editing=true;staged=[...(draft.selections[q.id]??[])];ui.tab='catalogue';page=0;draw();}));
    else{
-    const save=button(w('Enregistrer la préparation','Save preparation'),()=>apply({type:'prepare',classId:ui.classId,spellIds:staged}),'primary');save.disabled=staged.length!==q.count;
-    prep.append(el('p',{},`${staged.length} / ${q.count} `+w('sorts préparés — les sorts toujours préparés sont à part.','prepared spells — always-prepared spells are separate.')),save,button(w('Annuler','Cancel'),()=>{editing=false;draw();}));
+    const save=button(w('Enregistrer la préparation','Save preparation'),()=>apply({type:'prepare',classId:ui.classId,spellIds:staged}),'primary');save.disabled=staged.length>q.count||staged.length<(q.minimumCount??q.count);
+    prep.append(el('p',{},`${staged.length} / ${q.count} `+w('sorts préparés au maximum — les sorts toujours préparés sont à part.','prepared spells maximum — always-prepared spells are separate.')),save,button(w('Annuler','Cancel'),()=>{editing=false;draw();}));
    }
    shell.insertBefore(prep,list);
   }else if(view.classIds.length&&ui.classId!=='all')shell.insertBefore(el('p',{},w('Vos sorts connus et choix spéciaux évoluent lors de la progression du personnage.','Known spells and special choices change when your character advances.')),list);

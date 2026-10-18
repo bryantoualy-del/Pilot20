@@ -16,7 +16,7 @@ export function stagePreparation(context,config,input,{classId,spellIds}){
   const d=structuredClone(input),report=draftProgression(context,config,d);
   const q=report.choices.find(q=>q.classId===classId&&q.kind==='prepared');
   check(q,'This class does not prepare spells');
-  check(Array.isArray(spellIds)&&new Set(spellIds).size===spellIds.length&&spellIds.length===q.count&&spellIds.every(id=>q.options.includes(id)),'Invalid preparation');
+  check(Array.isArray(spellIds)&&new Set(spellIds).size===spellIds.length&&spellIds.length<=(q.count)&&spellIds.length>=(q.minimumCount??q.count)&&spellIds.every(id=>q.options.includes(id)),'Invalid preparation');
   d.selections[q.id]=[...spellIds];d.confirmed=true;updateCurrentHistory(d);return d;
 }
 /** Copying is explicit acquisition, distinct from the daily preparation and level-up allowance. */

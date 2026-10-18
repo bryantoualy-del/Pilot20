@@ -395,7 +395,7 @@ export function resolveProgression(index, request) {
               (id) =>
                 !grantedSpells.some((s) => s.classId === c.id && s.id === id),
             );
-      addChoice(c.id, "prepared", 1, count, options, "prepared");
+      addChoice(c.id, "prepared", 1, count, options, "prepared",{minimumCount:0});
     }
     if (c.id === "bard")
       for (const lv of [
@@ -445,6 +445,7 @@ export function resolveProgression(index, request) {
     featureSelections = new Set(),
     distinctGroups = new Map();
   for (const choice of choices) {
+    if(choice.kind==='prepared'&&effectiveSelections[choice.id]===undefined)effectiveSelections[choice.id]=[];
     const values = effectiveSelections[choice.id];
     if (!values) {
       issues.push({ code: "required-choice", choiceId: choice.id });
@@ -452,7 +453,7 @@ export function resolveProgression(index, request) {
     }
     if (
       !Array.isArray(values) ||
-      values.length !== choice.count ||
+      (values.length < (choice.minimumCount??choice.count) || values.length > choice.count) ||
       new Set(values).size !== values.length ||
       values.some((k) => !choice.options.includes(k))
     ) {
