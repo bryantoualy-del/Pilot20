@@ -61,7 +61,7 @@ export async function renderCreator(main,input,a) {
     if(q.options.length>8)wrap.append(search);
     function fill(){
       const query=filter.query.toLocaleLowerCase();
-      const options=q.options.filter(id=>a.context.index.get(id)?.type==='spell'?spellMatches(id,query,a.context.index.get(id)):[optionName(id,a),...Object.values(a.context.installed.get(id)?.name??{})].join(' ').toLocaleLowerCase().includes(query));
+      const options=q.options.filter(id=>a.context.index.get(id)?.type==='spell'?spellMatches(id,query,a.context.index.get(id)):[optionName(id,a),...Object.values(a.context.installed.get(id)?.name??{}),...(a.context.installed.get(id)?.data.aliases??[])].join(' ').toLocaleLowerCase().includes(query));
       const pageCount=Math.max(1,Math.ceil(options.length/8));filter.page=Math.min(filter.page,pageCount-1);
       list.replaceChildren();
       if(!options.length)list.append(el('p',{},w('Aucun résultat. Essayez un autre nom.','No results. Try another name.')));

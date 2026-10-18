@@ -1,3 +1,4 @@
+import {choiceLabels,languageLabels,extraTrainingLabels} from './choice-labels.js';
 import { renderQuick } from "./quick.js";
 import { appearanceControls } from "./appearance.js";
 import {
@@ -100,6 +101,10 @@ export function optionName(value, a) {
   }
   if (Object.hasOwn(SKILLS, value) || ABILITIES.includes(value))
     return a.label(value);
+  if(a.context.index.class(value))return a.cls(value);
+  if(value.startsWith('language:')){const key=value.slice(9);return a.state.locale==='fr'?languageLabels[key]??human(key):human(key);}
+  const weapon=Object.values(WEAPONS).find(w=>w.proficiency===value);if(weapon)return weapon.name[a.state.locale];
+  if(extraTrainingLabels[value])return extraTrainingLabels[value][a.state.locale==='fr'?0:1];
   const terms = {
     'two-one':['+2 à une caractéristique, +1 à une autre','+2 to one ability, +1 to another'],
     'three-ones':['+1 à trois caractéristiques différentes','+1 to three different abilities'],
@@ -132,6 +137,9 @@ export function optionName(value, a) {
   return terms[value]?.[a.state.locale === "fr" ? 0 : 1] ?? human(value);
 }
 export function choiceName(q, a) {
+  const owner=a.context.installed.get(q.ownerId),key=owner?.type==='feat'?q.id.split(':').at(-1):q.id.slice(q.classId.length+1),label=choiceLabels[key]?.[a.state.locale==='fr'?0:1];
+  if(owner?.type==='feat')return a.name(owner)+(label?' · '+label:'');
+  if(label)return label;
   const suffix = q.id.slice(q.classId.length + 1),
     lang = a.state.locale === "fr" ? 0 : 1;
   if (suffix.startsWith("asi-"))
@@ -155,6 +163,9 @@ export function issueMessage(issue, report, a) {
     title = q ? choiceName(q, a) : "",
     fr = a.state.locale === "fr";
   const messages = {
+    'feat-prerequisite':fr?'Les prérequis de ce don ne sont pas remplis. Vérifiez race, caractéristiques et maîtrises.':'This feat’s prerequisites are not met. Review ancestry, scores and training.',
+    'feat-score-cap':fr?'Ce don dépasserait20 dans cette caractéristique. Choisissez une autre caractéristique autorisée.':'This feat would exceed20 in that ability. Choose another allowed ability.',
+    'duplicate-feat':fr?'Ce don n’est pas répétable. Choisissez un autre don.':'This feat cannot be taken more than once.',
     'creator-companion':fr?'Renseignez le nom, le FP et la référence du compagnon éligible.':'Enter the eligible companion name, CR and profile reference.',
     'secret-replacement-budget':fr?'Ces Secrets demanderaient plusieurs remplacements au même niveau. Choisissez un autre sort ou vérifiez la progression.':'These Secrets would require multiple replacements at one level. Choose another spell or review progression.',
     'asi-versatility-limit':fr?'Ce remplacement de Polyvalence bardique demande un niveau de barde avec ASI et un seul changement autorisé.':'Bardic Versatility requires a bard ASI level and permits only one replacement.',

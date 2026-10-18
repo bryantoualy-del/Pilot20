@@ -92,9 +92,11 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       check(Array.isArray(d.restrictedSpellSchools)&&d.restrictedSpellSchools.length===2,'Subclass spell schools');
     }
     if(d.buildEffects){
-      keys(d.buildEffects,['proficiencies','attacksPerAction','resistances','minimumClassLevel','movement','scoreIncreases','hpPerClassLevel','naturalArmor','halfProficiency','defenseStyle','rangedWeaponAttackBonus','skills','immunities','heavyArmorBonus','initiativeAbility','saves','skillAbilityBonuses','expertiseSkills','speedBonus','existingMovementBonus','checkAbilityBonuses','unarmoredSpeedByClassLevel'],[]);
-      check(i.type==='feature','Build effects belong to features');
+      keys(d.buildEffects,['proficiencies','attacksPerAction','resistances','minimumClassLevel','movement','scoreIncreases','hpPerClassLevel','naturalArmor','halfProficiency','defenseStyle','rangedWeaponAttackBonus','skills','immunities','heavyArmorBonus','initiativeAbility','saves','skillAbilityBonuses','expertiseSkills','speedBonus','existingMovementBonus','checkAbilityBonuses','unarmoredSpeedByClassLevel','initiativeBonus','hpPerCharacterLevel','passiveSkillBonuses','mediumArmorDexCap'],[]);
+      check(['feature','feat'].includes(i.type),'Build effects belong to features or feats');
       const e=d.buildEffects;
+      for(const key of ['initiativeBonus','hpPerCharacterLevel','mediumArmorDexCap'])if(e[key]!==undefined)check(integer(e[key],0,20),'Feat statistic');
+      if(e.passiveSkillBonuses)for(const[k,v]of Object.entries(e.passiveSkillBonuses))check(Object.hasOwn(SKILLS,k)&&integer(v,0,20),'Passive skill bonus');
       if(e.unarmoredSpeedByClassLevel)check(e.unarmoredSpeedByClassLevel.length===20&&e.unarmoredSpeedByClassLevel.every(n=>integer(n,0,100)),'Unarmored movement');
       if(e.checkAbilityBonuses)for(const [ability,row]of Object.entries(e.checkAbilityBonuses))check(ABILITIES.includes(ability)&&ABILITIES.includes(row.ability)&&integer(row.minimum,0,5),'Feature check ability bonus');
       if(e.expertiseSkills)check(Array.isArray(e.expertiseSkills)&&e.expertiseSkills.every(k=>Object.hasOwn(SKILLS,k)),'Feature expertise');

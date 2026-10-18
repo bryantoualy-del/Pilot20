@@ -96,7 +96,7 @@ export function buildCharacter(
     alignment: null,
     scores: report.scores,
     skills: Object.fromEntries(background.skills.map((k) => [k, 1])),
-    saveProficiencies: first.data.saves,
+    saveProficiencies: [...new Set([...first.data.saves,...(report.additionalSaves??[])])],
     proficiencies: [],
     features: report.features,
     equipment: [],
@@ -116,10 +116,13 @@ export function buildCharacter(
   // Ancestry/background remain editable; no racial bonuses are silently added to supplied scores.
   for(const featureId of d.features){
     const feature=index.get(featureId),effect=feature?.data.buildEffects;if(!effect)continue;
-    if((definitions.find(c=>c.id===feature.data.classId)?.level??0)<(effect.minimumClassLevel??1))continue;
+    if((definitions.find(c=>c.id===(report.featureClassOverrides?.[featureId]??feature.data.classId))?.level??(feature.type==='feat'?1:0))<(effect.minimumClassLevel??1))continue;
     Object.assign(featureMovement,effect.movement??{});
-    const owner=definitions.find(c=>c.id===feature.data.classId),pb=2+Math.floor((definitions.reduce((n,c)=>n+c.level,0)-1)/4);
+    const owner=definitions.find(c=>c.id===(report.featureClassOverrides?.[featureId]??feature.data.classId))??(feature.type==='feat'?definitions[0]:null),pb=2+Math.floor((definitions.reduce((n,c)=>n+c.level,0)-1)/4);
     const modify=(suffix,stat,value,operation='add',condition=null)=>d.modifiers.push({id:featureId+':'+suffix,stat,value,operation,reason:feature.name.en,source:feature.source,...(condition?{condition}:{})});
+    if(effect.hpPerCharacterLevel)modify('feat-hp','maxHp',effect.hpPerCharacterLevel*definitions.reduce((n,c)=>n+c.level,0));
+    if(effect.initiativeBonus)modify('feat-initiative','initiative',effect.initiativeBonus);
+    for(const[skill,n]of Object.entries(effect.passiveSkillBonuses??{}))modify('passive-'+skill,'passiveBonus.'+skill,n);
     if(effect.hpPerClassLevel)modify('hp','maxHp',effect.hpPerClassLevel*owner.level);
     if(effect.naturalArmor)d.armorRules.push({id:featureId+':armor',...structuredClone(effect.naturalArmor),source:feature.source});
     if(effect.halfProficiency)modify('checks',effect.halfProficiency==='all'?'untrainedCheckBonus':'untrainedPhysicalCheckBonus',effect.halfProficiency==='all'?Math.floor(pb/2):Math.ceil(pb/2),'max');
@@ -401,7 +404,7 @@ export function buildCharacter(
       const e = index.get(id);
       if (!e || !["feature", "feat"].includes(e.type)) continue;
       const m = e.data.manualMechanics,
-        resourceId = m?.resourceId ? m.resourceId==='pact'?'pact:'+e.data.classId:e.data.classId + ":" + m.resourceId : null;
+        resourceId = m?.resourceId ? m.resourceId==='pact'?'pact:'+e.data.classId:(report.featureResourceOverrides?.[id]??(report.featureClassOverrides?.[id]??e.data.classId) + ":" + m.resourceId) : null;
       const resource =
         resourceId && (d.resources.some((r) => r.id === resourceId)||report.slots.resources[resourceId])
           ? { id: resourceId, amount: m.amount }
