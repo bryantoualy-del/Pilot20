@@ -3,6 +3,7 @@ import {ARMORS,WEAPONS,SRD_SOURCE,weaponProfile} from '../catalog/equipment.js';
 import {check} from '../character/contracts.js';
 const name=(fr,en)=>({fr,en});
 export const GEAR_NAMES={
+ net:name('Filet — effet manuel, sans dégâts','Net — manual effect, no damage'),
  shield:name('Bouclier','Shield'),'wooden-shield':name('Bouclier en bois','Wooden shield'),
  bolts:name('Carreaux','Bolts'),arrows:name('Flèches','Arrows'),quiver:name('Carquois','Quiver'),
  'explorer-pack':name('Paquetage d’explorateur','Explorer’s pack'),'dungeoneer-pack':name('Paquetage d’exploration souterraine','Dungeoneer’s pack'),
@@ -15,7 +16,7 @@ export const GEAR_NAMES={
 export const gearName=id=>ARMORS[id]?.name??WEAPONS[id]?.name??GEAR_NAMES[id];
 const instruments=['bagpipes','drum','dulcimer','flute','lute','lyre','horn','pan-flute','shawm','viol'];
 const weapons=(category,melee=false)=>Object.entries(WEAPONS).filter(([,w])=>w.category===category&&(!melee||!w.ranged)).map(([id])=>id);
-const simple=weapons('simple'),simpleMelee=weapons('simple',true),martial=weapons('martial'),martialMelee=weapons('martial',true);
+const simple=weapons('simple'),simpleMelee=weapons('simple',true),martial=[...weapons('martial'),'net'],martialMelee=weapons('martial',true);
 const item=(id,quantity=1)=>({id,quantity});
 /** Rules describe the first class only. Later multiclass levels grant no starting kit. */
 export function startingEquipment(draft,proficiencies=[]){
