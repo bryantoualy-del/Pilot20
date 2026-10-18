@@ -10,11 +10,11 @@ import { compileDraft, draftProgression } from "../../src/creator/model.js";
 import { ABILITIES, SKILLS } from "../../src/character/contracts.js";
 import { LANGUAGES } from "../../src/catalog/origins.js";
 import { el, button, field, select, check, download } from "./dom.js";
-export function openRaceEditor(a, d, update, initial = null) {
+export function openRaceEditor(a, d, update, initial = null, { lineageOnly = false } = {}) {
   const fr = a.state.locale === "fr",
     w = (f, e) => (fr ? f : e);
   let race = initial ? structuredClone(initial) : newHomebrewRace(),
-    mode = "homebrew",
+    mode = lineageOnly ? "tasha" : "homebrew",
     lineage = {
       size: "medium",
       ability: "cha",
@@ -24,10 +24,11 @@ export function openRaceEditor(a, d, update, initial = null) {
       gmApproved: false,
     };
   if (initial) race.gmApproved = false;
+  if (lineageOnly) race.name = { fr: "Lignée sur mesure", en: "Custom lineage" };
   const pane = el(
       "section",
       {},
-      el("h2", {}, w("Créer une race", "Create a race")),
+      el("h2", {}, lineageOnly ? w("Lignée sur mesure — Tasha", "Custom lineage — Tasha") : w("Créer une race", "Create a race")),
     ),
     errors = el("p", { role: "alert", class: "warning-text" }),
     form = el("div");
@@ -35,8 +36,8 @@ export function openRaceEditor(a, d, update, initial = null) {
   function draw() {
     form.replaceChildren();
     pane.replaceChildren(
-      el("h2", {}, w("Créer une race", "Create a race")),
-      field(
+      el("h2", {}, lineageOnly ? w("Lignée sur mesure — Tasha", "Custom lineage — Tasha") : w("Créer une race", "Create a race")),
+      !lineageOnly ? field(
         w("Parcours", "Path"),
         select(
           [
@@ -49,7 +50,7 @@ export function openRaceEditor(a, d, update, initial = null) {
             draw();
           },
         ),
-      ),
+      ) : null,
       form,
       errors,
     );
@@ -611,11 +612,15 @@ export function openRaceEditor(a, d, update, initial = null) {
               a.config = next;
               a.context = await a.campaigns.context(next);
             }
+            a.context = await a.campaigns.context(a.config);
             await update((x) => {
               x.manualRace = null;
               x.raceId = pack.catalog.items[0].id;
               refreshPortrait(a.context, x);
               x.subraceId = null;
+              x.originSelections = {};
+              x.originAdjustments = {};
+              x.scoresAreBase = true;
               x.origin = race.name.fr;
               x.customOriginRequiresReview = false;
             });
