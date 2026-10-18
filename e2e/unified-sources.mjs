@@ -37,7 +37,8 @@ try{
  const restrict=p.getByRole('checkbox',{name:'Activer les restrictions du MJ par ouvrage',exact:true});
  assert.equal(await restrict.isChecked(),false);
  assert.equal(await p.getByText('Aucun pack installé : contenu indisponible',{exact:true}).count(),0);
- await restrict.check();await p.getByRole('checkbox',{name:'Van Richten',exact:true}).waitFor({state:'visible'});
+ const oldRestriction=await restrict.elementHandle();await restrict.check();
+ await p.waitForFunction(e=>!e.isConnected,oldRestriction);await oldRestriction.dispose();
  assert.equal(await p.getByRole('checkbox',{name:'Van Richten',exact:true}).isChecked(),false);
  await restrict.uncheck();await p.waitForFunction(async()=>{
   const {openIndexedDB}=await import('/src/persistence/adapters.js'),s=await openIndexedDB();try{return (await s.get('meta','campaign:sources:default')).sourceRestrictions===false;}finally{s.close();}
