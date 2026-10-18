@@ -128,6 +128,8 @@ export function buildCharacter(
     d.proficiencies.push(...(effect.proficiencies??[]));
     for(const skill of effect.skills??[])d.skills[skill]=Math.max(d.skills[skill]??0,1);
     d.defenses.immunities.push(...(effect.immunities??[]));
+    for(const ability of effect.saves??[])if(!d.saveProficiencies.includes(ability))d.saveProficiencies.push(ability);
+    for(const[skill,ability]of Object.entries(effect.skillAbilityBonuses??{}))modify('skill-'+skill,'skill.'+skill,Math.floor((d.scores[ability]-10)/2));
     if(effect.initiativeAbility)modify('initiative','initiative',Math.floor((d.scores[effect.initiativeAbility]-10)/2));
     if(effect.heavyArmorBonus)modify('heavy-armor','ac',effect.heavyArmorBonus,'add','wearing-heavy-armor');
     d.defenses.resistances.push(...(effect.resistances??[]));
@@ -245,6 +247,8 @@ export function buildCharacter(
         if (Object.hasOwn(SKILLS, k)) d.skills[k] = 2;
         else d.proficiencies.push("expertise:" + k);
       });
+    if(choice.kind==='save-proficiency')for(const ability of values)if(!d.saveProficiencies.includes(ability))d.saveProficiencies.push(ability);
+    if(choice.kind==='training')for(const id of values){if(Object.hasOwn(SKILLS,id))d.skills[id]=Math.max(d.skills[id]??0,1);else d.proficiencies.push(id);}
     if (choice.kind === "proficiency") d.proficiencies.push(...values);
     if (
       [

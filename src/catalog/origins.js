@@ -166,7 +166,7 @@ export function resolveOrigins(index, request) {
       ...(cls?.data.choices ?? []),
       ...(subclass?.data.choices ?? []),
     ])
-      if (q.kind === "skill" && q.level <= c.level)
+      if (["skill","training"].includes(q.kind) && q.level <= c.level)
         for (const s of request.selections?.[c.id + ":" + q.key] ?? [])
           if (Object.hasOwn(SKILLS, s)) classSkills.add(s);
   }
