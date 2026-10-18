@@ -1,4 +1,4 @@
-import {replacementPermission,pactRetooling} from '../catalog/replacement-policy.js';
+import {replacementPermission,pactRetooling,forcedInvocationReplacement} from '../catalog/replacement-policy.js';
 import {check} from '../character/contracts.js';
 import {effectiveClassData,resolveProgression} from '../catalog/progression.js';
 const total=classes=>classes.reduce((n,c)=>n+c.level,0);
@@ -21,7 +21,7 @@ export function validateLevelGain(index,request,pending){
  if(!removed.length)continue;
  const c=request.classes.find(c=>c.id===old.classId),policy=effectiveClassData(index,c).acquisitionPolicy??{},advancing=classId===old.classId;
  const invocation=old.id.endsWith(':invocations'),known=old.replaceableKnown||old.id.endsWith(':known-spells')||old.id.endsWith(':known-free-spells')||old.id.includes(':magical-secrets-');
- if(invocation||known){const key=old.classId+(invocation?':invocation':':known'),cap=invocation?policy.invocationReplacementPerClassLevel??0:policy.knownReplacementPerClassLevel??0;const counted=invocation&&pactRetooling(index,request.classes,classId,before.selections,request.selections)?removed.filter(id=>after.options.includes(id)).length:removed.length;budgets.set(key,(budgets.get(key)??0)+counted);if(!advancing||budgets.get(key)>cap)issues.push({code:'replacement-limit',choiceId:old.id});if(old.id.includes(':magical-secrets-')&&now.filter(id=>!prior.includes(id)).some(id=>!index.get(id)?.data.classIds.includes(old.classId)))issues.push({code:'secret-replacement-class-list',choiceId:old.id});continue;}
+ if(invocation||known){const key=old.classId+(invocation?':invocation':':known'),cap=invocation?policy.invocationReplacementPerClassLevel??0:policy.knownReplacementPerClassLevel??0;const counted=invocation?removed.filter(id=>after.options.includes(id)||!forcedInvocationReplacement(index,request.classes,classId,before.selections,request.selections,id)).length:removed.length;budgets.set(key,(budgets.get(key)??0)+counted);if(!advancing||budgets.get(key)>cap)issues.push({code:'replacement-limit',choiceId:old.id});if(old.id.includes(':magical-secrets-')&&now.filter(id=>!prior.includes(id)).some(id=>!index.get(id)?.data.classIds.includes(old.classId)))issues.push({code:'secret-replacement-class-list',choiceId:old.id});continue;}
  const permit=replacementPermission(index,request.classes,classId,old);if(permit){budgets.set(permit.key,(budgets.get(permit.key)??0)+removed.length);if(removed.length<=permit.choiceMaximum&&budgets.get(permit.key)<=permit.maximum)continue;issues.push({code:'replacement-limit',choiceId:old.id});continue;}
  issues.push({code:'historical-choice-changed',choiceId:old.id});
  }

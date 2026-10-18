@@ -1,4 +1,4 @@
-import {replacementPermission,pactRetooling} from './replacement-policy.js';
+import {replacementPermission,pactRetooling,forcedInvocationReplacement} from './replacement-policy.js';
 /** Level-up audit, separate from combat. Only declarative snapshots, never inferred player choices. */
 import {check,keys,json,id,integer} from '../character/contracts.js';
 import {resolveProgression,effectiveClassData} from './progression.js';
@@ -42,7 +42,7 @@ export function validateAdvancementHistory(index,request,history) {
     const learned=old.replaceableKnown||old.id.endsWith(':known-spells')||old.id.endsWith(':known-free-spells')||old.id.includes(':magical-secrets-');
     const invocation=old.id.endsWith(':invocations');
     if(learned||invocation) {
-     const key=old.classId+(invocation?':invocation':':known');const counted=invocation&&pactRetooling(index,row.classes,row.classId,previous.report.selections,report.selections)?removed.filter(id=>next.options.includes(id)).length:removed.length;budgets.set(key,(budgets.get(key)??0)+counted);
+     const key=old.classId+(invocation?':invocation':':known');const counted=invocation?removed.filter(id=>next.options.includes(id)||!forcedInvocationReplacement(index,row.classes,row.classId,previous.report.selections,report.selections,id)).length:removed.length;budgets.set(key,(budgets.get(key)??0)+counted);
      const cap=invocation?policy.invocationReplacementPerClassLevel??0:policy.knownReplacementPerClassLevel??0;
      if((!advancing&&(removed.length||added.length))||budgets.get(key)>cap)addIssue('replacement-limit');
      if(old.id.includes(':magical-secrets-')&&removed.length&&added.some(id=>!index.get(id)?.data.classIds?.includes(old.classId)))addIssue('secret-replacement-class-list');
