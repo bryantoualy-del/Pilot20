@@ -222,7 +222,7 @@ export function resolveProgression(index, request) {
         ...extraSpells
           .filter(r=>r.mode!=='known')
           .flatMap((r) => r.spellIds)
-          .filter((id) => index.get(id).data.level >= minimumLevel),
+          .filter((id) => index.get(id).data.level >= minimumLevel&&index.get(id).data.level<=maxSpell),
       ]),
     ];
     for (const r of [...(d.resources ?? []).map(r=>({...r,ownerId:entry.id})), ...(sub?.data.resources ?? []).map(r=>({...r,ownerId:sub.id}))]) {
@@ -433,10 +433,7 @@ export function resolveProgression(index, request) {
             "arcanum-" + spellLevel,
             lv,
             1,
-            listSpells(index, c.id, {
-              minimumLevel: spellLevel,
-              maximumLevel: spellLevel,
-            }).map((s) => s.id),
+            index.list('spell').filter(s=>s.data.level===spellLevel&&(s.data.classIds.includes(c.id)||extraSpells.some(r=>r.mode==='expanded'&&r.spellIds.includes(s.id)))).map(s=>s.id),
             "spell",
           );
   }
