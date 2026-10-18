@@ -28,7 +28,7 @@ try{
   }
   storage.close();return out;
  });
- async function open(cls){await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();const card=p.locator('article').filter({has:p.getByRole('heading',{name:'Grimoire '+cls,exact:true})});await card.getByRole('button',{name:'Grimoire',exact:true}).click();await p.getByRole('heading',{name:'Votre grimoire',exact:true}).waitFor();}
+ async function open(cls){await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();const card=p.locator('article').filter({has:p.getByRole('heading',{name:'Grimoire '+cls,exact:true})});await card.getByRole('button',{name:'Grimoire',exact:true}).click();await p.locator('.grimoire[data-character-id="grimoire-'+cls+'"]').waitFor();}
  async function search(name){await p.getByRole('searchbox',{name:'Rechercher un sort',exact:true}).fill(name);}
  async function read(cls){return p.evaluate(async id=>{const {openIndexedDB}=await import('/src/persistence/adapters.js');const s=await openIndexedDB();try{return await s.get('characters',id);}finally{s.close();}},'grimoire-'+cls);}
  await open('bard');assert.equal(await p.getByRole('button',{name:'Modifier la préparation',exact:true}).count(),0);results.push('Bard10 has no daily preparation command');
@@ -38,7 +38,7 @@ try{
  const row=p.locator(`.grimoire-spell[data-spell-id="${fixtures.wizard.copyId}"]`);await row.waitFor();await row.getByRole('button',{name:'Inscrire',exact:true}).click();
  await p.locator('#dialog input[type=checkbox]').check();await p.locator('#dialog').getByRole('button',{name:'Confirmer la copie',exact:true}).click();
  await p.waitForFunction(async id=>{const {openIndexedDB}=await import('/src/persistence/adapters.js');const s=await openIndexedDB();try{return(await s.get('characters',id)).definition.revision===2;}finally{s.close();}},'grimoire-wizard');
- let after=await read('wizard');assert.ok(after.definition.spells.known.includes(fixtures.wizard.copyId));assert.deepEqual(after.definition.spells.prepared,before.definition.spells.prepared);
+ let after=await read('wizard');assert.ok(after.definition.spells.known.includes(fixtures.wizard.copyId),JSON.stringify({expected:fixtures.wizard.copyId,known:after.definition.spells.known,heading:await p.locator('.grimoire .eyebrow').textContent()}));assert.deepEqual(after.definition.spells.prepared,before.definition.spells.prepared);
  results.push('Wizard10 copy persists without changing preparation or removing previous book entries');
  await p.getByRole('button',{name:'Modifier la préparation',exact:true}).click();await search(fixtures.wizard.removeName);
  const removed=p.locator(`.grimoire-spell[data-spell-id="${fixtures.wizard.removeId}"]`);await removed.getByRole('checkbox',{name:'Préparer',exact:true}).uncheck();
