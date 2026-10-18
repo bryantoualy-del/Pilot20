@@ -16,6 +16,8 @@ import { StorageError } from "../persistence/adapters.js";
 import { validateCharacter } from "../character/definition.js";
 export function validateDraft(d) {
   json(d);
+  if(d.startingEquipmentEnabled!==undefined)check(typeof d.startingEquipmentEnabled==='boolean','Starting equipment flag');
+  if(d.startingEquipmentChoices!==undefined){check(d.startingEquipmentChoices&&typeof d.startingEquipmentChoices==='object'&&!Array.isArray(d.startingEquipmentChoices)&&Object.keys(d.startingEquipmentChoices).length<=100,'Starting equipment decisions');for(const [key,v]of Object.entries(d.startingEquipmentChoices))check(id(key)&&Array.isArray(v)&&v.length<=1&&v.every(id),'Starting equipment choice');}
   if(d.spellGrantReplacements!==undefined)validateGrantReplacements(d.spellGrantReplacements);
   check(
     d?.kind === "pilot20-creator-draft" &&

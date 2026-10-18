@@ -313,6 +313,7 @@ async function render() {
 }
 async function start() {
   const d = newDraft(state.campaignId);
+  d.startingEquipmentEnabled=true;d.startingEquipmentChoices={};
   await autosave(d);
   await nav("creator", d.id);
 }

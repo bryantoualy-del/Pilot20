@@ -150,6 +150,8 @@ export function issueMessage(issue, report, a) {
     title = q ? choiceName(q, a) : "",
     fr = a.state.locale === "fr";
   const messages = {
+    'starting-equipment-choice':fr?'Choisissez votre équipement pour continuer.':'Choose your equipment to continue.',
+    'starting-equipment-class':fr?'L’équipement de départ de cette classe nécessite une vérification.':'Review the starting equipment for this class.',
     'invalid-granted-spell-replacement':fr?'Vérifiez le niveau, l’école et l’origine du sort remplacé ; un seul remplacement est permis par niveau.':'Review the exchanged spell’s level, school and origin; only one exchange is allowed per level.',
     'duplicate-granted-spell':fr?'Deux octrois donnent le même sort. Choisissez un autre remplacement.':'Two grants provide the same spell. Choose another exchange.',
     "creator-name": a.t("requiredName"),

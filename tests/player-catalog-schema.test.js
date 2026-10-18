@@ -14,6 +14,6 @@ test('published catalogue and character schemas accept installed source definiti
  const character=ajv.compile(JSON.parse(await readFile(new URL('../schemas/contracts-v2.schema.json',import.meta.url))));
  const config={...defaultCampaign(),enabledSourceIds:['srd51','xge','tce','phb14','ravenloft','volo','motm']},ctx=campaignCatalog(playerCatalogs,[],config);
  for(const raceId of ['ravenloft:race:dhampir','volo:race:kobold','motm:race:kobold']){
-  let d=Object.assign(newDraft(),{name:'Recette schéma',raceId,backgroundId:'phb14:background:guild-merchant',classes:[{id:'fighter',level:1,subclassId:null}],classChosen:true});d=suggestChoices(ctx,config,d);d.reviewed=d.confirmed=true;const r=compileDraft(ctx,config,d);assert.equal(r.valid,true,JSON.stringify(r.issues));assert.equal(character(r.character),true,JSON.stringify(character.errors));
+  let d=Object.assign(newDraft(),{name:'Recette schéma',startingEquipmentEnabled:true,raceId,backgroundId:'phb14:background:guild-merchant',classes:[{id:'fighter',level:1,subclassId:null}],classChosen:true});d=suggestChoices(ctx,config,d);d.reviewed=d.confirmed=true;const r=compileDraft(ctx,config,d);assert.equal(r.valid,true,JSON.stringify(r.issues));assert.equal(character(r.character),true,JSON.stringify(character.errors));
  }
 });

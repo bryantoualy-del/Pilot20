@@ -18,12 +18,14 @@ export function singlePath(context,config,draft) {
   decisions.push(...(report.origin?.choices??[]).map(q=>({id:'origin:'+q.id,kind:'origin-choice',choice:q})));
   const priority={skill:0,proficiency:1,subclass:2,asi:3,feature:4,expertise:5,spellbook:7,spell:8,prepared:9};
   decisions.push(...[...(report.choices??[])].sort((a,b)=>a.level-b.level||(priority[a.kind]??6)-(priority[b.kind]??6)||a.id.localeCompare(b.id)).map(q=>({id:'choice:'+q.id,kind:'class-choice',choice:q})));
+  decisions.push(...(report.startingEquipment?.choices??[]).map(q=>({id:'equipment:'+q.id,kind:'equipment-choice',choice:q})));
   decisions.push({id:'equipment',kind:'equipment'},{id:'summary',kind:'summary'});
   const current=decisions.find(x=>x.id===draft.step)??decisions[0];
   return {report,decisions,current,position:decisions.indexOf(current)};
 }
 export function decisionReady(decision,report,draft) {
   const q=decision.choice;
+  if(decision.kind==='equipment-choice'){const v=draft.startingEquipmentChoices?.[q.id]??[];return v.length===1&&q.options.some(o=>o.id===v[0]);}
   if(q) {
     const selected=decision.kind==='origin-choice'?draft.originSelections?.[q.id]:q.kind==='subclass'?[draft.classes.find(c=>c.id===q.classId)?.subclassId].filter(Boolean):draft.selections[q.id];
     return selected?.length===q.count&&new Set(selected).size===selected.length&&selected.every(id=>q.options.includes(id))&&!report.issues.some(i=>i.choiceId===q.id);

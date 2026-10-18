@@ -21,6 +21,7 @@ export const phbSpells={kind:'catalog',schemaVersion:3,ruleset:'dnd5e-2014',id:'
 const playerSpells=structuredClone(spellCatalog);
 const playerClasses=structuredClone(classCatalog);
 const playerOrigins=structuredClone(originCatalog);
+playerClasses.items.find(i=>i.id==='srd51:life-domain:bonus-proficiency').data.buildEffects={proficiencies:['heavy-armor']};
 for(const row of subraceAdditions)playerOrigins.items.find(i=>i.id===row.raceId).data.subraces.push(row.subrace);
 for(const sub of subclasses.items.filter(i=>i.type==='subclass'))playerClasses.items.find(i=>i.type==='class'&&i.data.classId===sub.data.classId).data.subclassIds.push(sub.id);
 for(const item of playerSpells.items){const ref=references.find(r=>r.id===item.id);if(ref?.classIds.includes('artificer'))item.data.classIds=[...new Set([...item.data.classIds,'artificer'])];}
