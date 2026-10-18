@@ -68,7 +68,7 @@ export async function renderCreator(main,input,a) {
       const others=new Set(q.kind==='skill'?[...(singlePath(a.context,a.config,d).report.origin?.background.skills??[]),...Object.entries(d.selections).filter(([id])=>id!==q.id&&id.endsWith(':skills')).flatMap(([,v])=>v)]:[]);
       for(const id of options.slice(filter.page*8,(filter.page+1)*8)){
         const entry=a.context.index.get(id),selected=values.includes(id),disabled=!selected&&(!single&&values.length>=q.count||others.has(id));
-        const input=el('input',{type:single?'radio':'checkbox',name:q.id,checked:selected,disabled,'aria-label':optionName(id,a),onchange:e=>onchange(e.target.checked?single?[id]:[...values,id]:values.filter(x=>x!==id))});
+        const input=el('input',{type:single?'radio':'checkbox',name:q.id,checked:selected,disabled:disabled||q.requiredOptions?.includes(id),'aria-label':optionName(id,a),onchange:e=>onchange(e.target.checked?single?[id]:[...values,id]:values.filter(x=>x!==id))});
         list.append(el('div',{class:'single-option'+(selected?' selected':'')},el('label',{},input,el('span',{},optionName(id,a))),entry?button(w('Détail','Details'),()=>details(entry),'subtle'):null));
       }
       pages.replaceChildren();
@@ -150,7 +150,7 @@ export async function renderCreator(main,input,a) {
     if(current.kind==='origin-choice')body.append(choiceList(current.choice,d.originSelections?.[current.choice.id]??[],values=>update(x=>{x.originSelections??={};x.originSelections[current.choice.id]=values;}),{origin:true}));
     if(current.kind==='class-choice'){
       const q=current.choice;body.append(el('p',{},a.cls(q.classId)+' · '+text('level')+' '+q.level));
-      const values=q.kind==='subclass'?[d.classes.find(c=>c.id===q.classId)?.subclassId].filter(Boolean):d.selections[q.id]??[];
+      const values=q.kind==='subclass'?[d.classes.find(c=>c.id===q.classId)?.subclassId].filter(Boolean):report.selections?.[q.id]??d.selections[q.id]??[];
       body.append(choiceList(q,values,values=>update(x=>{
         if(q.kind==='subclass'){const c=x.classes.find(c=>c.id===q.classId);if(c.subclassId&&c.subclassId!==values[0])retainDecision(x,'subclass',q.classId);c.subclassId=values[0]??null;}else x.selections[q.id]=values;
       })));

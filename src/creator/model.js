@@ -245,6 +245,10 @@ export function compileDraft(context, config, d) {
       source: SRD_SOURCE,
     });
   }
+  if(c.features.includes('srd51:monk:martial-arts')&&!c.equipment.some(e=>e.equipped&&['armor','shield'].includes(e.kind))){
+    const die=r.scaling.monk.martialArtsDie,kensei=new Set(Object.entries(d.selections).filter(([key])=>key.startsWith('monk:kensei-')&&key!=='monk:kensei-art').flatMap(([,v])=>v));
+    for(const e of c.equipment.filter(e=>e.weapon)){const id=e.id.split(':').at(-1),w=WEAPONS[id];if(!w)continue;const monkWeapon=w.category==='simple'&&!w.ranged&&!['greatclub'].includes(id)||id==='shortsword'||kensei.has(w.proficiency);if(!monkWeapon)continue;if(c.scores.dex>c.scores.str)e.weapon.ability='dex';const m=/^1d(\d+)$/.exec(e.weapon.dice);if(m&&Number(m[1])<die)e.weapon.dice='1d'+die;}
+  }
   validateCharacter(c);
   check(validateBuild(c).valid, "Creator modifiers invalid");
   const stats = derive(c);

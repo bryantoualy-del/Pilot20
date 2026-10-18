@@ -330,6 +330,8 @@ export function resolveProgression(index, request) {
           ...(spec.distinctGroup ? { distinctGroup: spec.distinctGroup } : {}),
           ...(spec.replaceableKnown?{replaceableKnown:true}:{}),
           ...(spec.mutableAtRest?{mutableAtRest:true}:{}),
+          ...(spec.replacementRule?{replacementRule:spec.replacementRule}:{}),
+          ...(spec.requiredOptionsBeforeLevel&&L<spec.requiredOptionsBeforeLevel.level?{requiredOptions:spec.requiredOptionsBeforeLevel.options}:{}),
           ...(spec.adjudication ? { adjudication: spec.adjudication } : {}),
         },
       );
@@ -450,6 +452,7 @@ export function resolveProgression(index, request) {
     distinctGroups = new Map();
   for (const choice of choices) {
     if(choice.kind==='prepared'&&effectiveSelections[choice.id]===undefined)effectiveSelections[choice.id]=[];
+    if(choice.requiredOptions)effectiveSelections[choice.id]=[...new Set([...choice.requiredOptions,...(effectiveSelections[choice.id]??[])])];
     const values = effectiveSelections[choice.id];
     if (!values) {
       issues.push({ code: "required-choice", choiceId: choice.id });
@@ -589,7 +592,7 @@ export function resolveProgression(index, request) {
   );
   let unarmoredDefense=false;for(const c of classes){const id=index.class(c.id)?.data.armorRuleFeatureId;if(id&&features.has(id)){if(unarmoredDefense)features.delete(id);else unarmoredDefense=true;}}
   const uniqueRules=new Map();for(const id of features){const key=index.get(id)?.data.uniqueRuleKey;if(key){if(uniqueRules.has(key))issues.push({code:'duplicate-feature-rule',featureId:id,otherFeatureId:uniqueRules.get(key),choiceId:choices.find(q=>(effectiveSelections[q.id]??[]).includes(id))?.id});else uniqueRules.set(key,id);}}
-  for(const fid of features){const feature=index.get(fid),owner=classes.find(c=>c.id===feature?.data.classId);for(const row of feature?.data.innateSpells??[])if(owner&&owner.level>=row.classLevel)for(const id of row.spellIds)origin.spells.push({id,level:row.classLevel,ability:row.ability,ownerId:fid,featureOwnerId:fid,...(row.resourceId?{resourceId:owner.id+':'+row.resourceId}:{}),...(row.economy?{economy:row.economy}:{}),...(row.target?{target:row.target}:{}),...(row.maxTargets?{maxTargets:row.maxTargets}:{}),requirements:row.requirements,source:feature.source});}
+  for(const fid of features){const feature=index.get(fid),owner=classes.find(c=>c.id===feature?.data.classId);for(const row of feature?.data.innateSpells??[])if(owner&&owner.level>=row.classLevel)for(const id of row.spellIds)origin.spells.push({id,level:row.classLevel,ability:row.ability,ownerId:fid,featureOwnerId:fid,...(row.resourceId?{resourceId:owner.id+':'+row.resourceId}:{}),...(row.economy?{economy:row.economy}:{}),...(row.target?{target:row.target}:{}),...(row.maxTargets?{maxTargets:row.maxTargets}:{}),...(row.resourceAmount?{resourceAmount:row.resourceAmount}:{}),...(row.ritualOnly?{ritualOnly:true}:{}),requirements:row.requirements,source:feature.source});}
   return {
     origin,
     features: [...features],

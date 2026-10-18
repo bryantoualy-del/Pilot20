@@ -27,7 +27,7 @@ export function decisionReady(decision,report,draft) {
   const q=decision.choice;
   if(decision.kind==='equipment-choice'){const v=draft.startingEquipmentChoices?.[q.id]??[];return v.length===1&&q.options.some(o=>o.id===v[0]);}
   if(q) {
-    const selected=decision.kind==='origin-choice'?draft.originSelections?.[q.id]:q.kind==='subclass'?[draft.classes.find(c=>c.id===q.classId)?.subclassId].filter(Boolean):draft.selections[q.id]??(q.kind==='prepared'?[]:undefined);
+    const selected=decision.kind==='origin-choice'?draft.originSelections?.[q.id]:q.kind==='subclass'?[draft.classes.find(c=>c.id===q.classId)?.subclassId].filter(Boolean):report.selections?.[q.id]??draft.selections[q.id]??(q.kind==='prepared'?[]:undefined);
     return selected!==undefined&&selected.length>=(q.minimumCount??q.count)&&selected.length<=q.count&&new Set(selected).size===selected.length&&selected.every(id=>q.options.includes(id))&&!report.issues.some(i=>i.choiceId===q.id);
   }
   switch(decision.kind){

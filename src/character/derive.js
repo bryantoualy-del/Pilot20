@@ -155,7 +155,7 @@ export function derive(d) {
   const trace = [];
   for (const m of d.modifiers) {
     keys(m, ["id", "stat", "operation", "value", "reason", "source","condition"],["id", "stat", "operation", "value", "reason", "source"]);
-    if(m.condition!==undefined){check(['wearing-armor','wearing-heavy-armor'].includes(m.condition),'Modifier condition');if(!worn||m.condition==='wearing-heavy-armor'&&!worn.armor.heavy)continue;}
+    if(m.condition!==undefined){check(['wearing-armor','wearing-heavy-armor','unarmored-unshielded'].includes(m.condition),'Modifier condition');if(m.condition==='unarmored-unshielded'?(worn||shield):(!worn||m.condition==='wearing-heavy-armor'&&!worn.armor.heavy))continue;}
     source(m.source);
     const allowed = [
       "ac",

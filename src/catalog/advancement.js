@@ -47,6 +47,7 @@ export function validateAdvancementHistory(index,request,history) {
      if(old.id.includes(':magical-secrets-')&&removed.length&&added.some(id=>!index.get(id)?.data.classIds?.includes(old.classId)))addIssue('secret-replacement-class-list');
      continue;
     }
+    if(old.replacementRule&&removed.length){const rule=old.replacementRule,level=row.classes.find(c=>c.id===old.classId).level;if(!advancing||removed.length>rule.maximum||(rule.levels&&!rule.levels.includes(level)))addIssue('replacement-limit');continue;}
     const versatilityKind=old.id===old.classId+':cantrips'?'cantrip':old.kind==='expertise'?'expertise':null;
     if(versatilityKind&&removed.length&&(policy[versatilityKind+'ReplacementAtASI']??0)>0){
      const classLevel=row.classes.find(c=>c.id===old.classId).level,asi=report.choices.some(q=>q.classId===old.classId&&q.kind==='asi'&&q.level===classLevel),cap=policy[versatilityKind+'ReplacementAtASI']??0,key=old.classId+':asi-versatility';
