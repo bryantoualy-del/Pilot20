@@ -1,0 +1,1237 @@
+{
+  "kind": "catalog",
+  "schemaVersion": 3,
+  "ruleset": "dnd5e-2014",
+  "id": "pilot20:subclasses-extended-2014",
+  "items": [
+    {
+      "id": "xge:warlock:hexblade:hexblades-curse",
+      "type": "feature",
+      "name": {
+        "en": "Hexblades Curse",
+        "fr": "Malédiction du Magelame"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Magelame",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "warlock",
+        "minimumClassLevel": 1,
+        "description": "Action bonus, cible visible à9 m,1 minute. Ajoutez le bonus de maîtrise aux dégâts contre elle ; critiques sur19–20. À sa mort, récupérez niveau d’occultiste+Charisme PV, minimum1. Fin anticipée si vous êtes neutralisé ou mourez.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:warlock:hexblade:hex-warrior",
+      "type": "feature",
+      "name": {
+        "en": "Hex Warrior",
+        "fr": "Guerrier des maléfices"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Magelame",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "warlock",
+        "minimumClassLevel": 1,
+        "description": "Maîtrise des armures intermédiaires, boucliers et armes de guerre. Après un repos long, choisissez une arme maîtrisée sans propriété à deux mains : Charisme peut remplacer Force/Dextérité à ses attaques et dégâts. S’étend à toute arme du Pacte de la lame.",
+        "language": "fr",
+        "buildEffects": {
+          "proficiencies": [
+            "medium-armor",
+            "shields",
+            "martial-weapons"
+          ]
+        },
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:warlock:hexblade:accursed-specter",
+      "type": "feature",
+      "name": {
+        "en": "Accursed Specter",
+        "fr": "Spectre maudit"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Magelame",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "warlock",
+        "minimumClassLevel": 6,
+        "description": "Quand vous tuez un humanoïde, vous pouvez asservir son spectre jusqu’au prochain repos long. Il reçoit moitié de votre niveau d’occultiste en PV temporaires et un bonus d’attaque égal à Charisme, minimum0. Une création par repos long ; initiative et profil propres au spectre.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:warlock:hexblade:armor-of-hexes",
+      "type": "feature",
+      "name": {
+        "en": "Armor Of Hexes",
+        "fr": "Armure de maléfices"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Magelame",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "warlock",
+        "minimumClassLevel": 10,
+        "description": "Si la cible de votre malédiction du Magelame vous touche, votre réaction permet un d6 :4 ou plus transforme la touche en échec.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:warlock:hexblade:master-of-hexes",
+      "type": "feature",
+      "name": {
+        "en": "Master Of Hexes",
+        "fr": "Maître des maléfices"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Magelame",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "warlock",
+        "minimumClassLevel": 14,
+        "description": "À la mort d’une cible maudite, vous pouvez transférer la malédiction à une autre cible visible à9 m sans récupérer les PV de la première. Impossible si vous êtes neutralisé.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:warlock:hexblade",
+      "type": "subclass",
+      "name": {
+        "en": "The Hexblade",
+        "fr": "Magelame"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Magelame",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "warlock",
+        "grants": [
+          {
+            "level": 1,
+            "featureIds": [
+              "xge:warlock:hexblade:hexblades-curse",
+              "xge:warlock:hexblade:hex-warrior"
+            ]
+          },
+          {
+            "level": 6,
+            "featureIds": [
+              "xge:warlock:hexblade:accursed-specter"
+            ]
+          },
+          {
+            "level": 10,
+            "featureIds": [
+              "xge:warlock:hexblade:armor-of-hexes"
+            ]
+          },
+          {
+            "level": 14,
+            "featureIds": [
+              "xge:warlock:hexblade:master-of-hexes"
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "id": "hexblades-curse",
+            "recovery": "short",
+            "maxByLevel": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "id": "accursed-specter",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "extraSpells": [
+          {
+            "classLevel": 1,
+            "mode": "expanded",
+            "spellIds": [
+              "srd51:shield",
+              "phb14:spell:wrathful-smite"
+            ]
+          },
+          {
+            "classLevel": 3,
+            "mode": "expanded",
+            "spellIds": [
+              "srd51:blur",
+              "srd51:branding-smite"
+            ]
+          },
+          {
+            "classLevel": 5,
+            "mode": "expanded",
+            "spellIds": [
+              "phb14:spell:elemental-weapon",
+              "srd51:blink"
+            ]
+          },
+          {
+            "classLevel": 7,
+            "mode": "expanded",
+            "spellIds": [
+              "srd51:phantasmal-killer",
+              "phb14:spell:staggering-smite"
+            ]
+          },
+          {
+            "classLevel": 9,
+            "mode": "expanded",
+            "spellIds": [
+              "srd51:cone-of-cold",
+              "phb14:spell:banishing-smite"
+            ]
+          }
+        ],
+        "choices": [],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:bard:glamour:mantle-of-inspiration",
+      "type": "feature",
+      "name": {
+        "en": "Mantle Of Inspiration",
+        "fr": "Apparence inspirante"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Collège de la séduction",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "bard",
+        "minimumClassLevel": 3,
+        "description": "Action bonus et une Inspiration bardique : jusqu’à Charisme créatures, minimum1, visibles à18 m et pouvant vous voir reçoivent5 PV temporaires, puis peuvent utiliser leur réaction pour se déplacer sans attaque d’opportunité. PV temporaires8 au niveau5,11 au10,14 au15.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:bard:glamour:enthralling-performance",
+      "type": "feature",
+      "name": {
+        "en": "Enthralling Performance",
+        "fr": "Représentation envoûtante"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Collège de la séduction",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "bard",
+        "minimumClassLevel": 3,
+        "description": "Après1 minute de représentation, jusqu’à Charisme humanoïdes, minimum1, à18 m ayant assisté à toute la prestation font une sauvegarde de Sagesse contre votre DD. Sur échec, charme d’1 h sans imposer la violence ; il cesse si la cible est blessée ou vous voit nuire à ses alliés. Une utilisation par repos court ou long.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:bard:glamour:mantle-of-majesty",
+      "type": "feature",
+      "name": {
+        "en": "Mantle Of Majesty",
+        "fr": "Apparence majestueuse"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Collège de la séduction",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "bard",
+        "minimumClassLevel": 6,
+        "description": "Action bonus : injonction sans emplacement et apparence féerique maintenue par concentration1 minute. Vos actions bonus suivantes permettent une nouvelle injonction gratuite ; une cible déjà charmée par vous rate automatiquement sa sauvegarde contre ces injonctions. Une activation par repos long.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:bard:glamour:unbreakable-majesty",
+      "type": "feature",
+      "name": {
+        "en": "Unbreakable Majesty",
+        "fr": "Majesté inébranlable"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Collège de la séduction",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "bard",
+        "minimumClassLevel": 14,
+        "description": "Action bonus,1 minute. Lorsqu’une créature tente de vous attaquer pour la première fois d’un tour : sauvegarde de Charisme contre votre DD. Échec : autre cible ou attaque perdue ; réussite : elle peut attaquer mais sera désavantagée contre vos sorts pendant votre prochain tour. Une activation par repos court ou long.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:bard:glamour",
+      "type": "subclass",
+      "name": {
+        "en": "College of Glamour",
+        "fr": "Collège de la séduction"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Collège de la séduction",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "bard",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "xge:bard:glamour:mantle-of-inspiration",
+              "xge:bard:glamour:enthralling-performance"
+            ]
+          },
+          {
+            "level": 6,
+            "featureIds": [
+              "xge:bard:glamour:mantle-of-majesty"
+            ]
+          },
+          {
+            "level": 14,
+            "featureIds": [
+              "xge:bard:glamour:unbreakable-majesty"
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "id": "enthralling-performance",
+            "recovery": "short",
+            "maxByLevel": [
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "id": "mantle-of-majesty",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "id": "unbreakable-majesty",
+            "recovery": "short",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "extraSpells": [],
+        "choices": [],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:bard:eloquence:silver-tongue",
+      "type": "feature",
+      "name": {
+        "en": "Silver Tongue",
+        "fr": "Faconde"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Collège de l’Éloquence",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "bard",
+        "minimumClassLevel": 3,
+        "description": "Pour vos tests de Charisme (Persuasion ou Tromperie), un d20 inférieur à10 compte comme10.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:bard:eloquence:unsettling-words",
+      "type": "feature",
+      "name": {
+        "en": "Unsettling Words",
+        "fr": "Paroles déstabilisantes"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Collège de l’Éloquence",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "bard",
+        "minimumClassLevel": 3,
+        "description": "Action bonus et une Inspiration bardique : une cible visible à18 m soustrait le dé à sa prochaine sauvegarde avant le début de votre prochain tour.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:bard:eloquence:unfailing-inspiration",
+      "type": "feature",
+      "name": {
+        "en": "Unfailing Inspiration",
+        "fr": "Inspiration indéfectible"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Collège de l’Éloquence",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "bard",
+        "minimumClassLevel": 6,
+        "description": "Une créature qui utilise votre dé d’Inspiration bardique mais rate malgré tout son test, attaque ou sauvegarde conserve le dé.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:bard:eloquence:universal-speech",
+      "type": "feature",
+      "name": {
+        "en": "Universal Speech",
+        "fr": "Discours universel"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Collège de l’Éloquence",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "bard",
+        "minimumClassLevel": 6,
+        "description": "Une action permet à Charisme créatures, minimum1, à18 m de vous comprendre pendant1 h, quelle que soit la langue. Une utilisation gratuite par repos long ; un emplacement permet de recommencer.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:bard:eloquence:infectious-inspiration",
+      "type": "feature",
+      "name": {
+        "en": "Infectious Inspiration",
+        "fr": "Inspiration contagieuse"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Collège de l’Éloquence",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "bard",
+        "minimumClassLevel": 14,
+        "description": "Réaction après la réussite d’une créature grâce à votre Inspiration : accordez sans dépense un dé à une autre créature que vous-même, qui vous entend à18 m. Charisme utilisations, minimum1, par repos long.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:bard:eloquence",
+      "type": "subclass",
+      "name": {
+        "en": "College of Eloquence",
+        "fr": "Collège de l’Éloquence"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Collège de l’Éloquence",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "bard",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "tce:bard:eloquence:silver-tongue",
+              "tce:bard:eloquence:unsettling-words"
+            ]
+          },
+          {
+            "level": 6,
+            "featureIds": [
+              "tce:bard:eloquence:unfailing-inspiration",
+              "tce:bard:eloquence:universal-speech"
+            ]
+          },
+          {
+            "level": 14,
+            "featureIds": [
+              "tce:bard:eloquence:infectious-inspiration"
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "id": "universal-speech",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "id": "infectious-inspiration",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              {
+                "ability": "cha",
+                "minimum": 1
+              },
+              {
+                "ability": "cha",
+                "minimum": 1
+              },
+              {
+                "ability": "cha",
+                "minimum": 1
+              },
+              {
+                "ability": "cha",
+                "minimum": 1
+              },
+              {
+                "ability": "cha",
+                "minimum": 1
+              },
+              {
+                "ability": "cha",
+                "minimum": 1
+              },
+              {
+                "ability": "cha",
+                "minimum": 1
+              }
+            ]
+          }
+        ],
+        "extraSpells": [],
+        "choices": [],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:rogue:soulknife:psionic-power",
+      "type": "feature",
+      "name": {
+        "en": "Psionic Power",
+        "fr": "Pouvoir psionique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Âme acérée",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "rogue",
+        "minimumClassLevel": 3,
+        "description": "Réserve de dés égale au double du bonus de maîtrise : d6, puis d8 au niveau5, d10 au11 et d12 au17 de roublard. Repos long : tous ; action bonus une fois par repos court : un dé. Savoir-faire : ajoutez un dé à un test raté de compétence/outil maîtrisé, dépensé seulement si cela réussit. Murmures : action pour relier jusqu’à maîtrise créatures visibles pendant un nombre d’heures égal au dé, portée télépathique1,5 km ; premier usage par repos long gratuit, suivants un dé.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:rogue:soulknife:psychic-blades",
+      "type": "feature",
+      "name": {
+        "en": "Psychic Blades",
+        "fr": "Lames psychiques"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Âme acérée",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "rogue",
+        "minimumClassLevel": 3,
+        "description": "Pendant l’action Attaquer, une main libre manifeste une arme courante magique, finesse/lancer18 m, infligeant1d6 psychique+caractéristique. Après cette attaque, une action bonus peut manifester une seconde lame dans l’autre main libre ; dégâts1d4+caractéristique. Les lames disparaissent après l’attaque.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:rogue:soulknife:soul-blades",
+      "type": "feature",
+      "name": {
+        "en": "Soul Blades",
+        "fr": "Lames spirituelles"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Âme acérée",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "rogue",
+        "minimumClassLevel": 9,
+        "description": "Lame chercheuse : un dé psionique ajouté à une attaque de lame ratée, dépensé seulement si elle touche. Téléportation : action bonus, dépensez et lancez un dé ; téléportez-vous vers un espace visible et libre à3 m×résultat au plus.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:rogue:soulknife:psychic-veil",
+      "type": "feature",
+      "name": {
+        "en": "Psychic Veil",
+        "fr": "Voile psychique"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Âme acérée",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "rogue",
+        "minimumClassLevel": 13,
+        "description": "Action pour devenir invisible1 h avec l’équipement porté. Infliger des dégâts ou imposer une sauvegarde termine l’effet. Une utilisation gratuite par repos long ; un dé psionique permet de recommencer.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:rogue:soulknife:rend-mind",
+      "type": "feature",
+      "name": {
+        "en": "Rend Mind",
+        "fr": "Rupture spirituelle"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Âme acérée",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "rogue",
+        "minimumClassLevel": 17,
+        "description": "Lorsqu’une lame inflige des dégâts de Sournoise : sauvegarde de Sagesse, DD8+maîtrise+Dextérité, contre étourdissement1 minute. Nouveaux jets à la fin des tours. Une utilisation gratuite par repos long ; trois dés psioniques permettent de recommencer.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:rogue:soulknife",
+      "type": "subclass",
+      "name": {
+        "en": "Soulknife",
+        "fr": "Âme acérée"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Âme acérée",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "rogue",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "tce:rogue:soulknife:psionic-power",
+              "tce:rogue:soulknife:psychic-blades"
+            ]
+          },
+          {
+            "level": 9,
+            "featureIds": [
+              "tce:rogue:soulknife:soul-blades"
+            ]
+          },
+          {
+            "level": 13,
+            "featureIds": [
+              "tce:rogue:soulknife:psychic-veil"
+            ]
+          },
+          {
+            "level": 17,
+            "featureIds": [
+              "tce:rogue:soulknife:rend-mind"
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "id": "psionic-energy",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              },
+              {
+                "proficiency": true,
+                "minimum": 2,
+                "multiplier": 2
+              }
+            ]
+          },
+          {
+            "id": "psionic-recovery",
+            "recovery": "short",
+            "maxByLevel": [
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "id": "psychic-whispers-free",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "id": "psychic-veil-free",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "id": "rend-mind-free",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "extraSpells": [],
+        "choices": [],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    }
+  ]
+}

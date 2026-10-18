@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {chromium} from 'playwright';
+import {chromium,webkit} from 'playwright';
 import {spawn} from 'node:child_process';
 import {mkdir,writeFile} from 'node:fs/promises';
 const port=Number(process.env.PILOT20_E2E_PORT??4180),url=`http://127.0.0.1:${port}/web/index.html`;
@@ -8,7 +8,8 @@ let browser;
 const results=[],metrics=[],errors=[];
 try{
  await new Promise((resolve,reject)=>{server.stdout.once('data',resolve);server.once('error',reject);server.once('exit',code=>reject(Error('server '+code)));});
- browser=await chromium.launch({...(process.env.PILOT20_CHROMIUM?{executablePath:process.env.PILOT20_CHROMIUM}:{}),args:['--no-sandbox']});
+ const engine=process.env.PILOT20_E2E_BROWSER==='webkit'?webkit:chromium;
+ browser=await engine.launch(engine===webkit?{}:{...(process.env.PILOT20_CHROMIUM?{executablePath:process.env.PILOT20_CHROMIUM}:{}),args:['--no-sandbox']});
  const context=await browser.newContext({viewport:{width:390,height:844}}),p=await context.newPage();
  p.setDefaultTimeout(15000);p.on('pageerror',e=>errors.push(e.message));
  await mkdir('docs/screenshots/work4',{recursive:true});await mkdir('artifacts',{recursive:true});
@@ -77,7 +78,11 @@ try{
  assert.ok(await p.locator('.single-options input').count());results.push('Legacy expert Bard10 migrates without data loss and exposes real Magical Secrets10 decisions');
  // The packaging cache must complete before the offline proof.
  await p.waitForFunction(()=>document.querySelector('#offline-state')?.textContent.toLowerCase().includes('disponible hors ligne'),null,{timeout:30000});
- await context.setOffline(true);await p.reload();await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();await context.setOffline(false);
+ await p.waitForFunction(()=>navigator.serviceWorker.controller!==null);
+ // Playwright #42775: WebKit's offline emulation rejects even SW literal responses.
+ // Stop the actual origin server instead, so this still proves a real network outage.
+ if(engine===webkit)await new Promise(resolve=>{server.once('exit',resolve);server.kill();});else await context.setOffline(true);
+ await p.reload();await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();if(engine!==webkit)await context.setOffline(false);
  results.push('Offline reload opens the local library after the precache reports ready');
  assert.deepEqual(errors,[]);await context.close();
 }finally{

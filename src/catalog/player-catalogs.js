@@ -1,6 +1,7 @@
 import references from './data/spell-reference-2014.json' with {type:'json'};
 import notes from './data/extended-spell-notes-fr.json' with {type:'json'};
 import artificer from './data/artificer.json' with {type:'json'};
+import subclasses from './data/subclasses-extended.json' with {type:'json'};
 import phbFacts from './data/phb-spell-facts.json' with {type:'json'};
 import phbNotes from './data/phb-spell-notes-fr.json' with {type:'json'};
 import {classCatalog,spellCatalog,originCatalog} from './srd51-catalog.js';
@@ -16,8 +17,10 @@ const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-$/,'');
 export const phbSpells={kind:'catalog',schemaVersion:3,ruleset:'dnd5e-2014',id:'pilot20:phb-spells-2014',items:phbFacts.map(r=>({id:'phb14:spell:'+slug(r.name_en),type:'spell',name:{fr:r.name_fr,en:r.name_en},source:referencedSource('phb14',r.url),data:{ruleset:'dnd5e-2014',rulesSourceId:'phb14',level:r.level,school:schools[r.school]??r.school,classIds:[...r.classIds,...(['Thorn Whip','Elemental Weapon'].includes(r.name_en)?['artificer']:[])],castingTime:r.castingTime,range:r.range,components:r.components,duration:r.duration,concentration:/concentration/i.test(r.duration),ritual:r.ritual,description:phbNotes[r.name_en],language:'fr',reference:'AideDD 2014 / '+r.name_en,automation:{status:'manual',handler:null,limits:['Combat resolution remains player/GM adjudication.']},targeting:{mode:'manual',limits:'Player/GM validates geometry and eligibility.'},resolution:{kind:'manual',requiresAdjudication:true}}}))};
 // Add the Artificer's verified base list without changing SRD-only consumers or IDs.
 const playerSpells=structuredClone(spellCatalog);
+const playerClasses=structuredClone(classCatalog);
+for(const sub of subclasses.items.filter(i=>i.type==='subclass'))playerClasses.items.find(i=>i.type==='class'&&i.data.classId===sub.data.classId).data.subclassIds.push(sub.id);
 for(const item of playerSpells.items){const ref=references.find(r=>r.id===item.id);if(ref?.classIds.includes('artificer'))item.data.classIds=[...new Set([...item.data.classIds,'artificer'])];}
 const allReferences=spellReferences();
 for(const item of [...playerSpells.items,...extendedSpells.items,...phbSpells.items])item.data.optionalTashaClassIds=allReferences.find(r=>r.id===item.id)?.optionalTashaClassIds??[];
 const expandedLists={kind:'catalog',schemaVersion:3,ruleset:'dnd5e-2014',id:'pilot20:tce-additional-spell-lists',items:[...new Set(allReferences.flatMap(r=>r.optionalTashaClassIds??[]))].map(classId=>({id:'tce:'+classId+':additional-spells',type:'feature',name:{fr:'Sorts supplémentaires — '+classCatalog.items.find(c=>c.type==='class'&&c.data.classId===classId).name.fr,en:'Additional '+classId+' spells'},source:referencedSource('tce','https://dnd.wizards.com/products/tashas-cauldron-everything'),data:{ruleset:'dnd5e-2014',rulesSourceId:'tce',classId,minimumClassLevel:['paladin','ranger'].includes(classId)?2:1,optionalClassFeature:true,campaignOption:'tce:additional-spells:'+classId,description:'Ajoute à la liste de classe les sorts supplémentaires de Tasha. Ne les apprend ni ne les prépare automatiquement.',language:'fr',automation:{status:'manual',handler:null,limits:['Individual spell effects remain player/GM adjudication.']}}}))};
-export const playerCatalogs=[classCatalog,playerSpells,originCatalog,extendedSpells,phbSpells,artificer,expandedLists];
+export const playerCatalogs=[playerClasses,playerSpells,originCatalog,extendedSpells,phbSpells,artificer,expandedLists,subclasses];
