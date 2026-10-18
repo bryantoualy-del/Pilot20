@@ -112,12 +112,12 @@ export function buildCharacter(
     armorRules: [],
     buildRules: [],
   };
-  const featureMovement={};
+  const featureMovement={},movementMatchWalk=new Set();
   // Ancestry/background remain editable; no racial bonuses are silently added to supplied scores.
   for(const featureId of d.features){
     const feature=index.get(featureId),effect=feature?.data.buildEffects;if(!effect)continue;
     if((definitions.find(c=>c.id===(report.featureClassOverrides?.[featureId]??feature.data.classId))?.level??(feature.type==='feat'?1:0))<(effect.minimumClassLevel??1))continue;
-    Object.assign(featureMovement,effect.movement??{});
+    Object.assign(featureMovement,effect.movement??{});for(const mode of effect.movementMatchWalk??[])movementMatchWalk.add(mode);
     const owner=definitions.find(c=>c.id===(report.featureClassOverrides?.[featureId]??feature.data.classId))??(feature.type==='feat'?definitions[0]:null),pb=2+Math.floor((definitions.reduce((n,c)=>n+c.level,0)-1)/4);
     const modify=(suffix,stat,value,operation='add',condition=null)=>d.modifiers.push({id:featureId+':'+suffix,stat,value,operation,reason:feature.name.en,source:feature.source,...(condition?{condition}:{})});
     if(effect.hpPerCharacterLevel)modify('feat-hp','maxHp',effect.hpPerCharacterLevel*definitions.reduce((n,c)=>n+c.level,0));
@@ -525,7 +525,7 @@ export function buildCharacter(
           kind: spell.featureOwnerId?'class':"racial",
           ...(spell.target?{target:spell.target}:{}),...(spell.maxTargets?{maxTargets:spell.maxTargets}:{}),
           ...(e.data.concentration?{concentration:{effectId:e.id,start:'activation'}}:{}),
-          ...(spell.resourceId?{resource:{id:spell.resourceId,amount:spell.resourceAmount??1}}:{}),
+          ...(spell.resourceId&&!report.resources.some(r=>r.id===spell.resourceId&&r.unlimited)?{resource:{id:spell.resourceId,amount:spell.resourceAmount??1}}:{}),
           cost: spell.featureOwnerId?spell.economy??'none':spell.level === 1 ? "action" : "none",
           combat: {
             version: 1,
@@ -551,7 +551,7 @@ export function buildCharacter(
       weapon: null,
       source: index.get(originRequest.backgroundId).source,
     });
-  Object.assign(d.movement,featureMovement);
+  Object.assign(d.movement,featureMovement);for(const mode of movementMatchWalk){d.movement[mode]=d.movement.walk;d.movement[mode+'MatchesWalk']=true;}
   for(const id of d.features){const n=index.get(id)?.data.buildEffects?.existingMovementBonus??0;for(const key of ['climb','swim'])if(d.movement[key])d.movement[key]+=n;}
   d.features = [...new Set(d.features)];
   d.spells.known = [...new Set(d.spells.known)];
