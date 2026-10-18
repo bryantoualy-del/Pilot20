@@ -15,7 +15,7 @@ test('477 usable spell definitions preserve SRD IDs and include authored XGE/TCE
  const spells=context.index.list('spell');assert.equal(spells.length,477);assert.equal(spells.filter(s=>s.source.kind==='srd').length,319);assert.equal(spells.filter(s=>s.source.kind==='reference').length,158);
  for(const spell of spells.filter(s=>s.source.kind==='reference')){assert.ok(spell.data.description.length>50);assert.equal(spell.data.automation.status,'manual');assert.equal(spell.data.automation.handler,null);}
  assert.ok(context.index.get('phb14:spell:armor-of-agathys'));assert.ok(context.index.get('phb14:spell:hex'));
- const only=campaignCatalog(playerCatalogs,[],{...config,enabledSourceIds:['srd51']});assert.equal(only.index.list('spell').length,319);assert.equal(only.index.class('artificer'),undefined);
+ const only=campaignCatalog(playerCatalogs,[],{...config,sourceRestrictions:true,enabledSourceIds:['srd51']});assert.equal(only.index.list('spell').length,319);assert.equal(only.index.class('artificer'),undefined);
 });
 test('each Artificer specialization compiles levels1–20 with slots, preparation, infusions and fixed grants',()=>{
  for(let level=1;level<=20;level++)for(const subclassId of level<3?[null]:context.index.class('artificer').data.subclassIds){
@@ -31,7 +31,7 @@ test('each Artificer specialization compiles levels1–20 with slots, preparatio
 test('Tasha list additions are independent by class and do not auto-learn or prepare spells',()=>{
  const aid='srd51:aid';assert.ok(!context.index.get(aid).data.classIds.includes('bard'));
  const enabled=campaignCatalog(playerCatalogs,[],{...config,enabledOptions:['tce:additional-spells:bard']});assert.ok(enabled.index.get(aid).data.classIds.includes('bard'));assert.ok(!enabled.index.get(aid).data.classIds.includes('ranger'));
- const noTasha=campaignCatalog(playerCatalogs,[],{...config,enabledSourceIds:['srd51','phb14'],enabledOptions:['tce:additional-spells:bard']});assert.ok(!noTasha.index.get(aid).data.classIds.includes('bard'));
+ const noTasha=campaignCatalog(playerCatalogs,[],{...config,sourceRestrictions:true,enabledSourceIds:['srd51','phb14'],enabledOptions:['tce:additional-spells:bard']});assert.ok(!noTasha.index.get(aid).data.classIds.includes('bard'));
  assert.ok(!context.index.get(aid).data.classIds.includes('bard')); // no mutation of shared catalogues
 });
 test('Artificer multiclass contribution rounds up and its prepared list uses only Artificer levels',()=>{

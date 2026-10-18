@@ -32,18 +32,17 @@ export function renderRacePicker(d, a, update, filters) {
         !versions.length ? el('small', {}, w('Source désactivée', 'Source disabled')) : null)],
         async () => {
           if(versions.length){await update(x => selectRace(a.context,x,versions.find(v=>v.entry.id===d.raceId)?.entry.id??versions[0].entry.id,a.state.locale));return;}
-          a.modal(el('section',{},el('h2',{},label),el('p',{},w('Choisissez la version à autoriser pour cette campagne.','Choose the version to enable in this campaign.')),f.versions.map(v=>button(a.name(v.entry)+' · '+v.entry.source.document,async()=>{try{const sourceId=v.entry.data.rulesSourceId??(v.entry.data.customLineage?'tce':'srd51'),old=a.config,next={...old,revision:old.revision+1,enabledSourceIds:[...new Set([...old.enabledSourceIds,sourceId])]};await a.campaigns.save(next,{expectedRevision:old.revision});a.config=next;a.context=await a.campaigns.context(next);await update(x=>selectRace(a.context,x,v.entry.id,a.state.locale));document.querySelector('#dialog').close();}catch(e){a.fail(e);}},'primary'))));
         },
         selected ? 'selected' : '');
-      b.disabled = !f.versions.length;
+      b.disabled = !versions.length;
       b.setAttribute('aria-pressed', String(selected));
       grid.append(b); shown++;
     }
     if ('lignee sur mesure custom lineage tasha'.includes(state.query.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())) {
       const b = button([raceIcon('Lignée sur mesure'), el('span', {}, w('Lignée sur mesure', 'Custom lineage'))],
         () => openRaceEditor(a, d, update, null, { lineageOnly: true }));
-      b.disabled = !a.config.enabledSourceIds.includes('tce');
-      if (b.disabled) b.title = w('Activez Tasha dans Sources de campagne.', 'Enable Tasha in Campaign sources.');
+      b.disabled = !a.context.statuses.some(s => s.id === 'tce' && s.selected);
+      if (b.disabled) b.title = w('Tasha est restreint dans les paramètres de campagne.', 'Tasha is restricted in Campaign settings.');
       grid.append(b); shown++;
     }
     count.textContent = shown + w(' races affichées', ' races shown');
@@ -57,6 +56,5 @@ export function renderRacePicker(d, a, update, filters) {
   if (d.manualRace || (!d.raceId && d.origin)) wrapper.append(el('p', { role: 'status' },
     w('Votre ancienne origine est conservée. Choisissez une race ou configurez une Lignée sur mesure pour la remplacer.',
       'Your previous origin is retained. Choose a race or configure Custom lineage to replace it.')));
-  wrapper.append(button(w('Sources de campagne', 'Campaign sources'), () => a.nav('sources')));
   return wrapper;
 }

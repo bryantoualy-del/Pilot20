@@ -41,6 +41,7 @@ export function defaultCampaign(campaignId = "default") {
     ruleset: "dnd5e-2014",
     enabledSourceIds: ["srd51", "xge", "tce", "phb14"],
     enabledOptions: [],
+    sourceRestrictions: false,
   };
 }
 export function validateCampaign(c) {
@@ -53,7 +54,9 @@ export function validateCampaign(c) {
     "ruleset",
     "enabledSourceIds",
     "enabledOptions",
-  ]);
+    "sourceRestrictions",
+  ], ["kind", "schemaVersion", "id", "revision", "ruleset", "enabledSourceIds", "enabledOptions"]);
+  check(c.sourceRestrictions === undefined || typeof c.sourceRestrictions === "boolean", "Campaign restriction mode");
   check(
     c.kind === "pilot20-campaign-sources" &&
       c.schemaVersion === 1 &&
@@ -70,6 +73,10 @@ export function validateCampaign(c) {
     "Campaign sources/options",
   );
   return c;
+}
+/** Missing flags are legacy preferences, not an explicit MJ restriction. */
+export function sourceEnabled(campaign, sourceId) {
+  return campaign.sourceRestrictions !== true || campaign.enabledSourceIds.includes(sourceId);
 }
 /** Local JSON only. The acknowledgement records the user's authorization, not a rights certification. */
 export function parsePrivatePack(raw, { authorized = false } = {}) {
@@ -155,12 +162,12 @@ export function campaignCatalog(publicPacks, privatePacks, campaign) {
     .list()
     .filter(
       (i) =>
-        campaign.enabledSourceIds.includes(origins.get(i.id)) &&
+        sourceEnabled(campaign, origins.get(i.id)) &&
         (!i.data.campaignOption ||
           campaign.enabledOptions.includes(i.data.campaignOption)),
     );
-  for(const entry of items)if(entry.type==='spell'&&campaign.enabledSourceIds.includes('tce'))entry.data.classIds=[...new Set([...entry.data.classIds,...(entry.data.optionalTashaClassIds??[]).filter(id=>campaign.enabledOptions.includes('tce:additional-spells:'+id))])];
-  for(const entry of items)if(entry.type==='race')entry.data.subraces=entry.data.subraces.filter(s=>!s.rulesSourceId||campaign.enabledSourceIds.includes(s.rulesSourceId));
+  for(const entry of items)if(entry.type==='spell'&&sourceEnabled(campaign, 'tce'))entry.data.classIds=[...new Set([...entry.data.classIds,...(entry.data.optionalTashaClassIds??[]).filter(id=>campaign.enabledOptions.includes('tce:additional-spells:'+id))])];
+  for(const entry of items)if(entry.type==='race')entry.data.subraces=entry.data.subraces.filter(s=>!s.rulesSourceId||sourceEnabled(campaign, s.rulesSourceId));
   // Remove dependent definitions rather than offering incomplete or dangling builds.
   let changed = true;
   while (changed) {
@@ -213,7 +220,7 @@ export function campaignCatalog(publicPacks, privatePacks, campaign) {
       active = index.list().filter((i) => origins.get(i.id) === s.id);
     return {
       ...s,
-      selected: campaign.enabledSourceIds.includes(s.id),
+      selected: sourceEnabled(campaign, s.id),
       packIds: packs
         .filter((p) => p.items.some((i) => origins.get(i.id) === s.id))
         .map((p) => p.id),
@@ -297,7 +304,7 @@ export function buildCampaignCharacter(context, request, campaign) {
   const validation = validateSavedPlan(context, request);
   if (
     request.classes.length > 1 &&
-    (!campaign.enabledSourceIds.includes("srd51") ||
+    (!sourceEnabled(campaign, "srd51") ||
       !campaign.enabledOptions.includes("multiclass"))
   )
     validation.issues.push({ code: "multiclass-option-disabled" });
