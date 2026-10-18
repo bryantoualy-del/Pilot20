@@ -1,4 +1,5 @@
 import { ABILITIES, SKILLS, check } from "../character/contracts.js";
+import {canonicalProficiency,TOOL_PROFICIENCIES} from './proficiencies.js';
 
 export const LANGUAGES = [
   "common",
@@ -152,7 +153,7 @@ export function resolveOrigins(index, request) {
   const data = [
     ...(race ? [{ entry: race, data: race.data }] : []),
     ...(sub
-      ? [{ entry: { ...race, id: sub.id, name: sub.name }, data: sub }]
+      ? [{ entry: { ...race, id: sub.id, name: sub.name,source:sub.source??race.source }, data: sub }]
       : []),
     ...(bg ? [{ entry: bg, data: bg.data }] : []),
   ];
@@ -204,11 +205,20 @@ export function resolveOrigins(index, request) {
     if (kind === "language") languages.add(value);
   };
   const policy = originCustomizationPolicy(index);
+  const classTools=new Set((request.classes??[]).flatMap((c,i)=>index.class(c.id)?.data[i===0?'initialProficiencies':'multiclassProficiencies']??[]).map(canonicalProficiency));
+  for(const c of request.classes??[])for(const q of [...(index.class(c.id)?.data.choices??[]),...(index.get(c.subclassId)?.data.choices??[])])if(q.kind==='proficiency'&&q.level<=c.level)for(const v of request.selections?.[c.id+':'+q.key]??[])if(q.options.includes(v))classTools.add(canonicalProficiency(v));
+  let selectedSize=race?.data.size??'medium';
   for (const flag of ["abilities", "languages", "proficiencies"])
     if (originAdjustments[flag] && !policy[flag])
       issues.push({ code: "origin-option-disabled", option: flag });
 
   for (const { entry, data: d } of data) {
+    if(d.sizes){const chosen=ask(entry,{key:'size',kind:'ancestry-option',count:1,options:d.sizes,label:{fr:'Taille du personnage',en:'Character size'}});if(chosen[0])selectedSize=chosen[0];}
+    if(d.flexibleAbilityBoosts){
+      const pattern=ask(entry,{key:'ability-pattern',kind:'ancestry-option',count:1,options:['two-one','three-ones'],label:{fr:'Répartition des bonus de caractéristiques',en:'Ability score increases'}})[0];
+      const parts=pattern==='two-one'?[[2,1],[1,1]]:pattern==='three-ones'?[[1,3]]:[];
+      for(const [amount,count]of parts)for(const v of ask(entry,{key:'ability-bonus-'+amount,kind:'score',count,amount,options:ABILITIES.filter(a=>!bonuses[a]),label:{fr:'Bonus de +'+amount,en:'Increase by '+amount}}))bonuses[v]+=amount;
+    }
     if (d.homebrewDefinition && !d.homebrewDefinition.gmApproved)
       issues.push({ code: "homebrew-gm-review" });
     if (d.customLineage) {
@@ -275,7 +285,8 @@ export function resolveOrigins(index, request) {
     }
     for (const v of d.proficiencies ?? []) {
       let value = v;
-      if (originAdjustments.proficiencies && policy.proficiencies) {
+      if(entry.type==='background'&&TOOL_PROFICIENCIES.includes(canonicalProficiency(v))&&(classTools.has(canonicalProficiency(v))||[...proficiencies].some(p=>canonicalProficiency(p)===canonicalProficiency(v))))value=ask(entry,{key:'replace-tool-'+v,kind:'proficiency',count:1,options:TOOL_PROFICIENCIES.filter(p=>!classTools.has(p)&&![...proficiencies].some(v=>canonicalProficiency(v)===p)),label:{fr:'Remplacer une maîtrise d’outil déjà acquise',en:'Replace an already known tool proficiency'}})[0];
+      if (value===v && originAdjustments.proficiencies && policy.proficiencies) {
         const options = policy.proficiencies[v];
         if (options)
           value = ask(entry, {
@@ -299,6 +310,7 @@ export function resolveOrigins(index, request) {
       if (value) grant(entry, "language", value);
     }
     for (const spec of d.choices ?? []) {
+      if(spec.requiresChoice&&!(originSelections[entry.id+':'+spec.requiresChoice.key]??[]).includes(spec.requiresChoice.optionId))continue;
       let options = spec.options;
       if (spec.kind === "racial-spell")
         options = index
@@ -309,6 +321,7 @@ export function resolveOrigins(index, request) {
           .map((s) => s.id);
       if (spec.kind === "language")
         options = options.filter((k) => !languages.has(k));
+      if(spec.kind==='proficiency')options=options.filter(v=>![...proficiencies].some(p=>canonicalProficiency(p)===canonicalProficiency(v))&&!classTools.has(canonicalProficiency(v)));
       if (spec.kind === "skill")
         options = options.filter((k) => !grantedSkills.has(k));
       for (const v of ask(entry, spec, options)) {
@@ -318,7 +331,7 @@ export function resolveOrigins(index, request) {
         } else if (spec.kind === "racial-spell")
           spells.push({
             id: v,
-            ability: spec.ability,
+            ability: spec.abilityChoiceKey?(originSelections[entry.id+':'+spec.abilityChoiceKey]??[])[0]:spec.ability,
             level: 1,
             source: entry.source,
           });
@@ -327,7 +340,7 @@ export function resolveOrigins(index, request) {
       }
     }
     traits.push(
-      ...(d.traits ?? []).map((t) => ({
+      ...(d.traits ?? []).filter(t=>entry.id!==race?.id||!(sub?.replacesTraits??[]).includes(t.id)).filter(t=>(t.minimumCharacterLevel??1)<=(request.classes??[]).reduce((n,c)=>n+c.level,0)).filter(t=>!t.requiresChoice||(originSelections[entry.id+':'+t.requiresChoice.key]??[]).includes(t.requiresChoice.optionId)).map((t) => ({
         ...t,
         source: entry.source,
         ownerId: entry.id,
@@ -424,8 +437,10 @@ export function resolveOrigins(index, request) {
     spells,
     featIds,
     languages: [...languages],
-    size: race?.data.size ?? "medium",
-    speed: race?.data.speed ?? 30,
+    size: selectedSize,
+    creatureType:race?.data.creatureType??'humanoid',
+    movementModes:race?.data.movementModes??{},
+    speed: sub?.speed??race?.data.speed ?? 30,
     hpPerLevel: sub?.hpPerLevel ?? race?.data.hpPerLevel ?? 0,
     ignoreHeavyPenalty: race?.data.ignoreHeavyPenalty ?? false,
     resistances: [

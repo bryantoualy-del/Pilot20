@@ -46,7 +46,7 @@ export async function renderCreator(main,input,a) {
   function choiceList(q,values,onchange,{origin=false}={}) {
     const filter=filters.get(q.id)??{query:'',page:0};filters.set(q.id,filter);
     const wrap=el('div',{'data-choice-id':q.id,class:'single-choice'}),list=el('div',{class:'single-options'}),pages=el('div',{class:'single-pages'});
-    const title=q.classId?choiceName(q,a):q.key.replaceAll('-',' ');
+    const title=q.classId?choiceName(q,a):q.label?.[a.state.locale]??q.key.replaceAll('-',' ');
     wrap.append(el('p',{class:'single-choice-count',role:'status'},title+' · '+values.length+' / '+q.count));
     const search=el('input',{type:'search','aria-label':w('Rechercher une option','Search options'),placeholder:w('Rechercher en français ou en anglais…','Search French or English…'),value:filter.query,oninput:e=>{filter.query=e.target.value;filter.page=0;fill();}});
     if(q.options.length>8)wrap.append(search);

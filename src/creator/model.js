@@ -344,6 +344,13 @@ export function suggestChoices(
 ) {
   const d = structuredClone(input);
   for (let pass = 0; pass < 5; pass++) {
+    // Resolve dependent ancestry decisions before proposing ASIs. Native flexible
+    // bonuses can appear only after their distribution has been selected.
+    for(let n=0;n<100;n++){
+      const q=(draftProgression(context,config,d).origin?.choices??[]).find(q=>!d.originSelections?.[q.id]?.length&&q.options.length>=q.count);
+      if(!q)break;
+      d.originSelections??={};d.originSelections[q.id]=q.options.slice(0,q.count);
+    }
     const r = draftProgression(context, config, d),
       usedSkills = new Set(r.origin?.background.skills ?? d.background.skills),
       usedExpertise = new Set(),

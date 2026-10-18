@@ -1,0 +1,206 @@
+[
+  {
+    "raceId": "srd51:race:dwarf",
+    "subrace": {
+      "id": "phb14:race:mountain-dwarf",
+      "name": {
+        "fr": "Nain des montagnes",
+        "en": "Mountain Dwarf"
+      },
+      "bonuses": {
+        "str": 2
+      },
+      "proficiencies": [
+        "light-armor",
+        "medium-armor"
+      ],
+      "traits": [],
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "rulesSourceId": "phb14"
+    }
+  },
+  {
+    "raceId": "srd51:race:elf",
+    "subrace": {
+      "id": "phb14:race:wood-elf",
+      "name": {
+        "fr": "Elfe des bois",
+        "en": "Wood Elf"
+      },
+      "bonuses": {
+        "wis": 1
+      },
+      "speed": 35,
+      "proficiencies": [
+        "longswords",
+        "shortswords",
+        "shortbows",
+        "longbows"
+      ],
+      "traits": [
+        {
+          "id": "mask-of-the-wild",
+          "name": {
+            "fr": "Cachette naturelle",
+            "en": "Mask of the Wild"
+          },
+          "description": "Vous pouvez tenter de vous cacher même lorsqu’un phénomène naturel ne vous dissimule que partiellement.",
+          "automation": "manual"
+        }
+      ],
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "rulesSourceId": "phb14"
+    }
+  },
+  {
+    "raceId": "srd51:race:elf",
+    "subrace": {
+      "id": "phb14:race:drow",
+      "name": {
+        "fr": "Elfe noir",
+        "en": "Drow"
+      },
+      "bonuses": {
+        "cha": 1
+      },
+      "proficiencies": [
+        "rapiers",
+        "shortswords",
+        "hand-crossbows"
+      ],
+      "replacesTraits": [
+        "darkvision"
+      ],
+      "traits": [
+        {
+          "id": "superior-darkvision",
+          "name": {
+            "fr": "Vision dans le noir36 m",
+            "en": "Superior Darkvision120 ft."
+          },
+          "description": "Remplace la vision dans le noir de l’elfe.",
+          "automation": "manual"
+        },
+        {
+          "id": "sunlight-sensitivity",
+          "name": {
+            "fr": "Sensibilité au soleil",
+            "en": "Sunlight Sensitivity"
+          },
+          "description": "Désavantage aux attaques et tests visuels de Perception lorsque vous ou la cible êtes directement au soleil.",
+          "automation": "manual"
+        }
+      ],
+      "spells": [
+        {
+          "id": "srd51:dancing-lights",
+          "level": 1,
+          "ability": "cha"
+        },
+        {
+          "id": "srd51:faerie-fire",
+          "level": 3,
+          "ability": "cha",
+          "slotLevel": 1
+        },
+        {
+          "id": "srd51:darkness",
+          "level": 5,
+          "ability": "cha",
+          "slotLevel": 2
+        }
+      ],
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "rulesSourceId": "phb14"
+    }
+  },
+  {
+    "raceId": "srd51:race:halfling",
+    "subrace": {
+      "id": "phb14:race:stout-halfling",
+      "name": {
+        "fr": "Halfelin robuste",
+        "en": "Stout Halfling"
+      },
+      "bonuses": {
+        "con": 1
+      },
+      "proficiencies": [],
+      "resistances": [
+        "poison"
+      ],
+      "traits": [
+        {
+          "id": "stout-resilience",
+          "name": {
+            "fr": "Résistance du robuste",
+            "en": "Stout Resilience"
+          },
+          "description": "Avantage aux sauvegardes contre le poison ; résistance à ses dégâts.",
+          "automation": "manual"
+        }
+      ],
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "rulesSourceId": "phb14"
+    }
+  },
+  {
+    "raceId": "srd51:race:gnome",
+    "subrace": {
+      "id": "phb14:race:forest-gnome",
+      "name": {
+        "fr": "Gnome des forêts",
+        "en": "Forest Gnome"
+      },
+      "bonuses": {
+        "dex": 1
+      },
+      "proficiencies": [],
+      "spells": [
+        {
+          "id": "srd51:minor-illusion",
+          "level": 1,
+          "ability": "int"
+        }
+      ],
+      "traits": [
+        {
+          "id": "speak-small-beasts",
+          "name": {
+            "fr": "Communication avec les petits animaux",
+            "en": "Speak with Small Beasts"
+          },
+          "description": "Sons et gestes permettent de transmettre des idées simples à des bêtes P ou plus petites.",
+          "automation": "manual"
+        }
+      ],
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "rulesSourceId": "phb14"
+    }
+  }
+]

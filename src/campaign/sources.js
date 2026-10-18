@@ -120,6 +120,7 @@ const structuredCloneSafe = (v) => structuredClone(v);
 /** Validate the complete installed graph BEFORE filtering, including disabled packs/options. */
 export function campaignCatalog(publicPacks, privatePacks, campaign) {
   validateCampaign(campaign);
+  for(const pack of publicPacks)validateCatalogV3(pack,{distribution:'public'});
   check(
     Array.isArray(publicPacks) &&
       publicPacks.every((p) => p.items.every((i) => ['srd','reference'].includes(i.source.kind))),
@@ -159,6 +160,7 @@ export function campaignCatalog(publicPacks, privatePacks, campaign) {
           campaign.enabledOptions.includes(i.data.campaignOption)),
     );
   for(const entry of items)if(entry.type==='spell'&&campaign.enabledSourceIds.includes('tce'))entry.data.classIds=[...new Set([...entry.data.classIds,...(entry.data.optionalTashaClassIds??[]).filter(id=>campaign.enabledOptions.includes('tce:additional-spells:'+id))])];
+  for(const entry of items)if(entry.type==='race')entry.data.subraces=entry.data.subraces.filter(s=>!s.rulesSourceId||campaign.enabledSourceIds.includes(s.rulesSourceId));
   // Remove dependent definitions rather than offering incomplete or dangling builds.
   let changed = true;
   while (changed) {

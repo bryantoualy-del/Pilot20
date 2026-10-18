@@ -1,5 +1,6 @@
 import { resolveOrigins } from "./origins.js";
 import {validateGrantReplacements,resolveSpellGrants} from './spell-grants.js';
+import {canonicalProficiency} from './proficiencies.js';
 import {
   check,
   integer,
@@ -268,10 +269,11 @@ export function resolveProgression(index, request) {
         continue;
       }
       let options = spec.options;
+      if(spec.kind==='proficiency'&&!spec.toolReplacementFor)options=options.filter(id=>!background.proficiencies.some(p=>canonicalProficiency(p)===canonicalProficiency(id)));
       if(spec.filterAvailableFeatures) options=options.filter(id=>{const f=index.get(id);return f?.type==='feature'&&f.data.classId===c.id&&f.data.minimumClassLevel<=L&&(f.data.selectionRequires??[]).every(id=>selected.has(id)||features.has(id));});
       if(spec.toolReplacementFor){
-        const owned=new Set([...background.proficiencies,...classes.flatMap((cl,n)=>index.class(cl.id).data[n===0?'initialProficiencies':'multiclassProficiencies']),...Object.entries(selections).filter(([id])=>id!==c.id+':'+spec.key&&!id.endsWith(':skills')).flatMap(([,v])=>v)]);
-        options=owned.has(spec.toolReplacementFor)?options.filter(id=>!owned.has(id)):[spec.toolReplacementFor];
+        const owned=new Set([...background.proficiencies,...classes.flatMap((cl,n)=>index.class(cl.id).data[n===0?'initialProficiencies':'multiclassProficiencies']),...Object.entries(selections).filter(([id])=>id!==c.id+':'+spec.key&&!id.endsWith(':skills')).flatMap(([,v])=>v)].map(canonicalProficiency));
+        options=owned.has(canonicalProficiency(spec.toolReplacementFor))?options.filter(id=>!owned.has(canonicalProficiency(id))):[spec.toolReplacementFor];
       }
       if (spec.kind === "asi" && campaignOptions.includes("feats"))
         options = options.concat(
