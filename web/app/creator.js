@@ -1,3 +1,5 @@
+import {spellNotesFr} from '../../src/catalog/spell-notes-fr.js';
+import {spellReference,spellMatches} from '../../src/catalog/spell-reference.js';
 import {el,button,field,select,check,badge} from './dom.js';
 import {migrateSingleDraft,singlePath,decisionReady} from '../../src/creator/single-path.js';
 import {compileDraft,retainDecision,restoreDecision,templateScores} from '../../src/creator/model.js';
@@ -31,8 +33,11 @@ export async function renderCreator(main,input,a) {
       body.append(el('dl',{class:'spell-facts'},...['level','school','castingTime','range','duration','components'].flatMap(k=>[el('dt',{},text(k)),el('dd',{},terms[k])])),
         data.concentration?el('p',{},text('concentration')):null,data.ritual?el('p',{},text('ritual')):null);
     }
-    if(data.description)body.append(el('p',{class:'entry-description'},data.description));
-    body.append(el('details',{},el('summary',{},w('Référence','Reference')),el('p',{},entry.source.document)));
+    const note=a.state.locale==='fr'?spellNotesFr[entry.id]:null;
+    if(note)body.append(el('p',{class:'entry-description'},note));
+    if(data.description)body.append(el('details',{open:!note},el('summary',{},w('Description complète en anglais','Full description')),el('p',{class:'entry-description'},data.description)));
+    const reference=spellReference(entry.id);
+    body.append(el('details',{},el('summary',{},w('Référence','Reference')),el('p',{},entry.source.document),reference?el('p',{},reference.references.map(r=>r.sourceId+' · p. '+r.pages.join(', ')).join(' / ')):null,reference?el('a',{href:reference.detailUrl,target:'_blank',rel:'noopener noreferrer'},w('Fiche AideDD 2014','AideDD 2014 reference')):null));
     a.modal(body);
   }
   function choiceList(q,values,onchange,{origin=false}={}) {
@@ -44,7 +49,7 @@ export async function renderCreator(main,input,a) {
     if(q.options.length>8)wrap.append(search);
     function fill(){
       const query=filter.query.toLocaleLowerCase();
-      const options=q.options.filter(id=>[optionName(id,a),...Object.values(a.context.installed.get(id)?.name??{})].join(' ').toLocaleLowerCase().includes(query));
+      const options=q.options.filter(id=>a.context.index.get(id)?.type==='spell'?spellMatches(id,query,a.context.index.get(id)):[optionName(id,a),...Object.values(a.context.installed.get(id)?.name??{})].join(' ').toLocaleLowerCase().includes(query));
       const pageCount=Math.max(1,Math.ceil(options.length/8));filter.page=Math.min(filter.page,pageCount-1);
       list.replaceChildren();
       if(!options.length)list.append(el('p',{},w('Aucun résultat. Essayez un autre nom.','No results. Try another name.')));
