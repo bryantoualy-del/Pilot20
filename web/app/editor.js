@@ -109,6 +109,7 @@ export function optionName(value, a) {
     'two-one':['+2 à une caractéristique, +1 à une autre','+2 to one ability, +1 to another'],
     'three-ones':['+1 à trois caractéristiques différentes','+1 to three different abilities'],
     small:['Petite','Small'],medium:['Moyenne','Medium'],
+    'necrotic-shroud':['Voile nécrotique','Necrotic Shroud'],'radiant-consumption':['Lumière radiante','Radiant Consumption'],'radiant-soul':['Âme radiante','Radiant Soul'],autumn:['Automne','Autumn'],winter:['Hiver','Winter'],spring:['Printemps','Spring'],summer:['Été','Summer'],beasthide:['Peau de bête','Beasthide'],longtooth:['Longues dents','Longtooth'],swiftstride:['Longue foulée','Swiftstride'],wildhunt:['Traque sauvage','Wildhunt'],
     defiance:['Défiance','Defiance'],craftiness:['Astuce','Craftiness'],'draconic-sorcery':['Sorcellerie draconique','Draconic sorcery'],
     artisan:['Outils d’artisan','Artisan’s tools'],navigator:['Outils de navigateur','Navigator’s tools'],language:['Langue supplémentaire','Additional language'],
     drum: ["Tambour", "Drum"],
@@ -159,6 +160,7 @@ export function choiceName(q, a) {
   );
 }
 export function issueMessage(issue, report, a) {
+  if(issue.code==='racial-armor-prohibited')return a.state.locale==='fr'?'Cette race ne peut pas porter d’armure. Rangez l’armure pour utiliser son armure naturelle.':'This race cannot wear armor. Stow armor to use its natural armor.';
   const q = report.choices?.find((q) => q.id === issue.choiceId),
     title = q ? choiceName(q, a) : "",
     fr = a.state.locale === "fr";

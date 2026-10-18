@@ -312,8 +312,10 @@ export function resolveOrigins(index, request) {
       if (value) grant(entry, "language", value);
     }
     for (const spec of d.choices ?? []) {
+      if((spec.minimumCharacterLevel??1)>(request.classes??[]).reduce((n,c)=>n+c.level,0))continue;
       if(spec.requiresChoice&&!(originSelections[entry.id+':'+spec.requiresChoice.key]??[]).includes(spec.requiresChoice.optionId))continue;
       let options = spec.options;
+      if(spec.kind==='feat')options=index.list('feat').filter(f=>!f.data.requires?.length&&(f.data.requiresScores??[]).every(p=>scores[p.score]+(scoresAreBase?bonuses[p.score]:0)>=p.minimum)).map(f=>f.id);
       if (spec.kind === "racial-spell")
         options = index
           .list("spell")
@@ -337,6 +339,7 @@ export function resolveOrigins(index, request) {
             level: 1,
             source: entry.source,
           });
+        else if (spec.kind === 'feat') featIds.push(v);
         else if (spec.kind === "draconic") grant(entry, "draconic", v);
         else grant(entry, spec.kind, v);
       }
@@ -357,7 +360,7 @@ export function resolveOrigins(index, request) {
           (s) =>
             s.level <= (request.classes ?? []).reduce((n, c) => n + c.level, 0),
         )
-        .map((s) => ({ ...s, source: entry.source })),
+        .map((s) => ({ ...s, ...(s.abilityChoiceKey?{ability:(originSelections[entry.id+':'+s.abilityChoiceKey]??[])[0]}:{}), ownerId:entry.id, source: entry.source })),
     );
   }
   for (const key of Object.keys(originSelections))
@@ -442,6 +445,9 @@ export function resolveOrigins(index, request) {
     size: selectedSize,
     creatureType:race?.data.creatureType??'humanoid',
     movementModes:race?.data.movementModes??{},
+    naturalArmor:race?.data.naturalArmor??null,
+    armorBonus:race?.data.armorBonus??0,
+    initiativeProficiency:race?.data.initiativeProficiency??false,
     speed: sub?.speed??race?.data.speed ?? 30,
     hpPerLevel: sub?.hpPerLevel ?? race?.data.hpPerLevel ?? 0,
     ignoreHeavyPenalty: race?.data.ignoreHeavyPenalty ?? false,

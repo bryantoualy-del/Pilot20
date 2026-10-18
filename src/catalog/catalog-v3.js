@@ -61,7 +61,7 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       "Private content cannot be distributed",
     );
     check(i.data && i.data.ruleset === c.ruleset, "Entry ruleset");
-    if(i.source.kind==='reference') check(['xge','tce','phb14','ravenloft','volo','motm'].includes(i.data.rulesSourceId),'Referenced 2014 source');
+    if(i.source.kind==='reference') check(['xge','tce','phb14','ravenloft','volo','motm','eberron','scag','strixhaven'].includes(i.data.rulesSourceId),'Referenced 2014 source');
     const a = i.data.automation;
     keys(a, ["status", "handler", "limits"]);
     check(
@@ -137,10 +137,12 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       list(d.incompatible, "Incompatible entries");
     if (["race", "background"].includes(i.type)) {
       for (const owner of [d, ...(d.subraces ?? [])]) {
-        if(owner.source){source(owner.source);check(distribution!=='public'||owner.source.kind!=='private','Private subrace cannot be distributed');if(owner.source.kind==='reference')check(['xge','tce','phb14','ravenloft','volo','motm'].includes(owner.rulesSourceId),'Referenced subrace source');}
+        if(owner.source){source(owner.source);check(distribution!=='public'||owner.source.kind!=='private','Private subrace cannot be distributed');if(owner.source.kind==='reference')check(['xge','tce','phb14','ravenloft','volo','motm','eberron','scag','strixhaven'].includes(owner.rulesSourceId),'Referenced subrace source');}
         if(owner.flexibleAbilityBoosts!==undefined)check(owner.flexibleAbilityBoosts===true,'Flexible racial bonuses');
         if(owner.sizes)check(Array.isArray(owner.sizes)&&owner.sizes.length>0&&owner.sizes.every(s=>['small','medium'].includes(s)),'Racial size choices');
-        if(owner.movementModes){keys(owner.movementModes,['climb','swim','fly','climbMatchesWalk'],[]);for(const key of ['climb','swim','fly'])if(owner.movementModes[key]!==undefined)check(integer(owner.movementModes[key],0,200),'Racial movement');if(owner.movementModes.climbMatchesWalk!==undefined)check(typeof owner.movementModes.climbMatchesWalk==='boolean','Racial climbing policy');}
+        if(owner.movementModes){keys(owner.movementModes,['climb','swim','fly','climbMatchesWalk','flyMatchesWalk','flightArmorRestricted'],[]);for(const key of ['climb','swim','fly'])if(owner.movementModes[key]!==undefined)check(integer(owner.movementModes[key],0,200),'Racial movement');if(owner.movementModes.climbMatchesWalk!==undefined)check(typeof owner.movementModes.climbMatchesWalk==='boolean','Racial climbing policy');}
+        if(owner.naturalArmor){keys(owner.naturalArmor,['base','abilities','shieldAllowed']);check(integer(owner.naturalArmor.base,10,20)&&Array.isArray(owner.naturalArmor.abilities)&&owner.naturalArmor.abilities.every(a=>ABILITIES.includes(a))&&typeof owner.naturalArmor.shieldAllowed==='boolean','Racial armor');}
+        if(owner.armorBonus!==undefined)check(integer(owner.armorBonus,0,2),'Racial armor bonus');
         for(const t of owner.traits??[]){
           if(t.activation){keys(t.activation,['cost','target','maxTargets']);check(['none','action','bonus','reaction'].includes(t.activation.cost)&&['self','selected','none'].includes(t.activation.target)&&integer(t.activation.maxTargets,1,20),'Racial activation');}
           if(t.resource){keys(t.resource,['max','proficiency','recovery'],['recovery']);check(['short','long','none'].includes(t.resource.recovery)&&((t.resource.proficiency===true&&t.resource.max===undefined)||(t.resource.proficiency===undefined&&integer(t.resource.max,1,100))),'Racial resource');}
@@ -174,6 +176,7 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
                   "racial-spell",
                   "draconic",
                   "ancestry-option",
+                  "feat",
                 ].includes(q.kind),
               "Origin choice",
             );
