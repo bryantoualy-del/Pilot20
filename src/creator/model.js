@@ -74,6 +74,7 @@ export function buildRequest(d) {
     selections: structuredClone(d.selections),
     background: structuredClone(d.background),
     advancementHistory: structuredClone(d.advancementHistory ?? []),
+    spellbookTranscriptions: structuredClone(d.spellbookTranscriptions ?? []),
   };
 }
 export function draftProgression(context, config, d) {

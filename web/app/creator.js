@@ -1,5 +1,5 @@
-import {spellNotesFr} from '../../src/catalog/spell-notes-fr.js';
-import {spellReference,spellMatches} from '../../src/catalog/spell-reference.js';
+import {showEntryDetails} from './spell-detail.js';
+import {spellMatches} from '../../src/catalog/spell-reference.js';
 import {el,button,field,select,check,badge} from './dom.js';
 import {migrateSingleDraft,singlePath,decisionReady} from '../../src/creator/single-path.js';
 import {compileDraft,retainDecision,restoreDecision,templateScores} from '../../src/creator/model.js';
@@ -8,7 +8,6 @@ import {ABILITIES,SKILLS} from '../../src/character/contracts.js';
 import {POINT_COST,rollAbilityScores} from '../../src/catalog/origins.js';
 import {ARMORS,WEAPONS} from '../../src/catalog/equipment.js';
 import {optionName,choiceName,issueMessage} from './editor.js';
-import {spellTerms} from '../../src/catalog/localization.js';
 import {appearanceControls} from './appearance.js';
 import {raceIcon} from './race-icons.js';
 
@@ -24,22 +23,7 @@ export async function renderCreator(main,input,a) {
     await a.autosave(d);await draw(navigation);
   }
   async function go(id){d.step=id;await a.autosave(d);await draw(true);}
-  function details(entry) {
-    if(!entry)return;
-    const data=entry.data;
-    const body=el('section',{},el('h2',{},a.name(entry)));
-    if(entry.type==='spell'){
-      const terms=spellTerms(entry,a.state.locale);
-      body.append(el('dl',{class:'spell-facts'},...['level','school','castingTime','range','duration','components'].flatMap(k=>[el('dt',{},text(k)),el('dd',{},terms[k])])),
-        data.concentration?el('p',{},text('concentration')):null,data.ritual?el('p',{},text('ritual')):null);
-    }
-    const note=a.state.locale==='fr'?spellNotesFr[entry.id]:null;
-    if(note)body.append(el('p',{class:'entry-description'},note));
-    if(data.description)body.append(el('details',{open:!note},el('summary',{},w('Description complète en anglais','Full description')),el('p',{class:'entry-description'},data.description)));
-    const reference=spellReference(entry.id);
-    body.append(el('details',{},el('summary',{},w('Référence','Reference')),el('p',{},entry.source.document),reference?el('p',{},reference.references.map(r=>r.sourceId+' · p. '+r.pages.join(', ')).join(' / ')):null,reference?el('a',{href:reference.detailUrl,target:'_blank',rel:'noopener noreferrer'},w('Fiche AideDD 2014','AideDD 2014 reference')):null));
-    a.modal(body);
-  }
+  const details=entry=>showEntryDetails(entry,a);
   function choiceList(q,values,onchange,{origin=false}={}) {
     const filter=filters.get(q.id)??{query:'',page:0};filters.set(q.id,filter);
     const wrap=el('div',{'data-choice-id':q.id,class:'single-choice'}),list=el('div',{class:'single-options'}),pages=el('div',{class:'single-pages'});

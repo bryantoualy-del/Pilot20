@@ -3,7 +3,7 @@ import { check, keys, json, id, integer, source, ABILITIES } from '../character/
 const sameSet = (a, b) => a.length === b.length && a.every(v => b.includes(v));
 const key = (originId, spellId) => originId + '/' + spellId;
 const spellKinds = new Set(['spell', 'spellbook', 'prepared', 'ritual-spell', 'spell-mastery', 'signature-spell']);
-const acquisitions = new Set(['known', 'book', 'prepared-list', 'granted', 'arcanum', 'ritual', 'legacy']);
+const acquisitions = new Set(['known', 'book', 'copy', 'prepared-list', 'granted', 'arcanum', 'ritual', 'legacy']);
 const routes = new Set(['slot', 'pact', 'arcanum', 'ritual', 'origin', 'unknown']);
 const preparationModes = new Set(['none', 'daily', 'always']);
 
@@ -94,7 +94,8 @@ export function spellbookFromBuild(index, character, report, request) {
       const cls = character.classes.find(c => c.id === q.classId);
       const needsPreparation = ['cleric', 'druid', 'paladin', 'wizard'].includes(q.classId) || !!cls?.casting?.preparation;
       const acquisition = q.id.includes(':arcanum-') ? 'arcanum' : q.kind === 'spellbook' ? 'book' : q.kind === 'ritual-spell' ? 'ritual' : 'known';
-      add(spellId, q.id, q.classId, acquisition, needsPreparation && acquisition === 'book' ? 'daily' : 'none');
+      const copied=acquisition==='book'&&(request.spellbookTranscriptions??[]).some(t=>t.classId===q.classId&&t.spellId===spellId);
+      add(spellId, q.id, q.classId, copied?'copy':acquisition, needsPreparation && acquisition === 'book' ? 'daily' : 'none');
     }
   }
   for (const g of report.grantedSpells) add(g.id, g.classId + ':automatic', g.classId, 'granted', 'always');
