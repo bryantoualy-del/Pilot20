@@ -7,6 +7,8 @@ import {campaignCatalog,defaultCampaign} from '../src/campaign/sources.js';
 import {newDraft,suggestChoices,compileDraft} from '../src/creator/model.js';
 test('published catalogue and character schemas accept installed source definitions and lineage characters',async()=>{
  const ajv=new Ajv2020({strict:false});
+ ajv.addSchema(JSON.parse(await readFile(new URL('../schemas/combat-rules-v1.schema.json',import.meta.url))));
+ ajv.addSchema(JSON.parse(await readFile(new URL('../docs/session-v1.schema.json',import.meta.url))));
  const catalogue=ajv.compile(JSON.parse(await readFile(new URL('../schemas/catalog-v3.schema.json',import.meta.url))));
  for(const c of playerCatalogs)assert.equal(catalogue(c),true,c.id+': '+JSON.stringify(catalogue.errors));
  const character=ajv.compile(JSON.parse(await readFile(new URL('../schemas/contracts-v2.schema.json',import.meta.url))));
