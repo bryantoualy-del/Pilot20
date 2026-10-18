@@ -1659,3 +1659,5 @@ textarea[rows="14"] {
 .race-picker .single-races small{display:block;font-size:11px;line-height:1.3;color:var(--muted)}
 .race-picker .single-races button:disabled{opacity:.65;cursor:not-allowed}
 .race-picker>button{margin-top:12px}
+
+.class-icon{width:40px;height:40px;object-fit:contain;flex:0 0 40px;vertical-align:middle}

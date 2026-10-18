@@ -981,7 +981,7 @@ export async function renderEditor(main, d, a) {
       );
       if (cls)
         body.append(
-          el("h3", {}, classIcon(c.id) + " " + a.cls(c.id)),
+          el("h3", {}, classIcon(c.id), " ", a.cls(c.id)),
           el(
             "p",
             {},
