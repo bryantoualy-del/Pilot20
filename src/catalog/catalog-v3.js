@@ -92,9 +92,11 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       check(Array.isArray(d.restrictedSpellSchools)&&d.restrictedSpellSchools.length===2,'Subclass spell schools');
     }
     if(d.buildEffects){
-      keys(d.buildEffects,['proficiencies','attacksPerAction','resistances','minimumClassLevel','movement','scoreIncreases','hpPerClassLevel','naturalArmor','halfProficiency','defenseStyle','rangedWeaponAttackBonus','skills','immunities','heavyArmorBonus','initiativeAbility'],[]);
+      keys(d.buildEffects,['proficiencies','attacksPerAction','resistances','minimumClassLevel','movement','scoreIncreases','hpPerClassLevel','naturalArmor','halfProficiency','defenseStyle','rangedWeaponAttackBonus','skills','immunities','heavyArmorBonus','initiativeAbility','saves','skillAbilityBonuses'],[]);
       check(i.type==='feature','Build effects belong to features');
       const e=d.buildEffects;
+      if(e.saves)check(Array.isArray(e.saves)&&e.saves.every(a=>ABILITIES.includes(a)),'Feature saves');
+      if(e.skillAbilityBonuses)for(const [skill,ability]of Object.entries(e.skillAbilityBonuses))check(Object.hasOwn(SKILLS,skill)&&ABILITIES.includes(ability),'Feature skill bonus');
       if(e.initiativeAbility)check(ABILITIES.includes(e.initiativeAbility),'Initiative ability');
       if(e.skills)check(Array.isArray(e.skills)&&e.skills.every(s=>Object.hasOwn(SKILLS,s)),'Feature skills');
       if(e.immunities)list(e.immunities,'Feature immunities');
@@ -297,6 +299,8 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
               "spell-mastery",
               "signature-spell",
               "ritual-spell",
+              "training",
+              "save-proficiency",
             ].includes(q.kind),
           "Choice contract",
         );
@@ -371,6 +375,8 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
               "spell-mastery",
               "signature-spell",
               "ritual-spell",
+              "training",
+              "save-proficiency",
             ].includes(q.kind),
           "Extension choice contract",
         );
