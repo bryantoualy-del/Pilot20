@@ -9,13 +9,12 @@ import {spellMatches} from '../../src/catalog/spell-reference.js';
 import {el,button,field,select,check,badge} from './dom.js';
 import {migrateSingleDraft,singlePath,decisionReady} from '../../src/creator/single-path.js';
 import {compileDraft,retainDecision,restoreDecision,templateScores,changePrimaryClass} from '../../src/creator/model.js';
-import {raceOptions,raceSelection,selectRace} from '../../src/creator/race-selection.js';
+import {renderRacePicker} from './race-picker.js';
 import {ABILITIES,SKILLS} from '../../src/character/contracts.js';
 import {POINT_COST,rollAbilityScores} from '../../src/catalog/origins.js';
 import {ARMORS,WEAPONS} from '../../src/catalog/equipment.js';
 import {optionName,choiceName,issueMessage} from './editor.js';
 import {appearanceControls} from './appearance.js';
-import {raceIcon} from './race-icons.js';
 import {replacementOptions} from '../../src/catalog/spell-grants.js';
 
 export async function renderCreator(main,input,a) {
@@ -95,14 +94,7 @@ export async function renderCreator(main,input,a) {
         el('details',{},el('summary',{},w('Cadre de votre aventure','Adventure settings')),el('p',{},a.context.statuses.filter(s=>s.selected).map(s=>s.name).join(' · ')),button(w('Modifier les sources','Change sources'),()=>a.nav('sources'))));
     }
     if(current.kind==='race'){
-      const installed=a.context.index.list('race');
-      const choices=el('div',{class:'single-races'});
-      for(const entry of installed){const b=button([raceIcon(entry.name.fr),el('span',{},a.name(entry))],()=>update(x=>selectRace(a.context,x,entry.id,a.state.locale)),entry.id===d.raceId?'selected':'');b.setAttribute('aria-pressed',String(entry.id===d.raceId));choices.append(b);}
-      body.append(choices);
-      const manual=raceOptions(a.context,a.state.locale).filter(([id])=>id.startsWith('manual-race:'));
-      body.append(el('details',{open:!!d.manualRace},el('summary',{},w('Autres races et origine personnalisée','Other races and custom origin')),field(text('race'),select([['',w('Choisir','Choose')],...manual],raceSelection(d),e=>update(x=>selectRace(a.context,x,e.target.value,a.state.locale)))),
-        field(w('Nom de l’origine','Origin name'),el('input',{value:d.origin,onchange:e=>update(x=>{x.origin=e.target.value;x.raceId=null;x.manualRace=null;x.customOriginRequiresReview=true;})})),
-        el('p',{},w('Pour les races dont les règles restent à intégrer, les traits et bonus doivent être renseignés et vérifiés.','For races whose rules are still being integrated, traits and bonuses need to be entered and reviewed.'))));
+      body.append(renderRacePicker(d,a,update,filters));
       if(d.raceId)body.append(button(w('Traits de cette race','Race traits'),()=>details(a.context.index.get(d.raceId))));
     }
     if(current.kind==='subrace'){
