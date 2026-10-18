@@ -40,6 +40,7 @@ try{
  }
  await p.setViewportSize({width:390,height:844});await next();
  await changed(()=>p.locator('.single-classes').getByRole('button',{name:'Guerrier',exact:true}).click());
+ await p.waitForFunction(()=>document.querySelectorAll('.single-classes img.class-icon').length===13&&[...document.querySelectorAll('.single-classes img.class-icon')].every(img=>img.complete&&img.naturalWidth>0));
  assert.equal(await p.locator('.single-classes button').count(),13);assert.equal(await p.locator('.single-classes').getByRole('button',{name:'Guerrier',exact:true}).getAttribute('aria-pressed'),'true');
  for(const size of [{width:375,height:667},{width:390,height:844},{width:1180,height:820},{width:820,height:1180}]){await p.setViewportSize(size);await p.screenshot({path:`docs/screenshots/work4/classes-${size.width}x${size.height}.png`,fullPage:true});const m=await p.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,classes:[...document.querySelectorAll('.single-classes button')].map(b=>({width:b.getBoundingClientRect().width,height:b.getBoundingClientRect().height}))}));assert.ok(m.scrollWidth<=m.width);assert.ok(m.classes.every(b=>b.width>=44&&b.height>=44));metrics.push(m);}
  await p.setViewportSize({width:390,height:844});await next();
