@@ -1,3 +1,4 @@
+import {renderGrimoire} from "./grimoire.js";
 import { localizedName } from "../../src/catalog/localization.js";
 import { stepNames } from "./i18n.js";
 import { openIndexedDB } from "../../src/persistence/adapters.js";
@@ -133,7 +134,7 @@ async function nav(route, id = null) {
   await saveQueue;
   state.route = route;
   state.id = id;
-  if (id && ["creator", "companion"].includes(route)) {
+  if (id && ["creator", "companion", "grimoire"].includes(route)) {
     const d = await drafts.get(id);
     if (d) {
       state.campaignId = d.campaignId;
@@ -305,6 +306,7 @@ async function render() {
       await renderEditor(main, d, api());
     } else await nav("library");
   }
+  if (state.route === "grimoire") await renderGrimoire(main, state.id, api());
   if (state.route === "companion") await renderCompanion(main, state.id, api());
   updateOffline();
 }
@@ -487,7 +489,8 @@ async function libraryScreen(main, all) {
         el(
           "div",
           { class: "row" },
-          button(t("open"), () => nav("companion", c.id), "primary"),
+          button(state.locale === "fr" ? "Grimoire" : "Spellbook", () => nav("grimoire", c.id), "primary"),
+          button(t("open"), () => nav("companion", c.id)),
           button(t("edit"), () =>
             d ? nav("creator", c.id) : notice(t("noPlan")),
           ),

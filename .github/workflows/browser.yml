@@ -16,10 +16,15 @@ jobs:
       - run: npm run build:web
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
+        with:
+          name: pilot20-work4-local-build
+          path: dist/
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: creator-browser-evidence
           path: |
+            artifacts/e2e-work4-grimoire-results.json
             artifacts/e2e-work4-creator-results.json
             artifacts/e2e-results.json
             artifacts/e2e-v031-results.json
