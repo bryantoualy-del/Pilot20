@@ -8,4 +8,6 @@ Les capacités conditionnelles restent expliquées et disponibles comme définit
 
 Le moteur de tests navigateur est sélectionnable par `PILOT20_E2E_BROWSER=chromium|webkit`. La CI exécute désormais les deux moteurs, avec captures, exports et vérifications hors ligne séparés. WebKit Linux n’est pas une validation Safari sur iPhone/iPad physique.
 
+Le premier essai WebKit a atteint le test hors ligne puis rencontré le bogue d’émulation Playwright42775 (https://github.com/microsoft/playwright/issues/42775). Le test WebKit coupe désormais réellement le serveur d’origine au lieu d’utiliser `context.setOffline` : le rechargement ne peut réussir que grâce au cache de l’application. Ce contrôle n’est pas supprimé ni marqué artificiellement réussi.
+
 Tests : `tests/extended-subclasses.test.js` vérifie acquisitions, récupération, listes étendues, bonus de maîtrise multiclassé et désactivation de source sans perte de choix. La suite navigateur utilise désormais un barde de la séduction et un occultiste Magelame. Les résultats CI doivent être contrôlés sur chaque révision.

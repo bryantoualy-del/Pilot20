@@ -3,7 +3,8 @@ import {chromium,webkit} from 'playwright';
 import {spawn} from 'node:child_process';
 import {mkdir,writeFile} from 'node:fs/promises';
 const port=Number(process.env.PILOT20_E2E_PORT??4180),url=`http://127.0.0.1:${port}/web/index.html`;
-const server=spawn(process.execPath,['scripts/serve-web.mjs'],{env:{...process.env,PORT:String(port)},stdio:'pipe'});
+const startServer=()=>spawn(process.execPath,['scripts/serve-web.mjs'],{env:{...process.env,PORT:String(port)},stdio:'pipe'});
+let server=startServer();
 let browser;const results=[],errors=[],metrics=[];
 try{
  await new Promise((resolve,reject)=>{server.stdout.once('data',resolve);server.once('error',reject);server.once('exit',code=>reject(Error('server '+code)));});
@@ -56,8 +57,12 @@ try{
  const counter=await p.locator('.grimoire-status').textContent();await search('unmatchable search');assert.equal(await p.locator('.grimoire-status').textContent(),counter);results.push('Cleric domain spells stay always prepared outside the editable quota; search does not change counters');
  await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();await p.reload();await open('wizard');const reopened=await read('wizard');assert.deepEqual(reopened.spellbook,after.spellbook);results.push('Library reopening retains the exact spellbook and preparation metadata');
  await p.waitForFunction(()=>navigator.serviceWorker.controller!==null);
- await context.setOffline(true);await p.reload();await p.locator('header').waitFor();await open('wizard');
- assert.deepEqual((await read('wizard')).spellbook,after.spellbook);await context.setOffline(false);results.push('The saved wizard Grimoire reopens offline with its exact preparation');
+ // WebKit offline emulation bug #42775: interrupt the actual origin server instead.
+ if(engine===webkit)await new Promise(resolve=>{server.once('exit',resolve);server.kill();});else await context.setOffline(true);
+ await p.reload();await p.locator('header').waitFor();await open('wizard');
+ assert.deepEqual((await read('wizard')).spellbook,after.spellbook);
+ if(engine===webkit){server=startServer();await new Promise((resolve,reject)=>{server.stdout.once('data',resolve);server.once('error',reject);});}else await context.setOffline(false);
+ results.push('The saved wizard Grimoire reopens offline with its exact preparation');
  await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();
  const exportCard=p.locator('article').filter({has:p.getByRole('heading',{name:'Grimoire wizard',exact:true})});
  await exportCard.locator('summary').click();const downloadEvent=p.waitForEvent('download');await exportCard.getByRole('button',{name:'Exporter',exact:true}).click();

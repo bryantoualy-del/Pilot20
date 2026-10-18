@@ -78,7 +78,11 @@ try{
  assert.ok(await p.locator('.single-options input').count());results.push('Legacy expert Bard10 migrates without data loss and exposes real Magical Secrets10 decisions');
  // The packaging cache must complete before the offline proof.
  await p.waitForFunction(()=>document.querySelector('#offline-state')?.textContent.toLowerCase().includes('disponible hors ligne'),null,{timeout:30000});
- await context.setOffline(true);await p.reload();await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();await context.setOffline(false);
+ await p.waitForFunction(()=>navigator.serviceWorker.controller!==null);
+ // Playwright #42775: WebKit's offline emulation rejects even SW literal responses.
+ // Stop the actual origin server instead, so this still proves a real network outage.
+ if(engine===webkit)await new Promise(resolve=>{server.once('exit',resolve);server.kill();});else await context.setOffline(true);
+ await p.reload();await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();if(engine!==webkit)await context.setOffline(false);
  results.push('Offline reload opens the local library after the precache reports ready');
  assert.deepEqual(errors,[]);await context.close();
 }finally{
