@@ -10,6 +10,8 @@ Les tests à haut niveau ont montré que plusieurs capacités SRD étaient prés
 - Un style déjà acquis par une autre classe est exclu des choix proposés. Une ancienne sélection incompatible reste conservée et signalée.
 - Un second niveau initial dans une autre classe ne permet pas d’acquérir à nouveau Défense sans armure ; la première acquisition est retenue.
 
+L’ancêtre draconique et le terrain du Cercle de la terre sont conditionnés à leurs sous-classes respectives. Un ensorceleur de Tasha ne reçoit plus un choix draconique sans rapport avec son origine. Les couleurs draconiques disposent du type de dégâts associé ; le draconique est connu par la lignée, sans résistance permanente gratuite.
+
 Les effets restent rattachés à leurs identifiants et leur provenance SRD. Les conditions d’armure et le caractère d’arme à distance sont déclaratifs dans les contrats. Les champs ajoutés sont facultatifs pour la lecture des anciennes données. Les fiches anciennes qui n’intégraient pas ces bonus doivent être revues dans le Créateur avant de modifier leur Grimoire ; elles ne sont pas écrasées depuis un brouillon devenu différent.
 
 Des résumés français originaux sont fournis pour ces capacités ; leurs descriptions anglaises SRD sont conservées pour l’interface anglaise.

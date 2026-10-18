@@ -15,3 +15,6 @@ export const CORE_FRENCH={
  ...Object.fromEntries(['fighter','paladin','ranger'].map(cls=>['srd51:'+cls+':defense',['Défense','Votre CA augmente de1 lorsque vous portez une armure. Un bouclier seul ne suffit pas.'] ])),
  ...Object.fromEntries(['fighter','ranger'].map(cls=>['srd51:'+cls+':archery',['Archerie','Vous gagnez+2 aux jets d’attaque effectués avec des armes à distance. Ce bonus ne s’ajoute pas aux dégâts et ne transforme pas une arme de mêlée lancée en arme à distance.'] ])),
 };
+export const DRAGON_ANCESTRY=[['black','Noir','acid','acide'],['blue','Bleu','lightning','foudre'],['brass','Airain','fire','feu'],['bronze','Bronze','lightning','foudre'],['copper','Cuivre','acid','acide'],['gold','Or','fire','feu'],['green','Vert','poison','poison'],['red','Rouge','fire','feu'],['silver','Argent','cold','froid'],['white','Blanc','cold','froid']];
+CORE_BUILD_EFFECTS['srd51:draconic-bloodline:dragon-ancestor']={proficiencies:['language:draconic']};
+CORE_FRENCH['srd51:draconic-bloodline:dragon-ancestor']=['Ancêtre draconique','Choisissez votre dragon ancestral et son type de dégâts. Vous connaissez le draconique. Lors d’un test de Charisme avec des dragons, doublez la maîtrise si ce test en bénéficie déjà. Le choix ne vous accorde pas de résistance permanente.'];

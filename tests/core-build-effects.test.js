@@ -39,3 +39,7 @@ test('a Bard Counterspell check includes Jack of All Trades without changing its
  const d=input('bard',10);d.classes[0].subclassId='xge:bard:glamour';d.selections['bard:magical-secrets-10']=['srd51:counterspell','srd51:fireball'];const{r}=build(d);
  const reaction=r.character.reactiveRules.find(rule=>rule.id==='counterspell');assert.ok(reaction);const effect=reaction.options.flatMap(o=>o.effects).find(e=>e.kind==='counter');assert.equal(effect.bonus,modifier(r.character.scores.cha)+Math.floor(r.stats.proficiency/2));
 });
+test('draconic ancestry is conditional, identifies cold ancestors and grants its language without a free resistance',()=>{
+ for(const sub of ['tce:sorcerer:aberrant-mind','tce:sorcerer:clockwork-soul']){const d=input('sorcerer',10);d.classes[0].subclassId=sub;const{r}=build(d);assert.equal(r.choices.some(q=>q.id==='sorcerer:dragon-ancestor'),false);assert.equal(r.character.features.some(id=>id.startsWith('srd51:sorcerer:')&&ctx.index.get(id)?.data.optionKind==='dragon-ancestor'),false);}
+ const d=input('sorcerer',6);d.selections['sorcerer:dragon-ancestor']=['srd51:sorcerer:white'];const{r}=build(d);assert.equal(ctx.index.get('srd51:sorcerer:white').data.dragonDamageType,'cold');assert.ok(r.character.features.includes('srd51:sorcerer:white'));assert.ok(r.character.proficiencies.includes('language:draconic'));assert.equal(r.character.defenses.resistances.includes('cold'),false);assert.ok(!r.origin.choices.filter(q=>q.kind==='language').some(q=>q.options.includes('draconic')));
+});

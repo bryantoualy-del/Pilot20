@@ -205,6 +205,8 @@ export function resolveOrigins(index, request) {
     if (kind === "language") languages.add(value);
   };
   const policy = originCustomizationPolicy(index);
+  const classLanguages=new Set();
+  for(const c of request.classes??[])for(const row of [...(index.class(c.id)?.data.grants??[]),...(index.get(c.subclassId)?.data.grants??[])])if(row.level<=c.level)for(const fid of row.featureIds)for(const value of index.get(fid)?.data.buildEffects?.proficiencies??[])if(value.startsWith('language:'))classLanguages.add(value.slice(9));
   const classTools=new Set((request.classes??[]).flatMap((c,i)=>index.class(c.id)?.data[i===0?'initialProficiencies':'multiclassProficiencies']??[]).map(canonicalProficiency));
   for(const c of request.classes??[])for(const q of [...(index.class(c.id)?.data.choices??[]),...(index.get(c.subclassId)?.data.choices??[])])if(q.kind==='proficiency'&&q.level<=c.level)for(const v of request.selections?.[c.id+':'+q.key]??[])if(q.options.includes(v))classTools.add(canonicalProficiency(v));
   let selectedSize=race?.data.size??'medium';
@@ -305,7 +307,7 @@ export function resolveOrigins(index, request) {
           key: "replace-language-" + v,
           kind: "language",
           count: 1,
-          options: LANGUAGES.filter((k) => !languages.has(k)),
+          options: LANGUAGES.filter((k) => !languages.has(k)&&!classLanguages.has(k)),
         })[0];
       if (value) grant(entry, "language", value);
     }
@@ -320,7 +322,7 @@ export function resolveOrigins(index, request) {
           )
           .map((s) => s.id);
       if (spec.kind === "language")
-        options = options.filter((k) => !languages.has(k));
+        options = options.filter((k) => !languages.has(k)&&!classLanguages.has(k));
       if(spec.kind==='proficiency')options=options.filter(v=>![...proficiencies].some(p=>canonicalProficiency(p)===canonicalProficiency(v))&&!classTools.has(canonicalProficiency(v)));
       if (spec.kind === "skill")
         options = options.filter((k) => !grantedSkills.has(k));
