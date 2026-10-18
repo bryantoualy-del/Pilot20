@@ -1,3 +1,4 @@
+import {inventoryControls} from './inventory.js';
 import {beginAdvancement,cancelAdvancement} from '../../src/creator/advancement.js';
 import {sameDefinition} from '../../src/creator/revision.js';
 import {classIcon} from './class-icons.js';
@@ -27,7 +28,7 @@ export async function renderCreator(main,input,a) {
   const filters=new Map();
   const swaps=new Map();
   const text=key=>a.t(key);
-  const label=decision=>({identity:w('Votre personnage','Your character'),race:w('Choisissez votre race','Choose your race'),subrace:text('subrace'),class:w('Classe et niveau','Class and level'),background:text('background'),scores:text('scores'),'hit-points':w('Points de vie','Hit points'),equipment:text('equipment'),summary:w('Votre personnage est-il prêt ?','Is your character ready?')})[decision.kind]??(decision.kind==='origin-choice'?w('Un choix de votre origine','An origin choice'):decision.kind==='equipment-choice'?decision.choice.label[a.state.locale]:choiceName(decision.choice,a));
+  const label=decision=>({identity:w('Votre personnage','Your character'),race:w('Choisissez votre race','Choose your race'),subrace:text('subrace'),class:w('Classe et niveau','Class and level'),background:text('background'),scores:text('scores'),'hit-points':w('Points de vie','Hit points'),'equipment-method':w('Votre équipement de départ','Your starting equipment'),equipment:text('equipment'),summary:w('Votre personnage est-il prêt ?','Is your character ready?')})[decision.kind]??(decision.kind==='origin-choice'?w('Un choix de votre origine','An origin choice'):decision.kind==='equipment-choice'?decision.choice.label[a.state.locale]:choiceName(decision.choice,a));
   async function update(fn,{navigation=false}={}) {
     d.finalized=false;d.status='draft';d.confirmed=false;d.reviewed=false;fn(d);
     await a.autosave(d);await draw(navigation);
@@ -157,11 +158,12 @@ export async function renderCreator(main,input,a) {
       if(q.id==='ranger:beast-companion'&&values.includes('phb14:ranger:companion:other'))body.append(field(w('Nom de la bête, FP et référence du profil','Beast name, CR and profile reference'),el('textarea',{value:d.companionNotes??'',maxlength:3000,onchange:e=>update(x=>{x.companionNotes=e.target.value;})})));
       if(q.id===q.classId+':known-spells'){const exchanges=originSpellExchanges(q.classId);if(exchanges)body.append(exchanges);}
     }
+    if(current.kind==='equipment-method')body.append(el('p',{},w('Choisissez le matériel de classe et d’historique, ou la richesse initiale pour acheter votre matériel. Les choix de chaque méthode restent conservés.','Choose class and background equipment, or starting wealth to buy your gear. Each method retains its choices.')),field(w('Méthode','Method'),select([['kit',w('Matériel de classe et d’historique','Class and background equipment')],['wealth',w('Richesse initiale et achats','Starting wealth and purchases')]],d.equipmentMethod??'kit',e=>update(x=>{x.equipmentMethod=e.target.value;}))));
     if(current.kind==='equipment-choice'){
       const q=current.choice,selected=d.startingEquipmentChoices?.[q.id]?.[0];
       body.append(el('div',{class:'single-options'},q.options.map(o=>el('div',{class:'single-option'+(o.id===selected?' selected':'')},el('label',{},el('input',{type:'radio',name:q.id,checked:o.id===selected,'aria-label':o.name[a.state.locale],onchange:()=>update(x=>{x.startingEquipmentChoices??={};x.startingEquipmentChoices[q.id]=[o.id];})}),el('span',{},o.name[a.state.locale]))))));
     }
-    if(current.kind==='equipment'&&d.startingEquipmentEnabled===true){
+    if(current.kind==='equipment'&&d.startingEquipmentEnabled===true&&d.equipmentMethod!=='wealth'){
       body.append(el('p',{},w('Votre matériel de départ, en complément de celui de votre historique.','Your starting kit, in addition to your background equipment.')),
         el('ul',{},(report.startingEquipment?.items??[]).map(i=>el('li',{},i.quantity+' × '+i.name[a.state.locale]))),
         el('details',{},el('summary',{},w('Équipement de l’historique','Background equipment')),(report.origin?.equipment??[]).map(i=>el('p',{},i.name[a.state.locale]))),
@@ -170,8 +172,9 @@ export async function renderCreator(main,input,a) {
     if(current.kind==='equipment'&&d.startingEquipmentEnabled!==true){
       body.append(field(text('armor'),select(Object.entries(ARMORS).map(([id,v])=>[id,v.name[a.state.locale]]).concat([['none',text('unarmored')]]),d.equipment,e=>update(x=>{x.equipment=e.target.value;}))),check(text('shield'),d.shield,e=>update(x=>{x.shield=e.target.checked;})),
         el('details',{},el('summary',{},text('weapons')),Object.entries(WEAPONS).map(([id,item])=>check(item.name[a.state.locale],d.weapons?.includes(id)??false,e=>update(x=>{x.weapons=e.target.checked?[...(x.weapons??[]),id]:(x.weapons??[]).filter(v=>v!==id);})))),
-        el('p',{},w('Les alternatives complètes d’équipement de départ sont encore en cours d’intégration.','Complete starting-equipment alternatives are still being integrated.')));
+        el('p',{},w('Ancienne fiche : ces sélections d’équipement sont conservées. Le matériel supplémentaire peut être ajouté ci-dessous.','Legacy sheet: existing equipment choices are retained. Additional equipment can be added below.')));
     }
+    if(current.kind==='equipment'){body.append(inventoryControls(d,a,update));const built=compileDraft(a.context,a.config,{...d,confirmed:true,reviewed:true});if(built.character||built.equipmentPreview)body.append(el('details',{},el('summary',{},w('Porter ou ranger le matériel','Equip or stow equipment')),(built.equipmentPreview??built.character.equipment).filter(e=>['armor','shield','weapon'].includes(e.kind)).map(e=>check(e.name?.[a.state.locale]??e.id,e.equipped,event=>update(x=>{x.unequippedItems=event.target.checked?(x.unequippedItems??[]).filter(id=>id!==e.id):[...new Set([...(x.unequippedItems??[]),e.id])];})))));} 
     if(current.kind==='summary'){
       const compiled=compileDraft(a.context,a.config,{...d,confirmed:true});
       body.append(el('p',{},d.classes.map(c=>a.cls(c.id)+' '+c.level).join(' / ')));

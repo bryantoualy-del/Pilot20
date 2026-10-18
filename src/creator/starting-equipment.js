@@ -1,3 +1,4 @@
+import {backgroundKit} from './background-equipment.js';
 import {ARMORS,WEAPONS,SRD_SOURCE,weaponProfile} from '../catalog/equipment.js';
 import {check} from '../character/contracts.js';
 const name=(fr,en)=>({fr,en});
@@ -18,7 +19,7 @@ const simple=weapons('simple'),simpleMelee=weapons('simple',true),martial=weapon
 const item=(id,quantity=1)=>({id,quantity});
 /** Rules describe the first class only. Later multiclass levels grant no starting kit. */
 export function startingEquipment(draft,proficiencies=[]){
- if(draft.startingEquipmentEnabled!==true)return {choices:[],items:[],issues:[],valid:true};
+ if(draft.equipmentMethod==='wealth'||draft.startingEquipmentEnabled!==true)return {choices:[],items:[],issues:[],valid:true};
  const cls=draft.classes[0].id,selected=draft.startingEquipmentChoices??{},choices=[],items=[],issues=[];
  const fixed=(...ids)=>items.push(...ids.map(v=>typeof v==='string'?item(v):v));
  const choose=(key,fr,en,options)=>{
@@ -67,14 +68,22 @@ export function startingEquipment(draft,proficiencies=[]){
  }else if(cls==='artificer'){
   choose('simple-1','Première arme courante','First simple weapon',simple);choose('simple-2','Seconde arme courante','Second simple weapon',simple);choose('armor','Votre armure','Your armor',['studded','scale']);fixed('light-crossbow',item('bolts',20),'thieves-tools','dungeoneer-pack');
  }else issues.push({code:'starting-equipment-class',id:cls});
+ if(draft.startingEquipmentVersion>=2){
+  for(const [generic,key,fr,en,options]of [
+   ['arcane-focus','arcane-focus-type','Votre focaliseur arcanique','Your arcane focus',[['crystal','Cristal','Crystal'],['orb','Orbe','Orb'],['rod','Sceptre','Rod'],['staff','Bâton','Staff'],['wand','Baguette','Wand']]],
+   ['druidic-focus','druidic-focus-type','Votre focaliseur druidique','Your druidic focus',[['mistletoe','Brin de gui','Sprig of mistletoe'],['totem','Totem','Totem'],['staff','Bâton','Staff'],['yew-wand','Baguette d’if','Yew wand']]],
+   ['holy-symbol','holy-symbol-type','Votre symbole sacré','Your holy symbol',[['amulet','Amulette','Amulet'],['emblem','Emblème','Emblem'],['reliquary','Reliquaire','Reliquary']]]
+  ])if(items.some(i=>i.id===generic)){const choice=choose(key,fr,en,options.map(([id,fr,en])=>({id,name:name(fr,en),items:[]})));if(choice){const entry=items.find(i=>i.id===generic);entry.name=name(gearName(generic).fr+' — '+options.find(o=>o[0]===choice)[1],gearName(generic).en+' — '+options.find(o=>o[0]===choice)[2]);if(choice==='staff')entry.weaponId='quarterstaff';}}
+ }
+ const backgroundItems=draft.startingEquipmentVersion>=2?backgroundKit(draft,choose,gearName):null;
  const totals=new Map();for(const v of items){check(gearName(v.id),'Unknown starting item');totals.set(v.id,(totals.get(v.id)??0)+v.quantity);}
- return {choices,items:[...totals].map(([id,quantity])=>({id,quantity,name:gearName(id)})),issues,valid:issues.length===0};
+ return {choices,backgroundItems,items:[...totals].map(([id,quantity])=>({id,quantity,name:items.find(i=>i.id===id)?.name??gearName(id),...(items.find(i=>i.id===id)?.weaponId?{weaponId:items.find(i=>i.id===id).weaponId}:{})})),issues,valid:issues.length===0};
 }
 export function compileStartingEquipment(draft,character){
  const report=startingEquipment(draft,character.proficiencies);check(report.valid,'Incomplete starting equipment');
  const source=draft.classes[0].id==='artificer'?{kind:'reference',document:'Chaudron des merveilles de Tasha — équipement de départ',license:'Pilot20-original-summary',url:'https://www.dndbeyond.com/sources/dnd/tcoe'}:SRD_SOURCE;
- return report.items.map(({id,quantity,name})=>{
-  const shield=['shield','wooden-shield'].includes(id),armor=ARMORS[id]?.profile??(shield?{base:2,dexCap:0,bonus:0,minStrength:0,heavy:false}:null),weapon=weaponProfile(id,character.scores,character.proficiencies);
+ return report.items.map(({id,quantity,name,weaponId})=>{
+  const shield=['shield','wooden-shield'].includes(id),armor=ARMORS[id]?.profile??(shield?{base:2,dexCap:0,bonus:0,minStrength:0,heavy:false}:null),weapon=weaponProfile(weaponId??id,character.scores,character.proficiencies);
   return {id:'starting:'+draft.classes[0].id+':'+id,quantity,name,kind:weapon?'weapon':shield?'shield':armor?'armor':'item',equipped:!!(weapon||armor),armor:armor?structuredClone(armor):null,weapon,source};
  });
 }

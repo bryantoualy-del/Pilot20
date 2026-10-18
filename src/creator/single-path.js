@@ -18,6 +18,7 @@ export function singlePath(context,config,draft) {
   decisions.push(...(report.origin?.choices??[]).map(q=>({id:'origin:'+q.id,kind:'origin-choice',choice:q})));
   const priority={skill:0,proficiency:1,subclass:2,asi:3,feature:4,expertise:5,spellbook:7,spell:8,prepared:9};
   decisions.push(...[...(report.choices??[])].sort((a,b)=>a.level-b.level||(priority[a.kind]??6)-(priority[b.kind]??6)||a.id.localeCompare(b.id)).map(q=>({id:'choice:'+q.id,kind:'class-choice',choice:q})));
+  if(draft.startingEquipmentEnabled===true)decisions.push({id:'equipment-method',kind:'equipment-method'});
   decisions.push(...(report.startingEquipment?.choices??[]).map(q=>({id:'equipment:'+q.id,kind:'equipment-choice',choice:q})));
   decisions.push({id:'equipment',kind:'equipment'},{id:'summary',kind:'summary'});
   const current=decisions.find(x=>x.id===draft.step)??decisions[0];
@@ -38,6 +39,7 @@ export function decisionReady(decision,report,draft) {
     case 'background':return !!draft.backgroundId||!!draft.background.name.trim()&&draft.background.skills.length===2;
     case 'scores':return !report.issues.some(i=>/score-method|origin-score-cap|asi-cap/.test(i.code));
     case 'hit-points':return report.hitPoints?.valid===true;
+    case 'equipment':return report.economy?.valid!==false;
     case 'summary':return report.valid;
     default:return true;
   }
