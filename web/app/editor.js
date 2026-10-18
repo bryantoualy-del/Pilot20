@@ -60,6 +60,10 @@ const colors = {
   wizard: "#7fadd1",
 };
 const choiceTitles = {
+  'storm-environment':['Environnement de tempête','Storm environment'],
+  'divine-fury-type':['Dégâts de Fureur divine','Divine Fury damage'],
+  'primal-knowledge-3':['Savoir primal · 3','Primal Knowledge · 3'],
+  'primal-knowledge-10':['Savoir primal · 10','Primal Knowledge · 10'],
   skills: ["Compétences", "Skills"],
   instruments: ["Instruments", "Instruments"],
   tool: ["Outil", "Tool"],

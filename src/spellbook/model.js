@@ -113,8 +113,8 @@ export function spellbookFromBuild(index, character, report, request) {
   }
   for (const spell of report.origin?.spells ?? []) {
     // The legacy origin report does not distinguish every racial owner: keep that limitation explicit.
-    const originId = character.ancestry.subraceId ?? character.ancestry.id;
-    add(spell.id, originId, null, 'granted', 'always', spell);
+    const originId = spell.ownerId??character.ancestry.subraceId ?? character.ancestry.id;
+    const g=add(spell.id, originId, null, 'granted', 'always', spell);if(spell.featureOwnerId)g.acquiredAt.classLevel=spell.level;
   }
   if (book.grants.some(g => g.acquisition !== 'legacy' && g.acquiredAt.characterLevel === null)) book.unresolved.push('acquisition-history-not-recorded');
   book.preparedGrantIds = [...new Set(book.preparedGrantIds)];

@@ -217,7 +217,7 @@ export function resolveProgression(index, request) {
           .filter((id) => index.get(id).data.level >= minimumLevel),
       ]),
     ];
-    for (const r of [...(d.resources ?? []), ...(sub?.data.resources ?? [])]) {
+    for (const r of [...(d.resources ?? []).map(r=>({...r,ownerId:entry.id})), ...(sub?.data.resources ?? []).map(r=>({...r,ownerId:sub.id}))]) {
       if (suppressedResources.has(c.id + ":" + r.id)) continue;
       let n = r.maxByLevel[L - 1];
       if (n && typeof n === "object")
@@ -231,6 +231,7 @@ export function resolveProgression(index, request) {
         recovery: L >= (r.shortRestFromLevel ?? 21) ? "short" : r.recovery,
         unlimited: n === null,
         classId: c.id,
+        ownerId:r.ownerId,
         ...(r.recharge ? { recharge: r.recharge } : {}),
       });
     }
@@ -561,8 +562,7 @@ export function resolveProgression(index, request) {
       let n = r.maxByLevel[c.level - 1];
       if (n && typeof n === "object")
         n =
-          Math.max(n.minimum, modifier(adjustedScores[n.ability])) +
-          (n.add ?? 0);
+          Math.max(n.minimum,n.proficiency?2+Math.floor((classes.reduce((s,c)=>s+c.level,0)-1)/4):modifier(adjustedScores[n.ability]))*(n.multiplier??1)+(n.add??0);
       if (n !== 0)
         resources.push({
           id: c.id + ":" + r.id,
@@ -570,6 +570,7 @@ export function resolveProgression(index, request) {
           recovery: r.recovery,
           unlimited: n === null,
           classId: c.id,
+          ownerId:fid,
           ...(r.recharge ? { recharge: r.recharge } : {}),
         });
     }
@@ -577,6 +578,7 @@ export function resolveProgression(index, request) {
     new Set(resources.map((r) => r.id)).size === resources.length,
     "Duplicate resolved resource",
   );
+  for(const fid of features){const feature=index.get(fid),owner=classes.find(c=>c.id===feature?.data.classId);for(const row of feature?.data.innateSpells??[])if(owner&&owner.level>=row.classLevel)for(const id of row.spellIds)origin.spells.push({id,level:row.classLevel,ability:row.ability,ownerId:fid,featureOwnerId:fid,resourceId:owner.id+':'+row.resourceId,requirements:row.requirements,source:feature.source});}
   return {
     origin,
     features: [...features],
