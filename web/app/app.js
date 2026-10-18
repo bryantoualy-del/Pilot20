@@ -264,7 +264,7 @@ async function render() {
           { class: "hero-art", "aria-hidden": "true" },
           el("div", { class: "orbit orbit-one" }),
           el("div", { class: "orbit orbit-two" }),
-          el("div", { class: "die" }, "20"),
+          el("img", { class: "hero-logo", src:"./icon.svg", alt:"" }),
           el("span", { class: "art-label" }, "ROLL YOUR STORY"),
         ),
       ),
@@ -305,7 +305,7 @@ async function render() {
 }
 async function start() {
   const d = newDraft(state.campaignId);
-  d.startingEquipmentEnabled=true;d.startingEquipmentChoices={};d.scoreMethod='standard';
+  d.startingEquipmentEnabled=true;d.startingEquipmentChoices={};d.scoreMethod='point-buy';
   await autosave(d);
   await nav("creator", d.id);
 }

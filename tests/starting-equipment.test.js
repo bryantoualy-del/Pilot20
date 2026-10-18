@@ -22,7 +22,7 @@ test('fighter alternatives change armor, weapons and derived AC without granting
  const multi=structuredClone(d);multi.classes.push({id:'rogue',level:1,subclassId:null});const kit=startingEquipment(multi,r.character.proficiencies);assert.ok(kit.choices.every(q=>q.id.startsWith('starting:fighter:')));
 });
 test('missing equipment decisions block finalization while old drafts retain their equipment exactly',()=>{
- const input=draft(),path=singlePath(ctx,config,input),q=path.decisions.find(d=>d.kind==='equipment-choice');assert.ok(q);assert.equal(decisionReady(q,path.report,input),false);
+ const input=draft(),path=singlePath(ctx,config,input),q={choice:path.report.startingEquipment.choices[0]};assert.ok(q.choice);assert.equal(decisionReady(path.decisions.find(d=>d.kind==='equipment'),path.report,input),false);
  const complete=build(input),missing=structuredClone(complete.d);delete missing.startingEquipmentChoices[q.choice.id];assert.equal(compileDraft(ctx,config,missing).valid,false);
  const legacy=structuredClone(complete.d);delete legacy.startingEquipmentEnabled;legacy.equipment='chain';legacy.shield=true;const result=compileDraft(ctx,config,legacy);assert.equal(result.valid,true);assert.ok(result.character.equipment.some(e=>e.id==='user:armor'));assert.ok(!result.character.equipment.some(e=>e.id.startsWith('starting:')));
 });

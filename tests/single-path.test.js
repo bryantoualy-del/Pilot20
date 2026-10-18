@@ -29,7 +29,7 @@ test('subrace and caster decisions adapt to the actual character and keep stable
  const before=structuredClone(d);singlePath(context,config,d);assert.deepEqual(d,before);
 });
 test('an invalid or duplicate selection never marks a decision complete',()=>{
- const d=newDraft(),p=singlePath(context,config,d),q=p.decisions.find(x=>x.choice?.kind==='skill');
+ const d=newDraft(),p=singlePath(context,config,d),training=p.decisions.find(x=>x.kind==='training'),q={kind:'class-choice',choice:training.classChoices.find(x=>x.kind==='skill')};
  d.selections[q.choice.id]=[q.choice.options[0],q.choice.options[0]];
  assert.equal(decisionReady(q,singlePath(context,config,d).report,d),false);
 });

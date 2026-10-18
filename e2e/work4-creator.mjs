@@ -53,7 +53,7 @@ try{
   assert.ok(visited++<35,'bounded fighter creation');
   const kind=await p.locator('.single-body').getAttribute('data-kind');
   assert.ok(!['choice:fighter:cantrips','choice:fighter:prepared'].includes(await p.locator('.single-body').getAttribute('data-decision-id')));
-  if(['origin-choice','class-choice','equipment-choice'].includes(kind)){
+  if(['training','origin-choice','class-choice','equipment-choice'].includes(kind)){
    if(await p.locator('.single-body').getAttribute('data-decision-id')==='choice:fighter:fighting-style')await changed(()=>p.getByRole('radio',{name:'Défense',exact:true}).check());
    let guard=0;
    while(await p.locator('.single-actions .primary').isDisabled()){

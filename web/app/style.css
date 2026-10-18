@@ -1756,3 +1756,20 @@ button.primary,.single-actions .primary{color:#191b1f}
 @media(max-width:420px){.score-table{font-size:12px}.score-table tbody th{font-size:12px}.score-stepper button{width:30px;min-height:40px}.score-stepper{gap:2px}.score-table th,.score-table td{padding:7px 2px}}
 
 .class-icon-frame{position:relative;display:block;width:40px;height:40px;flex:0 0 40px;overflow:hidden}
+
+/* Creation review: contain long localized labels without clipping content. */
+.single-body,.single-body section,.single-option,.single-option label,.feature-level{min-width:0;max-width:100%}
+.single-option label{flex:1;display:flex;align-items:center;gap:12px}
+.single-option label span{min-width:0;overflow-wrap:anywhere}
+.single-option button{flex-shrink:0}
+.single-body select{width:100%;max-width:100%;min-width:0;text-overflow:ellipsis}
+.feature-level{display:grid;grid-template-columns:90px minmax(0,1fr);gap:8px;padding:8px 0;border-bottom:1px solid var(--border)}
+.feature-level strong{align-self:center}
+.feature-level button{white-space:normal;overflow-wrap:anywhere;text-align:left;max-width:100%;margin:0}
+.entry-description{overflow-wrap:anywhere}
+.hero-logo{width:160px;height:160px;object-fit:contain;position:relative;z-index:1}
+.race-facts{margin-top:20px;padding:16px;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:6px}
+.race-facts h2{margin-top:0}.race-facts li p{font-size:14px;margin-top:4px}
+.score-table{table-layout:fixed}.score-table th:first-child{width:23%}.score-table th:nth-child(2){width:25%}.score-table th:nth-child(3){width:10%}.score-table th:nth-child(4){width:22%}
+@media(max-width:420px){.score-table tbody th{font-size:11px;overflow-wrap:anywhere}.score-stepper button{width:26px;min-width:26px}.racial-bonus{gap:3px}.racial-bonus input{width:17px;height:17px}.feature-level{grid-template-columns:65px minmax(0,1fr)}}
+.feature-buttons{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
