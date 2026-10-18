@@ -1,3 +1,4 @@
+import {invocationEligible} from './warlock-invocations.js';
 import { resolveOrigins } from "./origins.js";
 import {validateGrantReplacements,resolveSpellGrants} from './spell-grants.js';
 import {canonicalProficiency} from './proficiencies.js';
@@ -335,9 +336,7 @@ export function resolveProgression(index, request) {
           .list("feature")
           .filter(
             (f) =>
-              f.data.optionKind === "invocation" &&
-              f.data.minimumClassLevel <= L &&
-              (f.data.selectionRequires ?? []).every((k) => selected.has(k)),
+              invocationEligible(f,{classId:c.id,level:L,selections:selected,features}),
           )
           .map((f) => f.id),
         "feature",

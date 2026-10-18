@@ -119,6 +119,7 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
             d[field].every((v) => typeof v === "string" && v.length <= 2000),
           "Safe display metadata",
         );
+    if(d.selectionRequiresAny!==undefined)list(d.selectionRequiresAny,'Alternative prerequisites');
     if (d.incompatible !== undefined)
       list(d.incompatible, "Incompatible entries");
     if (["race", "background"].includes(i.type)) {
@@ -456,8 +457,7 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
         ["action", "bonus", "reaction", "none"].includes(m.economy) &&
           ["self", "selected"].includes(m.target) &&
           integer(m.maxTargets, 1, 20) &&
-          id(m.resourceId) &&
-          integer(m.amount, 1, 100),
+          (m.resourceId===null?m.amount===0:id(m.resourceId)&&integer(m.amount,1,100)),
         "Manual mechanics",
       );
       check(
@@ -572,6 +572,7 @@ export function createCatalogIndex(
             d[field].every((v) => typeof v === "string" && v.length <= 2000),
           "Safe display metadata",
         );
+    if(d.selectionRequiresAny!==undefined)list(d.selectionRequiresAny,'Alternative prerequisites');
     if (d.incompatible !== undefined)
       list(d.incompatible, "Incompatible entries");
     if (["feature", "subclass"].includes(i.type))

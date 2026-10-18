@@ -389,9 +389,9 @@ export function buildCharacter(
       const e = index.get(id);
       if (!e || !["feature", "feat"].includes(e.type)) continue;
       const m = e.data.manualMechanics,
-        resourceId = m?.resourceId ? e.data.classId + ":" + m.resourceId : null;
+        resourceId = m?.resourceId ? m.resourceId==='pact'?'pact:'+e.data.classId:e.data.classId + ":" + m.resourceId : null;
       const resource =
-        resourceId && d.resources.some((r) => r.id === resourceId)
+        resourceId && (d.resources.some((r) => r.id === resourceId)||report.slots.resources[resourceId])
           ? { id: resourceId, amount: m.amount }
           : null;
       if (resourceId && !resource)
