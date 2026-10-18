@@ -280,7 +280,7 @@ export function resolveProgression(index, request) {
       }
       if(spec.saveReplacementFor&&!index.class(classes[0].id).data.saves.includes(spec.saveReplacementFor))continue;
       let options = spec.spellList?listSpells(index,spec.spellList.classId,{minimumLevel:spec.spellList.minimumLevel,maximumLevel:spec.spellList.maximumLevel}).map(s=>s.id):spec.options;
-      if(spec.kind==='training')options=options.filter(id=>!Object.hasOwn(SKILLS,id)||!proficientSkills.has(id));
+      if(spec.kind==='training')options=options.filter(id=>!Object.hasOwn(SKILLS,id)||!proficientSkills.has(id)||(selections[c.id+':'+spec.key]??[]).includes(id));
       if(spec.replacementSpellList&&L>spec.level)options=[...new Set([...options,...listSpells(index,spec.replacementSpellList,{minimumLevel:1,maximumLevel:maxSpell}).map(s=>s.id)])];
       if(spec.bonusIfAlreadyKnown&&!(selections[c.id+':cantrips']??[]).includes(spec.bonusIfAlreadyKnown))options=[spec.bonusIfAlreadyKnown];
       if(spec.kind==='feature')options=options.filter(id=>{const key=index.get(id)?.data.uniqueRuleKey;return !key||!Object.entries(selections).filter(([choice])=>choice!==c.id+':'+spec.key).flatMap(([,values])=>values).some(other=>index.get(other)?.data.uniqueRuleKey===key);});
@@ -329,6 +329,7 @@ export function resolveProgression(index, request) {
                 entry.id)),
           ...(spec.distinctGroup ? { distinctGroup: spec.distinctGroup } : {}),
           ...(spec.replaceableKnown?{replaceableKnown:true}:{}),
+          ...(spec.mutableAtRest?{mutableAtRest:true}:{}),
           ...(spec.adjudication ? { adjudication: spec.adjudication } : {}),
         },
       );

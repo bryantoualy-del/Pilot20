@@ -92,9 +92,11 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       check(Array.isArray(d.restrictedSpellSchools)&&d.restrictedSpellSchools.length===2,'Subclass spell schools');
     }
     if(d.buildEffects){
-      keys(d.buildEffects,['proficiencies','attacksPerAction','resistances','minimumClassLevel','movement','scoreIncreases','hpPerClassLevel','naturalArmor','halfProficiency','defenseStyle','rangedWeaponAttackBonus','skills','immunities','heavyArmorBonus','initiativeAbility','saves','skillAbilityBonuses'],[]);
+      keys(d.buildEffects,['proficiencies','attacksPerAction','resistances','minimumClassLevel','movement','scoreIncreases','hpPerClassLevel','naturalArmor','halfProficiency','defenseStyle','rangedWeaponAttackBonus','skills','immunities','heavyArmorBonus','initiativeAbility','saves','skillAbilityBonuses','expertiseSkills','speedBonus','existingMovementBonus'],[]);
       check(i.type==='feature','Build effects belong to features');
       const e=d.buildEffects;
+      if(e.expertiseSkills)check(Array.isArray(e.expertiseSkills)&&e.expertiseSkills.every(k=>Object.hasOwn(SKILLS,k)),'Feature expertise');
+      for(const key of ['speedBonus','existingMovementBonus'])if(e[key]!==undefined)check(integer(e[key],0,60),'Feature speed bonus');
       if(e.saves)check(Array.isArray(e.saves)&&e.saves.every(a=>ABILITIES.includes(a)),'Feature saves');
       if(e.skillAbilityBonuses)for(const [skill,ability]of Object.entries(e.skillAbilityBonuses))check(Object.hasOwn(SKILLS,skill)&&ABILITIES.includes(ability),'Feature skill bonus');
       if(e.initiativeAbility)check(ABILITIES.includes(e.initiativeAbility),'Initiative ability');
