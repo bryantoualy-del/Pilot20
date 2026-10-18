@@ -208,7 +208,7 @@ export function resolveProgression(index, request) {
     );
     const extraSpells = [
       ...(sub?.data.extraSpells ?? []).map(r=>({...r,ownerId:sub.id})),
-      ...[...selected].flatMap((id) => {
+      ...[...new Set([...selected,...optional.filter(f=>f.data.classId===c.id).map(f=>f.id)])].flatMap((id) => {
         const d = index.get(id)?.data;
         return d?.classId === c.id ? (d.extraSpells ?? []).map(r=>({...r,ownerId:id})) : [];
       }),
@@ -594,16 +594,19 @@ export function resolveProgression(index, request) {
           ...(r.recharge ? { recharge: r.recharge } : {}),
         });
     }
+  const resourceAliases={},channels=resources.filter(r=>/^(cleric|paladin):channel$/.test(r.id));
+  if(channels.length>1){const shared=channels[0];shared.max=Math.max(...channels.map(r=>r.max));for(const row of channels){resourceAliases[row.id]=shared.id;if(row!==shared)resources.splice(resources.indexOf(row),1);}}
   check(
     new Set(resources.map((r) => r.id)).size === resources.length,
     "Duplicate resolved resource",
   );
   let unarmoredDefense=false;for(const c of classes){const id=index.class(c.id)?.data.armorRuleFeatureId;if(id&&features.has(id)){if(unarmoredDefense)features.delete(id);else unarmoredDefense=true;}}
   const uniqueRules=new Map();for(const id of features){const key=index.get(id)?.data.uniqueRuleKey;if(key){if(uniqueRules.has(key))issues.push({code:'duplicate-feature-rule',featureId:id,otherFeatureId:uniqueRules.get(key),choiceId:choices.find(q=>(effectiveSelections[q.id]??[]).includes(id))?.id});else uniqueRules.set(key,id);}}
-  for(const fid of features){const feature=index.get(fid),owner=classes.find(c=>c.id===(featResolution.featureOwners[fid]??feature?.data.classId));for(const row of feature?.data.innateSpells??[])if(owner&&(featResolution.featureOwners[fid]||owner.level>=row.classLevel))for(const id of row.spellIds)origin.spells.push({id,level:row.classLevel,ability:row.ability,ownerId:fid+(row.ritualOnly?':ritual':''),featureOwnerId:fid,...(row.resourceId?{resourceId:owner.id+':'+row.resourceId}:{}),...(row.economy?{economy:row.economy}:{}),...(row.target?{target:row.target}:{}),...(row.maxTargets?{maxTargets:row.maxTargets}:{}),...(row.resourceAmount?{resourceAmount:row.resourceAmount}:{}),...(row.ritualOnly?{ritualOnly:true}:{}),requirements:row.requirements,source:feature.source});}
+  for(const fid of features){const feature=index.get(fid),owner=classes.find(c=>c.id===(featResolution.featureOwners[fid]??feature?.data.classId));for(const row of feature?.data.innateSpells??[])if(owner&&(featResolution.featureOwners[fid]||owner.level>=row.classLevel))for(const id of row.spellIds)origin.spells.push({id,level:row.classLevel,ability:row.ability,ownerId:fid+(row.ritualOnly?':ritual':feature.data.extraSpells?.some(g=>g.mode!=='expanded'&&g.spellIds.includes(id))?':innate':''),featureOwnerId:fid,...(row.resourceId?{resourceId:owner.id+':'+row.resourceId}:{}),...(row.economy?{economy:row.economy}:{}),...(row.target?{target:row.target}:{}),...(row.maxTargets?{maxTargets:row.maxTargets}:{}),...(row.resourceAmount?{resourceAmount:row.resourceAmount}:{}),...(row.ritualOnly?{ritualOnly:true}:{}),requirements:row.requirements,source:feature.source});}
   for(const row of request.pactRitualCopies??[]){const s=index.get(row.spellId),owner=classes.find(c=>c.id==='warlock'),fid='srd51:warlock:book-of-ancient-secrets';if(!owner||!features.has(fid))continue;if(!s?.data.ritual||s.data.level<1||s.data.level>Math.ceil(owner.level/2)||!row.note?.trim())issues.push({code:'invalid-pact-ritual-copy',id:row.spellId});else origin.spells.push({id:s.id,level:owner.level,ability:'cha',ownerId:fid,ritualOnly:true,source:index.get(fid).source});}
   return {
     origin,
+    resourceAliases,
     additionalSaves:featResolution.additionalSaves,
     featureClassOverrides:featResolution.featureOwners,
     featureResourceOverrides:featResolution.featureResourceOverrides,
