@@ -1226,6 +1226,11 @@
                   }
                 },
                 "uniqueItems": true
+              },
+              "minimumCount": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 20
               }
             },
             "required": [

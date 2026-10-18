@@ -44,10 +44,11 @@ export async function renderCreator(main,input,a) {
       (d.spellGrantReplacements??[]).filter(r=>r.originId===sub.id).map(r=>el('p',{},w('Niveau ','Level ')+r.classLevel+' : '+a.name(a.context.installed.get(r.originalSpellId))+' → '+a.name(a.context.installed.get(r.spellId)))));
   }
   function choiceList(q,values,onchange,{origin=false}={}) {
+    const single=q.count===1&&q.kind!=='prepared';
     const filter=filters.get(q.id)??{query:'',page:0};filters.set(q.id,filter);
     const wrap=el('div',{'data-choice-id':q.id,class:'single-choice'}),list=el('div',{class:'single-options'}),pages=el('div',{class:'single-pages'});
     const title=q.classId?choiceName(q,a):q.label?.[a.state.locale]??q.key.replaceAll('-',' ');
-    wrap.append(el('p',{class:'single-choice-count',role:'status'},title+' · '+values.length+' / '+q.count));
+    wrap.append(el('p',{class:'single-choice-count',role:'status'},title+' · '+values.length+' / '+q.count+(q.kind==='prepared'?w(' au maximum',' maximum'):'')));
     const search=el('input',{type:'search','aria-label':w('Rechercher une option','Search options'),placeholder:w('Rechercher en français ou en anglais…','Search French or English…'),value:filter.query,oninput:e=>{filter.query=e.target.value;filter.page=0;fill();}});
     if(q.options.length>8)wrap.append(search);
     function fill(){
@@ -58,8 +59,8 @@ export async function renderCreator(main,input,a) {
       if(!options.length)list.append(el('p',{},w('Aucun résultat. Essayez un autre nom.','No results. Try another name.')));
       const others=new Set(q.kind==='skill'?[...(singlePath(a.context,a.config,d).report.origin?.background.skills??[]),...Object.entries(d.selections).filter(([id])=>id!==q.id&&id.endsWith(':skills')).flatMap(([,v])=>v)]:[]);
       for(const id of options.slice(filter.page*8,(filter.page+1)*8)){
-        const entry=a.context.index.get(id),selected=values.includes(id),disabled=!selected&&(q.count>1&&values.length>=q.count||others.has(id));
-        const input=el('input',{type:q.count===1?'radio':'checkbox',name:q.id,checked:selected,disabled,'aria-label':optionName(id,a),onchange:e=>onchange(e.target.checked?q.count===1?[id]:[...values,id]:values.filter(x=>x!==id))});
+        const entry=a.context.index.get(id),selected=values.includes(id),disabled=!selected&&(!single&&values.length>=q.count||others.has(id));
+        const input=el('input',{type:single?'radio':'checkbox',name:q.id,checked:selected,disabled,'aria-label':optionName(id,a),onchange:e=>onchange(e.target.checked?single?[id]:[...values,id]:values.filter(x=>x!==id))});
         list.append(el('div',{class:'single-option'+(selected?' selected':'')},el('label',{},input,el('span',{},optionName(id,a))),entry?button(w('Détail','Details'),()=>details(entry),'subtle'):null));
       }
       pages.replaceChildren();

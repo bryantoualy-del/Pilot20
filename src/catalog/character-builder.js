@@ -205,6 +205,7 @@ export function buildCharacter(
         id: chunkId,
         level,
         count,
+        ...(choice.kind==='prepared'&&values.length<choice.count?{minimumCount:0}:{}),
         options: choice.options,
         requires: [],
         incompatible: [],

@@ -22,7 +22,7 @@ async function fixture(cls='wizard',level=5){
 test('preparation is a staged complete set; known casters get no preparation command',async()=>{
  const f=await fixture('cleric',5),q=draftProgression(f.context,f.config,f.draft).choices.find(q=>q.kind==='prepared');
  const before=structuredClone(f.draft);
- assert.throws(()=>stagePreparation(f.context,f.config,f.draft,{classId:'cleric',spellIds:[]}));assert.deepEqual(f.draft,before);
+ assert.deepEqual(stagePreparation(f.context,f.config,f.draft,{classId:'cleric',spellIds:[]}).selections['cleric:prepared'],[]);assert.deepEqual(f.draft,before);
  const b=await fixture('bard',10);assert.equal(grimoireView(b.context,b.config,b.draft,b.record).choices.some(q=>q.kind==='prepared'),false);
  assert.throws(()=>stagePreparation(b.context,b.config,b.draft,{classId:'bard',spellIds:[]}));
  const replacement=q.options.filter(id=>!(f.draft.selections[q.id]??[]).includes(id))[0];
