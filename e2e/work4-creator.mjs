@@ -70,7 +70,7 @@ try{
   await creatorRepository(s,characterLibrary(s)).save(suggestChoices(ctx,c,d));s.close();
  });
  await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();
- const bardCard=p.locator('article').filter({has:p.getByRole('heading',{name:'Work4 Barde10',exact:true})});await bardCard.getByRole('button',{name:'Reprendre un brouillon',exact:true}).click();
+ const bardCard=p.locator('article').filter({has:p.getByRole('heading',{name:'Work4 Barde10',exact:true})});await bardCard.getByRole('button',{name:/^Reprendre/}).click();
  await p.locator('.single-body').waitFor();assert.equal((await drafts()).find(d=>d.id==='work4-legacy-bard').mode,'single');
  await p.locator('.single-plan summary').click();const secrets=p.locator('.single-plan nav button').filter({hasText:/Secrets magiques.*10/});assert.equal(await secrets.count(),1);await changed(()=>secrets.click());
  assert.equal(await p.locator('.single-body').getAttribute('data-decision-id'),'choice:bard:magical-secrets-10');
