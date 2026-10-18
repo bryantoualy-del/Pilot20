@@ -156,8 +156,8 @@ const nav = async (name) => {
     .click();
   if (name === "Sources de campagne")
     await p.locator(".source-card").first().waitFor();
-  else if (name === "Bibliothèque")
-    await p.locator("main h1").filter({ hasText: "Bibliothèque" }).waitFor();
+  else if (name === "Mes persos")
+    await p.locator("main h1").filter({ hasText: "Mes persos" }).waitFor();
   else await p.locator(".hero").waitFor();
 };
 try {
@@ -216,13 +216,13 @@ try {
   results.push(
     "Real Second Wind engine action consumed resource and healed HP",
   );
-  await nav("Bibliothèque");
+  await nav("Mes persos");
   await p
     .getByRole("heading", { name: "Aster — Guerrier 1", exact: true })
     .waitFor();
   await screenshot("desktop-library");
   await p.reload();
-  await nav("Bibliothèque");
+  await nav("Mes persos");
   await p
     .getByRole("heading", { name: "Aster — Guerrier 1", exact: true })
     .waitFor();
@@ -294,7 +294,7 @@ try {
   );
   await nav("Sources de campagne");
   await p.getByLabel("Guide complet de Xanathar", { exact: true }).uncheck();
-  await nav("Bibliothèque");
+  await nav("Mes persos");
   const privateCard = p.locator(".card").filter({
     has: p.getByRole("heading", {
       name: "Contrat privé original",
@@ -304,7 +304,7 @@ try {
   await privateCard.getByText("À vérifier", { exact: true }).waitFor();
   await nav("Sources de campagne");
   await p.getByLabel("Guide complet de Xanathar", { exact: true }).check();
-  await nav("Bibliothèque");
+  await nav("Mes persos");
   await privateCard
     .getByRole("button", { name: "Modifier", exact: true })
     .click();
@@ -314,7 +314,7 @@ try {
     "original:college",
   );
   results.push("Source off/on preserves and restores private selections");
-  await nav("Bibliothèque");
+  await nav("Mes persos");
   const card = p.locator(".card").filter({
     has: p.getByRole("heading", {
       name: "Contrat privé original",
@@ -383,7 +383,7 @@ try {
     })
     .click();
   await p.getByText(/Démonstration : vous commencez/).waitFor();
-  await nav("Bibliothèque");
+  await nav("Mes persos");
   await p
     .locator(".card")
     .filter({
@@ -403,7 +403,7 @@ try {
   results.push(
     "Fully offline character creation, final save, edit and real Companion session",
   );
-  await nav("Bibliothèque");
+  await nav("Mes persos");
   await p
     .locator(".card")
     .filter({
@@ -463,7 +463,7 @@ try {
     secondPage = await secondContext.newPage();
   await secondPage.goto(url);
   await secondPage
-    .getByRole("button", { name: "Bibliothèque", exact: true })
+    .getByRole("button", { name: "Mes persos", exact: true })
     .first()
     .click();
   await secondPage

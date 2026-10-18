@@ -245,7 +245,7 @@ try {
   await ctx.setOffline(true);
   await p.reload();
   await p
-    .getByRole("button", { name: "Bibliothèque", exact: true })
+    .getByRole("button", { name: "Mes persos", exact: true })
     .first()
     .click();
   await p

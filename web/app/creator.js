@@ -81,8 +81,8 @@ export async function renderCreator(main,input,a) {
     const plan=singlePath(a.context,a.config,d),{report,current,decisions,position}=plan;
     if(d.step!==current.id){d.step=current.id;await a.autosave(d);}
     const body=el('div',{class:'single-body','data-decision-id':current.id,'data-kind':current.kind},el('p',{class:'eyebrow'},`${position+1} / ${decisions.length} · D&D 2014`),el('h1',{tabindex:-1},label(current)));
-    const saveState=el('span',{id:'draft-save-state',role:'status'},text('saved'));
-    const header=el('div',{class:'single-heading'},el('span',{},d.name||w('Nouveau personnage','New character')),saveState,button(w('Quitter','Exit'),()=>a.nav('library')));
+    const saveState=el('span',{id:'draft-save-state',role:'status'},text(d.finalized?'saved':'draftSaved'));
+    const header=el('div',{class:'single-heading'},el('span',{},d.name||w('Nouveau personnage','New character')),saveState,button(text('saveAndExit'),async()=>{try{await a.autosave(d);await a.nav('library');}catch(e){a.fail(e);}}));
     const sectionNav=el('details',{class:'single-plan'},el('summary',{},w('Revoir une étape','Review a step')),el('nav',{'aria-label':w('Étapes de création','Creation steps')},decisions.map(decision=>{
       const b=button(label(decision),()=>go(decision.id));if(decision.id===current.id)b.setAttribute('aria-current','step');return b;
     })));
@@ -196,7 +196,7 @@ export async function renderCreator(main,input,a) {
           result.character.revision=expectedCharacterRevision===null?1:expectedCharacterRevision+1;
           d.confirmed=true;d.status=result.status;
           d.sourceReferences=[...new Set([...result.character.features.filter(id=>a.context.index.get(id)),...result.character.spells.known,...[d.raceId,d.backgroundId].filter(Boolean)])];
-          await a.autosave(d);const saved=await a.drafts.finalize(d,result.character,{expectedCharacterRevision,expectedDraftRevision:d.revision,spellbook:result.spellbook,expectedBaseDefinition});Object.assign(d,saved.draft);await a.nav('library');
+          await a.autosave(d);const saved=await a.drafts.finalize(d,result.character,{expectedCharacterRevision,expectedDraftRevision:d.revision,spellbook:result.spellbook,expectedBaseDefinition});Object.assign(d,saved.draft);await a.nav('library');a.notice(text('characterSaved'));
         }catch(e){a.fail(e);}
       },'primary');save.disabled=!compiled.valid||!!externalEdits;body.append(save);
     }

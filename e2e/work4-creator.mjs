@@ -21,7 +21,17 @@ try{
  assert.equal(await p.getByRole('button',{name:'Rapide',exact:true}).count(),0);
  assert.equal(await p.getByRole('button',{name:'Guidé',exact:true}).count(),0);
  assert.equal(await p.getByRole('button',{name:'Expert',exact:true}).count(),0);
- await changed(async()=>{await p.locator('#character-name').fill('Work4 Guerrier');await p.locator('#character-name').blur();});await next();
+ await changed(async()=>{await p.locator('#character-name').fill('Work4 Guerrier');await p.locator('#character-name').blur();});await p.getByRole('button',{name:'Enregistrer et quitter',exact:true}).click();
+ await p.getByRole('heading',{name:'Mes persos',exact:true}).waitFor();
+ await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();
+ assert.equal((await drafts())[0].finalized,false);
+ await p.reload();await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();
+ const draftCard=p.locator('article').filter({has:p.getByRole('heading',{name:'Work4 Guerrier',exact:true})});
+ await draftCard.getByRole('button',{name:/^Reprendre/}).click();await p.locator('#character-name').waitFor();
+ assert.equal(await p.locator('#character-name').inputValue(),'Work4 Guerrier');
+ assert.match(await p.locator('#draft-save-state').innerText(),/Brouillon enregistré/);
+ results.push('Save and exit lists an unfinished draft in My characters; reload and resume retain its name');
+ await next();
  await changed(()=>p.getByRole('button',{name:'Humain',exact:true}).click());
  for(const size of [{width:375,height:667},{width:390,height:844},{width:1180,height:820},{width:820,height:1180}]){
   await p.setViewportSize(size);await p.screenshot({path:`docs/screenshots/work4/race-${size.width}x${size.height}.png`,fullPage:true});
@@ -56,14 +66,25 @@ try{
  }
  await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).waitFor();
  assert.equal(await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).isEnabled(),true);
+ // Leave restrictive filters in the list before finalizing. Saving must reveal the character.
+ await p.getByRole('button',{name:'Enregistrer et quitter',exact:true}).click();
+ await p.getByRole('heading',{name:'Mes persos',exact:true}).waitFor();
+ await p.getByRole('searchbox').fill('Work4 Guerrier');
+ await p.locator('.toolbar select').selectOption('fighter');
+ await p.getByLabel('En cours',{exact:true}).check();
+ await p.locator('article').filter({has:p.getByRole('heading',{name:'Work4 Guerrier',exact:true})}).getByRole('button',{name:/^Reprendre/}).click();
  await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).click();
- await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).waitFor();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();
+ await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).waitFor();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();
+ assert.equal(await p.getByRole('searchbox').inputValue(),'');
+ assert.equal(await p.locator('.toolbar select').inputValue(),'');
+ assert.equal(await p.getByLabel('En cours',{exact:true}).isChecked(),false);
+ assert.match(await p.locator('#notice').innerText(),/Personnage enregistré dans Mes persos/);
  results.push('Fighter1 created through one route, race and skill decisions resolved, backtracking preserves scores, saved to library');
  const record=await p.evaluate(async()=>{const {openIndexedDB}=await import('/src/persistence/adapters.js');const s=await openIndexedDB();try{return(await s.list('characters'))[0].value;}finally{s.close();}});
  const armorClass=await p.evaluate(async d=>{const {derive}=await import('/src/character/derive.js');return derive(d).ac;},record.definition);assert.equal(armorClass,19);
  assert.equal(record.definition.identity.name,'Work4 Guerrier');assert.ok(record.definition.equipment.some(e=>e.id.startsWith('starting:fighter:')));assert.equal(record.definition.background,'Guild Merchant');assert.equal(record.spellbook.characterRevision,record.definition.revision);
  const savedDraft=(await drafts())[0];assert.equal(savedDraft.mode,'single');assert.equal(savedDraft.finalized,true);
- await p.reload();await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();
+ await p.reload();await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();
  await p.getByRole('button',{name:'Modifier',exact:true}).click();await p.locator('.single-body[data-kind=summary]').waitFor();
  results.push('Closing/reopening restores the saved character and its exact decision surface');
  // Seed a legacy high-level draft using the existing SRD compiler, then edit it through the real UI.
@@ -76,7 +97,7 @@ try{
   Object.assign(d,{mode:'expert',name:'Work4 Barde10',step:'features',classes:[{id:'bard',level:10,subclassId:'srd51:college-of-lore'}],raceId:'srd51:race:human',backgroundId:'srd51:background:acolyte',classChosen:true});
   await creatorRepository(s,characterLibrary(s)).save(suggestChoices(ctx,c,d));s.close();
  });
- await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();
+ await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();
  const bardCard=p.locator('article').filter({has:p.getByRole('heading',{name:'Work4 Barde10',exact:true})});await bardCard.getByRole('button',{name:/^Reprendre/}).click();
  await p.locator('.single-body').waitFor();assert.equal((await drafts()).find(d=>d.id==='work4-legacy-bard').mode,'single');
  await p.locator('.single-plan summary').click();const secrets=p.locator('.single-plan nav button').filter({hasText:/Secrets magiques.*10/});assert.equal(await secrets.count(),1);await changed(()=>secrets.click());
@@ -94,7 +115,7 @@ try{
  // Playwright #42775: WebKit's offline emulation rejects even SW literal responses.
  // Stop the actual origin server instead, so this still proves a real network outage.
  if(engine===webkit)await new Promise(resolve=>{server.once('exit',resolve);server.kill();});else await context.setOffline(true);
- await p.reload();await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();if(engine!==webkit)await context.setOffline(false);
+ await p.reload();await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();if(engine!==webkit)await context.setOffline(false);
  results.push('Offline reload opens the local library after the precache reports ready');
  assert.deepEqual(errors,[]);await context.close();
 }finally{
