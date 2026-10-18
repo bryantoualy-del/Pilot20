@@ -30,7 +30,7 @@ try{
   }
   storage.close();return out;
  });
- async function open(cls){await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();const card=p.locator('article').filter({has:p.getByRole('heading',{name:'Grimoire '+cls,exact:true})});await card.getByRole('button',{name:'Grimoire',exact:true}).click();await p.locator('.grimoire[data-character-id="grimoire-'+cls+'"]').waitFor();}
+ async function open(cls){await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();const card=p.locator('article').filter({has:p.getByRole('heading',{name:'Grimoire '+cls,exact:true})});await card.getByRole('button',{name:'Grimoire',exact:true}).click();await p.locator('.grimoire[data-character-id="grimoire-'+cls+'"]').waitFor();}
  async function search(name){await p.getByRole('searchbox',{name:'Rechercher un sort',exact:true}).fill(name);}
  async function read(cls){return p.evaluate(async id=>{const {openIndexedDB}=await import('/src/persistence/adapters.js');const s=await openIndexedDB();try{return await s.get('characters',id);}finally{s.close();}},'grimoire-'+cls);}
  async function creatorChange(action){const old=await p.locator('.single-body').elementHandle();await action();await p.waitForFunction(e=>!e.isConnected,old);await old.dispose();}
@@ -61,7 +61,7 @@ try{
  assert.equal(await p.getByRole('button',{name:'Enregistrer la préparation',exact:true}).isEnabled(),true);await p.getByRole('button',{name:'Enregistrer la préparation',exact:true}).click();
  await p.locator('.grimoire[data-character-id="grimoire-cleric"][data-character-revision="2"]').waitFor();const clericAfter=await read('cleric');assert.equal(clericAfter.definition.spells.prepared.length,clericBefore.definition.spells.prepared.length-1);assert.ok(clericAfter.definition.spells.prepared.includes(fixtures.cleric.autoId));results.push('Cleric may save fewer than the daily maximum without removing domain spells');
 
- await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();await p.reload();await open('wizard');const reopened=await read('wizard');assert.deepEqual(reopened.spellbook,after.spellbook);results.push('Library reopening retains the exact spellbook and preparation metadata');
+ await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();await p.reload();await open('wizard');const reopened=await read('wizard');assert.deepEqual(reopened.spellbook,after.spellbook);results.push('Library reopening retains the exact spellbook and preparation metadata');
  await p.waitForFunction(()=>navigator.serviceWorker.controller!==null);
  // WebKit offline emulation bug #42775: interrupt the actual origin server instead.
  if(engine===webkit)await new Promise(resolve=>{server.once('exit',resolve);server.kill();});else await context.setOffline(true);
@@ -69,13 +69,13 @@ try{
  assert.deepEqual((await read('wizard')).spellbook,after.spellbook);
  if(engine===webkit){server=startServer();await new Promise((resolve,reject)=>{server.stdout.once('data',resolve);server.once('error',reject);});}else await context.setOffline(false);
  results.push('The saved wizard Grimoire reopens offline with its exact preparation');
- await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();
+ await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();
  const exportCard=p.locator('article').filter({has:p.getByRole('heading',{name:'Grimoire wizard',exact:true})});
  await exportCard.locator('summary').click();const downloadEvent=p.waitForEvent('download');await exportCard.getByRole('button',{name:'Exporter',exact:true}).click();
  const downloaded=await downloadEvent,exportPath='artifacts/wizard-roundtrip.json';await downloaded.saveAs(exportPath);
  const importedContext=await browser.newContext({viewport:{width:390,height:844}}),importPage=await importedContext.newPage();
  importPage.on('pageerror',e=>errors.push(e.message));await importPage.goto(url);
- await importPage.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();
+ await importPage.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();
  await importPage.locator('input[type=file]').setInputFiles(exportPath);
  const importedCard=importPage.locator('article').filter({has:importPage.getByRole('heading',{name:'Grimoire wizard',exact:true})});
  await importedCard.getByRole('button',{name:'Grimoire',exact:true}).click();await importPage.locator('.grimoire[data-character-id="grimoire-wizard"]').waitFor();

@@ -399,7 +399,7 @@ try {
   record(
     "F: source off/on persisted; private feature/source preservation remains covered by the original browser suite",
   );
-  await nav("Bibliothèque");
+  await nav("Mes persos");
   await p.getByLabel("En cours", { exact: true }).check();
   assert.equal(
     await p

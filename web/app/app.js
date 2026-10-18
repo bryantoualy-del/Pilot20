@@ -113,7 +113,7 @@ function autosave(d) {
     revisions.set(d.id, snapshot.revision);
     d.revision = snapshot.revision;
     document.querySelector("#draft-save-state")?.replaceChildren(
-      t("saved") +
+      t(snapshot.finalized ? "saved" : "draftSaved") +
         " · " +
         new Date(snapshot.updatedAt).toLocaleTimeString(state.locale, {
           hour: "2-digit",
@@ -133,6 +133,12 @@ function autosave(d) {
 }
 async function nav(route, id = null) {
   await saveQueue;
+  if (route === "library") {
+    state.query = "";
+    state.filter = "";
+    state.archives = false;
+    state.inProgress = false;
+  }
   state.route = route;
   state.id = id;
   if (id && ["creator", "companion", "grimoire"].includes(route)) {

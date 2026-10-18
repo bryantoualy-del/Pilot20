@@ -9,7 +9,7 @@ try{
   s.close();return out;
  });
  await p.reload();await p.locator('header').waitFor();
- async function open(id,button='Modifier'){await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();await p.locator('article').filter({has:p.getByRole('heading',{name:id,exact:true})}).getByRole('button',{name:button,exact:true}).click();await p.locator(button==='Grimoire'?'.grimoire':'.single-body').waitFor();}
+ async function open(id,button='Modifier'){await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();await p.locator('article').filter({has:p.getByRole('heading',{name:id,exact:true})}).getByRole('button',{name:button,exact:true}).click();await p.locator(button==='Grimoire'?'.grimoire':'.single-body').waitFor();}
  async function changed(action){const old=await p.locator('.single-body').elementHandle();await action();await p.waitForFunction(e=>!e.isConnected,old);await old.dispose();}
  async function step(name){await p.locator('.single-plan summary').click();await changed(()=>p.locator('.single-plan nav').getByRole('button',{name,exact:true}).click());}
  async function read(id){return p.evaluate(async id=>{const{openIndexedDB}=await import('/src/persistence/adapters.js'),s=await openIndexedDB();try{return{record:await s.get('characters',id),draft:await s.get('meta','creator:draft:'+id)};}finally{s.close();}},id);}
