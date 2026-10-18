@@ -25,7 +25,7 @@ export function validateDraft(d) {
     "Draft header",
   );
   check(
-    ["quick", "guided", "expert"].includes(d.mode) &&
+    ["single", "quick", "guided", "expert"].includes(d.mode) &&
       typeof d.name === "string" &&
       d.name.length <= 200 &&
       Array.isArray(d.classes) &&

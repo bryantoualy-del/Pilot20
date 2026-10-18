@@ -20,6 +20,7 @@ jobs:
         with:
           name: creator-browser-evidence
           path: |
+            artifacts/e2e-work4-creator-results.json
             artifacts/e2e-results.json
             artifacts/e2e-v031-results.json
             artifacts/e2e-v032-results.json

@@ -8,7 +8,8 @@ import { validateSavedPlan } from "../../src/campaign/sources.js";
 import { frNames } from "./translations.js";
 import { messages, labels, classNames } from "./i18n.js";
 import { el, button, field, select, check, badge, download } from "./dom.js";
-import { renderEditor, newDraft } from "./editor.js";
+import { renderCreator as renderEditor } from "./creator.js";
+import { newDraft } from "../../src/creator/model.js";
 import { renderCompanion } from "./companion.js";
 const root = document.querySelector("#app"),
   dialog = document.querySelector("#dialog");
