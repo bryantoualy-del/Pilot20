@@ -1,3 +1,4 @@
+import {localizeCore} from './core-french.js';
 import {tashaOptions} from './tasha-options.js';
 import {integrateInvocationSpells} from './invocation-spells.js';
 import {feats2014} from './feats-2014.js';
@@ -67,3 +68,5 @@ for(const feature of [...playerClasses.items,...subclasses.items,...clericDomain
 for(const cls of ['fighter','paladin','ranger']){const c=playerClasses.items.find(i=>i.type==='class'&&i.data.classId===cls);for(const q of c.data.choices.filter(q=>['fighting-style','additional-style'].includes(q.key))){const keys=cls==='fighter'?['blind-fighting','interception','superior-technique','thrown-weapon-fighting','unarmed-fighting']:cls==='paladin'?['blind-fighting','interception']:['blind-fighting','thrown-weapon-fighting'];q.options.push(...keys.map(key=>'tce:fighter:'+key));if(cls==='paladin')q.options.push('tce:paladin:blessed-warrior');if(cls==='ranger')q.options.push('tce:ranger:druidic-warrior');}}
 playerClasses.items.find(i=>i.type==='class'&&i.data.classId==='sorcerer').data.choices.find(q=>q.key==='metamagic').options.push('tce:sorcerer:seeking-spell','tce:sorcerer:transmuted-spell');
 const depth=warlockInvocations.items.find(i=>i.id==='xge:warlock:gift-of-the-depths');depth.data.buildEffects={movementMatchWalk:['swim']};
+
+localizeCore(playerCatalogs);
