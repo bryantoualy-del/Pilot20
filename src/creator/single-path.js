@@ -16,7 +16,7 @@ export function singlePath(context,config,draft) {
   const decisions=[{id:'identity',kind:'identity'},{id:'race',kind:'race'}];
   if(race?.data.subraces.length)decisions.push({id:'subrace',kind:'subrace'});
   decisions.push({id:'class',kind:'class'},{id:'background',kind:'background'},{id:'scores',kind:'scores'},{id:'hit-points',kind:'hit-points'});
-  const training=q=>['skill','proficiency','language','tool','training'].includes(q.kind);
+  const training=q=>['skill','proficiency','language','tool','training'].includes(q.kind)||q.ownerId===draft.backgroundId;
   const originTraining=(report.origin?.choices??[]).filter(training);
   const classTraining=(report.choices??[]).filter(training);
   decisions.push({id:'training',kind:'training',originChoices:originTraining,classChoices:classTraining});

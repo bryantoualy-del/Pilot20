@@ -67,7 +67,7 @@ try{
   await next();
  }
  await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).waitFor();
- assert.equal(await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).isEnabled(),true);
+ assert.equal(await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).isEnabled(),true,await p.locator('.single-body').innerText());
  // Leave restrictive filters in the list before finalizing. Saving must reveal the character.
  await p.getByRole('button',{name:'Enregistrer et quitter',exact:true}).click();
  await p.getByRole('heading',{name:'Mes persos',exact:true}).waitFor();

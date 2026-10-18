@@ -24,3 +24,10 @@ test('training and equipment consolidate old steps without losing selections',()
 test('numeric spacing keeps dice and decimals intact',()=>{
  assert.equal(readableText('Votre CA augmente de1 ; à9 m,1 minute. Ajoutez2d6 et1,50 m.'),'Votre CA augmente de 1 ; à 9 m, 1 minute. Ajoutez 2d6 et 1,50 m.');
 });
+test('conditional background training stays in the same proficiency screen',()=>{
+ const d=newDraft();d.raceId='srd51:race:human';d.backgroundId='phb14:background:guild-merchant';
+ let p=singlePath(ctx,config,d);assert.ok(p.decisions.find(x=>x.kind==='training').originChoices.some(q=>q.key==='trade-training'));
+ d.originSelections['phb14:background:guild-merchant:trade-training']=['artisan'];p=singlePath(ctx,config,d);
+ const training=p.decisions.find(x=>x.kind==='training');assert.ok(training.originChoices.some(q=>q.ownerId===d.backgroundId&&q.kind==='proficiency'));
+ assert.ok(!p.decisions.some(x=>x.kind==='origin-choice'&&x.choice.ownerId===d.backgroundId));
+});
