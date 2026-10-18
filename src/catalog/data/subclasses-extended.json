@@ -334,6 +334,17 @@
           "limits": [
             "Conditional actions and combat resolution remain player/GM adjudication."
           ]
+        },
+        "manualMechanics": {
+          "economy": "bonus",
+          "target": "selected",
+          "maxTargets": 20,
+          "resourceId": "inspiration",
+          "amount": 1,
+          "requirements": [
+            "Action bonus et une Inspiration bardique : jusqu’à Charisme créatures, minimum1, visibles à18 m et pouvant vous voir reçoivent5 PV temporaires, puis peuvent utiliser leur réaction pour se déplacer sans attaque d’opportunité. PV temporaires8 au niveau5,11 au10,14 au15.",
+            "Valider les limites de cible, portée et déclenchement."
+          ]
         }
       }
     },
@@ -362,6 +373,17 @@
           "handler": null,
           "limits": [
             "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "none",
+          "target": "selected",
+          "maxTargets": 20,
+          "resourceId": "enthralling-performance",
+          "amount": 1,
+          "requirements": [
+            "Après1 minute de représentation, jusqu’à Charisme humanoïdes, minimum1, à18 m ayant assisté à toute la prestation font une sauvegarde de Sagesse contre votre DD. Sur échec, charme d’1 h sans imposer la violence ; il cesse si la cible est blessée ou vous voit nuire à ses alliés. Une utilisation par repos court ou long.",
+            "Valider les limites de cible, portée et déclenchement."
           ]
         }
       }
@@ -392,7 +414,34 @@
           "limits": [
             "Conditional actions and combat resolution remain player/GM adjudication."
           ]
-        }
+        },
+        "manualMechanics": {
+          "economy": "bonus",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "mantle-of-majesty",
+          "amount": 1,
+          "requirements": [
+            "Action bonus : injonction sans emplacement et apparence féerique maintenue par concentration1 minute. Vos actions bonus suivantes permettent une nouvelle injonction gratuite ; une cible déjà charmée par vous rate automatiquement sa sauvegarde contre ces injonctions. Une activation par repos long.",
+            "Valider les limites de cible, portée et déclenchement."
+          ],
+          "concentration": true
+        },
+        "innateSpells": [
+          {
+            "classLevel": 6,
+            "spellIds": [
+              "srd51:command"
+            ],
+            "ability": "cha",
+            "resourceId": null,
+            "economy": "bonus",
+            "target": "selected",
+            "maxTargets": 1,
+            "requiresActiveFeature": "xge:bard:glamour:mantle-of-majesty",
+            "requirements": "Seulement pendant Apparence majestueuse active et sa concentration, pendant1 min. Injonction par action bonus sans emplacement. L’usage par repos long est payé à l’activation de l’Apparence, pas à chaque Injonction."
+          }
+        ]
       }
     },
     {
@@ -420,6 +469,17 @@
           "handler": null,
           "limits": [
             "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "bonus",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "unbreakable-majesty",
+          "amount": 1,
+          "requirements": [
+            "Action bonus,1 minute. Lorsqu’une créature tente de vous attaquer pour la première fois d’un tour : sauvegarde de Charisme contre votre DD. Échec : autre cible ou attaque perdue ; réussite : elle peut attaquer mais sera désavantagée contre vos sorts pendant votre prochain tour. Une activation par repos court ou long.",
+            "Valider les limites de cible, portée et déclenchement."
           ]
         }
       }
@@ -581,7 +641,16 @@
           "limits": [
             "Conditional actions and combat resolution remain player/GM adjudication."
           ]
-        }
+        },
+        "checkRules": [
+          {
+            "skills": [
+              "persuasion",
+              "deception"
+            ],
+            "minimumD20": 10
+          }
+        ]
       }
     },
     {
@@ -609,6 +678,17 @@
           "handler": null,
           "limits": [
             "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "bonus",
+          "target": "selected",
+          "maxTargets": 1,
+          "resourceId": "inspiration",
+          "amount": 1,
+          "requirements": [
+            "Action bonus et une Inspiration bardique : une cible visible à18 m soustrait le dé à sa prochaine sauvegarde avant le début de votre prochain tour.",
+            "Valider les limites de cible, portée et déclenchement."
           ]
         }
       }
@@ -668,6 +748,21 @@
           "limits": [
             "Conditional actions and combat resolution remain player/GM adjudication."
           ]
+        },
+        "manualMechanics": {
+          "economy": "action",
+          "target": "selected",
+          "maxTargets": 20,
+          "resourceId": "universal-speech",
+          "amount": 1,
+          "requirements": [
+            "Une action permet à Charisme créatures, minimum1, à18 m de vous comprendre pendant1 h, quelle que soit la langue. Une utilisation gratuite par repos long ; un emplacement permet de recommencer.",
+            "Valider les limites de cible, portée et déclenchement."
+          ]
+        },
+        "alternateCost": {
+          "slotMinimum": 1,
+          "replacesFreeUse": true
         }
       }
     },
@@ -696,6 +791,17 @@
           "handler": null,
           "limits": [
             "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "reaction",
+          "target": "selected",
+          "maxTargets": 1,
+          "resourceId": "infectious-inspiration",
+          "amount": 1,
+          "requirements": [
+            "Réaction après la réussite d’une créature grâce à votre Inspiration : accordez sans dépense un dé à une autre créature que vous-même, qui vous entend à18 m. Charisme utilisations, minimum1, par repos long.",
+            "Valider les limites de cible, portée et déclenchement."
           ]
         }
       }
@@ -4364,6 +4470,1210 @@
           "handler": null,
           "limits": [
             "Conditional combat effects require adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:bard:valor:bonus-proficiencies",
+      "type": "feature",
+      "name": {
+        "en": "Bonus Proficiencies",
+        "fr": "Maîtrises supplémentaires"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Collège de la vaillance",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "bard",
+        "minimumClassLevel": 3,
+        "description": "Maîtrise des armures intermédiaires, boucliers et armes de guerre.",
+        "language": "fr",
+        "buildEffects": {
+          "proficiencies": [
+            "medium-armor",
+            "shields",
+            "martial-weapons"
+          ]
+        },
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:bard:valor:combat-inspiration",
+      "type": "feature",
+      "name": {
+        "en": "Combat Inspiration",
+        "fr": "Inspiration martiale"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Collège de la vaillance",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "bard",
+        "minimumClassLevel": 3,
+        "description": "Une créature portant votre dé d’Inspiration peut l’ajouter à un jet de dégâts d’arme. Après une attaque contre elle mais avant de savoir si elle touche, elle peut aussi utiliser sa réaction pour ajouter le dé à sa CA contre cette attaque. Le dé est consommé ; aucune seconde Inspiration n’est dépensée.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:bard:valor:extra-attack",
+      "type": "feature",
+      "name": {
+        "en": "Extra Attack",
+        "fr": "Attaque supplémentaire"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Collège de la vaillance",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "bard",
+        "minimumClassLevel": 6,
+        "description": "L’action Attaquer permet deux attaques au lieu d’une.",
+        "language": "fr",
+        "buildEffects": {
+          "attacksPerAction": 2
+        },
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:bard:valor:battle-magic",
+      "type": "feature",
+      "name": {
+        "en": "Battle Magic",
+        "fr": "Magie de combat"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Collège de la vaillance",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "bard",
+        "minimumClassLevel": 14,
+        "description": "Après avoir lancé un sort de barde par votre action, vous pouvez effectuer une attaque d’arme par action bonus.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "bonus",
+          "target": "selected",
+          "maxTargets": 1,
+          "resourceId": "battle-magic",
+          "amount": 1,
+          "requirements": [
+            "Après avoir lancé un sort de barde par votre action, vous pouvez effectuer une attaque d’arme par action bonus.",
+            "Valider les déclencheurs, cibles et effets particuliers."
+          ]
+        }
+      }
+    },
+    {
+      "id": "phb14:bard:valor",
+      "type": "subclass",
+      "name": {
+        "en": "College of Valor",
+        "fr": "Collège de la vaillance"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Manuel des joueurs2014 / Collège de la vaillance",
+        "license": "Pilot20-original-summary",
+        "url": "https://www.dndbeyond.com/sources/dnd/phb-2014"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "phb14",
+        "classId": "bard",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "phb14:bard:valor:bonus-proficiencies",
+              "phb14:bard:valor:combat-inspiration"
+            ]
+          },
+          {
+            "level": 6,
+            "featureIds": [
+              "phb14:bard:valor:extra-attack"
+            ]
+          },
+          {
+            "level": 14,
+            "featureIds": [
+              "phb14:bard:valor:battle-magic"
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "id": "battle-magic",
+            "recovery": "none",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        ],
+        "extraSpells": [],
+        "choices": [],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:bard:swords:bonus-proficiencies",
+      "type": "feature",
+      "name": {
+        "en": "Bonus Proficiencies",
+        "fr": "Maîtrises supplémentaires"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Collège des épées",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "bard",
+        "minimumClassLevel": 3,
+        "description": "Maîtrise des armures intermédiaires et du cimeterre. Une arme de mêlée courante ou de guerre que vous maîtrisez peut servir de focaliseur pour vos sorts de barde.",
+        "language": "fr",
+        "buildEffects": {
+          "proficiencies": [
+            "medium-armor",
+            "scimitars"
+          ]
+        },
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:bard:swords:fighting-style",
+      "type": "feature",
+      "name": {
+        "en": "Fighting Style",
+        "fr": "Style de combat"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Collège des épées",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "bard",
+        "minimumClassLevel": 3,
+        "description": "Choisissez Duel ou Combat à deux armes. Vous ne pouvez acquérir deux fois le même style.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:bard:swords:blade-flourish",
+      "type": "feature",
+      "name": {
+        "en": "Blade Flourish",
+        "fr": "Moulinet"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Collège des épées",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "bard",
+        "minimumClassLevel": 3,
+        "description": "L’action Attaquer à votre tour augmente votre vitesse au sol de3 m jusqu’à la fin du tour. Après une touche d’arme dans cette action, dépensez une Inspiration pour un seul moulinet par tour : défensif, dégâts supplémentaires du dé et même bonus à la CA jusqu’au début de votre prochain tour ; tranchant, dégâts du dé à la cible et aux autres créatures choisies visibles à1,50 m de vous ; mobile, dégâts du dé et repoussement de1,50 m+30 cm×dé, puis déplacement jusqu’à votre vitesse par réaction pour finir à1,50 m de la cible.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "none",
+          "target": "selected",
+          "maxTargets": 20,
+          "resourceId": "inspiration",
+          "amount": 1,
+          "requirements": [
+            "L’action Attaquer à votre tour augmente votre vitesse au sol de3 m jusqu’à la fin du tour. Après une touche d’arme dans cette action, dépensez une Inspiration pour un seul moulinet par tour : défensif, dégâts supplémentaires du dé et même bonus à la CA jusqu’au début de votre prochain tour ; tranchant, dégâts du dé à la cible et aux autres créatures choisies visibles à1,50 m de vous ; mobile, dégâts du dé et repoussement de1,50 m+30 cm×dé, puis déplacement jusqu’à votre vitesse par réaction pour finir à1,50 m de la cible.",
+            "Valider les déclencheurs, cibles et effets particuliers."
+          ]
+        },
+        "usageLimits": [
+          {
+            "count": 1,
+            "per": "turn",
+            "group": "blade-flourish"
+          }
+        ]
+      }
+    },
+    {
+      "id": "xge:bard:swords:extra-attack",
+      "type": "feature",
+      "name": {
+        "en": "Extra Attack",
+        "fr": "Attaque supplémentaire"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Collège des épées",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "bard",
+        "minimumClassLevel": 6,
+        "description": "L’action Attaquer permet deux attaques au lieu d’une.",
+        "language": "fr",
+        "buildEffects": {
+          "attacksPerAction": 2
+        },
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:bard:swords:masters-flourish",
+      "type": "feature",
+      "name": {
+        "en": "Masters Flourish",
+        "fr": "Moulinet de maître"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Collège des épées",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "bard",
+        "minimumClassLevel": 14,
+        "description": "Lors d’un moulinet, vous pouvez utiliser1d6 au lieu de dépenser une Inspiration bardique. Cette option ne donne pas un second moulinet pendant le même tour.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "none",
+          "target": "selected",
+          "maxTargets": 20,
+          "resourceId": "masters-flourish",
+          "amount": 1,
+          "requirements": [
+            "Lors d’un moulinet, vous pouvez utiliser1d6 au lieu de dépenser une Inspiration bardique. Cette option ne donne pas un second moulinet pendant le même tour.",
+            "Valider les déclencheurs, cibles et effets particuliers."
+          ]
+        },
+        "usageLimits": [
+          {
+            "count": 1,
+            "per": "turn",
+            "group": "blade-flourish"
+          }
+        ]
+      }
+    },
+    {
+      "id": "xge:bard:swords",
+      "type": "subclass",
+      "name": {
+        "en": "College of Swords",
+        "fr": "Collège des épées"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Collège des épées",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "bard",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "xge:bard:swords:bonus-proficiencies",
+              "xge:bard:swords:fighting-style",
+              "xge:bard:swords:blade-flourish"
+            ]
+          },
+          {
+            "level": 6,
+            "featureIds": [
+              "xge:bard:swords:extra-attack"
+            ]
+          },
+          {
+            "level": 14,
+            "featureIds": [
+              "xge:bard:swords:masters-flourish"
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "id": "masters-flourish",
+            "recovery": "none",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        ],
+        "extraSpells": [],
+        "choices": [
+          {
+            "key": "swords-fighting-style",
+            "level": 3,
+            "kind": "feature",
+            "count": 1,
+            "options": [
+              "srd51:fighter:dueling",
+              "srd51:fighter:two-weapon-fighting"
+            ]
+          }
+        ],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:bard:whispers:psychic-blades",
+      "type": "feature",
+      "name": {
+        "en": "Psychic Blades",
+        "fr": "Lames psychiques"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Collège des murmures",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "bard",
+        "minimumClassLevel": 3,
+        "description": "Une fois par round, pendant votre tour, après une touche d’arme : dépensez une Inspiration pour ajouter2d6 psychiques. Ce supplément devient3d6 au niveau5,5d6 au10 et8d6 au15.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "none",
+          "target": "selected",
+          "maxTargets": 1,
+          "resourceId": "inspiration",
+          "amount": 1,
+          "requirements": [
+            "Une fois par round, pendant votre tour, après une touche d’arme : dépensez une Inspiration pour ajouter2d6 psychiques. Ce supplément devient3d6 au niveau5,5d6 au10 et8d6 au15.",
+            "Valider les déclencheurs, cibles et effets particuliers."
+          ]
+        },
+        "usageLimits": [
+          {
+            "count": 1,
+            "per": "round",
+            "requires": "own-turn-and-weapon-hit"
+          }
+        ]
+      }
+    },
+    {
+      "id": "xge:bard:whispers:words-of-terror",
+      "type": "feature",
+      "name": {
+        "en": "Words Of Terror",
+        "fr": "Mots de terreur"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Collège des murmures",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "bard",
+        "minimumClassLevel": 3,
+        "description": "Après au moins1 min de conversation avec un humanoïde isolé, il réussit une sauvegarde de Sagesse contre votre DD ou vous craint, ou craint une autre créature choisie. Durée1 h, interrompue si la cible ou ses alliés sont attaqués ou blessés. Une utilisation par repos court ou long.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "none",
+          "target": "selected",
+          "maxTargets": 1,
+          "resourceId": "words-of-terror",
+          "amount": 1,
+          "requirements": [
+            "Après au moins1 min de conversation avec un humanoïde isolé, il réussit une sauvegarde de Sagesse contre votre DD ou vous craint, ou craint une autre créature choisie. Durée1 h, interrompue si la cible ou ses alliés sont attaqués ou blessés. Une utilisation par repos court ou long.",
+            "Valider les déclencheurs, cibles et effets particuliers."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:bard:whispers:mantle-of-whispers",
+      "type": "feature",
+      "name": {
+        "en": "Mantle Of Whispers",
+        "fr": "Voile de murmures"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Collège des murmures",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "bard",
+        "minimumClassLevel": 6,
+        "description": "Réaction quand un humanoïde meurt à9 m : capturez son ombre jusqu’à son utilisation ou votre prochain repos long. Une action consomme l’ombre pour une apparence du défunt vivant pendant1 h, terminable par action bonus. Vous connaissez ses informations ordinaires, pas ses secrets ;+5 à Tromperie opposée à Perspicacité pour ce déguisement. Une capture par repos court ou long.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "reaction",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "mantle-of-whispers",
+          "amount": 1,
+          "requirements": [
+            "Réaction quand un humanoïde meurt à9 m : capturez son ombre jusqu’à son utilisation ou votre prochain repos long. Une action consomme l’ombre pour une apparence du défunt vivant pendant1 h, terminable par action bonus. Vous connaissez ses informations ordinaires, pas ses secrets ;+5 à Tromperie opposée à Perspicacité pour ce déguisement. Une capture par repos court ou long.",
+            "Valider les déclencheurs, cibles et effets particuliers."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:bard:whispers:shadow-lore",
+      "type": "feature",
+      "name": {
+        "en": "Shadow Lore",
+        "fr": "Savoir des ombres"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Collège des murmures",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "bard",
+        "minimumClassLevel": 14,
+        "description": "Action : murmure à une créature à9 m. Sauvegarde de Sagesse contre votre DD, automatiquement réussie si elle ne vous entend pas ou ne partage pas de langue. Échec : charme8 h, obéissance par peur d’un secret, sans risquer sa vie ni combattre sans inclination préalable. Vous ou vos alliés attaquant, blessant ou imposant une sauvegarde terminez l’effet. Une utilisation par repos long.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "action",
+          "target": "selected",
+          "maxTargets": 1,
+          "resourceId": "shadow-lore",
+          "amount": 1,
+          "requirements": [
+            "Action : murmure à une créature à9 m. Sauvegarde de Sagesse contre votre DD, automatiquement réussie si elle ne vous entend pas ou ne partage pas de langue. Échec : charme8 h, obéissance par peur d’un secret, sans risquer sa vie ni combattre sans inclination préalable. Vous ou vos alliés attaquant, blessant ou imposant une sauvegarde terminez l’effet. Une utilisation par repos long.",
+            "Valider les déclencheurs, cibles et effets particuliers."
+          ]
+        }
+      }
+    },
+    {
+      "id": "xge:bard:whispers",
+      "type": "subclass",
+      "name": {
+        "en": "College of Whispers",
+        "fr": "Collège des murmures"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Guide complet de Xanathar / Collège des murmures",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/xanathars-guide-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "xge",
+        "classId": "bard",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "xge:bard:whispers:psychic-blades",
+              "xge:bard:whispers:words-of-terror"
+            ]
+          },
+          {
+            "level": 6,
+            "featureIds": [
+              "xge:bard:whispers:mantle-of-whispers"
+            ]
+          },
+          {
+            "level": 14,
+            "featureIds": [
+              "xge:bard:whispers:shadow-lore"
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "id": "words-of-terror",
+            "recovery": "short",
+            "maxByLevel": [
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "id": "mantle-of-whispers",
+            "recovery": "short",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "id": "shadow-lore",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "extraSpells": [],
+        "choices": [],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:bard:creation:mote-of-potential",
+      "type": "feature",
+      "name": {
+        "en": "Mote Of Potential",
+        "fr": "Grain de potentiel"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Collège de la Création",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "bard",
+        "minimumClassLevel": 3,
+        "description": "Un dé d’Inspiration accordé peut porter un grain qui dure jusqu’à la perte du dé. Sur un test de caractéristique, le bénéficiaire relance le dé d’Inspiration et choisit le résultat. Sur une attaque, la cible et les créatures choisies visibles à1,50 m d’elle réussissent une sauvegarde de Constitution contre votre DD ou prennent des dégâts de tonnerre égaux au dé. Sur une sauvegarde, le bénéficiaire gagne dé+Charisme PV temporaires, minimum1.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:bard:creation:performance-of-creation",
+      "type": "feature",
+      "name": {
+        "en": "Performance Of Creation",
+        "fr": "Créativité concrète"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Collège de la Création",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "bard",
+        "minimumClassLevel": 3,
+        "description": "Action : créez un objet non magique à3 m sur une surface ou dans un liquide pouvant le soutenir. Taille M maximum, valeur au plus20×niveau de barde po, durée égale à maîtrise heures. Un seul objet actif ; une nouvelle création remplace l’ancien. Taille G au niveau6 puis TG au14. Un usage gratuit par repos long, sinon un emplacement de niveau2 ou plus.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "action",
+          "target": "self",
+          "maxTargets": 1,
+          "resourceId": "performance-of-creation",
+          "amount": 1,
+          "requirements": [
+            "Action : créez un objet non magique à3 m sur une surface ou dans un liquide pouvant le soutenir. Taille M maximum, valeur au plus20×niveau de barde po, durée égale à maîtrise heures. Un seul objet actif ; une nouvelle création remplace l’ancien. Taille G au niveau6 puis TG au14. Un usage gratuit par repos long, sinon un emplacement de niveau2 ou plus.",
+            "Valider les déclencheurs, cibles et effets particuliers."
+          ]
+        },
+        "alternateCost": {
+          "slotMinimum": 2,
+          "replacesFreeUse": true
+        },
+        "creationRules": [
+          {
+            "classLevel": 3,
+            "maximumSize": "medium",
+            "maximumGoldMultiplier": 20,
+            "maximumActive": 1,
+            "durationHours": "proficiency"
+          },
+          {
+            "classLevel": 6,
+            "maximumSize": "large"
+          },
+          {
+            "classLevel": 14,
+            "maximumSize": "huge",
+            "maximumGoldMultiplier": null,
+            "maximumActive": {
+              "ability": "cha",
+              "minimum": 2
+            },
+            "maximumSizedObjects": 1,
+            "otherObjectsMaximumSize": "small"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tce:bard:creation:animating-performance",
+      "type": "feature",
+      "name": {
+        "en": "Animating Performance",
+        "fr": "Prestation dansante"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Collège de la Création",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "bard",
+        "minimumClassLevel": 6,
+        "description": "Action : animez un objet non magique de taille G ou moins visible à9 m pendant1 h, jusqu’à0 PV ou votre mort. Il agit juste après vous à la même initiative ; déplacement et réaction libres, action Esquiver sauf ordre par votre action bonus. L’action bonus d’Inspiration peut aussi transmettre cet ordre. Un seul objet animé ; un nouveau remplace l’ancien. Un usage gratuit par repos long, sinon un emplacement de niveau3 ou plus.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        },
+        "manualMechanics": {
+          "economy": "action",
+          "target": "selected",
+          "maxTargets": 1,
+          "resourceId": "animating-performance",
+          "amount": 1,
+          "requirements": [
+            "Action : animez un objet non magique de taille G ou moins visible à9 m pendant1 h, jusqu’à0 PV ou votre mort. Il agit juste après vous à la même initiative ; déplacement et réaction libres, action Esquiver sauf ordre par votre action bonus. L’action bonus d’Inspiration peut aussi transmettre cet ordre. Un seul objet animé ; un nouveau remplace l’ancien. Un usage gratuit par repos long, sinon un emplacement de niveau3 ou plus.",
+            "Valider les déclencheurs, cibles et effets particuliers."
+          ]
+        },
+        "alternateCost": {
+          "slotMinimum": 3,
+          "replacesFreeUse": true
+        },
+        "companionProfile": {
+          "id": "tce:bard:creation:dancing-item",
+          "name": {
+            "fr": "Objet dansant",
+            "en": "Dancing Item"
+          },
+          "creatureType": "construct",
+          "maximumSize": "large",
+          "armorClass": 16,
+          "hitPoints": {
+            "base": 10,
+            "perClassLevel": 5,
+            "classId": "bard"
+          },
+          "movement": {
+            "walk": 30,
+            "fly": 30,
+            "hover": true
+          },
+          "scores": {
+            "str": 18,
+            "dex": 14,
+            "con": 16,
+            "int": 4,
+            "wis": 10,
+            "cha": 6
+          },
+          "damageImmunities": [
+            "poison",
+            "psychic"
+          ],
+          "conditionImmunities": [
+            "charmed",
+            "frightened",
+            "poisoned",
+            "exhaustion"
+          ],
+          "senses": {
+            "darkvision": 60,
+            "passivePerception": 10
+          },
+          "proficiency": "owner",
+          "attack": {
+            "ability": "spell-attack-of-owner",
+            "reach": 5,
+            "dice": "1d10",
+            "damageType": "force",
+            "bonus": "proficiency-of-owner"
+          },
+          "form": "immutable",
+          "speedAura": {
+            "range": 10,
+            "change": 10,
+            "choices": [
+              "increase",
+              "decrease"
+            ],
+            "requiresNotIncapacitated": true,
+            "duration": "end-of-affected-turn"
+          },
+          "defaultAction": "dodge",
+          "commandEconomy": "bonus",
+          "commandAlsoWith": "bardic-inspiration",
+          "independentWhenOwner": "incapacitated",
+          "maximumActive": 1,
+          "durationHours": 1
+        }
+      }
+    },
+    {
+      "id": "tce:bard:creation:creative-crescendo",
+      "type": "feature",
+      "name": {
+        "en": "Creative Crescendo",
+        "fr": "Crescendo créatif"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Collège de la Création",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "bard",
+        "minimumClassLevel": 14,
+        "description": "Créativité concrète peut maintenir Charisme objets, minimum2, sans plafond de valeur. Un seul peut avoir votre taille maximale ; les autres sont P ou TP. Quand la limite serait dépassée, choisissez l’objet précédent qui disparaît.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:bard:creation",
+      "type": "subclass",
+      "name": {
+        "en": "College of Creation",
+        "fr": "Collège de la Création"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Collège de la Création",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "bard",
+        "grants": [
+          {
+            "level": 3,
+            "featureIds": [
+              "tce:bard:creation:mote-of-potential",
+              "tce:bard:creation:performance-of-creation"
+            ]
+          },
+          {
+            "level": 6,
+            "featureIds": [
+              "tce:bard:creation:animating-performance"
+            ]
+          },
+          {
+            "level": 14,
+            "featureIds": [
+              "tce:bard:creation:creative-crescendo"
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "id": "performance-of-creation",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "id": "animating-performance",
+            "recovery": "long",
+            "maxByLevel": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "extraSpells": [],
+        "choices": [],
+        "description": "Aptitudes acquises aux niveaux indiqués ; les effets conditionnels sont consultables dans la fiche.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional actions and combat resolution remain player/GM adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:bard:magical-inspiration",
+      "type": "feature",
+      "name": {
+        "fr": "Inspiration magique",
+        "en": "Magical Inspiration"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Barde — aptitudes optionnelles",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "bard",
+        "minimumClassLevel": 2,
+        "optionalClassFeature": true,
+        "campaignOption": "tce:bard:magical-inspiration",
+        "description": "Un bénéficiaire de votre Inspiration qui lance un sort de dégâts ou de soins peut consommer le dé pour augmenter les dégâts ou PV rendus d’une seule cible affectée. Aucune seconde dépense d’Inspiration par le barde.",
+        "language": "fr",
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional spell and combat outcomes require adjudication."
+          ]
+        }
+      }
+    },
+    {
+      "id": "tce:bard:bardic-versatility",
+      "type": "feature",
+      "name": {
+        "fr": "Polyvalence bardique",
+        "en": "Bardic Versatility"
+      },
+      "source": {
+        "kind": "reference",
+        "document": "Chaudron des merveilles de Tasha / Barde — aptitudes optionnelles",
+        "license": "Pilot20-original-summary",
+        "url": "https://dnd.wizards.com/products/tashas-cauldron-everything"
+      },
+      "data": {
+        "ruleset": "dnd5e-2014",
+        "rulesSourceId": "tce",
+        "classId": "bard",
+        "minimumClassLevel": 4,
+        "optionalClassFeature": true,
+        "campaignOption": "tce:bard:bardic-versatility",
+        "description": "À un niveau de barde donnant une ASI, remplacez soit une compétence d’Expertise par une autre compétence maîtrisée sans Expertise, soit un sort mineur de Sorts par un autre sort mineur de barde. Un seul de ces deux changements est permis à ce niveau.",
+        "language": "fr",
+        "acquisitionPolicyOverride": {
+          "cantripReplacementAtASI": 1,
+          "expertiseReplacementAtASI": 1,
+          "sharedASIReplacementLimit": 1
+        },
+        "automation": {
+          "status": "manual",
+          "handler": null,
+          "limits": [
+            "Conditional spell and combat outcomes require adjudication."
           ]
         }
       }

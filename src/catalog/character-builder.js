@@ -508,12 +508,14 @@ export function buildCharacter(
         { ...e, id: sid },
         {
           kind: spell.featureOwnerId?'class':"racial",
+          ...(spell.target?{target:spell.target}:{}),...(spell.maxTargets?{maxTargets:spell.maxTargets}:{}),
           ...(e.data.concentration?{concentration:{effectId:e.id,start:'activation'}}:{}),
           ...(spell.resourceId?{resource:{id:spell.resourceId,amount:1}}:{}),
-          cost: spell.featureOwnerId?'none':spell.level === 1 ? "action" : "none",
+          cost: spell.featureOwnerId?spell.economy??'none':spell.level === 1 ? "action" : "none",
           combat: {
             version: 1,
             mode: "manual",
+            ...(spell.featureOwnerId?{externalRequirements:['featureEligibilityValidated']}:{}),
             requirements: [
               (spell.featureOwnerId?'Feature spellcasting uses ':"Racial spellcasting uses ") +
                 spell.ability +

@@ -18,3 +18,10 @@ export const CORE_FRENCH={
 export const DRAGON_ANCESTRY=[['black','Noir','acid','acide'],['blue','Bleu','lightning','foudre'],['brass','Airain','fire','feu'],['bronze','Bronze','lightning','foudre'],['copper','Cuivre','acid','acide'],['gold','Or','fire','feu'],['green','Vert','poison','poison'],['red','Rouge','fire','feu'],['silver','Argent','cold','froid'],['white','Blanc','cold','froid']];
 CORE_BUILD_EFFECTS['srd51:draconic-bloodline:dragon-ancestor']={proficiencies:['language:draconic']};
 CORE_FRENCH['srd51:draconic-bloodline:dragon-ancestor']=['Ancêtre draconique','Choisissez votre dragon ancestral et son type de dégâts. Vous connaissez le draconique. Lors d’un test de Charisme avec des dragons, doublez la maîtrise si ce test en bénéficie déjà. Le choix ne vous accorde pas de résistance permanente.'];
+
+for(const cls of ['fighter','paladin','ranger'])for(const [key,fr,note]of [
+ ['dueling','Duel','Avec une seule arme de mêlée tenue dans une main et aucune autre arme tenue, ajoutez2 à ses jets de dégâts. Un bouclier n’est pas une autre arme.'],
+ ['two-weapon-fighting','Combat à deux armes','Pour l’attaque supplémentaire du combat à deux armes, vous pouvez ajouter votre modificateur de caractéristique aux dégâts. Les autres conditions du combat à deux armes restent nécessaires.'],
+ ['great-weapon-fighting','Armes à deux mains','Avec une arme de mêlée tenue à deux mains et ayant la propriété à deux mains ou polyvalente, relancez une fois chaque dé de dégâts d’arme donnant1 ou2 ; utilisez le nouveau résultat.'],
+ ['protection','Protection','Réaction quand une autre cible à1,50 m de vous est attaquée par une créature visible : imposez le désavantage à cette attaque. Vous devez manier un bouclier.'],
+])if((cls==='fighter')||(cls==='paladin'&&key!=='two-weapon-fighting')||(cls==='ranger'&&['dueling','two-weapon-fighting'].includes(key)))CORE_FRENCH['srd51:'+cls+':'+key]=[fr,note];

@@ -60,6 +60,7 @@ const colors = {
   wizard: "#7fadd1",
 };
 const choiceTitles = {
+  'swords-fighting-style':['Style de combat du Collège des épées','College of Swords fighting style'],
   'storm-environment':['Environnement de tempête','Storm environment'],
   'divine-fury-type':['Dégâts de Fureur divine','Divine Fury damage'],
   'primal-knowledge-3':['Savoir primal · 3','Primal Knowledge · 3'],
@@ -154,6 +155,8 @@ export function issueMessage(issue, report, a) {
     title = q ? choiceName(q, a) : "",
     fr = a.state.locale === "fr";
   const messages = {
+    'secret-replacement-budget':fr?'Ces Secrets demanderaient plusieurs remplacements au même niveau. Choisissez un autre sort ou vérifiez la progression.':'These Secrets would require multiple replacements at one level. Choose another spell or review progression.',
+    'asi-versatility-limit':fr?'Ce remplacement de Polyvalence bardique demande un niveau de barde avec ASI et un seul changement autorisé.':'Bardic Versatility requires a bard ASI level and permits only one replacement.',
     'duplicate-feature-rule':fr?'Ce style de combat est déjà acquis. Choisissez un autre style.':'This fighting style is already known. Choose another style.',
     'hp-roll':fr?'Renseignez un résultat valide pour chaque dé de vie.':'Enter a valid result for every Hit Die.',
     'hp-method':fr?'Choisissez une méthode de points de vie.':'Choose a hit point method.',

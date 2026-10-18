@@ -22,6 +22,11 @@ export const phbSpells={kind:'catalog',schemaVersion:3,ruleset:'dnd5e-2014',id:'
 const playerSpells=structuredClone(spellCatalog);
 const playerClasses=structuredClone(classCatalog);
 const playerOrigins=structuredClone(originCatalog);
+for(const [key,fr,economy,target,note]of [
+ ['cutting-words','Mots cinglants','reaction','selected','Réaction après une attaque, un test de caractéristique ou des dégâts d’une créature visible à18 m, avant l’annonce du résultat : dépensez une Inspiration et soustrayez le dé au jet. La cible doit vous entendre et ne pas être immunisée au charme.'],
+ ['peerless-skill','Compétence hors pair','none','self','Après un de vos tests de caractéristique, avant de connaître sa réussite : dépensez une Inspiration et ajoutez le dé au résultat.'],
+]){const f=playerClasses.items.find(i=>i.id==='srd51:college-of-lore:'+key);f.name.fr=fr;f.data.descriptionEn=f.data.description;f.data.description=note;f.data.language='fr';f.data.manualMechanics={economy,target,maxTargets:1,resourceId:'inspiration',amount:1,requirements:[note]};}
+
 playerClasses.items.find(i=>i.type==='class'&&i.data.classId==='sorcerer').data.choices.find(q=>q.key==='dragon-ancestor').subclassId='srd51:draconic-bloodline';
 playerClasses.items.find(i=>i.type==='class'&&i.data.classId==='druid').data.choices.find(q=>q.key==='land').subclassId='srd51:circle-of-the-land';
 for(const [key,fr,type,damageFr]of DRAGON_ANCESTRY){const f=playerClasses.items.find(i=>i.id==='srd51:sorcerer:'+key);f.name.fr=fr+' · '+damageFr;Object.assign(f.data,{dragonDamageType:type,descriptionEn:'Dragon ancestry associated with '+type+' damage. It grants no permanent damage resistance.',description:'Dragon ancestral associé aux dégâts de '+damageFr+'. La résistance éventuelle d’Affinité élémentaire demande ses conditions et une dépense de sorcellerie ; elle n’est pas permanente.',language:'fr'});}

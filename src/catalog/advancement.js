@@ -47,6 +47,13 @@ export function validateAdvancementHistory(index,request,history) {
      if(old.id.includes(':magical-secrets-')&&removed.length&&added.some(id=>!index.get(id)?.data.classIds?.includes(old.classId)))addIssue('secret-replacement-class-list');
      continue;
     }
+    const versatilityKind=old.id===old.classId+':cantrips'?'cantrip':old.kind==='expertise'?'expertise':null;
+    if(versatilityKind&&removed.length&&(policy[versatilityKind+'ReplacementAtASI']??0)>0){
+     const classLevel=row.classes.find(c=>c.id===old.classId).level,asi=report.choices.some(q=>q.classId===old.classId&&q.kind==='asi'&&q.level===classLevel),cap=policy[versatilityKind+'ReplacementAtASI']??0,key=old.classId+':asi-versatility';
+     budgets.set(key,(budgets.get(key)??0)+removed.length);
+     if(!advancing||!asi||removed.length>cap||budgets.get(key)>(policy.sharedASIReplacementLimit??cap))addIssue('asi-versatility-limit');
+     continue;
+    }
     // Count increases (new cantrip / metamagic / etc.) are allowed only when that class advances.
     if(removed.length||!advancing)addIssue('historical-choice-changed');
    }
