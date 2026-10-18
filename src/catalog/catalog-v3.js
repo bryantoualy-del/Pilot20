@@ -240,8 +240,9 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
             v === null ||
               integer(v, 0, 1000) ||
               (v &&
-                ABILITIES.includes(v.ability) &&
+                (ABILITIES.includes(v.ability) || v.proficiency===true) &&
                 integer(v.minimum, 0, 30) &&
+                (v.multiplier===undefined || integer(v.multiplier,1,10)) &&
                 (v.add === undefined || integer(v.add, 0, 30))),
             "Resource maximum",
           );
@@ -449,8 +450,9 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
             v === null ||
               integer(v, 0, 1000) ||
               (v &&
-                ABILITIES.includes(v.ability) &&
+                (ABILITIES.includes(v.ability) || v.proficiency===true) &&
                 integer(v.minimum, 0, 30) &&
+                (v.multiplier===undefined || integer(v.multiplier,1,10)) &&
                 (v.add === undefined || integer(v.add, 0, 30))),
             "Resource maximum",
           );

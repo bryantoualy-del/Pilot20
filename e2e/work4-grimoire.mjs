@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {chromium} from 'playwright';
+import {chromium,webkit} from 'playwright';
 import {spawn} from 'node:child_process';
 import {mkdir,writeFile} from 'node:fs/promises';
 const port=Number(process.env.PILOT20_E2E_PORT??4180),url=`http://127.0.0.1:${port}/web/index.html`;
@@ -7,7 +7,8 @@ const server=spawn(process.execPath,['scripts/serve-web.mjs'],{env:{...process.e
 let browser;const results=[],errors=[],metrics=[];
 try{
  await new Promise((resolve,reject)=>{server.stdout.once('data',resolve);server.once('error',reject);server.once('exit',code=>reject(Error('server '+code)));});
- browser=await chromium.launch({...(process.env.PILOT20_CHROMIUM?{executablePath:process.env.PILOT20_CHROMIUM}:{}),args:['--no-sandbox']});
+ const engine=process.env.PILOT20_E2E_BROWSER==='webkit'?webkit:chromium;
+ browser=await engine.launch(engine===webkit?{}:{...(process.env.PILOT20_CHROMIUM?{executablePath:process.env.PILOT20_CHROMIUM}:{}),args:['--no-sandbox']});
  const context=await browser.newContext({viewport:{width:1180,height:820}}),p=await context.newPage();p.setDefaultTimeout(15000);p.on('pageerror',e=>errors.push(e.message));
  await mkdir('docs/screenshots/work4',{recursive:true});await mkdir('artifacts',{recursive:true});await p.goto(url);await p.locator('header').waitFor();
  const fixtures=await p.evaluate(async()=>{
@@ -18,7 +19,7 @@ try{
   const library=characterLibrary(storage),drafts=creatorRepository(storage,library),campaigns=campaignRepository(storage,playerCatalogs);
   const config=await campaigns.initialize(),ctx=await campaigns.context(config),out={};
   for(const [cls,level]of [['wizard',10],['cleric',5],['bard',10],['warlock',11],['artificer',10]]){
-   let d=newDraft('default','grimoire-'+cls);Object.assign(d,{name:'Grimoire '+cls,mode:'single',classChosen:true,raceId:'srd51:race:human',backgroundId:'srd51:background:acolyte',classes:[{id:cls,level,subclassId:ctx.index.class(cls).data.subclassIds[0]}]});
+   let d=newDraft('default','grimoire-'+cls);Object.assign(d,{name:'Grimoire '+cls,mode:'single',classChosen:true,raceId:'srd51:race:human',backgroundId:'srd51:background:acolyte',classes:[{id:cls,level,subclassId:({bard:'xge:bard:glamour',warlock:'xge:warlock:hexblade'})[cls]??ctx.index.class(cls).data.subclassIds[0]}]});
    d=suggestChoices(ctx,config,d);for(const q of draftProgression(ctx,config,d).choices.filter(q=>q.kind==='prepared'))d.selections[q.id]=q.options.slice(0,q.count);
    d.confirmed=d.reviewed=true;await drafts.save(d);const result=compileDraft(ctx,config,d);if(!result.valid)throw Error(JSON.stringify(result.issues));await drafts.finalize(d,result.character,{expectedDraftRevision:1,spellbook:result.spellbook});
    const book=result.choices.find(q=>q.kind==='spellbook'),prep=result.choices.find(q=>q.kind==='prepared');

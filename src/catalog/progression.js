@@ -216,7 +216,7 @@ export function resolveProgression(index, request) {
       let n = r.maxByLevel[L - 1];
       if (n && typeof n === "object")
         n =
-          Math.max(n.minimum, modifier(adjustedScores[n.ability])) +
+          Math.max(n.minimum, n.proficiency?2+Math.floor((classes.reduce((s,c)=>s+c.level,0)-1)/4):modifier(adjustedScores[n.ability])) * (n.multiplier??1) +
           (n.add ?? 0);
       if (n === 0) continue;
       resources.push({

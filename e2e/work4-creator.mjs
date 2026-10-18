@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {chromium} from 'playwright';
+import {chromium,webkit} from 'playwright';
 import {spawn} from 'node:child_process';
 import {mkdir,writeFile} from 'node:fs/promises';
 const port=Number(process.env.PILOT20_E2E_PORT??4180),url=`http://127.0.0.1:${port}/web/index.html`;
@@ -8,7 +8,8 @@ let browser;
 const results=[],metrics=[],errors=[];
 try{
  await new Promise((resolve,reject)=>{server.stdout.once('data',resolve);server.once('error',reject);server.once('exit',code=>reject(Error('server '+code)));});
- browser=await chromium.launch({...(process.env.PILOT20_CHROMIUM?{executablePath:process.env.PILOT20_CHROMIUM}:{}),args:['--no-sandbox']});
+ const engine=process.env.PILOT20_E2E_BROWSER==='webkit'?webkit:chromium;
+ browser=await engine.launch(engine===webkit?{}:{...(process.env.PILOT20_CHROMIUM?{executablePath:process.env.PILOT20_CHROMIUM}:{}),args:['--no-sandbox']});
  const context=await browser.newContext({viewport:{width:390,height:844}}),p=await context.newPage();
  p.setDefaultTimeout(15000);p.on('pageerror',e=>errors.push(e.message));
  await mkdir('docs/screenshots/work4',{recursive:true});await mkdir('artifacts',{recursive:true});

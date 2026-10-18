@@ -360,7 +360,7 @@ export function suggestChoices(
       }
     }
     for (const planned of r.choices) {
-      const q=planned.kind==='proficiency'&&!d.selections[planned.id]?.length?(draftProgression(context,config,d).choices.find(q=>q.id===planned.id)??planned):planned;
+      const q=['proficiency','expertise'].includes(planned.kind)&&!d.selections[planned.id]?.length?(draftProgression(context,config,d).choices.find(q=>q.id===planned.id)??planned):planned;
       if (
         q.kind === "subclass" ||
         (preserveIdentity &&
