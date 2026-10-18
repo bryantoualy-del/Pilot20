@@ -155,6 +155,7 @@ export function issueMessage(issue, report, a) {
     title = q ? choiceName(q, a) : "",
     fr = a.state.locale === "fr";
   const messages = {
+    'creator-companion':fr?'Renseignez le nom, le FP et la référence du compagnon éligible.':'Enter the eligible companion name, CR and profile reference.',
     'secret-replacement-budget':fr?'Ces Secrets demanderaient plusieurs remplacements au même niveau. Choisissez un autre sort ou vérifiez la progression.':'These Secrets would require multiple replacements at one level. Choose another spell or review progression.',
     'asi-versatility-limit':fr?'Ce remplacement de Polyvalence bardique demande un niveau de barde avec ASI et un seul changement autorisé.':'Bardic Versatility requires a bard ASI level and permits only one replacement.',
     'duplicate-feature-rule':fr?'Ce style de combat est déjà acquis. Choisissez un autre style.':'This fighting style is already known. Choose another style.',

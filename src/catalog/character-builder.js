@@ -128,6 +128,7 @@ export function buildCharacter(
     d.proficiencies.push(...(effect.proficiencies??[]));
     for(const skill of effect.skills??[])d.skills[skill]=Math.max(d.skills[skill]??0,1);
     d.defenses.immunities.push(...(effect.immunities??[]));
+    for(const[ability,row]of Object.entries(effect.checkAbilityBonuses??{}))modify('check-'+ability,'checkBonus.'+ability,Math.max(row.minimum,Math.floor((d.scores[row.ability]-10)/2)));
     for(const skill of effect.expertiseSkills??[])d.skills[skill]=2;
     if(effect.speedBonus)modify('speed','speed',effect.speedBonus);
     for(const ability of effect.saves??[])if(!d.saveProficiencies.includes(ability))d.saveProficiencies.push(ability);

@@ -97,7 +97,7 @@ export function derive(d) {
     pb = proficiencyBonus(level),
     stats = { level, proficiency: pb, attacksPerAction: 1,untrainedCheckBonus:0,untrainedPhysicalCheckBonus:0,rangedWeaponAttackBonus:0 };
   for (const c of d.classes) stats["class." + c.id] = c.level;
-  for (const k of ABILITIES) stats["mod." + k] = modifier(d.scores[k]);
+  for (const k of ABILITIES){stats["mod." + k] = modifier(d.scores[k]);stats["checkBonus."+k]=0;}
   const skills = {},
     saves = {},
     casting = {};
@@ -165,6 +165,7 @@ export function derive(d) {
       "attacksPerAction",
       "untrainedCheckBonus","untrainedPhysicalCheckBonus","rangedWeaponAttackBonus",
       ...ABILITIES.map((k) => "save." + k),
+      ...ABILITIES.map(k=>"checkBonus."+k),
       ...Object.keys(SKILLS).map((k) => "skill." + k),
       ...d.classes.flatMap((c) => ["spellAttack." + c.id, "spellDC." + c.id]),
     ];
@@ -196,9 +197,9 @@ export function derive(d) {
     });
   }
   const halfBonus=ability=>Math.max(stats.untrainedCheckBonus,['str','dex','con'].includes(ability)?stats.untrainedPhysicalCheckBonus:0);
-  for(const [skill,ability]of Object.entries(SKILLS))if(!d.skills[skill])stats['skill.'+skill]+=halfBonus(ability);
-  stats.initiative+=d.proficiencies.includes('initiative')?pb:halfBonus('dex');
-  const checks=Object.fromEntries(ABILITIES.map(a=>[a,stats['mod.'+a]+halfBonus(a)]));
+  for(const [skill,ability]of Object.entries(SKILLS))stats['skill.'+skill]+=(d.skills[skill]?0:halfBonus(ability))+stats['checkBonus.'+ability];
+  stats.initiative+=(d.proficiencies.includes('initiative')?pb:halfBonus('dex'))+stats['checkBonus.dex'];
+  const checks=Object.fromEntries(ABILITIES.map(a=>[a,stats['mod.'+a]+halfBonus(a)+stats['checkBonus.'+a]]));
   check(
     integer(stats.maxHp, 1) &&
       integer(stats.ac, 0, 100) &&

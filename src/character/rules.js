@@ -100,7 +100,7 @@ export function compileAbilities(d,stats,resources) {
 
 export function validateRuleData(d) {
   const refs=['level','proficiency','attacksPerAction','maxHp','ac','speed','initiative','untrainedCheckBonus','untrainedPhysicalCheckBonus','rangedWeaponAttackBonus',
-    ...ABILITIES.flatMap(k=>['mod.'+k,'save.'+k]),
+    ...ABILITIES.flatMap(k=>['mod.'+k,'save.'+k,'checkBonus.'+k]),
     ...Object.keys(SKILLS).map(k=>'skill.'+k),
     ...d.classes.flatMap(c=>['class.'+c.id,'spellAttack.'+c.id,'spellDC.'+c.id]),
     ...d.equipment.filter(e=>e.weapon!==null).flatMap(e=>['weaponAttack.'+e.id,'weaponDamage.'+e.id])];

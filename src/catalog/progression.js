@@ -39,7 +39,7 @@ export function effectiveClassData(index,c){
  const base=index.class(c.id)?.data,sub=c.subclassId?index.get(c.subclassId):null;
  if(!base)return base;
  const out={...base};if(sub?.data.classId===c.id&&c.level>=base.subclassLevel)for(const key of ['casting','cantripsKnown','spellsKnown','spellListClassId','spellListClassIds','unrestrictedSpellsKnown','restrictedSpellSchools','acquisitionPolicy'])if(sub.data[key]!==undefined)out[key]=sub.data[key];
- for(const f of index.list('feature'))if(f.data.optionalClassFeature&&f.data.classId===c.id&&c.level>=f.data.minimumClassLevel&&f.data.acquisitionPolicyOverride)out.acquisitionPolicy={...out.acquisitionPolicy,...f.data.acquisitionPolicyOverride};
+ for(const f of index.list('feature'))if(f.data.optionalClassFeature&&f.data.classId===c.id&&c.level>=f.data.minimumClassLevel&&(!f.data.subclassId||f.data.subclassId===c.subclassId)&&f.data.acquisitionPolicyOverride)out.acquisitionPolicy={...out.acquisitionPolicy,...f.data.acquisitionPolicyOverride};
  return out;
 }
 /** Resolves a current build, never silently chooses. All acquisition levels are class levels. */
@@ -121,7 +121,7 @@ export function resolveProgression(index, request) {
       (f) =>
         f.data.optionalClassFeature &&
         classes.some(
-          (c) => c.id === f.data.classId && c.level >= f.data.minimumClassLevel,
+          (c) => c.id === f.data.classId && c.level >= f.data.minimumClassLevel && (!f.data.subclassId||c.subclassId===f.data.subclassId),
         ),
     );
   const replacementOwners = new Map();
