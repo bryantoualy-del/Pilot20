@@ -2,6 +2,8 @@ import references from './data/spell-reference-2014.json' with {type:'json'};
 import notes from './data/extended-spell-notes-fr.json' with {type:'json'};
 import artificer from './data/artificer.json' with {type:'json'};
 import subclasses from './data/subclasses-extended.json' with {type:'json'};
+import extraOrigins from './data/origins-extended.json' with {type:'json'};
+import subraceAdditions from './data/subrace-additions.json' with {type:'json'};
 import phbFacts from './data/phb-spell-facts.json' with {type:'json'};
 import phbNotes from './data/phb-spell-notes-fr.json' with {type:'json'};
 import {classCatalog,spellCatalog,originCatalog} from './srd51-catalog.js';
@@ -18,9 +20,11 @@ export const phbSpells={kind:'catalog',schemaVersion:3,ruleset:'dnd5e-2014',id:'
 // Add the Artificer's verified base list without changing SRD-only consumers or IDs.
 const playerSpells=structuredClone(spellCatalog);
 const playerClasses=structuredClone(classCatalog);
+const playerOrigins=structuredClone(originCatalog);
+for(const row of subraceAdditions)playerOrigins.items.find(i=>i.id===row.raceId).data.subraces.push(row.subrace);
 for(const sub of subclasses.items.filter(i=>i.type==='subclass'))playerClasses.items.find(i=>i.type==='class'&&i.data.classId===sub.data.classId).data.subclassIds.push(sub.id);
 for(const item of playerSpells.items){const ref=references.find(r=>r.id===item.id);if(ref?.classIds.includes('artificer'))item.data.classIds=[...new Set([...item.data.classIds,'artificer'])];}
 const allReferences=spellReferences();
 for(const item of [...playerSpells.items,...extendedSpells.items,...phbSpells.items])item.data.optionalTashaClassIds=allReferences.find(r=>r.id===item.id)?.optionalTashaClassIds??[];
 const expandedLists={kind:'catalog',schemaVersion:3,ruleset:'dnd5e-2014',id:'pilot20:tce-additional-spell-lists',items:[...new Set(allReferences.flatMap(r=>r.optionalTashaClassIds??[]))].map(classId=>({id:'tce:'+classId+':additional-spells',type:'feature',name:{fr:'Sorts supplémentaires — '+classCatalog.items.find(c=>c.type==='class'&&c.data.classId===classId).name.fr,en:'Additional '+classId+' spells'},source:referencedSource('tce','https://dnd.wizards.com/products/tashas-cauldron-everything'),data:{ruleset:'dnd5e-2014',rulesSourceId:'tce',classId,minimumClassLevel:['paladin','ranger'].includes(classId)?2:1,optionalClassFeature:true,campaignOption:'tce:additional-spells:'+classId,description:'Ajoute à la liste de classe les sorts supplémentaires de Tasha. Ne les apprend ni ne les prépare automatiquement.',language:'fr',automation:{status:'manual',handler:null,limits:['Individual spell effects remain player/GM adjudication.']}}}))};
-export const playerCatalogs=[playerClasses,playerSpells,originCatalog,extendedSpells,phbSpells,artificer,expandedLists,subclasses];
+export const playerCatalogs=[playerClasses,playerSpells,playerOrigins,extendedSpells,phbSpells,artificer,expandedLists,subclasses,extraOrigins];

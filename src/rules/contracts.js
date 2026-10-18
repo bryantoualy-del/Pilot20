@@ -61,7 +61,7 @@ export function validateCatalogPack(p,{distribution='private'}={}) {
     check(id(i.id) && integer(i.version,1) && ['class','subclass','progression','trait','feat','spell','equipment','condition','creature','transformation','ability'].includes(i.type),'Content identity');
     check(Array.isArray(i.references) && i.references.every(text),'Content references');validateCoverageRule(i.rules);
     check(i.mechanics && typeof i.mechanics==='object' && !Array.isArray(i.mechanics),'Inert mechanical data');
-    if(distribution==='public') check(i.source.kind==='srd' || (i.source.kind==='homebrew' && i.source.license==='CC-BY-4.0'),'Public redistribution license not established');
+    if(distribution==='public') check(i.source.kind==='srd' || (i.source.kind==='homebrew' && i.source.license==='CC-BY-4.0') || (i.source.kind==='reference'&&i.source.license==='Pilot20-original-summary'),'Public redistribution license not established');
   }
   return p;
 }

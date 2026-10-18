@@ -239,6 +239,7 @@ export function derive(d) {
     ac: stats.ac,
     maxHp: stats.maxHp,
     speed: stats.speed,
+    movement:{walk:stats.speed,...(d.movement.climb!==undefined?{climb:d.movement.climbMatchesWalk?stats.speed:d.movement.climb}:{}),...(d.movement.swim!==undefined?{swim:d.movement.swim}:{}),...(d.movement.fly!==undefined?{fly:d.movement.fly}:{})},
     initiative: stats.initiative,
     attacksPerAction: stats.attacksPerAction,
     acOptions,

@@ -414,9 +414,10 @@ export function buildCharacter(
     d.ancestry = {
       id: o.race.id,
       subraceId: o.subrace?.id ?? null,
-      source: o.race.source,
+      source: o.subrace?.source??o.race.source,
+      ...(o.race.source.kind==='reference'?{size:o.size,creatureType:o.creatureType}:{}),
     };
-    d.movement = { walk: o.speed, ignoreHeavyPenalty: o.ignoreHeavyPenalty };
+    d.movement = { walk: o.speed, ignoreHeavyPenalty: o.ignoreHeavyPenalty,...o.movementModes };
     d.defenses.resistances = [
       ...new Set([...d.defenses.resistances, ...o.resistances]),
     ];
@@ -450,12 +451,16 @@ export function buildCharacter(
   }
   for (const trait of o.traits) {
     const tid = trait.ownerId + ":" + trait.id;
+    const resourceId=trait.resource?tid+':uses':null;
+    if(resourceId)d.resources.push({id:resourceId,max:trait.resource.proficiency?2+Math.floor((definitions.reduce((n,c)=>n+c.level,0)-1)/4):trait.resource.max,recovery:trait.resource.recovery,source:trait.source});
     d.features.push(tid);
     d.abilities.push(
       ability(
         { id: tid, name: trait.name, source: trait.source, type: "race" },
         {
           kind: "racial",
+          ...(trait.activation??{}),
+          ...(resourceId?{resource:{id:resourceId,amount:1}}:{}),
           combat: {
             version: 1,
             mode: "manual",

@@ -30,7 +30,7 @@ try{
  }
  await p.setViewportSize({width:390,height:844});await next();
  await changed(()=>p.locator('.single-body select').first().selectOption('fighter'));await next();
- await changed(()=>p.locator('.single-body select').first().selectOption('srd51:background:acolyte'));await next();
+ await changed(()=>p.locator('.single-body select').first().selectOption('phb14:background:guild-merchant'));await next();
  assert.equal(await p.locator('.single-body').getAttribute('data-kind'),'scores');
  const before=(await drafts())[0];await changed(()=>p.locator('.single-actions button').first().click());
  await next();assert.deepEqual((await drafts())[0].scores,before.scores);await next();
@@ -55,7 +55,7 @@ try{
  await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).waitFor();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();
  results.push('Fighter1 created through one route, race and skill decisions resolved, backtracking preserves scores, saved to library');
  const record=await p.evaluate(async()=>{const {openIndexedDB}=await import('/src/persistence/adapters.js');const s=await openIndexedDB();try{return(await s.list('characters'))[0].value;}finally{s.close();}});
- assert.equal(record.definition.identity.name,'Work4 Guerrier');assert.equal(record.spellbook.characterRevision,record.definition.revision);
+ assert.equal(record.definition.identity.name,'Work4 Guerrier');assert.equal(record.definition.background.id,'phb14:background:guild-merchant');assert.equal(record.spellbook.characterRevision,record.definition.revision);
  const savedDraft=(await drafts())[0];assert.equal(savedDraft.mode,'single');assert.equal(savedDraft.finalized,true);
  await p.reload();await p.locator('header').getByRole('button',{name:'Bibliothèque',exact:true}).click();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();
  await p.getByRole('button',{name:'Modifier',exact:true}).click();await p.locator('.single-body[data-kind=summary]').waitFor();
