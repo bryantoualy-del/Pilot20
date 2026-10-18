@@ -31,14 +31,16 @@ export function stageWizardCopy(context,config,input,{spellId,confirmedCopy=fals
   d.spellbookTranscriptions.push({classId:'wizard',spellId,characterLevel:d.classes.reduce((n,c)=>n+c.level,0),reason:note.trim()});
   d.selections[q.id]=[...(d.selections[q.id]??[]),spellId];d.confirmed=true;updateCurrentHistory(d);return d;
 }
-export function ritualCopyOptions(context,config,draft){
- if(!draft)return[];const report=draftProgression(context,config,draft),featId='phb14:feat:ritual-caster';if(!report.features?.includes(featId))return[];
- const cls=draft.selections[featId+':spell-class']?.[0],owned=new Set([...(draft.selections[featId+':rituals']??[]),...(draft.featRitualCopies??[]).filter(r=>r.featId===featId).map(r=>r.spellId)]),cap=Math.ceil(draft.classes.reduce((n,c)=>n+c.level,0)/2);
- return context.index.list('spell').filter(s=>s.data.ritual&&s.data.level>0&&s.data.level<=cap&&s.data.classIds.includes(cls)&&!owned.has(s.id)).map(s=>s.id);
+export function ritualCopyOptions(context,config,draft,bookId='auto'){
+ if(!draft)return[];const report=draftProgression(context,config,draft),featId='phb14:feat:ritual-caster',pactId='srd51:warlock:book-of-ancient-secrets';
+ const feat=report.features?.includes(featId),pact=report.features?.includes(pactId),all=[];
+ if(feat&&bookId!=='pact'){const cls=draft.selections[featId+':spell-class']?.[0],owned=new Set([...(draft.selections[featId+':rituals']??[]),...(draft.featRitualCopies??[]).filter(r=>r.featId===featId).map(r=>r.spellId)]),cap=Math.ceil(draft.classes.reduce((n,c)=>n+c.level,0)/2);all.push(...context.index.list('spell').filter(s=>s.data.ritual&&s.data.level>0&&s.data.level<=cap&&s.data.classIds.includes(cls)&&!owned.has(s.id)).map(s=>s.id));}
+ if(pact&&bookId!=='feat'){const cap=Math.ceil(draft.classes.find(c=>c.id==='warlock').level/2),owned=new Set([...(draft.selections['warlock:ancient-rituals']??[]),...(draft.pactRitualCopies??[]).map(r=>r.spellId)]);all.push(...context.index.list('spell').filter(s=>s.data.ritual&&s.data.level>0&&s.data.level<=cap&&!owned.has(s.id)).map(s=>s.id));}return[...new Set(all)];
 }
-export function stageRitualCopy(context,config,input,{spellId,confirmedCopy=false,note=''}){
- check(ritualCopyOptions(context,config,input).includes(spellId),'Ritual cannot be copied into this book');check(confirmedCopy===true&&typeof note==='string'&&note.trim()&&note.length<=500,'Confirm ritual access, time and material cost');
- const d=structuredClone(input);d.featRitualCopies??=[];d.featRitualCopies.push({featId:'phb14:feat:ritual-caster',spellId,characterLevel:d.classes.reduce((n,c)=>n+c.level,0),note:note.trim()});d.confirmed=true;return d;
+export function stageRitualCopy(context,config,input,{spellId,confirmedCopy=false,note='',bookId='auto'}){
+ const destination=bookId==='auto'?(ritualCopyOptions(context,config,input,'feat').includes(spellId)?'feat':'pact'):bookId;
+ check(['feat','pact'].includes(destination)&&ritualCopyOptions(context,config,input,destination).includes(spellId),'Ritual cannot be copied into this book');check(confirmedCopy===true&&typeof note==='string'&&note.trim()&&note.length<=500,'Confirm ritual access, time and material cost');
+ const d=structuredClone(input),row={spellId,characterLevel:d.classes.reduce((n,c)=>n+c.level,0),note:note.trim()};if(destination==='feat'){d.featRitualCopies??=[];d.featRitualCopies.push({featId:'phb14:feat:ritual-caster',...row});}else{d.pactRitualCopies??=[];d.pactRitualCopies.push(row);}d.confirmed=true;return d;
 }
 export function stageCantripRest(context,config,input,{classId='wizard',removeId,spellId,confirmedRest=false}){
  const d=structuredClone(input),report=draftProgression(context,config,d),q=report.choices.find(q=>q.id===classId+':cantrips');

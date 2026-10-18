@@ -82,6 +82,7 @@ export function buildRequest(d) {
     background: structuredClone(d.background),
     advancementHistory: [...structuredClone(d.advancementHistory??[]),...(d.pendingAdvancement&&d.advancementHistory?.length?[{classId:d.pendingAdvancement.classId,classes:structuredClone(d.classes),selections:structuredClone(d.selections)}]:[])],
     spellbookTranscriptions: structuredClone(d.spellbookTranscriptions ?? []),
+    pactRitualCopies:structuredClone(d.pactRitualCopies??[]),
     featRitualCopies:structuredClone(d.featRitualCopies??[]),
     spellGrantReplacements:structuredClone(d.spellGrantReplacements??[]),
     hpMode:d.hpMode??'average',

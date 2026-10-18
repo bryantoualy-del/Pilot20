@@ -404,7 +404,8 @@ export function buildCharacter(
       const e = index.get(id);
       if (!e || !["feature", "feat"].includes(e.type)) continue;
       const m = e.data.manualMechanics,
-        resourceId = m?.resourceId ? m.resourceId==='pact'?'pact:'+e.data.classId:(report.featureResourceOverrides?.[id]??(report.featureClassOverrides?.[id]??e.data.classId) + ":" + m.resourceId) : null;
+        rawResourceId = m?.resourceId ? m.resourceId==='pact'?'pact:'+e.data.classId:(report.featureResourceOverrides?.[id]??(report.featureClassOverrides?.[id]??e.data.classId) + ":" + m.resourceId) : null,
+        resourceId=report.resourceAliases?.[rawResourceId]??rawResourceId;
       const resource =
         resourceId && (d.resources.some((r) => r.id === resourceId)||report.slots.resources[resourceId])
           ? { id: resourceId, amount: m.amount }

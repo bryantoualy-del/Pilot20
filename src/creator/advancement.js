@@ -1,4 +1,4 @@
-import {replacementPermission,pactRetooling} from '../catalog/replacement-policy.js';
+import {replacementPermission,pactRetooling,forcedInvocationReplacement} from '../catalog/replacement-policy.js';
 import {check} from '../character/contracts.js';
 import {effectiveClassData,resolveProgression} from '../catalog/progression.js';
 const total=classes=>classes.reduce((n,c)=>n+c.level,0);
@@ -14,14 +14,14 @@ export function validateLevelGain(index,request,pending){
  if(!pending)return[];const issues=[],before=pending.before,classId=pending.classId;
  const oldCounts=new Map(before.classes.map(c=>[c.id,c.level])),newCounts=new Map(request.classes.map(c=>[c.id,c.level]));
  if(total(request.classes)!==total(before.classes)+1||[...new Set([...oldCounts.keys(),...newCounts.keys()])].some(id=>(newCounts.get(id)??0)!==(oldCounts.get(id)??0)+(id===classId?1:0)))return[{code:'level-gain-class-sequence'}];
- const report=resolveProgression(index,{...request,classes:before.classes,selections:before.selections,spellbookTranscriptions:before.spellbookTranscriptions??[],spellGrantReplacements:before.spellGrantReplacements??[],featRitualCopies:before.featRitualCopies??[]});
+ const report=resolveProgression(index,{...request,classes:before.classes,selections:before.selections,spellbookTranscriptions:before.spellbookTranscriptions??[],spellGrantReplacements:before.spellGrantReplacements??[],featRitualCopies:before.featRitualCopies??[],pactRitualCopies:before.pactRitualCopies??[]});
  const next=resolveProgression(index,request),budgets=new Map();
  for(const old of report.choices){if(old.kind==='prepared'||old.mutableAtRest)continue;const after=next.choices.find(q=>q.id===old.id);const prior=before.selections[old.id]??(old.kind==='subclass'?[before.classes.find(c=>c.id===old.classId)?.subclassId].filter(Boolean):[]),now=request.selections[old.id]??(old.kind==='subclass'?[request.classes.find(c=>c.id===old.classId)?.subclassId].filter(Boolean):[]),removed=prior.filter(id=>!now.includes(id));
  if(!after){if(pactRetooling(index,request.classes,classId,before.selections,request.selections)&&old.classId==='warlock'&&['warlock:tome-cantrips','warlock:ancient-rituals'].includes(old.id))continue;issues.push({code:'level-gain-choice-removed',choiceId:old.id});continue;}
  if(!removed.length)continue;
  const c=request.classes.find(c=>c.id===old.classId),policy=effectiveClassData(index,c).acquisitionPolicy??{},advancing=classId===old.classId;
  const invocation=old.id.endsWith(':invocations'),known=old.replaceableKnown||old.id.endsWith(':known-spells')||old.id.endsWith(':known-free-spells')||old.id.includes(':magical-secrets-');
- if(invocation||known){const key=old.classId+(invocation?':invocation':':known'),cap=invocation?policy.invocationReplacementPerClassLevel??0:policy.knownReplacementPerClassLevel??0;const counted=invocation&&pactRetooling(index,request.classes,classId,before.selections,request.selections)?removed.filter(id=>after.options.includes(id)).length:removed.length;budgets.set(key,(budgets.get(key)??0)+counted);if(!advancing||budgets.get(key)>cap)issues.push({code:'replacement-limit',choiceId:old.id});if(old.id.includes(':magical-secrets-')&&now.filter(id=>!prior.includes(id)).some(id=>!index.get(id)?.data.classIds.includes(old.classId)))issues.push({code:'secret-replacement-class-list',choiceId:old.id});continue;}
+ if(invocation||known){const key=old.classId+(invocation?':invocation':':known'),cap=invocation?policy.invocationReplacementPerClassLevel??0:policy.knownReplacementPerClassLevel??0;const counted=invocation?removed.filter(id=>after.options.includes(id)||!forcedInvocationReplacement(index,request.classes,classId,before.selections,request.selections,id)).length:removed.length;budgets.set(key,(budgets.get(key)??0)+counted);if(!advancing||budgets.get(key)>cap)issues.push({code:'replacement-limit',choiceId:old.id});if(old.id.includes(':magical-secrets-')&&now.filter(id=>!prior.includes(id)).some(id=>!index.get(id)?.data.classIds.includes(old.classId)))issues.push({code:'secret-replacement-class-list',choiceId:old.id});continue;}
  const permit=replacementPermission(index,request.classes,classId,old);if(permit){budgets.set(permit.key,(budgets.get(permit.key)??0)+removed.length);if(removed.length<=permit.choiceMaximum&&budgets.get(permit.key)<=permit.maximum)continue;issues.push({code:'replacement-limit',choiceId:old.id});continue;}
  issues.push({code:'historical-choice-changed',choiceId:old.id});
  }
