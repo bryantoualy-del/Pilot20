@@ -1,5 +1,6 @@
 /** Editorial guidance; mechanical values always come from the catalogue. */
 const rows = {
+  artificer: ['Magie et créations','Magic and crafting','Sorts préparés, créations magiques et spécialisations.','Prepared spells, magical creations and specializations.','Élevée','High'],
   barbarian: [
     "Mêlée résistante",
     "Robust frontline",
