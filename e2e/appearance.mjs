@@ -36,7 +36,7 @@ try {
   }
   await summary.focus();await p.keyboard.press('Enter');assert.equal((await style()).open,false);
   await p.locator('header').getByLabel('Langue / Language').selectOption('en');
-  const english=p.locator('.single-body>details').first().locator(':scope>summary');
+  const english=p.getByText('Portrait and appearance — optional',{exact:true});
   await english.waitFor();assert.match(await english.evaluate(e=>getComputedStyle(e,'::after').content),/Show/);
   assert.deepEqual(errors,[]);
   console.log('Appearance: light parchment palette, explicit FR/EN disclosure hints, rotating chevron, portrait section opens by touch/keyboard, responsive375/390/1180 screenshots.');
