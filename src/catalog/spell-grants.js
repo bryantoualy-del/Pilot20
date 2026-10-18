@@ -11,7 +11,7 @@ export function replacementOptions(index,originId,originalSpellId){
 }
 /** Preserve a slot's original identity and record only explicit player exchanges. */
 export function resolveSpellGrants(index,cls,extraSpells,replacements){
- const issues=[],rows=extraSpells.filter(r=>['known','prepared'].includes(r.mode)).flatMap(r=>r.spellIds.map(id=>({id,originalSpellId:id,classId:cls.id,mode:r.mode,ownerId:r.ownerId,classLevel:r.classLevel})));
+ const issues=[],rows=extraSpells.filter(r=>['known','prepared','book'].includes(r.mode)).flatMap(r=>r.spellIds.map(id=>({id,originalSpellId:id,classId:cls.id,mode:r.mode,ownerId:r.ownerId,classLevel:r.classLevel})));
  const used=new Set();
  for(const swap of replacements.filter(r=>index.get(r.originId)?.data.classId===cls.id).sort((a,b)=>a.classLevel-b.classLevel)){
   const row=rows.find(r=>r.ownerId===swap.originId&&r.originalSpellId===swap.originalSpellId),key=swap.originId+':'+swap.classLevel;

@@ -128,6 +128,7 @@ export function buildCharacter(
     d.proficiencies.push(...(effect.proficiencies??[]));
     for(const skill of effect.skills??[])d.skills[skill]=Math.max(d.skills[skill]??0,1);
     d.defenses.immunities.push(...(effect.immunities??[]));
+    if(effect.initiativeAbility)modify('initiative','initiative',Math.floor((d.scores[effect.initiativeAbility]-10)/2));
     if(effect.heavyArmorBonus)modify('heavy-armor','ac',effect.heavyArmorBonus,'add','wearing-heavy-armor');
     d.defenses.resistances.push(...(effect.resistances??[]));
     if(effect.attacksPerAction)d.modifiers.push({id:featureId+':attacks',stat:'attacksPerAction',operation:'max',value:effect.attacksPerAction,reason:feature.name.en,source:feature.source});

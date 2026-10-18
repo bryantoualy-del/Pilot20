@@ -92,9 +92,10 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       check(Array.isArray(d.restrictedSpellSchools)&&d.restrictedSpellSchools.length===2,'Subclass spell schools');
     }
     if(d.buildEffects){
-      keys(d.buildEffects,['proficiencies','attacksPerAction','resistances','minimumClassLevel','movement','scoreIncreases','hpPerClassLevel','naturalArmor','halfProficiency','defenseStyle','rangedWeaponAttackBonus','skills','immunities','heavyArmorBonus'],[]);
+      keys(d.buildEffects,['proficiencies','attacksPerAction','resistances','minimumClassLevel','movement','scoreIncreases','hpPerClassLevel','naturalArmor','halfProficiency','defenseStyle','rangedWeaponAttackBonus','skills','immunities','heavyArmorBonus','initiativeAbility'],[]);
       check(i.type==='feature','Build effects belong to features');
       const e=d.buildEffects;
+      if(e.initiativeAbility)check(ABILITIES.includes(e.initiativeAbility),'Initiative ability');
       if(e.skills)check(Array.isArray(e.skills)&&e.skills.every(s=>Object.hasOwn(SKILLS,s)),'Feature skills');
       if(e.immunities)list(e.immunities,'Feature immunities');
       if(e.heavyArmorBonus!==undefined)check(integer(e.heavyArmorBonus,1,5),'Heavy armor bonus');
@@ -276,9 +277,9 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
               integer(v, 0, 1000) ||
               (v &&
                 (ABILITIES.includes(v.ability) || v.proficiency===true) &&
-                integer(v.minimum, 0, 30) &&
+                integer(v.minimum, -5, 30) &&
                 (v.multiplier===undefined || integer(v.multiplier,1,10)) &&
-                (v.add === undefined || integer(v.add, 0, 30))),
+                (v.add === undefined || integer(v.add, 0, 60))),
             "Resource maximum",
           );
       }
@@ -485,9 +486,9 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
               integer(v, 0, 1000) ||
               (v &&
                 (ABILITIES.includes(v.ability) || v.proficiency===true) &&
-                integer(v.minimum, 0, 30) &&
+                integer(v.minimum, -5, 30) &&
                 (v.multiplier===undefined || integer(v.multiplier,1,10)) &&
-                (v.add === undefined || integer(v.add, 0, 30))),
+                (v.add === undefined || integer(v.add, 0, 60))),
             "Resource maximum",
           );
         if (r.recharge) {
@@ -621,7 +622,7 @@ export function createCatalogIndex(
     for (const row of d.extraSpells ?? []) {
       check(
         integer(row.classLevel, 1, 20) &&
-          ["prepared", "known", "expanded"].includes(row.mode),
+          ["prepared", "known", "expanded", "book"].includes(row.mode),
         "Extra spell grant",
       );
       list(row.spellIds, "Extra spells");
