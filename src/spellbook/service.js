@@ -40,6 +40,12 @@ export function stageRitualCopy(context,config,input,{spellId,confirmedCopy=fals
  check(ritualCopyOptions(context,config,input).includes(spellId),'Ritual cannot be copied into this book');check(confirmedCopy===true&&typeof note==='string'&&note.trim()&&note.length<=500,'Confirm ritual access, time and material cost');
  const d=structuredClone(input);d.featRitualCopies??=[];d.featRitualCopies.push({featId:'phb14:feat:ritual-caster',spellId,characterLevel:d.classes.reduce((n,c)=>n+c.level,0),note:note.trim()});d.confirmed=true;return d;
 }
+export function stageCantripRest(context,config,input,{classId='wizard',removeId,spellId,confirmedRest=false}){
+ const d=structuredClone(input),report=draftProgression(context,config,d),q=report.choices.find(q=>q.id===classId+':cantrips');
+ check(q?.mutableAtRest&&confirmedRest,'This replacement requires Cantrip Formulas and a completed long rest');
+ const owned=d.selections[q.id]??[];check(owned.includes(removeId)&&q.options.includes(spellId)&&!owned.includes(spellId),'Invalid cantrip replacement');
+ d.selections[q.id]=owned.map(id=>id===removeId?spellId:id);d.restSpellChanges??=[];d.restSpellChanges.push({classId,removeId,spellId,recordedAt:new Date().toISOString(),reason:'cantrip-formulas-long-rest'});d.confirmed=true;updateCurrentHistory(d);return d;
+}
 function comparable(character){const c=structuredClone(character);c.revision=1;return JSON.stringify(c);}
 /** Reuse the production compiler and the creator's atomic definition/book/draft transaction. */
 export function grimoireService({library,drafts,campaigns}){
@@ -53,7 +59,7 @@ export function grimoireService({library,drafts,campaigns}){
       const before=compileDraft(context,config,{...draft,confirmed:true});
       // External manual definition changes must never be discarded by rebuilding from an older draft.
       check(before.valid&&sameDefinition(before.character,record.definition),'Character differs from its build plan; review it before changing spells');
-      const next=command.type==='prepare'?stagePreparation(context,config,draft,command):command.type==='copy'?stageWizardCopy(context,config,draft,command):command.type==='ritual-copy'?stageRitualCopy(context,config,draft,command):null;
+      const next=command.type==='prepare'?stagePreparation(context,config,draft,command):command.type==='copy'?stageWizardCopy(context,config,draft,command):command.type==='ritual-copy'?stageRitualCopy(context,config,draft,command):command.type==='rest-cantrip'?stageCantripRest(context,config,draft,command):null;
       check(next,'Unknown grimoire operation');
       const result=compileDraft(context,config,next);check(result.valid,'Spell choices need review');
       result.character.revision=expectedCharacterRevision+1;next.status=result.status;

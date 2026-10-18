@@ -57,6 +57,12 @@ export async function renderGrimoire(main,characterId,a){
   shell.replaceChildren(header,tabs,toolbar,filters,status,list,pages);
   if(!currentGrants.length&&ui.tab==='mine')shell.insertBefore(el('p',{},w('Vous n’avez aucun sort acquis pour cette origine.','No spells have been acquired for this origin.')),list);
   if(view.book.unresolved.includes('legacy-origins-and-acquisition-levels'))shell.insertBefore(el('p',{},w('Les sorts de cette ancienne fiche sont conservés. Vérifiez leurs origines dans le Créateur avant de les modifier.','Spells from this older character have been preserved. Review their origins in the creator before editing.')),list);
+  const formulas=view.choices.find(q=>q.id==='wizard:cantrips'&&q.mutableAtRest);
+  if(formulas&&view.editable){shell.insertBefore(button(w('Formules : remplacer un sort mineur après repos long','Formulas: replace a cantrip after a long rest'),()=>{
+   const owned=draft.selections[formulas.id]??[],available=formulas.options.filter(id=>!owned.includes(id));let removeId=owned[0],spellId=available[0],confirmedRest=false;
+   const save=button(w('Confirmer le remplacement','Confirm replacement'),()=>apply({type:'rest-cantrip',removeId,spellId,confirmedRest}),'primary');save.disabled=true;
+   a.modal(el('section',{},el('h2',{},w('Formules de sort mineur','Cantrip Formulas')),field(w('Sort remplacé','Replace'),select(owned.map(id=>[id,a.name(a.context.index.get(id))]),removeId,e=>removeId=e.target.value)),field(w('Nouveau sort','New spell'),select(available.map(id=>[id,a.name(a.context.index.get(id))]),spellId,e=>spellId=e.target.value)),check(w('J’ai terminé un repos long et étudié les formules.','I completed a long rest and studied the formulas.'),false,e=>{confirmedRest=e.target.checked;save.disabled=!confirmedRest;}),save));
+  }),list);}
   if(q&&view.editable){
    const prep=el('div',{class:'grimoire-preparation'});
    if(!editing)prep.append(button(w('Modifier la préparation','Change preparation'),()=>{editing=true;staged=[...(draft.selections[q.id]??[])];ui.tab='catalogue';page=0;draw();}));

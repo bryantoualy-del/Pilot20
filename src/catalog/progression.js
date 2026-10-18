@@ -260,6 +260,7 @@ export function resolveProgression(index, request) {
       ...optional
         .filter((f) => f.data.classId === c.id)
         .flatMap((f) => f.data.choices ?? []),
+      ...[...selected].filter(id=>(featResolution.featureOwners[id]??index.get(id)?.data.classId)===c.id).flatMap(id=>(index.get(id)?.data.choices??[]).map(q=>({...q,featureOwnerId:id}))),
     ]) {
       if (suppressedChoices.has(c.id + ":" + spec.key)) continue;
       if (
@@ -281,12 +282,13 @@ export function resolveProgression(index, request) {
         continue;
       }
       if(spec.saveReplacementFor&&!index.class(classes[0].id).data.saves.includes(spec.saveReplacementFor))continue;
-      let options = spec.spellList?listSpells(index,spec.spellList.classId,{minimumLevel:spec.spellList.minimumLevel,maximumLevel:spec.spellList.maximumLevel}).map(s=>s.id):spec.options;
+      let options = spec.dynamicFeatureKind==='maneuver'?index.list('feature').filter(f=>f.id.includes(':fighter:maneuver:')).map(f=>f.id):spec.spellList?listSpells(index,spec.spellList.classId,{minimumLevel:spec.spellList.minimumLevel,maximumLevel:spec.spellList.maximumLevel}).map(s=>s.id):spec.options;
+      if(spec.filterProficientWeapons){const owned=new Set([...(position===0?d.initialProficiencies:d.multiclassProficiencies),...background.proficiencies,...[...features,...selected].flatMap(id=>index.get(id)?.data.buildEffects?.proficiencies??[])]);options=options.filter(id=>owned.has(id)||index.class(c.id).data.initialProficiencies.includes('martial-weapons')||id.endsWith('s')&&owned.has('simple-weapons')&&['clubs','daggers','handaxes','javelins','light-hammers','maces','quarterstaffs','sickles','spears','light-crossbows','darts','shortbows','slings'].includes(id));}
       if(spec.kind==='training')options=options.filter(id=>!Object.hasOwn(SKILLS,id)||!proficientSkills.has(id)||(selections[c.id+':'+spec.key]??[]).includes(id));
       if(spec.replacementSpellList&&L>spec.level)options=[...new Set([...options,...listSpells(index,spec.replacementSpellList,{minimumLevel:1,maximumLevel:maxSpell}).map(s=>s.id)])];
       if(spec.bonusIfAlreadyKnown&&!(selections[c.id+':cantrips']??[]).includes(spec.bonusIfAlreadyKnown))options=[spec.bonusIfAlreadyKnown];
       if(spec.kind==='feature')options=options.filter(id=>{const key=index.get(id)?.data.uniqueRuleKey;return !key||!Object.entries(selections).filter(([choice])=>choice!==c.id+':'+spec.key).flatMap(([,values])=>values).some(other=>index.get(other)?.data.uniqueRuleKey===key);});
-      if(spec.kind==='proficiency'&&!spec.toolReplacementFor)options=options.filter(id=>!background.proficiencies.some(p=>canonicalProficiency(p)===canonicalProficiency(id)));
+      if(spec.kind==='proficiency'&&!spec.filterProficientWeapons&&!spec.toolReplacementFor)options=options.filter(id=>!background.proficiencies.some(p=>canonicalProficiency(p)===canonicalProficiency(id)));
       if(spec.filterAvailableFeatures) options=options.filter(id=>{const f=index.get(id);return f?.type==='feature'&&f.data.classId===c.id&&f.data.minimumClassLevel<=L&&(f.data.selectionRequires??[]).every(id=>selected.has(id)||features.has(id));});
       if(spec.toolReplacementFor){
         const owned=new Set([...background.proficiencies,...classes.flatMap((cl,n)=>index.class(cl.id).data[n===0?'initialProficiencies':'multiclassProficiencies']),...Object.entries(selections).filter(([id])=>id!==c.id+':'+spec.key&&!id.endsWith(':skills')).flatMap(([,v])=>v)].map(canonicalProficiency));
@@ -324,7 +326,7 @@ export function resolveProgression(index, request) {
         spec.kind,
         {
           ownerId:
-            spec.subclassId ??
+            spec.featureOwnerId??spec.subclassId ??
             (sub?.data.choices?.includes(spec)
               ? sub.id
               : (optional.find((f) => f.data.choices?.includes(spec))?.id ??
@@ -333,6 +335,7 @@ export function resolveProgression(index, request) {
           ...(spec.replaceableKnown?{replaceableKnown:true}:{}),
           ...(spec.mutableAtRest?{mutableAtRest:true}:{}),
           ...(spec.replacementRule?{replacementRule:spec.replacementRule}:{}),
+          ...(spec.featureResourceId?{featureResourceId:spec.featureResourceId}:{}),
           ...(spec.requiredOptionsBeforeLevel&&L<spec.requiredOptionsBeforeLevel.level?{requiredOptions:spec.requiredOptionsBeforeLevel.options}:{}),
           ...(spec.adjudication ? { adjudication: spec.adjudication } : {}),
         },
@@ -361,6 +364,7 @@ export function resolveProgression(index, request) {
         d.cantripsKnown[L - 1],
         classSpells({ maximumLevel: 0 }).filter(s=>!grantedSpells.some(g=>g.classId===c.id&&g.id===s.id)).map((s) => s.id),
         "spell",
+        {...(d.acquisitionPolicy?.cantripReplacementAtLongRest?{mutableAtRest:true}:{})},
       );
     if (d.spellsKnown?.[L - 1]) {
       let count = d.spellsKnown[L - 1];
@@ -499,7 +503,7 @@ export function resolveProgression(index, request) {
           issues.push({ code: "duplicate-expertise", choiceId: choice.id });
         expertise.add(v);
       }
-    if (choice.kind === "feature") values.forEach((v) => features.add(v));
+    if (choice.kind === "feature") values.forEach((v) => {features.add(v);if(choice.featureResourceId)featResolution.featureResourceOverrides[v]=choice.classId+':'+choice.featureResourceId;if(choice.ownerId&&featResolution.featureOwners[choice.ownerId])featResolution.featureOwners[v]=choice.classId;});
   }
   // Validate that above-acquisition Bard-list replacements could fit into actual
   // level gains. This does not create or certify any missing history.
@@ -565,6 +569,7 @@ export function resolveProgression(index, request) {
           featureId: fid,
           otherFeatureId: other,
         });
+  const replacementTags=new Set([...features].flatMap(id=>index.get(id)?.data.replacesByTag??[]));for(const id of [...features])if(replacementTags.has(index.get(id)?.data.replacementTag))features.delete(id);
   for (const fid of [...features])
     for (const replaced of index.get(fid)?.data.replaces ?? [])
       features.delete(replaced);

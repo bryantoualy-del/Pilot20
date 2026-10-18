@@ -1,3 +1,5 @@
+import {tashaOptions} from './tasha-options.js';
+import {integrateInvocationSpells} from './invocation-spells.js';
 import {feats2014} from './feats-2014.js';
 import {monkTraditions} from './monk-traditions.js';
 import {barbarianTotem} from './barbarian-totem.js';
@@ -54,8 +56,14 @@ const allReferences=spellReferences();
 for(const item of [...playerSpells.items,...extendedSpells.items,...phbSpells.items])item.data.optionalTashaClassIds=allReferences.find(r=>r.id===item.id)?.optionalTashaClassIds??[];
 const expandedLists={kind:'catalog',schemaVersion:3,ruleset:'dnd5e-2014',id:'pilot20:tce-additional-spell-lists',items:[...new Set(allReferences.flatMap(r=>r.optionalTashaClassIds??[]))].map(classId=>({id:'tce:'+classId+':additional-spells',type:'feature',name:{fr:'Sorts supplémentaires — '+classCatalog.items.find(c=>c.type==='class'&&c.data.classId===classId).name.fr,en:'Additional '+classId+' spells'},source:referencedSource('tce','https://dnd.wizards.com/products/tashas-cauldron-everything'),data:{ruleset:'dnd5e-2014',rulesSourceId:'tce',classId,minimumClassLevel:['paladin','ranger'].includes(classId)?2:1,optionalClassFeature:true,campaignOption:'tce:additional-spells:'+classId,description:'Ajoute à la liste de classe les sorts supplémentaires de Tasha. Ne les apprend ni ne les prépare automatiquement.',language:'fr',automation:{status:'manual',handler:null,limits:['Individual spell effects remain player/GM adjudication.']}}}))};
 playerClasses.items.find(i=>i.type==='class'&&i.data.classId==='warlock').data.choices.find(q=>q.key==='pact-boon').options.push('tce:warlock:pact-of-the-talisman');
-export const playerCatalogs=[playerClasses,playerSpells,playerOrigins,extendedSpells,phbSpells,artificer,expandedLists,subclasses,extraOrigins,warlockInvocations,clericDomains,druidCircles,wizardTraditions,sorcererOrigins,warlockPatrons,fighterArchetypes,rogueArchetypes,paladinOaths,rangerConclaves,monkTraditions,barbarianTotem,feats2014];
+export const playerCatalogs=[playerClasses,playerSpells,playerOrigins,extendedSpells,phbSpells,artificer,expandedLists,subclasses,extraOrigins,warlockInvocations,clericDomains,druidCircles,wizardTraditions,sorcererOrigins,warlockPatrons,fighterArchetypes,rogueArchetypes,paladinOaths,rangerConclaves,monkTraditions,barbarianTotem,feats2014,tashaOptions];
 
 for(const[id,rule]of [['phb14:fighter:battle-master',{levels:[7,10,15],maximum:1}],['tce:fighter:rune-knight',{levels:null,maximum:1}]])playerCatalogs.flatMap(c=>c.items).find(i=>i.id===id).data.choices.find(q=>['maneuvers','runes'].includes(q.key)).replacementRule=rule;
 
 playerClasses.items.find(i=>i.id==='srd51:monk:unarmored-movement').data.buildEffects={unarmoredSpeedByClassLevel:playerClasses.items.find(i=>i.type==='class'&&i.data.classId==='monk').data.scaling.unarmoredSpeedBonus};
+
+integrateInvocationSpells(playerClasses);
+for(const feature of [...playerClasses.items,...subclasses.items,...clericDomains.items])if(feature.type==='feature'&&feature.data.classId==='cleric'&&['Divine Strike','Potent Spellcasting'].includes(feature.name.en))feature.data.replacementTag='cleric-damage-boost';
+for(const cls of ['fighter','paladin','ranger']){const c=playerClasses.items.find(i=>i.type==='class'&&i.data.classId===cls);for(const q of c.data.choices.filter(q=>['fighting-style','additional-style'].includes(q.key))){const keys=cls==='fighter'?['blind-fighting','interception','superior-technique','thrown-weapon-fighting','unarmed-fighting']:cls==='paladin'?['blind-fighting','interception']:['blind-fighting','thrown-weapon-fighting'];q.options.push(...keys.map(key=>'tce:fighter:'+key));if(cls==='paladin')q.options.push('tce:paladin:blessed-warrior');if(cls==='ranger')q.options.push('tce:ranger:druidic-warrior');}}
+playerClasses.items.find(i=>i.type==='class'&&i.data.classId==='sorcerer').data.choices.find(q=>q.key==='metamagic').options.push('tce:sorcerer:seeking-spell','tce:sorcerer:transmuted-spell');
+const depth=warlockInvocations.items.find(i=>i.id==='xge:warlock:gift-of-the-depths');depth.data.buildEffects={movementMatchWalk:['swim']};

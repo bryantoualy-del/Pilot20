@@ -1,3 +1,4 @@
+import {replacementPermission,pactRetooling} from './replacement-policy.js';
 /** Level-up audit, separate from combat. Only declarative snapshots, never inferred player choices. */
 import {check,keys,json,id,integer} from '../character/contracts.js';
 import {resolveProgression,effectiveClassData} from './progression.js';
@@ -26,7 +27,7 @@ export function validateAdvancementHistory(index,request,history) {
    for(const old of previous.report.choices) {
     const next=report.choices.find(c=>c.id===old.id),before=previous.report.selections[old.id]??[],after=report.selections[old.id]??[];
     const removed=difference(before,after),added=difference(after,before);
-    if(!next){if(!retraining)issues.push({code:'historical-choice-disappeared',choiceId:old.id,characterLevel:i+1});continue;}
+    if(!next){if(pactRetooling(index,row.classes,row.classId,previous.report.selections,report.selections)&&old.classId==='warlock'&&['warlock:tome-cantrips','warlock:ancient-rituals'].includes(old.id))continue;if(!retraining)issues.push({code:'historical-choice-disappeared',choiceId:old.id,characterLevel:i+1});continue;}
     if(!removed.length&&!added.length)continue;
     const advancing=old.classId===row.classId,policy=effectiveClassData(index,row.classes.find(c=>c.id===old.classId)).acquisitionPolicy??{};
     const addIssue=code=>issues.push({code,choiceId:old.id,characterLevel:i+1});
@@ -41,20 +42,13 @@ export function validateAdvancementHistory(index,request,history) {
     const learned=old.replaceableKnown||old.id.endsWith(':known-spells')||old.id.endsWith(':known-free-spells')||old.id.includes(':magical-secrets-');
     const invocation=old.id.endsWith(':invocations');
     if(learned||invocation) {
-     const key=old.classId+(invocation?':invocation':':known');budgets.set(key,(budgets.get(key)??0)+removed.length);
+     const key=old.classId+(invocation?':invocation':':known');const counted=invocation&&pactRetooling(index,row.classes,row.classId,previous.report.selections,report.selections)?removed.filter(id=>next.options.includes(id)).length:removed.length;budgets.set(key,(budgets.get(key)??0)+counted);
      const cap=invocation?policy.invocationReplacementPerClassLevel??0:policy.knownReplacementPerClassLevel??0;
      if((!advancing&&(removed.length||added.length))||budgets.get(key)>cap)addIssue('replacement-limit');
      if(old.id.includes(':magical-secrets-')&&removed.length&&added.some(id=>!index.get(id)?.data.classIds?.includes(old.classId)))addIssue('secret-replacement-class-list');
      continue;
     }
-    if(old.replacementRule&&removed.length){const rule=old.replacementRule,level=row.classes.find(c=>c.id===old.classId).level;if(!advancing||removed.length>rule.maximum||(rule.levels&&!rule.levels.includes(level)))addIssue('replacement-limit');continue;}
-    const versatilityKind=old.id===old.classId+':cantrips'?'cantrip':old.kind==='expertise'?'expertise':null;
-    if(versatilityKind&&removed.length&&(policy[versatilityKind+'ReplacementAtASI']??0)>0){
-     const classLevel=row.classes.find(c=>c.id===old.classId).level,asi=report.choices.some(q=>q.classId===old.classId&&q.kind==='asi'&&q.level===classLevel),cap=policy[versatilityKind+'ReplacementAtASI']??0,key=old.classId+':asi-versatility';
-     budgets.set(key,(budgets.get(key)??0)+removed.length);
-     if(!advancing||!asi||removed.length>cap||budgets.get(key)>(policy.sharedASIReplacementLimit??cap))addIssue('asi-versatility-limit');
-     continue;
-    }
+    const permit=replacementPermission(index,row.classes,row.classId,old);if(permit&&removed.length){budgets.set(permit.key,(budgets.get(permit.key)??0)+removed.length);if(removed.length>permit.choiceMaximum||budgets.get(permit.key)>permit.maximum)addIssue(permit.key.endsWith(':asi-versatility')?'asi-versatility-limit':'replacement-limit');continue;}
     // Count increases (new cantrip / metamagic / etc.) are allowed only when that class advances.
     if(removed.length||!advancing)addIssue('historical-choice-changed');
    }

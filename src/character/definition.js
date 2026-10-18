@@ -51,7 +51,7 @@ export function validateCharacter(d) {
   check(Array.isArray(d.resources) && Array.isArray(d.abilities) && Array.isArray(d.modifiers),'Rule arrays');
   ids(d.resources.map(r=>r.id));ids(d.abilities.map(a=>a.id));ids(d.modifiers.map(m=>m.id));
   keys(d.defenses,['resistances','immunities','vulnerabilities']);for(const v of Object.values(d.defenses)) ids(v);
-  keys(d.movement,['walk','ignoreHeavyPenalty','climb','swim','fly','climbMatchesWalk'],['walk','ignoreHeavyPenalty']);check(integer(d.movement.walk,0,200) && typeof d.movement.ignoreHeavyPenalty==='boolean','Movement');
+  keys(d.movement,['walk','ignoreHeavyPenalty','climb','swim','fly','climbMatchesWalk','swimMatchesWalk'],['walk','ignoreHeavyPenalty']);check(integer(d.movement.walk,0,200) && typeof d.movement.ignoreHeavyPenalty==='boolean','Movement');
   for(const key of ['climb','swim','fly'])if(d.movement[key]!==undefined)check(integer(d.movement[key],0,200),'Movement mode');if(d.movement.climbMatchesWalk!==undefined)check(typeof d.movement.climbMatchesWalk==='boolean','Climb speed policy');
   check(Array.isArray(d.armorRules),'Armor rules');
   for(const a of d.armorRules) {keys(a,['id','base','abilities','shieldAllowed','source']);check(id(a.id) && integer(a.base,0,30) && typeof a.shieldAllowed==='boolean','AC rule');ids(a.abilities);check(a.abilities.every(k=>ABILITIES.includes(k)),'AC abilities');source(a.source);}

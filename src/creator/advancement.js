@@ -1,3 +1,4 @@
+import {replacementPermission,pactRetooling} from '../catalog/replacement-policy.js';
 import {check} from '../character/contracts.js';
 import {effectiveClassData,resolveProgression} from '../catalog/progression.js';
 const total=classes=>classes.reduce((n,c)=>n+c.level,0);
@@ -16,14 +17,12 @@ export function validateLevelGain(index,request,pending){
  const report=resolveProgression(index,{...request,classes:before.classes,selections:before.selections,spellbookTranscriptions:before.spellbookTranscriptions??[],spellGrantReplacements:before.spellGrantReplacements??[],featRitualCopies:before.featRitualCopies??[]});
  const next=resolveProgression(index,request),budgets=new Map();
  for(const old of report.choices){if(old.kind==='prepared'||old.mutableAtRest)continue;const after=next.choices.find(q=>q.id===old.id);const prior=before.selections[old.id]??(old.kind==='subclass'?[before.classes.find(c=>c.id===old.classId)?.subclassId].filter(Boolean):[]),now=request.selections[old.id]??(old.kind==='subclass'?[request.classes.find(c=>c.id===old.classId)?.subclassId].filter(Boolean):[]),removed=prior.filter(id=>!now.includes(id));
- if(!after){issues.push({code:'level-gain-choice-removed',choiceId:old.id});continue;}
+ if(!after){if(pactRetooling(index,request.classes,classId,before.selections,request.selections)&&old.classId==='warlock'&&['warlock:tome-cantrips','warlock:ancient-rituals'].includes(old.id))continue;issues.push({code:'level-gain-choice-removed',choiceId:old.id});continue;}
  if(!removed.length)continue;
  const c=request.classes.find(c=>c.id===old.classId),policy=effectiveClassData(index,c).acquisitionPolicy??{},advancing=classId===old.classId;
  const invocation=old.id.endsWith(':invocations'),known=old.replaceableKnown||old.id.endsWith(':known-spells')||old.id.endsWith(':known-free-spells')||old.id.includes(':magical-secrets-');
- if(invocation||known){const key=old.classId+(invocation?':invocation':':known'),cap=invocation?policy.invocationReplacementPerClassLevel??0:policy.knownReplacementPerClassLevel??0;budgets.set(key,(budgets.get(key)??0)+removed.length);if(!advancing||budgets.get(key)>cap)issues.push({code:'replacement-limit',choiceId:old.id});if(old.id.includes(':magical-secrets-')&&now.filter(id=>!prior.includes(id)).some(id=>!index.get(id)?.data.classIds.includes(old.classId)))issues.push({code:'secret-replacement-class-list',choiceId:old.id});continue;}
- if(old.replacementRule&&removed.length){const rule=old.replacementRule;if(!advancing||removed.length>rule.maximum||(rule.levels&&!rule.levels.includes(c.level)))issues.push({code:'replacement-limit',choiceId:old.id});continue;}
- const kind=old.id===old.classId+':cantrips'?'cantrip':old.kind==='expertise'?'expertise':null;
- if(kind&&advancing&&next.choices.some(q=>q.classId===classId&&q.kind==='asi'&&q.level===c.level)){const cap=policy[kind+'ReplacementAtASI']??0,key=classId+':versatility';budgets.set(key,(budgets.get(key)??0)+removed.length);if(removed.length<=cap&&budgets.get(key)<=(policy.sharedASIReplacementLimit??cap))continue;}
+ if(invocation||known){const key=old.classId+(invocation?':invocation':':known'),cap=invocation?policy.invocationReplacementPerClassLevel??0:policy.knownReplacementPerClassLevel??0;const counted=invocation&&pactRetooling(index,request.classes,classId,before.selections,request.selections)?removed.filter(id=>after.options.includes(id)).length:removed.length;budgets.set(key,(budgets.get(key)??0)+counted);if(!advancing||budgets.get(key)>cap)issues.push({code:'replacement-limit',choiceId:old.id});if(old.id.includes(':magical-secrets-')&&now.filter(id=>!prior.includes(id)).some(id=>!index.get(id)?.data.classIds.includes(old.classId)))issues.push({code:'secret-replacement-class-list',choiceId:old.id});continue;}
+ const permit=replacementPermission(index,request.classes,classId,old);if(permit){budgets.set(permit.key,(budgets.get(permit.key)??0)+removed.length);if(removed.length<=permit.choiceMaximum&&budgets.get(permit.key)<=permit.maximum)continue;issues.push({code:'replacement-limit',choiceId:old.id});continue;}
  issues.push({code:'historical-choice-changed',choiceId:old.id});
  }
  return issues;
