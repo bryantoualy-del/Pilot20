@@ -20,6 +20,12 @@ jobs:
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npx playwright install --with-deps ${{ matrix.engine }}
       - run: npm run build:web
+      - name: Verify parchment theme and disclosure controls
+        run: npm run test:e2e:appearance
+      - uses: actions/upload-artifact@v4
+        with:
+          name: appearance-preview-${{ matrix.engine }}
+          path: docs/screenshots/appearance/
       - name: Verify race picker and Custom lineage
         run: npm run test:e2e:race-picker
       - run: npm run test:e2e
