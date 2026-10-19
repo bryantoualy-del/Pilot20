@@ -1793,3 +1793,96 @@ button.primary,.single-actions .primary{color:#191b1f}
 .recap-row button{flex:none;font-size:12px;min-height:38px;padding:7px 11px}
 .recap-incomplete .recap-content p{color:var(--accent)}
 @media(max-width:600px){.score-mode-hint{align-items:flex-start;flex-direction:column}.recap-row{align-items:flex-start}.recap-row button{min-height:36px;padding:6px 8px}}
+
+
+/* Validated iPad and phone designs — six clearly visible chapters, same 2014 decisions. */
+.creator-page{max-width:1200px}
+.single-creator{max-width:1120px}
+.journey-steps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;margin:16px 0 12px}
+.single-creator .journey-steps button{display:flex;align-items:center;justify-content:flex-start;gap:8px;min-width:0;padding:10px 8px;min-height:52px;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--muted);font:600 12px/1.25 system-ui,sans-serif;text-align:left}
+.journey-number{display:inline-grid;place-items:center;flex:0 0 26px;height:26px;border:1px solid #786451;border-radius:5px;color:var(--gold);font:600 11px/1 system-ui,sans-serif}
+.journey-name{min-width:0;overflow-wrap:anywhere}
+.single-creator .journey-steps [aria-current=step]{color:var(--text);border-color:var(--accent);background:#342d30}
+.journey-steps [aria-current=step] .journey-number{background:var(--accent);color:#191b1f;border-color:var(--accent)}
+.journey-steps .journey-done .journey-number{border-color:var(--green);color:var(--green)}
+.journey-substep{margin:16px 0 8px;color:var(--gold);font:600 11px/1.35 system-ui,sans-serif;letter-spacing:1.4px;text-transform:uppercase}
+.single-creator .single-progress{height:3px;margin-bottom:0}
+.class-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,1fr);gap:20px;align-items:start}
+.class-layout .single-classes{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:0}
+.class-layout .single-classes button{flex-direction:column;justify-content:center;align-items:center;gap:6px;min-height:94px;text-align:center;padding:12px 6px}
+.class-layout .single-classes .class-icon-frame{margin:auto}
+.class-layout .single-classes button span:last-child{font:600 14px/1.25 system-ui,sans-serif;text-align:center}
+.class-setup{background:var(--surface);border:1px solid var(--border);padding:18px;border-radius:5px;min-width:0}
+.class-setup h2{font:600 21px/1.2 Georgia,serif;margin:0 0 7px}
+.class-setup p{margin:8px 0}
+.level-stepper{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;gap:8px;align-items:center}
+.level-stepper input{text-align:center;font-size:22px;font-weight:700}
+.single-creator .level-stepper button{min-width:0;padding:4px 0;font-size:23px}
+.class-specialization{display:flex;align-items:center;flex-wrap:wrap;gap:8px;justify-content:space-between;margin:10px 0}
+.class-specialization button{font-size:13px}
+.race-filter-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.single-creator .race-filter-row button{min-height:38px;padding:6px 12px;font-size:13px}
+.race-facts{margin-top:14px}
+.race-facts-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.race-facts-top h2{margin:0}
+.race-facts-top button{min-height:40px;font-size:13px}
+.race-summary{color:var(--text);margin:10px 0 14px;font-size:14px}
+.race-trait-tags{display:flex;flex-wrap:wrap;gap:7px}
+.race-trait-tags span{padding:6px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:var(--muted);font-size:12px}
+.race-facts details{margin-top:14px}
+.asi-switch{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+.asi-switch button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:8px;white-space:normal;min-width:0}
+.asi-switch small{font-size:12px;color:var(--muted)}
+.asi-switch button.selected{border-color:var(--accent);background:#352b2c}
+.score-table{margin-top:14px}
+.score-table .score-final strong{color:var(--text);font-size:16px;font-variant-numeric:tabular-nums}
+@media(min-width:1024px){.single-races{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(min-width:701px) and (max-width:1023px){.class-layout{grid-template-columns:minmax(0,1fr) minmax(235px,.8fr)}.single-creator .journey-steps button{padding:8px 5px;font-size:11px;gap:5px}.journey-number{flex-basis:22px;height:22px}.class-layout .single-classes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){
+  .creator-page{padding:4px 14px 12px}
+  .single-creator .single-body{padding:12px 0 18px}
+  .journey-steps{gap:5px;margin:12px 0}
+  .single-creator .journey-steps button{min-height:49px;flex-direction:column;justify-content:center;gap:3px;padding:5px 1px;border-color:transparent;font-size:10px}
+  .journey-name{display:none}
+  .single-creator .journey-steps [aria-current=step] .journey-name{display:block;text-align:center;font-size:10px;line-height:1.1}
+  .journey-number{flex-basis:auto;width:26px;height:26px}
+  .class-layout{display:block}
+  .class-layout .single-classes{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  .class-layout .single-classes button{min-height:88px;padding:10px 2px}
+  .class-setup{margin-top:12px;padding:14px}
+  .single-races{grid-template-columns:1fr}
+  .race-picker .single-races button{min-height:54px;padding:8px 10px}
+  .race-facts-top{align-items:flex-start}
+  .race-facts-top button{flex:0 0 auto}
+  .score-table,.score-table tbody{display:block;width:100%;border:0}
+  .score-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .score-table .score-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(120px,1fr);gap:7px 9px;align-items:center;border:1px solid var(--border);border-radius:5px;background:var(--surface);margin-bottom:8px;padding:10px;min-width:0}
+  .score-table .score-row th,.score-table .score-row td{border:0;padding:2px;min-width:0}
+  .score-table .score-row th{grid-column:1;grid-row:1;font-size:15px;text-align:left}
+  .score-table .score-base{grid-column:2;grid-row:1}
+  .score-table .score-cost{grid-column:1;grid-row:2;text-align:left}
+  .score-table .score-bonus{grid-column:2;grid-row:2}
+  .score-table .score-final{grid-column:1/-1;grid-row:3;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border)!important;padding-top:8px!important}
+  .score-table .score-cost::before,.score-table .score-bonus::before,.score-table .score-final::before{content:attr(data-label);display:block;color:var(--muted);font-size:11px;text-align:left;margin-bottom:3px}
+  .score-table .score-final::before{margin:0}
+  .score-table .score-cost{text-align:left}
+  .score-stepper{justify-content:flex-end}
+  .score-stepper button{width:44px;min-width:44px;min-height:44px}
+  .racial-bonus{justify-content:flex-end}
+  .racial-bonus input{width:22px;height:22px;min-height:22px}
+  .single-actions{position:sticky;bottom:0;z-index:10}
+  .single-option{flex-wrap:wrap}
+  .single-option button{margin-left:auto}
+}
+@media(max-width:360px){
+  .creator-page{padding-inline:10px}
+  .score-table .score-row{grid-template-columns:minmax(0,1fr) minmax(110px,1fr);gap:6px}
+  .score-stepper button{width:40px;min-width:40px}
+  .asi-switch{grid-template-columns:1fr}
+  .single-creator .journey-steps button{padding:5px 0}
+}
+
+/* Advanced decision menu is optional and placed after the active step. */
+.single-creator>.single-plan{margin:2px 0 0;opacity:.9}
+.single-creator>.single-plan>summary{font-size:11px;letter-spacing:.2px;text-transform:none;color:var(--muted);min-height:34px}
+.single-creator>.single-plan nav button{font-size:12px}

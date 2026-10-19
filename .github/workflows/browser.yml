@@ -5,7 +5,7 @@ permissions:
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -31,6 +31,8 @@ jobs:
       - name: Verify unified sources and reversible MJ restrictions
         run: node e2e/unified-sources.mjs
       - run: node e2e/compact-creator.mjs
+      - name: Verify approved iPad/phone six-stage journey
+        run: node e2e/validated-journey.mjs
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
         with:

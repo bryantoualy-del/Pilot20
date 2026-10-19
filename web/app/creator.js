@@ -16,6 +16,7 @@ import {ARMORS,WEAPONS} from '../../src/catalog/equipment.js';
 import {optionName,choiceName,issueMessage} from './editor.js';
 import {appearanceControls} from './appearance.js';
 import {replacementOptions} from '../../src/catalog/spell-grants.js';
+import {JOURNEY_STAGES,journeyStage,orderJourney,resolvedInlineDecision} from './creator-journey.js';
 
 export async function renderCreator(main,input,a) {
   const d=migrateSingleDraft(input),w=(fr,en)=>a.state.locale==='fr'?fr:en;
@@ -81,21 +82,45 @@ export async function renderCreator(main,input,a) {
     wrap.append(list,pages);fill();return wrap;
   }
   async function draw(focus=false) {
-    const plan=singlePath(a.context,a.config,d),{report,current,decisions,position}=plan;
+    const plan=singlePath(a.context,a.config,d),report=plan.report,decisions=orderJourney(plan.decisions),current=decisions.find(x=>x.id===plan.current.id)??decisions[0],position=decisions.indexOf(current);
     if(d.step!==current.id){d.step=current.id;await a.autosave(d);}
     const body=el('div',{class:'single-body','data-decision-id':current.id,'data-kind':current.kind},el('h1',{tabindex:-1},label(current)),el('p',{class:'single-edition'},'D&D 2014'));
     const saveState=el('span',{id:'draft-save-state',role:'status'},text(d.finalized?'saved':'draftSaved'));
     const exit=button(w('Quitter','Exit'),async()=>{try{await a.autosave(d);await a.nav('library');}catch(e){a.fail(e);}});
     exit.setAttribute('aria-label',text('saveAndExit'));exit.title=text('saveAndExit');
     const header=el('div',{class:'single-heading'},el('span',{},d.name||w('Nouveau personnage','New character')),saveState,exit);
-    const groupOf=x=>x.kind==='origin-choice'?'origin':x.kind==='class-choice'?(['spell','spellbook','prepared'].includes(x.choice.kind)?'spells':'features'):['equipment-choice','equipment-method'].includes(x.kind)?'equipment':x.kind==='subrace'?'race':x.kind;
+    const stageId=journeyStage(current),stageIndex=JOURNEY_STAGES.findIndex(s=>s.id===stageId);
+    const withinStage=decisions.filter(x=>journeyStage(x)===stageId);
+    const withinPosition=withinStage.findIndex(x=>x.id===current.id);
+    const sectionNav=el('nav',{class:'journey-steps','aria-label':w('Six étapes de création','Six creation stages')},
+      JOURNEY_STAGES.map((stage,i)=>{
+        const first=decisions.find(x=>journeyStage(x)===stage.id);
+        const b=button([el('span',{class:'journey-number'},String(i+1).padStart(2,'0')),el('span',{class:'journey-name'},w(stage.fr,stage.en))],()=>first?go(first.id):null,'journey-stage');
+        b.setAttribute('aria-label',w(stage.fr,stage.en));if(stageId===stage.id)b.setAttribute('aria-current','step');
+        if(i<stageIndex)b.classList.add('journey-done');return b;
+      }));
+    const progress=el('progress',{class:'single-progress',value:stageIndex+1,max:JOURNEY_STAGES.length,
+      'aria-label':w('Progression de la création','Character creation progress'),
+      'aria-valuetext':(stageIndex+1)+' / '+JOURNEY_STAGES.length+' · '+w(JOURNEY_STAGES[stageIndex].fr,JOURNEY_STAGES[stageIndex].en)+' · '+label(current)});
+    const substep=el('p',{class:'journey-substep'},w('ÉTAPE ','STEP ')+(stageIndex+1)+' / 6'+
+      (withinStage.length>1?' · '+w('Décision ','Decision ')+(withinPosition+1)+' / '+withinStage.length:''));
+    // Detailed navigation remains available on demand for advanced users and older drafts.
+    const groupOf=x=>x.kind==='origin-choice'?'origin':x.kind==='class-choice'?
+      (['spell','spellbook','prepared'].includes(x.choice.kind)?'spells':'features'):
+      ['equipment-choice','equipment-method'].includes(x.kind)?'equipment':x.kind==='subrace'?'race':x.kind;
     const groups=[...new Set(decisions.map(groupOf))];
-    const groupNames={identity:text('name'),race:text('race'),class:text('class'),background:text('background'),scores:text('scores'),'hit-points':text('hp'),origin:w('Origine et maîtrises','Origin and training'),features:w('Capacités','Features'),spells:w('Sorts','Spells'),equipment:text('equipment'),training:w('Maîtrises','Proficiencies'),summary:w('Récapitulatif','Summary')};
-    const sectionNav=el('details',{class:'single-plan'},el('summary',{},el('span',{},w('Création du personnage','Character creation')),el('span',{class:'single-step-count'},`${position+1} / ${decisions.length}`)),el('nav',{'aria-label':w('Étapes de création','Creation steps')},groups.map(group=>{
-      const decision=decisions.find(x=>groupOf(x)===group);const b=button(groupNames[group],()=>go(decision.id));if(group===groupOf(current))b.setAttribute('aria-current','step');return b;
-    })));
-    const progress=el('progress',{class:'single-progress',value:position+1,max:decisions.length,'aria-label':w('Progression de la création','Character creation progress'),'aria-valuetext':`${position+1} / ${decisions.length} · ${label(current)}`});
-    shell.replaceChildren(header,sectionNav,progress,body);
+    const groupNames={identity:text('name'),race:text('race'),class:text('class'),background:text('background'),
+      scores:text('scores'),'hit-points':text('hp'),origin:w('Origine et maîtrises','Origin and training'),
+      features:w('Capacités','Features'),spells:w('Sorts','Spells'),equipment:text('equipment'),
+      training:w('Maîtrises','Proficiencies'),summary:w('Récapitulatif','Summary')};
+    const detailedNav=el('details',{class:'single-plan'},el('summary',{},
+      el('span',{},w('Accéder à un choix précis','Jump to a specific choice')),
+      el('span',{class:'single-step-count'},(position+1)+' / '+decisions.length)),
+      el('nav',{'aria-label':w('Choix détaillés','Detailed choices')},groups.map(group=>{
+        const decision=decisions.find(x=>groupOf(x)===group),b=button(groupNames[group],()=>go(decision.id));
+        if(group===groupOf(current))b.setAttribute('aria-current','step');return b;
+      })));
+    shell.replaceChildren(header,sectionNav,progress,substep,body,detailedNav);
     if(d.pendingAdvancement)body.append(el('p',{role:'status'},w('Progression en cours : ','Level gain in progress: ')+a.cls(d.pendingAdvancement.classId)),button(w('Annuler ce gain de niveau','Cancel this level gain'),async()=>{const restored=cancelAdvancement(d);Object.keys(d).forEach(k=>delete d[k]);Object.assign(d,restored);await a.autosave(d);await draw(true);}));
     if(current.kind==='identity'){
       body.append(field(text('name'),el('input',{id:'character-name',value:d.name,maxlength:200,autocomplete:'off',onchange:e=>update(x=>{x.name=e.target.value;})})),
@@ -104,26 +129,83 @@ export async function renderCreator(main,input,a) {
     }
     if(current.kind==='race'){
       body.append(renderRacePicker(d,a,update,filters));
-      if(report.origin?.race){const o=report.origin;body.append(el('section',{class:'race-facts','aria-live':'polite'},el('h2',{},a.name(o.race)),el('dl',{class:'spell-facts'},...[[w('Bonus','Bonuses'),Object.entries(o.bonuses??{}).filter(([,v])=>v).map(([k,v])=>a.label(k)+' +'+v).join(', ')||w('À choisir dans Caractéristiques','Choose in Ability scores')],[w('Taille','Size'),optionName(o.size,a)],[w('Vitesse','Speed'),(o.speed/5*1.5).toLocaleString(a.state.locale)+' m'],[w('Langues','Languages'),(o.languages??[]).map(id=>optionName(id,a)).join(', ')]].flatMap(([k,v])=>[el('dt',{},k),el('dd',{},v)])),el('ul',{},(o.traits??[]).filter(t=>[o.race.id,o.subrace?.id].includes(t.ownerId)).map(t=>el('li',{},t.name?.[a.state.locale]??t.id,t.description?el('p',{},t.description):null))),button(w('Tous les détails','All details'),()=>details(o.race))));}
+      if(report.origin?.race){
+        const o=report.origin,traits=(o.traits??[]).filter(t=>[o.race.id,o.subrace?.id].includes(t.ownerId)),
+          bonuses=Object.entries(o.bonuses??{}).filter(([,v])=>v).map(([k,v])=>a.label(k)+' +'+v).join(' · '),
+          summary=[bonuses||w('Bonus à répartir','Bonuses to assign'),(o.speed/5*1.5).toLocaleString(a.state.locale)+' m',
+            (o.languages??[]).map(id=>optionName(id,a)).join(', ')].filter(Boolean).join(' · ');
+        body.append(el('section',{class:'race-facts','aria-live':'polite'},
+          el('div',{class:'race-facts-top'},el('h2',{},a.name(o.race)),button(w('Fiche complète','Full entry'),()=>details(o.race),'subtle')),
+          el('p',{class:'race-summary'},summary),
+          el('div',{class:'race-trait-tags'},traits.slice(0,5).map(t=>el('span',{},t.name?.[a.state.locale]??t.id))),
+          el('details',{},el('summary',{},w('Tous les traits raciaux','All racial traits')),
+            traits.map(t=>el('p',{},el('strong',{},t.name?.[a.state.locale]??t.id),t.description?el('span',{},' · '+t.description):null)))));
+      }
     }
     if(current.kind==='subrace'){
       const race=report.origin.race;
       for(const sub of race.data.subraces)body.append(button(sub.name[a.state.locale],()=>update(x=>{x.subraceId=sub.id;}),d.subraceId===sub.id?'selected':''));
     }
     if(current.kind==='class'){
-      const cls=d.classes[0];
-      const classes=el('div',{class:'single-classes',role:'group','aria-label':text('class')});
-      for(const entry of a.context.index.list('class').sort((a1,b1)=>a.cls(a1.data.classId).localeCompare(a.cls(b1.data.classId),a.state.locale))){const id=entry.data.classId,selected=d.classChosen!==false&&cls.id===id,b=button([classIcon(id),el('span',{},a.cls(id))],()=>update(x=>{changePrimaryClass(x,id);}),selected?'selected':'');b.setAttribute('aria-pressed',String(selected));b.disabled=d.classes.slice(1).some(c=>c.id===id);classes.append(b);}
-      body.append(classes);
-      if(d.classChosen!==false){const info=classInfo(cls.id,a.state.locale);if(info)body.append(el('p',{},info.description));const primary=Object.entries(templateScores(cls.id)).find(([,value])=>value===15)?.[0];body.append(el('p',{},w('Caractéristique conseillée : ','Suggested ability: ')+a.label(primary)));}
+      const cls=d.classes[0],classLayout=el('div',{class:'class-layout'}),
+        classes=el('div',{class:'single-classes',role:'group','aria-label':text('class')}),
+        setup=el('section',{class:'class-setup'});
+      for(const entry of a.context.index.list('class').sort((a1,b1)=>a.cls(a1.data.classId).localeCompare(a.cls(b1.data.classId),a.state.locale))){
+        const id=entry.data.classId,selected=d.classChosen!==false&&cls.id===id,
+          b=button([classIcon(id),el('span',{},a.cls(id))],()=>update(x=>{changePrimaryClass(x,id);}),selected?'selected':'');
+        b.setAttribute('aria-pressed',String(selected));b.disabled=d.classes.slice(1).some(c=>c.id===id);classes.append(b);
+      }
+      if(d.classChosen!==false){
+        setup.append(el('h2',{},a.cls(cls.id)));
+        const info=classInfo(cls.id,a.state.locale);
+        if(info)setup.append(el('p',{class:'single-help'},info.description));
+        const primary=Object.entries(templateScores(cls.id)).find(([,value])=>value===15)?.[0];
+        if(primary)setup.append(el('p',{class:'single-help'},w('Caractéristique conseillée : ','Suggested ability: ')+a.label(primary)));
+      }
+      const changeLevel=n=>{
+        const others=d.classes.slice(1).reduce((sum,c)=>sum+c.level,0);
+        if(!Number.isInteger(n)||n<1||n+others>20){a.notice(w('Le niveau total doit rester entre 1 et 20.','Total level must stay between 1 and 20.'));return;}
+        return update(x=>{x.classes[0].level=n;});
+      };
+      const levelInput=el('input',{type:'number',min:1,max:20,value:cls.level,'aria-label':text('level'),
+        onchange:e=>changeLevel(Number(e.target.value))});
+      const minus=button('−',()=>changeLevel(cls.level-1),'level-control'),
+        plus=button('+',()=>changeLevel(cls.level+1),'level-control');
+      minus.setAttribute('aria-label',w('Réduire le niveau','Decrease level'));plus.setAttribute('aria-label',w('Augmenter le niveau','Increase level'));
+      minus.disabled=cls.level<=1;plus.disabled=d.classes.reduce((sum,c)=>sum+c.level,0)>=20;
+      setup.append(field(text('level'),el('div',{class:'level-stepper'},minus,levelInput,plus)));
+      const subclassDecision=decisions.find(x=>x.kind==='class-choice'&&x.choice?.kind==='subclass'&&x.choice.classId===cls.id);
+      if(subclassDecision){
+        const q=subclassDecision.choice,chosen=a.context.index.get(cls.subclassId);
+        setup.append(field(w('Sous-classe','Subclass'),
+          select([['',w('Choisir une spécialisation','Choose specialization')],...q.options.map(id=>[id,a.name(a.context.index.get(id))])],
+            cls.subclassId??'',e=>update(x=>{
+              const c=x.classes.find(c=>c.id===cls.id);
+              if(c.subclassId&&c.subclassId!==e.target.value)retainDecision(x,'subclass',cls.id);
+              c.subclassId=e.target.value||null;
+            }))));
+        if(chosen)setup.append(el('div',{class:'class-specialization'},el('strong',{},a.name(chosen)),
+          button(w('Voir les aptitudes','View features'),()=>details(chosen),'subtle')));
+      }else setup.append(el('p',{class:'single-help'},w('Votre spécialisation apparaît lorsqu’elle est disponible à ce niveau.','Your specialization appears when it unlocks at this level.')));
       const grants=[...(a.context.index.class(cls.id)?.data.grants??[]),...(a.context.index.get(cls.subclassId)?.data.grants??[])].filter(row=>row.level<=cls.level);
       const levels=[...new Set(grants.map(row=>row.level))].sort((a,b)=>a-b);
-      body.append(el('details',{},el('summary',{},w('Capacités par niveau','Features by level')),levels.map(level=>el('div',{class:'feature-level'},el('strong',{},text('level')+' '+level),el('div',{class:'feature-buttons'},grants.filter(row=>row.level===level).flatMap(row=>row.featureIds).map(id=>{const entry=a.context.index.get(id);return entry?button(a.name(entry),()=>details(entry),'subtle'):null;}))))));
-      body.append(field(text('level'),el('input',{type:'number',min:1,max:20,value:cls.level,onchange:e=>{const n=Number(e.target.value);if(Number.isInteger(n)&&n>=1&&n+d.classes.slice(1).reduce((s,c)=>s+c.level,0)<=20)update(x=>{x.classes[0].level=n;});else a.notice(w('Le niveau total doit rester entre 1 et 20.','Total level must stay between 1 and 20.'));}})));
+      setup.append(el('details',{},el('summary',{},w('Capacités par niveau','Features by level')),
+        levels.map(level=>el('div',{class:'feature-level'},el('strong',{},text('level')+' '+level),
+          el('div',{class:'feature-buttons'},grants.filter(row=>row.level===level).flatMap(row=>row.featureIds)
+            .map(id=>{const entry=a.context.index.get(id);return entry?button(a.name(entry),()=>details(entry),'subtle'):null;}))))));
+      classLayout.append(classes,setup);body.append(classLayout);
       if(a.config.enabledOptions.includes('multiclass')){
         const advanced=el('details',{},el('summary',{},w('Ajouter une classe','Add a class')));
-        for(const [i,c]of d.classes.entries())if(i>0)advanced.append(el('p',{},a.cls(c.id)),field(text('level'),el('input',{type:'number',min:1,max:20,value:c.level,onchange:e=>{const n=Number(e.target.value);if(Number.isInteger(n)&&n>=1&&d.classes.reduce((s,c,j)=>s+(i===j?n:c.level),0)<=20)update(x=>{x.classes[i].level=n;});}})),button(w('Retirer cette classe','Remove this class'),()=>update(x=>{x.classes.splice(i,1);})));
-        let id='';advanced.append(select([['',w('Choisir une classe','Choose a class')],...a.context.index.list('class').filter(c=>!d.classes.some(x=>x.id===c.data.classId)).map(c=>[c.data.classId,a.cls(c.data.classId)])],'',e=>{id=e.target.value;}),button(text('add'),()=>{if(id&&d.classes.reduce((n,c)=>n+c.level,0)<20)update(x=>{x.classes.push({id,level:1,subclassId:null});});}));body.append(advanced);
+        for(const [i,c]of d.classes.entries())if(i>0)advanced.append(el('p',{},a.cls(c.id)),
+          field(text('level'),el('input',{type:'number',min:1,max:20,value:c.level,onchange:e=>{
+            const n=Number(e.target.value);
+            if(Number.isInteger(n)&&n>=1&&d.classes.reduce((s,c,j)=>s+(i===j?n:c.level),0)<=20)update(x=>{x.classes[i].level=n;});
+          }})),button(w('Retirer cette classe','Remove this class'),()=>update(x=>{x.classes.splice(i,1);})));
+        let id='';advanced.append(select([['',w('Choisir une classe','Choose a class')],...a.context.index.list('class')
+          .filter(c=>!d.classes.some(x=>x.id===c.data.classId)).map(c=>[c.data.classId,a.cls(c.data.classId)])],'',
+          e=>{id=e.target.value;}),button(text('add'),()=>{
+            if(id&&d.classes.reduce((n,c)=>n+c.level,0)<20)update(x=>{x.classes.push({id,level:1,subclassId:null});});
+          }));body.append(advanced);
       }
     }
     if(current.kind==='background'){
@@ -169,7 +251,7 @@ export async function renderCreator(main,input,a) {
         for(const q of scoreChoices){const values=d.originSelections?.[q.id]??[],selected=values.includes(ability);bonus.append(el('label',{},el('input',{type:q.count===1?'radio':'checkbox',name:q.id,checked:selected,disabled:!selected&&(!q.options.includes(ability)||values.length>=q.count&&q.count!==1),'aria-label':a.label(ability)+' +'+q.amount,onchange:e=>update(x=>{x.originSelections??={};x.originSelections[q.id]=e.target.checked?(q.count===1?[ability]:[...values,ability]):values.filter(v=>v!==ability);})}),el('span',{},'+'+q.amount)));}
         if(!scoreChoices.length)bonus.append(el('span',{},'+'+(report.origin?.bonuses?.[ability]??0)));
         const final=report.scores?.[ability]??n,mod=Math.floor((final-10)/2);
-        rows.append(el('tr',{},el('th',{scope:'row'},a.label(ability)),el('td',{},el('div',{class:'score-stepper'},minus,el('output',{},n),plus)),el('td',{},d.scoreMethod==='point-buy'?(POINT_COST[n]??'—'):'—'),el('td',{},bonus),el('td',{},el('strong',{},final+' ('+(mod>=0?'+':'')+mod+')'))));
+        rows.append(el('tr',{class:'score-row'},el('th',{scope:'row'},a.label(ability)),el('td',{class:'score-base','data-label':w('Valeur brute','Base')},el('div',{class:'score-stepper'},minus,el('output',{},n),plus)),el('td',{class:'score-cost','data-label':w('Coût','Cost')},d.scoreMethod==='point-buy'?(POINT_COST[n]??'—'):'—'),el('td',{class:'score-bonus','data-label':w('Bonus racial','Racial bonus')},bonus),el('td',{class:'score-final','data-label':w('Final','Final')},el('strong',{},final+' ('+(mod>=0?'+':'')+mod+')'))));
       }
       grid.append(rows);body.append(grid);
       body.append(el('p',{},w('Points de vie prévus : ','Estimated hit points: ')+(report.hpPreview??'—')));
@@ -202,7 +284,7 @@ export async function renderCreator(main,input,a) {
         if(!a.config.enabledOptions.includes('feats'))body.append(el('p',{},w('Les dons sont désactivés dans cette campagne. Vous pouvez les autoriser ci-dessous.','Feats are disabled for this campaign. You can enable them below.')),button(w('Autoriser les dons pour cette campagne','Enable feats for this campaign'),async()=>{const next={...a.config,revision:a.config.revision+1,enabledOptions:[...a.config.enabledOptions,'feats']};await a.campaigns.save(next,{expectedRevision:a.config.revision});await a.nav('creator',d.id);}));
         const selected=values[0]??'',isFeat=selected&&!selected.startsWith('asi:'),feats=q.options.filter(id=>!id.startsWith('asi:'));
         const state=filters.get(q.id)??{mode:isFeat?'feat':'scores',pair:selected.startsWith('asi:')?selected.split(':').slice(1):['','']};filters.set(q.id,state);
-        body.append(field(w('Choix','Choice'),select([['scores',w('Caractéristiques','Ability scores')],['feat',w('Don','Feat')]],state.mode,e=>{state.mode=e.target.value;saveChoice([]);})));
+        body.append(el('div',{class:'asi-switch',role:'group','aria-label':w('Amélioration ou don','Ability increase or feat')},button([el('strong',{},w('Améliorer les caractéristiques','Improve abilities')),el('small',{},w('+2 ou +1 / +1','+2 or +1 / +1'))],()=>{state.mode='scores';saveChoice([]);},state.mode==='scores'?'selected':''),button([el('strong',{},w('Choisir un don','Choose a feat')),el('small',{},w('Une nouvelle aptitude','A new feature'))],()=>{state.mode='feat';saveChoice([]);},state.mode==='feat'?'selected':'')));
         if(state.mode==='feat')body.append(field(w('Don','Feat'),select([['',w('Choisir un don','Choose a feat')],...feats.map(id=>[id,optionName(id,a)])],isFeat?selected:'',e=>saveChoice(e.target.value?[e.target.value]:[]))));
         else for(const i of [0,1])body.append(field('+1 · '+(i+1),select([['',w('Choisir une caractéristique','Choose an ability')],...ABILITIES.map(id=>[id,a.label(id)])],state.pair[i],e=>{state.pair[i]=e.target.value;const [x,y]=state.pair,id=q.options.find(id=>id===`asi:${x}:${y}`||id===`asi:${y}:${x}`);saveChoice(id?[id]:[]);})));
       }else body.append(choiceList(q,values,saveChoice));
@@ -326,7 +408,7 @@ export async function renderCreator(main,input,a) {
     if(errors.length)body.append(el('p',{class:'single-help',role:'status'},issueMessage(errors[0],report,a)));
     const actions=el('div',{class:'single-actions'}),back=button(text('back'),()=>position?go(decisions[position-1].id):a.nav('library'));
     actions.append(back);
-    if(current.kind!=='summary'){const next=button(text('next'),()=>go(decisions[position+1].id),'primary');next.disabled=!ready;actions.append(next);}
+    if(current.kind!=='summary'){let nextIndex=position+1;while(nextIndex<decisions.length-1&&resolvedInlineDecision(decisions[nextIndex],report,d,decisionReady))nextIndex++;const next=button(text('next'),()=>go(decisions[nextIndex].id),'primary');next.disabled=!ready;actions.append(next);}
     shell.append(actions);
     if(focus){body.querySelector('h1').focus({preventScroll:true});window.scrollTo({top:0});}
   }

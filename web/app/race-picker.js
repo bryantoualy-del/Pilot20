@@ -6,7 +6,7 @@ import { el, button, field, select } from './dom.js';
 
 export function renderRacePicker(d, a, update, filters) {
   const w = (fr, en) => a.state.locale === 'fr' ? fr : en;
-  const state = filters.get('race-picker') ?? { query: '' };
+  const state = filters.get('race-picker') ?? { query: '', availableOnly: false };
   filters.set('race-picker', state);
   const wrapper = el('section', { class: 'race-picker' });
   const grid = el('div', { class: 'single-races', 'aria-label': w('Races', 'Races') });
@@ -17,10 +17,14 @@ export function renderRacePicker(d, a, update, filters) {
     placeholder: w('Rechercher une race…', 'Search races…'),
     oninput: e => { state.query = e.target.value; fill(); },
   });
-  wrapper.append(field(w('Rechercher une race', 'Search races'), search), count, grid);
+  const tabs=el('div',{class:'race-filter-row',role:'group','aria-label':w('Filtrer les races','Filter races')});
+  const all=button(w('Toutes les races','All races'),()=>{state.availableOnly=false;fill();},'subtle');
+  const available=button(w('Disponibles','Available'),()=>{state.availableOnly=true;fill();},'subtle');
+  tabs.append(all,available);
+  wrapper.append(field(w('Rechercher une race', 'Search races'), search),tabs, count, grid);
   function fill() {
-    grid.replaceChildren();
-    const families = raceLibrary(a.context, { query: state.query }).filter(f=>f.versions.length).sort((x, y) =>
+    grid.replaceChildren();all.classList.toggle('selected',!state.availableOnly);available.classList.toggle('selected',state.availableOnly);
+    const families = raceLibrary(a.context, { query: state.query }).filter(f=>f.versions.length&&(!state.availableOnly||f.versions.some(v=>v.available))).sort((x, y) =>
       Number(y.versions.some(v => v.available)) - Number(x.versions.some(v => v.available)) ||
       (a.state.locale === 'fr' ? x.nom_fr : x.name_en).localeCompare(a.state.locale === 'fr' ? y.nom_fr : y.name_en, a.state.locale));
     let shown = 0;

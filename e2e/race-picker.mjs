@@ -18,7 +18,7 @@ try {
   await changed(async()=>{await p.locator('#character-name').fill('Lignée test');await p.locator('#character-name').blur();});
   await changed(()=>p.locator('.single-actions .primary').click());
   assert.ok(await p.locator('.single-races button').count()>=44);
-  assert.equal(await p.getByRole('progressbar').getAttribute('value'),'2');
+  assert.equal(await p.getByRole('progressbar').getAttribute('value'),'1'); // Name and race share the Origine chapter.
   // Every installed family uses the transparent icon set, including label aliases.
   const icons=await p.locator('.single-races').evaluate(async grid=>{
     return Promise.all([...grid.querySelectorAll('button')].map(async b=>{
