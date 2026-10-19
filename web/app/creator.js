@@ -132,7 +132,7 @@ export async function renderCreator(main,input,a) {
       else body.append(button(w('Détail de l’historique','Background details'),()=>details(a.context.index.get(d.backgroundId))));
     }
     if(current.kind==='scores'){
-      body.append(field(text('method'),select(['standard','point-buy','rolled','manual'].map(k=>[k,text(k==='manual'?'manualScores':k)]),d.scoreMethod,e=>update(x=>{x.scoreMethod=e.target.value;x.scoresAreBase=true;if(x.scoreMethod==='standard')x.scores=templateScores(x.classes[0].id);if(x.scoreMethod==='point-buy')x.scores=Object.fromEntries(ABILITIES.map(k=>[k,8]));}))),
+      body.append(field(text('method'),select(['standard','point-buy','rolled','manual'].map(k=>[k,text(k==='manual'?'manualScores':k)]),d.scoreMethod,e=>update(x=>{x.scoreMethod=e.target.value;x.scoresAreBase=true;if(x.scoreMethod==='standard')x.scores=templateScores(x.classes[0].id);if(x.scoreMethod==='point-buy')x.scores=Object.fromEntries(ABILITIES.map(k=>[k,10]));}))),
         d.scoreMethod==='point-buy'?null:check(w('Ajouter les bonus raciaux aux valeurs ci-dessous','Add racial bonuses to the scores below'),d.scoresAreBase,e=>update(x=>{x.scoresAreBase=e.target.checked;})));
       if(d.scoreMethod==='rolled')body.append(button(text('rollScores'),()=>update(x=>{const r=rollAbilityScores();x.scoreRolls=r.rolls;x.scores=Object.fromEntries(ABILITIES.map((k,i)=>[k,r.values[i]]));})));
       const spent=Object.values(d.scores).reduce((sum,n)=>sum+(POINT_COST[n]??100),0);
@@ -146,7 +146,7 @@ export async function renderCreator(main,input,a) {
           el('p',{class:'single-help'},validScores?(remaining?remaining+' '+w('points restants · utilisez les + et − pour les répartir.','points remaining · use + and − to allocate them.'):w('27 points attribués.','All 27 points allocated.')):w('Les valeurs de base doivent être comprises entre 8 et 15.','Base scores must be between 8 and 15.'))));
       }else if(d.scoreMethod==='standard'){
         body.append(el('div',{class:'score-mode-hint'},el('span',{},w('Le tableau standard est fixe. Le budget de 27 points appartient à la méthode Achat de points.','The standard array is fixed. The 27-point budget is available with Point buy.')),
-          button(w('Répartir 27 points','Use 27-point buy'),()=>update(x=>{x.scoreMethod='point-buy';x.scoresAreBase=true;x.scores=Object.fromEntries(ABILITIES.map(k=>[k,8]));}),'subtle')));
+          button(w('Répartir 27 points','Use 27-point buy'),()=>update(x=>{x.scoreMethod='point-buy';x.scoresAreBase=true;x.scores=Object.fromEntries(ABILITIES.map(k=>[k,10]));}),'subtle')));
       }
       const grid=el('table',{class:'score-table'},el('thead',{},el('tr',{},['',w('Valeur brute','Base'),w('Coût','Cost'),w('Bonus racial','Racial bonus'),w('Valeur finale','Final')].map(t=>el('th',{},t))))),rows=el('tbody',{});
       const scoreChoices=(report.origin?.choices??[]).filter(q=>q.kind==='score');
