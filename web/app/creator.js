@@ -302,7 +302,7 @@ export async function renderCreator(main,input,a) {
         const state=filters.get(q.id)??{mode:isFeat?'feat':'scores',pair:selected.startsWith('asi:')?selected.split(':').slice(1):['','']};filters.set(q.id,state);
         body.append(el('div',{class:'asi-switch',role:'group','aria-label':w('Amélioration ou don','Ability increase or feat')},button([el('strong',{},w('Améliorer les caractéristiques','Improve abilities')),el('small',{},w('+2 ou +1 / +1','+2 or +1 / +1'))],()=>{state.mode='scores';saveChoice([]);},state.mode==='scores'?'selected':''),button([el('strong',{},w('Choisir un don','Choose a feat')),el('small',{},w('Une nouvelle aptitude','A new feature'))],()=>{state.mode='feat';saveChoice([]);},state.mode==='feat'?'selected':'')));
         if(state.mode==='feat'){
-          const normalize=v=>String(v??'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLocaleLowerCase();
+          const normalize=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
           const search=el('input',{type:'search',value:state.featQuery??'',placeholder:w('Rechercher un don (FR / EN)…','Find a feat (FR / EN)…'),'aria-label':w('Rechercher un don','Search feats'),oninput:e=>{state.featQuery=e.target.value;refresh();}});
           const picker=select([],isFeat?selected:'',e=>saveChoice(e.target.value?[e.target.value]:[]));
           const status=el('small',{role:'status'});
