@@ -136,13 +136,31 @@ export async function renderCreator(main,input,a) {
         d.scoreMethod==='point-buy'?null:check(w('Ajouter les bonus raciaux aux valeurs ci-dessous','Add racial bonuses to the scores below'),d.scoresAreBase,e=>update(x=>{x.scoresAreBase=e.target.checked;})));
       if(d.scoreMethod==='rolled')body.append(button(text('rollScores'),()=>update(x=>{const r=rollAbilityScores();x.scoreRolls=r.rolls;x.scores=Object.fromEntries(ABILITIES.map((k,i)=>[k,r.values[i]]));})));
       const spent=Object.values(d.scores).reduce((sum,n)=>sum+(POINT_COST[n]??100),0);
+      if(d.scoreMethod==='point-buy'){
+        const validScores=Object.values(d.scores).every(n=>Object.hasOwn(POINT_COST,n));
+        const remaining=Math.max(0,27-spent);
+        body.append(el('section',{class:'score-budget','aria-label':w('Budget de points','Point-buy budget')},
+          el('div',{class:'score-budget-head'},el('strong',{},w('Points utilisés','Points spent')),
+            el('output',{class:'score-budget-total',role:'status','aria-live':'polite'},validScores?spent+' / 27':w('Valeurs invalides','Invalid scores'))),
+          el('progress',{value:validScores?Math.min(27,spent):0,max:27,'aria-label':w('Points utilisés sur 27','Points spent out of 27')}),
+          el('p',{class:'single-help'},validScores?(remaining?remaining+' '+w('points restants · utilisez les + et − pour les répartir.','points remaining · use + and − to allocate them.'):w('27 points attribués.','All 27 points allocated.')):w('Les valeurs de base doivent être comprises entre 8 et 15.','Base scores must be between 8 and 15.'))));
+      }else if(d.scoreMethod==='standard'){
+        body.append(el('div',{class:'score-mode-hint'},el('span',{},w('Le tableau standard est fixe. Le budget de 27 points appartient à la méthode Achat de points.','The standard array is fixed. The 27-point budget is available with Point buy.')),
+          button(w('Répartir 27 points','Use 27-point buy'),()=>update(x=>{x.scoreMethod='point-buy';x.scoresAreBase=true;x.scores=Object.fromEntries(ABILITIES.map(k=>[k,8]));}),'subtle')));
+      }
       const grid=el('table',{class:'score-table'},el('thead',{},el('tr',{},['',w('Valeur brute','Base'),w('Coût','Cost'),w('Bonus racial','Racial bonus'),w('Valeur finale','Final')].map(t=>el('th',{},t))))),rows=el('tbody',{});
       const scoreChoices=(report.origin?.choices??[]).filter(q=>q.kind==='score');
       const patterns=(report.origin?.choices??[]).filter(q=>q.key==='ability-pattern');
       for(const q of patterns)body.append(field(q.label[a.state.locale],select([['',w('Choisir','Choose')],...q.options.map(id=>[id,optionName(id,a)])],d.originSelections?.[q.id]?.[0]??'',e=>update(x=>{x.originSelections??={};x.originSelections[q.id]=e.target.value?[e.target.value]:[];for(const key of Object.keys(x.originSelections))if(key.startsWith(q.ownerId+':ability-bonus-'))delete x.originSelections[key];}))));
       for(const ability of ABILITIES){
         const n=d.scores[ability],min=d.scoreMethod==='point-buy'?8:1,max=d.scoreMethod==='point-buy'?15:30;
-        const change=delta=>update(x=>{x.scores[ability]+=delta;});
+        const change=delta=>update(x=>{
+          const current=x.scores[ability],next=current+delta;
+          if(next<min||next>max)return;
+          const total=Object.values(x.scores).reduce((sum,v)=>sum+(POINT_COST[v]??100),0);
+          if(x.scoreMethod==='point-buy'&&total+(POINT_COST[next]??100)-(POINT_COST[current]??100)>27)return;
+          x.scores[ability]=next;
+        });
         const minus=button('−',()=>change(-1)),plus=button('+',()=>change(1));
         minus.setAttribute('aria-label',w('Diminuer ','Decrease ')+a.label(ability));plus.setAttribute('aria-label',w('Augmenter ','Increase ')+a.label(ability));
         minus.disabled=n<=min;plus.disabled=n>=max||(d.scoreMethod==='point-buy'&&spent+POINT_COST[n+1]-POINT_COST[n]>27);
@@ -153,7 +171,6 @@ export async function renderCreator(main,input,a) {
         rows.append(el('tr',{},el('th',{scope:'row'},a.label(ability)),el('td',{},el('div',{class:'score-stepper'},minus,el('output',{},n),plus)),el('td',{},d.scoreMethod==='point-buy'?(POINT_COST[n]??'—'):'—'),el('td',{},bonus),el('td',{},el('strong',{},final+' ('+(mod>=0?'+':'')+mod+')'))));
       }
       grid.append(rows);body.append(grid);
-      if(d.scoreMethod==='point-buy')body.append(el('p',{class:'point-budget',role:'status'},w('Coût en points : ','Point cost: '),el('strong',{},Object.values(d.scores).some(n=>!Object.hasOwn(POINT_COST,n))?w('Score brut hors de 8–15','Base score outside 8–15'):spent+' / 27')));
       body.append(el('p',{},w('Points de vie prévus : ','Estimated hit points: ')+(report.hpPreview??'—')));
     }
     if(current.kind==='hit-points'){
