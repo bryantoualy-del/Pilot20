@@ -139,9 +139,9 @@ export async function renderCreator(main,input,a) {
       if(d.scoreMethod==='point-buy'){
         const validScores=Object.values(d.scores).every(n=>Object.hasOwn(POINT_COST,n));
         const remaining=Math.max(0,27-spent);
-        body.append(el('section',{class:'score-budget','aria-label':w('Budget de points','Point-buy budget')},
-          el('div',{class:'score-budget-head'},el('strong',{},w('Points utilisés','Points spent')),
-            el('output',{class:'score-budget-total',role:'status','aria-live':'polite'},validScores?spent+' / 27':w('Valeurs invalides','Invalid scores'))),
+        body.append(el('section',{class:'score-budget point-budget','aria-label':w('Budget de points','Point-buy budget')},
+          el('div',{class:'score-budget-head'},el('span',{},w('Points utilisés','Points spent')),
+            el('strong',{class:'score-budget-total',role:'status','aria-live':'polite'},validScores?spent+' / 27':w('Valeurs invalides','Invalid scores'))),
           el('progress',{value:validScores?Math.min(27,spent):0,max:27,'aria-label':w('Points utilisés sur 27','Points spent out of 27')}),
           el('p',{class:'single-help'},validScores?(remaining?remaining+' '+w('points restants · utilisez les + et − pour les répartir.','points remaining · use + and − to allocate them.'):w('27 points attribués.','All 27 points allocated.')):w('Les valeurs de base doivent être comprises entre 8 et 15.','Base scores must be between 8 and 15.'))));
       }else if(d.scoreMethod==='standard'){
