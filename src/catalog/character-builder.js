@@ -403,6 +403,14 @@ export function buildCharacter(
     if (!executable.has(id)) {
       const e = index.get(id);
       if (!e || !["feature", "feat"].includes(e.type)) continue;
+      // Partial support: existing manual command owns confirmed costs; no combat executor implied.
+      for(const cap of e.data.draconicCapabilities??[]){
+        const selectedAbility=selections[e.id+':ability']?.[0],pb=2+Math.floor((definitions.reduce((n,c)=>n+c.level,0)-1)/4);
+        const mechanics=structuredClone(cap.mechanics);
+        if(mechanics.save){mechanics.save.dc=8+pb+Math.floor((d.scores[selectedAbility]-10)/2);mechanics.save.chosenAbility=selectedAbility;}
+        if(mechanics.acBonus==='proficiency')mechanics.acBonus=pb;
+        d.abilities.push(ability({...e,id:e.id+':'+cap.key,name:cap.name},{cost:cap.economy,target:mechanics.target==='self'?'self':'selected',resource:{id:e.id+':'+cap.key,amount:1},combat:{version:1,mode:'manual',externalRequirements:['featureEligibilityValidated'],requirements:[cap.summary,...(mechanics.save?['Force DD '+mechanics.save.dc+' ; caractéristique choisie : '+selectedAbility]:[]),...(mechanics.acBonus?['Bonus de CA : +'+mechanics.acBonus]:[]),'Validation du joueur/MJ ; effet limité à son déclencheur.']}}));
+      }
       const m = e.data.manualMechanics,
         rawResourceId = m?.resourceId ? m.resourceId==='pact'?'pact:'+e.data.classId:(report.featureResourceOverrides?.[id]??(report.featureClassOverrides?.[id]??e.data.classId) + ":" + m.resourceId) : null,
         resourceId=report.resourceAliases?.[rawResourceId]??rawResourceId;
@@ -520,6 +528,16 @@ export function buildCharacter(
     if (!e) continue;
     const sid = spell.featureOwnerId?spell.featureOwnerId+':spell:'+e.id:"origin:spell:" + e.id;
     if(spell.racialUses){const rid=(spell.ownerId??o.race.id)+':'+(spell.racialPool??e.id)+':uses';if(!d.resources.some(r=>r.id===rid))d.resources.push({id:rid,...spell.racialUses,source:spell.source});spell.resourceId=rid;}
+    if(spell.featureOwnerId&&index.get(spell.featureOwnerId)?.data.draconicHealing){
+      spell.economy='action';spell.target='selected';
+      spell.requirements+='; healing modifier '+Math.floor((d.scores[spell.ability]-10)/2)+'; free casting at level 1, or expend a slot via the separate slot route.';
+      for(const r of report.slots.resources?Object.entries(report.slots.resources):[]){
+        const [resourceId,maximum]=r;if(!maximum)continue;
+        const slotLevel=maximum.slotLevel;
+        if(!Number.isInteger(slotLevel)||slotLevel<1)continue;
+        d.abilities.push(ability({...e,id:sid+':'+resourceId},{cost:'action',target:'selected',resource:{id:resourceId,amount:1},combat:{version:1,mode:'manual',externalRequirements:['featureEligibilityValidated'],requirements:[spell.requirements,'Slot level '+slotLevel+'; heal '+slotLevel+'d8 + '+Math.floor((d.scores[spell.ability]-10)/2)+'.']}}));
+      }
+    }
     d.spells.known.push(e.id);
     d.spells.prepared.push(e.id);
     d.features.push(sid);
