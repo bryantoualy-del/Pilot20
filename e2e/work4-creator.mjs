@@ -72,7 +72,8 @@ try{
     assert.ok(guard++<20,'bounded option quota');
     const groups=p.locator('.single-choice');let incomplete=-1;for(let i=0;i<await groups.count();i++){const count=(await groups.nth(i).locator('.single-choice-count').innerText()).match(/· (\d+) \/ (\d+)/);if(count&&Number(count[1])<Number(count[2])){incomplete=i;break;}}
     const options=incomplete>=0?groups.nth(incomplete).locator('.single-options input:enabled:not(:checked)'):p.locator('.single-options input:enabled:not(:checked)');assert.ok(await options.count(),'an eligible option remains');
-    await changed(()=>options.first().check());
+    // Un clic déclenche un re-render immédiat : .check() retente sur un nouveau nœud.
+    await changed(()=>options.first().click());
    }
   }
   if(kind==='equipment')for(const size of [{width:390,height:844},{width:1180,height:820}]){await p.setViewportSize(size);await p.screenshot({path:`docs/screenshots/work4/equipment-${size.width}x${size.height}.png`,fullPage:true});assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));}
