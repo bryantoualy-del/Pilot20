@@ -1886,3 +1886,7 @@ button.primary,.single-actions .primary{color:#191b1f}
 .single-creator>.single-plan{margin:2px 0 0;opacity:.9}
 .single-creator>.single-plan>summary{font-size:11px;letter-spacing:.2px;text-transform:none;color:var(--muted);min-height:34px}
 .single-creator>.single-plan nav button{font-size:12px}
+
+/* Optical correction (not geometric centering): source has generous transparent margins.
+   Keep a common 40px layout box, scale only the painted Ensorceleur glyph. */
+.single-classes img.class-icon--sorcerer{transform:scale(1.30);transform-origin:50% 50%;}
