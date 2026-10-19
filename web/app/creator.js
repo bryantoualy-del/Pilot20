@@ -260,8 +260,12 @@ export async function renderCreator(main,input,a) {
       };
       const origin=report.origin??{};
       const ancestry=[origin.race&&a.name(origin.race),origin.subrace&&a.name(origin.subrace)].filter(Boolean).join(' · ');
-      const classes=d.classes.map(c=>a.cls(c.id)+' '+c.level+(c.subclassId?' · '+a.name(a.context.index.get(c.subclassId)):'')).join(' / ');
-      const background=d.backgroundId?a.name(a.context.index.get(d.backgroundId)):d.background.name;
+      const classes=d.classes.map(c=>{
+        const subclass=c.subclassId?a.context.index.get(c.subclassId):null;
+        return a.cls(c.id)+' '+c.level+(subclass?' · '+a.name(subclass):'');
+      }).join(' / ');
+      const backgroundEntry=d.backgroundId?a.context.index.get(d.backgroundId):null;
+      const background=backgroundEntry?a.name(backgroundEntry):d.background.name;
       const points=Object.values(d.scores).reduce((total,n)=>total+(POINT_COST[n]??100),0);
       const scores=ABILITIES.map(key=>{
         const n=report.scores?.[key]??d.scores[key],mod=Math.floor((n-10)/2);
