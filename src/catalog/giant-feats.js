@@ -14,7 +14,7 @@ const power=(key,fr,en,description,giant,{resistances=[],limited=true}={})=>feat
 });
 export const giantFeats={kind:'catalog',schemaVersion:3,ruleset:'dnd5e-2014',id:'pilot20:giants-feats-2014',items:[
  feat('strike-of-the-giants','Frappe des géants','Strike of the Giants',
- 'Maîtrise d’une arme de guerre ou historique Gigantin. Choisissez un type de frappe : nuages, feu, givre, collines, pierres ou tempêtes. Sur une attaque d’arme réussie, appliquez les dégâts et l’effet du type choisi, dans la limite d’une fois par tour. Usages par repos long égaux au bonus de maîtrise.',{
+ 'Maîtrise d’une arme de guerre ou historique Gigantin. Choisissez un type de frappe : Nuages (+1d4 tonnerre, sauvegarde de Sagesse ou invisibilité à cette cible), Feu (+1d10 feu), Givre (+1d6 froid, sauvegarde de Constitution ou vitesse 0), Collines (+1d6 du type de l’arme, sauvegarde de Force ou à terre), Pierres (+1d6 force, sauvegarde de Force ou repoussement 3 m), Tempêtes (+1d6 foudre, sauvegarde de Constitution ou désavantage aux attaques). DD = 8 + BM + modificateur de Force ou Constitution. Une fois par tour après une attaque d’arme de mêlée ou une attaque d’arme à distance avec une arme de jet réussie ; utilisations égales au bonus de maîtrise par repos long.',{
   requirements:{martialWeapon:true,backgroundNames:['Giant Foundling']},
   giantStrikeChoices:['cloud','fire','frost','hill','stone','storm'],
   featResource:{maximum:'proficiency',recovery:'long'},
