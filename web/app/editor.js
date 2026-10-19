@@ -91,6 +91,8 @@ const human = (v) =>
     .replace(/[-_]/g, " ")
     .replace(/^./, (x) => x.toUpperCase());
 export function optionName(value, a) {
+  const giantChoices={cloud:['Nuages','Cloud'],fire:['Feu','Fire'],frost:['Givre','Frost'],hill:['Collines','Hill'],stone:['Pierres','Stone'],storm:['Tempêtes','Storm']};
+  if(Object.hasOwn(giantChoices,value))return giantChoices[value][a.state.locale==='fr'?0:1];
   const entry = a.context.installed.get(value);
   if (entry) return a.name(entry);
   if (value.startsWith("asi:")) {
