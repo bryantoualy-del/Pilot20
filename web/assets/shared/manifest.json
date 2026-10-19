@@ -161,9 +161,11 @@
     {
       "key": "classes/sorcerer",
       "path": "./assets/shared/classes/sorcerer.webp",
-      "bytes": 1162,
-      "sha256": "2d2ad40200d33194894824af15c49bb4c9da28082cacb2b5ce7ca2b20a639570",
-      "sourceFile": "assets/icon-data/icon-data-01.json"
+      "bytes": 1874,
+      "sha256": "66e0036ce42637f3619df22c5b11bee0773bace236ac5e0a36502c5b08a46b45",
+      "sourceFile": "assets/icon-data/icon-data-01.json",
+      "derivedFromSha256": "2d2ad40200d33194894824af15c49bb4c9da28082cacb2b5ce7ca2b20a639570",
+      "normalization": "Recentered nontransparent artwork into 64x64 canvas using original RPG Connect icon; no new artwork."
     },
     {
       "key": "classes/warlock",

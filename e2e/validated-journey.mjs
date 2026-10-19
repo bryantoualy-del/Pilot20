@@ -36,6 +36,31 @@ try{
   const loaded=await page.locator('.single-classes img.class-icon').evaluateAll(nodes=>
     nodes.length===13&&nodes.every(img=>img.complete&&img.naturalWidth>0));
   assert.ok(loaded,'existing local class icons loaded');
+  // Regression: the original RPG Connect sorcerer artwork had an off-center alpha box.
+  // The normalized Pilot20 image must render inside the same 40 x 40 box as every class.
+  const sorcerer=page.locator('.single-classes img[src$="sorcerer.webp"]');
+  assert.equal(await sorcerer.count(),1,'one Ensorceleur icon');
+  const iconGeometry=await sorcerer.evaluate(img=>{
+    const outer=img.getBoundingClientRect(),canvas=document.createElement('canvas');
+    canvas.width=64;canvas.height=64;
+    const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,64,64);
+    const {data}=ctx.getImageData(0,0,64,64);
+    let left=64,top=64,right=-1,bottom=-1;
+    for(let y=0;y<64;y++)for(let x=0;x<64;x++){
+      if(data[(y*64+x)*4+3]<18)continue;
+      left=Math.min(left,x);top=Math.min(top,y);
+      right=Math.max(right,x);bottom=Math.max(bottom,y);
+    }
+    return {width:outer.width,height:outer.height,parent:img.parentElement.tagName,
+      left,top,right,bottom,centerX:(left+right)/2,centerY:(top+bottom)/2};
+  });
+  assert.equal(iconGeometry.parent,'BUTTON','no per-icon image clipping frame');
+  assert.equal(iconGeometry.width,40);assert.equal(iconGeometry.height,40);
+  assert.ok(Math.abs(iconGeometry.centerX-31.5)<=2&&Math.abs(iconGeometry.centerY-31.5)<=2,
+    'Ensorceleur artwork must be visually centered: '+JSON.stringify(iconGeometry));
+  assert.ok(iconGeometry.left>=3&&iconGeometry.right<=60&&iconGeometry.top>=5&&iconGeometry.bottom<=58,
+    'transparent margins must exist on every side: '+JSON.stringify(iconGeometry));
+
   assert.ok(await page.locator('.level-stepper input').isVisible());
   for(const size of [{width:375,height:667},{width:390,height:844},{width:820,height:1180},{width:1180,height:820}]){
     await page.setViewportSize(size);
