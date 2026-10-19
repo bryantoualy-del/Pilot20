@@ -55,12 +55,48 @@ try{
       left,top,right,bottom,centerX:(left+right)/2,centerY:(top+bottom)/2};
   });
   assert.equal(iconGeometry.parent,'BUTTON','no per-icon image clipping frame');
-  assert.equal(iconGeometry.width,40);assert.equal(iconGeometry.height,40);
+  // Image still reserves 40 CSS pixels; the rendered mark grows 30% around its center.
+  assert.equal(Math.round(iconGeometry.width),52);assert.equal(Math.round(iconGeometry.height),52);
+  assert.equal(await sorcerer.evaluate(img=>getComputedStyle(img).width),'40px');
   assert.ok(Math.abs(iconGeometry.centerX-31.5)<=2&&Math.abs(iconGeometry.centerY-31.5)<=2,
     'Ensorceleur artwork must be visually centered: '+JSON.stringify(iconGeometry));
   assert.ok(iconGeometry.left>=3&&iconGeometry.right<=60&&iconGeometry.top>=5&&iconGeometry.bottom<=58,
     'transparent margins must exist on every side: '+JSON.stringify(iconGeometry));
 
+  // Diagnostic: compare the *painted* footprint, not 40x40 transparent files.
+  const iconMetrics=await page.evaluate(()=>{
+    return [...document.querySelectorAll('.single-classes button')].map(button=>{
+      const img=button.querySelector('img'),name=button.innerText.trim();
+      if(!img||!img.complete||!img.naturalWidth)return{name,error:'not loaded'};
+      const canvas=document.createElement('canvas');canvas.width=64;canvas.height=64;
+      const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,64,64);
+      const d=ctx.getImageData(0,0,64,64).data;
+      let x0=64,x1=-1,y0=64,y1=-1;
+      for(let y=0;y<64;y++)for(let x=0;x<64;x++)if(d[(y*64+x)*4+3]>=32){
+        x0=Math.min(x0,x);x1=Math.max(x1,x);
+        y0=Math.min(y0,y);y1=Math.max(y1,y);
+      }
+      const box=img.getBoundingClientRect(),card=button.getBoundingClientRect(),
+        frame=button.querySelector('.class-icon-frame')?.getBoundingClientRect();
+      let left=box.left+x0*box.width/64,top=box.top+y0*box.height/64,
+        right=box.left+(x1+1)*box.width/64,bottom=box.top+(y1+1)*box.height/64;
+      if(frame){left=Math.max(left,frame.left);right=Math.min(right,frame.right);
+        top=Math.max(top,frame.top);bottom=Math.min(bottom,frame.bottom);}
+      return{name,paintW:Math.round((right-left)*10)/10,paintH:Math.round((bottom-top)*10)/10,
+        paintCenterOffset:Math.round(((left+right)/2-(card.left+card.right)/2)*10)/10,
+        imgW:Math.round(box.width*10)/10,bounds:[x0,y0,x1,y1]};
+    });
+  });
+  const referenceNames=new Set(['Barde','Clerc','Druide','Guerrier','Paladin']);
+  const reference=iconMetrics.filter(x=>referenceNames.has(x.name)).map(x=>x.paintH).sort((a,b)=>a-b);
+  const median=reference[Math.floor(reference.length/2)];
+  const ensorceleur=iconMetrics.find(x=>x.name==='Ensorceleur');
+  assert.ok(ensorceleur&&median>0,'measurable icons for optical comparison');
+  assert.ok(ensorceleur.paintH>=median*.78&&ensorceleur.paintH<=median*1.22,
+    'Ensorceleur should approach reference icon size: '+JSON.stringify({ensorceleur,median}));
+  assert.ok(Math.abs(ensorceleur.paintCenterOffset)<=2.5,
+    'Ensorceleur drawn center must remain aligned with its card: '+JSON.stringify(ensorceleur));
+  console.log('CLASS_ICON_OPTICAL_SIZES '+JSON.stringify({median,icons:iconMetrics}));
   assert.ok(await page.locator('.level-stepper input').isVisible());
   for(const size of [{width:375,height:667},{width:390,height:844},{width:820,height:1180},{width:1180,height:820}]){
     await page.setViewportSize(size);
