@@ -46,8 +46,20 @@ try{
  await p.setViewportSize({width:390,height:844});await next();
  await changed(()=>p.locator('.single-body select').first().selectOption('phb14:background:guild-merchant'));await next();
  assert.equal(await p.locator('.single-body').getAttribute('data-kind'),'scores');
- const before=(await drafts())[0];await changed(()=>p.locator('.single-actions button').first().click());
- await next();assert.deepEqual((await drafts())[0].scores,before.scores);await next();
+ // La création AideDD démarre avec six valeurs de 10 : 12 points déjà dépensés.
+ const before=(await drafts())[0];
+ assert.equal(before.scoreMethod,'point-buy');
+ assert.deepEqual(Object.values(before.scores),[10,10,10,10,10,10]);
+ assert.equal(await p.locator('.point-budget strong').innerText(),'12 / 27');
+ assert.equal(await p.locator('.single-actions .primary').isDisabled(),true);
+ await changed(()=>p.locator('.single-actions button').first().click());
+ await next();assert.deepEqual((await drafts())[0].scores,before.scores);
+ // 10→15 deux fois (+7 et +7), puis 10→11 (+1) : total 27/27.
+ for(const [ability,count] of [['Force',5],['Dextérité',5],['Constitution',1]])
+  for(let n=0;n<count;n++)await changed(()=>p.getByRole('button',{name:'Augmenter '+ability,exact:true}).click());
+ assert.equal(await p.locator('.point-budget strong').innerText(),'27 / 27');
+ assert.equal(await p.locator('.single-actions .primary').isEnabled(),true);
+ await next();
  let visited=0;
  while(await p.locator('.single-body').getAttribute('data-kind')!=='summary'){
   assert.ok(visited++<35,'bounded fighter creation');
