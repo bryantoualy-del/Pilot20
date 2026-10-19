@@ -55,7 +55,9 @@ try{
       left,top,right,bottom,centerX:(left+right)/2,centerY:(top+bottom)/2};
   });
   assert.equal(iconGeometry.parent,'BUTTON','no per-icon image clipping frame');
-  assert.equal(iconGeometry.width,40);assert.equal(iconGeometry.height,40);
+  // Image still reserves 40 CSS pixels; the rendered mark grows 30% around its center.
+  assert.equal(Math.round(iconGeometry.width),52);assert.equal(Math.round(iconGeometry.height),52);
+  assert.equal(await sorcerer.evaluate(img=>getComputedStyle(img).width),'40px');
   assert.ok(Math.abs(iconGeometry.centerX-31.5)<=2&&Math.abs(iconGeometry.centerY-31.5)<=2,
     'Ensorceleur artwork must be visually centered: '+JSON.stringify(iconGeometry));
   assert.ok(iconGeometry.left>=3&&iconGeometry.right<=60&&iconGeometry.top>=5&&iconGeometry.bottom<=58,
@@ -85,7 +87,16 @@ try{
         imgW:Math.round(box.width*10)/10,bounds:[x0,y0,x1,y1]};
     });
   });
-  console.log('CLASS_ICON_OPTICAL_BASELINE '+JSON.stringify(iconMetrics));
+  const referenceNames=new Set(['Barde','Clerc','Druide','Guerrier','Paladin']);
+  const reference=iconMetrics.filter(x=>referenceNames.has(x.name)).map(x=>x.paintH).sort((a,b)=>a-b);
+  const median=reference[Math.floor(reference.length/2)];
+  const ensorceleur=iconMetrics.find(x=>x.name==='Ensorceleur');
+  assert.ok(ensorceleur&&median>0,'measurable icons for optical comparison');
+  assert.ok(ensorceleur.paintH>=median*.78&&ensorceleur.paintH<=median*1.22,
+    'Ensorceleur should approach reference icon size: '+JSON.stringify({ensorceleur,median}));
+  assert.ok(Math.abs(ensorceleur.paintCenterOffset)<=2.5,
+    'Ensorceleur drawn center must remain aligned with its card: '+JSON.stringify(ensorceleur));
+  console.log('CLASS_ICON_OPTICAL_SIZES '+JSON.stringify({median,icons:iconMetrics}));
   assert.ok(await page.locator('.level-stepper input').isVisible());
   for(const size of [{width:375,height:667},{width:390,height:844},{width:820,height:1180},{width:1180,height:820}]){
     await page.setViewportSize(size);
