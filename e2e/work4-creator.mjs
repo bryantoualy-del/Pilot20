@@ -44,7 +44,11 @@ try{
  assert.equal(await p.locator('.single-classes button').count(),13);assert.equal(await p.locator('.single-classes').getByRole('button',{name:'Guerrier',exact:true}).getAttribute('aria-pressed'),'true');
  for(const size of [{width:375,height:667},{width:390,height:844},{width:1180,height:820},{width:820,height:1180}]){await p.setViewportSize(size);await p.screenshot({path:`docs/screenshots/work4/classes-${size.width}x${size.height}.png`,fullPage:true});const m=await p.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,classes:[...document.querySelectorAll('.single-classes button')].map(b=>({width:b.getBoundingClientRect().width,height:b.getBoundingClientRect().height}))}));assert.ok(m.scrollWidth<=m.width);assert.ok(m.classes.every(b=>b.width>=44&&b.height>=44));metrics.push(m);}
  await p.setViewportSize({width:390,height:844});await next();
- await changed(()=>p.locator('.single-body select').first().selectOption('phb14:background:guild-merchant'));await next();
+ assert.equal(await p.locator('.single-body').getAttribute('data-kind'),'scores');
+ // The validated six-stage UX now places abilities before background (stage 3 then 4).
+ await step('Historique');
+ await changed(()=>p.locator('.single-body select').first().selectOption('phb14:background:guild-merchant'));
+ await step('Caractéristiques');
  assert.equal(await p.locator('.single-body').getAttribute('data-kind'),'scores');
  // La création AideDD démarre avec six valeurs de 10 : 12 points déjà dépensés.
  const before=(await drafts())[0];

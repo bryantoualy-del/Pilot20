@@ -100,11 +100,27 @@ export async function renderCreator(main,input,a) {
         if(i<stageIndex)b.classList.add('journey-done');return b;
       }));
     const progress=el('progress',{class:'single-progress',value:stageIndex+1,max:JOURNEY_STAGES.length,
-      'aria-label':w('Progression du parcours','Journey progress'),
-      'aria-valuetext':(stageIndex+1)+' / '+JOURNEY_STAGES.length+' · '+w(JOURNEY_STAGES[stageIndex].fr,JOURNEY_STAGES[stageIndex].en)});
+      'aria-label':w('Progression de la création','Character creation progress'),
+      'aria-valuetext':(stageIndex+1)+' / '+JOURNEY_STAGES.length+' · '+w(JOURNEY_STAGES[stageIndex].fr,JOURNEY_STAGES[stageIndex].en)+' · '+label(current)});
     const substep=el('p',{class:'journey-substep'},w('ÉTAPE ','STEP ')+(stageIndex+1)+' / 6'+
       (withinStage.length>1?' · '+w('Décision ','Decision ')+(withinPosition+1)+' / '+withinStage.length:''));
-    shell.replaceChildren(header,sectionNav,progress,substep,body);
+    // Detailed navigation remains available on demand for advanced users and older drafts.
+    const groupOf=x=>x.kind==='origin-choice'?'origin':x.kind==='class-choice'?
+      (['spell','spellbook','prepared'].includes(x.choice.kind)?'spells':'features'):
+      ['equipment-choice','equipment-method'].includes(x.kind)?'equipment':x.kind==='subrace'?'race':x.kind;
+    const groups=[...new Set(decisions.map(groupOf))];
+    const groupNames={identity:text('name'),race:text('race'),class:text('class'),background:text('background'),
+      scores:text('scores'),'hit-points':text('hp'),origin:w('Origine et maîtrises','Origin and training'),
+      features:w('Capacités','Features'),spells:w('Sorts','Spells'),equipment:text('equipment'),
+      training:w('Maîtrises','Proficiencies'),summary:w('Récapitulatif','Summary')};
+    const detailedNav=el('details',{class:'single-plan'},el('summary',{},
+      el('span',{},w('Accéder à un choix précis','Jump to a specific choice')),
+      el('span',{class:'single-step-count'},(position+1)+' / '+decisions.length)),
+      el('nav',{'aria-label':w('Choix détaillés','Detailed choices')},groups.map(group=>{
+        const decision=decisions.find(x=>groupOf(x)===group),b=button(groupNames[group],()=>go(decision.id));
+        if(group===groupOf(current))b.setAttribute('aria-current','step');return b;
+      })));
+    shell.replaceChildren(header,sectionNav,progress,substep,body,detailedNav);
     if(d.pendingAdvancement)body.append(el('p',{role:'status'},w('Progression en cours : ','Level gain in progress: ')+a.cls(d.pendingAdvancement.classId)),button(w('Annuler ce gain de niveau','Cancel this level gain'),async()=>{const restored=cancelAdvancement(d);Object.keys(d).forEach(k=>delete d[k]);Object.assign(d,restored);await a.autosave(d);await draw(true);}));
     if(current.kind==='identity'){
       body.append(field(text('name'),el('input',{id:'character-name',value:d.name,maxlength:200,autocomplete:'off',onchange:e=>update(x=>{x.name=e.target.value;})})),
