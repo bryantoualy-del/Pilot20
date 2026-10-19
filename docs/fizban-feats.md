@@ -25,3 +25,5 @@ Les champs `trigger`, `mechanics`, `maximum`, `recovery` et `automation` décriv
 Pour une future commande réseau, conserver un commandId/reactionId et parentActionId stables, refuser les conditions invalides sans coût, consommer sur validation/grant et conserver résultat et tombstone d’annulation. Réutiliser les descripteurs défensifs Samoth pour Ailes. Aucun second moteur dans Pilot20, aucune modification Encounter dans cette livraison.
 
 Tests : `tests/fizban-feats.test.js` + suite existante ; contrôles navigateur Chromium/WebKit et largeurs téléphone/iPad en CI. Aucun essai sur appareil physique déclaré.
+
+Résultats locaux : suite de 554 tests réussie, 6 tests Fizban ciblés réussis, build web et deux contrôles de couverture réussis ; vrai sélecteur ASI testé sous Chromium 153 à 390 et 1180 px sans débordement. WebKit est prévu dans les Actions existantes ; aucun appareil physique testé.
