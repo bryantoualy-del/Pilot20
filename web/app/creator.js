@@ -232,6 +232,69 @@ export async function renderCreator(main,input,a) {
       const compiled=compileDraft(a.context,a.config,{...d,confirmed:true});
       body.append(el('p',{},d.classes.map(c=>a.cls(c.id)+' '+c.level).join(' / ')));
       if(compiled.stats)body.append(el('div',{class:'single-summary'},el('p',{},text('hp')+' '+compiled.stats.maxHp),el('p',{},text('ac')+' '+compiled.stats.ac)));
+      // Le récapitulatif se construit à partir du même état que le parcours :
+      // aucun choix manquant n'est remplacé par une suggestion silencieuse.
+      const recap=el('div',{class:'single-recap','aria-label':w('Récapitulatif des choix','Choice recap')});
+      const recapRow=(name,value,target,valid=true)=>{
+        const row=el('div',{class:'recap-row'+(valid?'':' recap-incomplete')},
+          el('div',{class:'recap-content'},el('strong',{},name),
+            el('p',{},value||w('À compléter','To complete'))),
+          button(w('Modifier','Edit'),()=>go(target),'subtle'));
+        return row;
+      };
+      const recapSection=(heading,rows)=>{
+        if(!rows.length)return;
+        recap.append(el('section',{class:'recap-section'},el('h2',{},heading),...rows));
+      };
+      const chosen=x=>{
+        const q=x.choice;
+        if(x.kind==='origin-choice')return d.originSelections?.[q.id]??[];
+        if(q.kind==='subclass')return [d.classes.find(c=>c.id===q.classId)?.subclassId].filter(Boolean);
+        return report.selections?.[q.id]??d.selections?.[q.id]??[];
+      };
+      const decisionRow=x=>{
+        const values=chosen(x),readyChoice=decisionReady(x,report,d);
+        const name=x.kind==='origin-choice'?(x.choice.label?.[a.state.locale]??optionName(x.choice.key,a)):choiceName(x.choice,a);
+        const empty=readyChoice?w('Aucun choix requis','No selection required'):w('À compléter','To complete');
+        return recapRow(name,values.map(id=>optionName(id,a)).join(' · ')||empty,x.id,readyChoice);
+      };
+      const origin=report.origin??{};
+      const ancestry=[origin.race&&a.name(origin.race),origin.subrace&&a.name(origin.subrace)].filter(Boolean).join(' · ');
+      const classes=d.classes.map(c=>a.cls(c.id)+' '+c.level+(c.subclassId?' · '+a.name(a.context.index.get(c.subclassId)):'')).join(' / ');
+      const background=d.backgroundId?a.name(a.context.index.get(d.backgroundId)):d.background.name;
+      const points=Object.values(d.scores).reduce((total,n)=>total+(POINT_COST[n]??100),0);
+      const scores=ABILITIES.map(key=>{
+        const n=report.scores?.[key]??d.scores[key],mod=Math.floor((n-10)/2);
+        return a.label(key)+' '+n+' ('+(mod>=0?'+':'')+mod+')';
+      }).join(' · ');
+      recapSection(w('Personnage','Character'),[
+        recapRow(w('Nom','Name'),d.name,'identity'),
+        recapRow(w('Race et ascendance','Race and ancestry'),ancestry,'race',!!origin.race),
+        recapRow(w('Classe, niveau et spécialisation','Class, level and specialization'),classes,'class'),
+        recapRow(w('Historique','Background'),background,'background',!!background),
+        recapRow(w('Caractéristiques finales','Final ability scores'),scores+(d.scoreMethod==='point-buy'?' · '+points+' / 27':''),'scores',decisionReady({kind:'scores'},report,d)),
+        recapRow(w('Points de vie','Hit points'),String(report.hpPreview??'—'),'hit-points',report.hitPoints?.valid===true)
+      ]);
+      const training=decisions.find(x=>x.kind==='training');
+      const fixedTraining=[...(origin.background?.skills??[]),...(origin.languages??[]),...(origin.background?.proficiencies??[])];
+      const trainingRows=fixedTraining.length?[recapRow(w('Accordées par l’origine','Granted by origin'),[...new Set(fixedTraining)].map(id=>optionName(id,a)).join(' · '),'training')]:[];
+      if(training)for(const q of [...training.classChoices,...training.originChoices]){
+        const x={kind:training.originChoices.includes(q)?'origin-choice':'class-choice',choice:q,id:'training'};
+        trainingRows.push(recapRow(q.classId?choiceName(q,a):(q.label?.[a.state.locale]??optionName(q.key,a)),
+          chosen(x).map(id=>optionName(id,a)).join(' · ')||w('À compléter','To complete'),'training',decisionReady(x,report,d)));
+      }
+      recapSection(w('Maîtrises et langues','Proficiencies and languages'),trainingRows);
+      const extraChoices=decisions.filter(x=>['origin-choice','class-choice'].includes(x.kind));
+      const magicKinds=new Set(['spell','spellbook','prepared']);
+      recapSection(w('Capacités, dons et autres choix','Features, feats and other choices'),extraChoices.filter(x=>!magicKinds.has(x.choice.kind)).map(decisionRow));
+      recapSection(w('Sorts et grimoire','Spells and spellbook'),extraChoices.filter(x=>magicKinds.has(x.choice.kind)).map(decisionRow));
+      const equipment=[...(report.startingEquipment?.items??[]),...(origin.equipment??[])].map(item=>(item.quantity??1)+' × '+(item.name?.[a.state.locale]??item.id));
+      const additional=(d.inventoryLedger??[]).map(item=>item.quantity+' × '+(item.customName||item.itemId));
+      recapSection(w('Équipement','Equipment'),[
+        recapRow(w('Méthode','Method'),d.equipmentMethod==='wealth'?w('Richesse initiale et achats','Starting wealth and purchases'):w('Matériel de départ','Starting equipment'),'equipment'),
+        recapRow(w('Équipement choisi','Chosen equipment'),[...equipment,...additional].join(' · ')||w('Aucun équipement sélectionné','No equipment selected'),'equipment',report.economy?.valid!==false)
+      ]);
+      body.append(recap);
       const events=d.advancementEvents??[];body.append(el('details',{},el('summary',{},w('Historique de progression','Advancement history')),el('p',{},d.advancementHistory?.length?w('Historique complet renseigné ; sa validité est contrôlée à la sauvegarde.','Complete history supplied; validation runs on save.'):w('Création directe au niveau choisi : les acquisitions antérieures ne sont pas connues. Aucun niveau passé n’a été inventé.','Created directly at the selected level: earlier acquisitions are unknown. No past levels were invented.')),events.map(e=>el('p',{},a.cls(e.classId)+' · '+e.from.classes.reduce((n,c)=>n+c.level,0)+' → '+e.to.classes.reduce((n,c)=>n+c.level,0)+' · '+new Date(e.recordedAt).toLocaleDateString(a.state.locale)))));
       if(d.finalized&&!externalEdits&&!d.pendingAdvancement&&d.classes.reduce((n,c)=>n+c.level,0)<20)body.append(el('details',{},el('summary',{},w('Gagner un niveau','Gain a level')),d.classes.map(c=>button(a.cls(c.id)+' → '+(c.level+1),async()=>{const next=beginAdvancement(d,c.id);Object.keys(d).forEach(k=>delete d[k]);Object.assign(d,next);await a.autosave(d);await draw(true);})),a.config.enabledOptions.includes('multiclass')?a.context.index.list('class').filter(c=>!d.classes.some(x=>x.id===c.data.classId)).map(c=>button(w('Nouvelle classe : ','New class: ')+a.cls(c.data.classId),async()=>{const next=beginAdvancement(d,c.data.classId);Object.keys(d).forEach(k=>delete d[k]);Object.assign(d,next);await a.autosave(d);await draw(true);})):null));
       for(const issue of compiled.issues){const item=el('div',{class:'single-issue'},el('p',{},issueMessage(issue,report,a)));
