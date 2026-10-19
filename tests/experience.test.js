@@ -132,7 +132,7 @@ test("vendored assets have auditable hashes and are included in offline packagin
     assert.equal(b.length, a.bytes);
     bytes += b.length;
   }
-  assert.equal(bytes, 166648);
+  assert.equal(bytes, 167872); // 67 audited assets, including the normalized Ensorceleur WebP
   const { assetURL } = await import("../web/app/asset-registry.js");
   assert.equal(assetURL("class", "../secret"), null);
   assert.equal(assetURL("unknown", "bard"), null);
