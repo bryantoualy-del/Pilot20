@@ -161,9 +161,11 @@
     {
       "key": "classes/sorcerer",
       "path": "./assets/shared/classes/sorcerer.webp",
-      "bytes": 1162,
-      "sha256": "2d2ad40200d33194894824af15c49bb4c9da28082cacb2b5ce7ca2b20a639570",
-      "sourceFile": "assets/icon-data/icon-data-01.json"
+      "bytes": 2386,
+      "sha256": "5819f6b2365b2cb38787468c2ccc7291ba14277a1dba6bf3ba3abd9bb7e8b588",
+      "sourceFile": "assets/icon-data/icon-data-01.json",
+      "derivedFromSha256": "2d2ad40200d33194894824af15c49bb4c9da28082cacb2b5ce7ca2b20a639570",
+      "normalization": "Removed visually empty left region (alpha < 18), cropped the painted symbol x=31..64, and centered it in a 64x64 transparent WebP; original artwork preserved."
     },
     {
       "key": "classes/warlock",
