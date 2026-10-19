@@ -211,7 +211,23 @@ export async function renderCreator(main,input,a) {
     if(current.kind==='background'){
       body.append(field(text('background'),select([['',w('Historique sur mesure','Custom background')],...a.context.index.list('background').map(b=>[b.id,a.name(b)])],d.backgroundId??'',e=>update(x=>{x.backgroundId=e.target.value||null;}))));
       if(!d.backgroundId){body.append(field(text('name'),el('input',{value:d.background.name,onchange:e=>update(x=>{x.background.name=e.target.value;})})),choiceList({id:'custom:background-skills',key:text('skills'),kind:'skill',options:Object.keys(SKILLS),count:2},d.background.skills,values=>update(x=>{x.background.skills=values;})),el('p',{},w('Langues, outils et capacité de cet historique restent à vérifier avec votre MJ.','Languages, tools and the background feature still need review with your GM.')));}
-      else body.append(button(w('Détail de l’historique','Background details'),()=>details(a.context.index.get(d.backgroundId))));
+      else {
+        const background=a.context.index.get(d.backgroundId),data=background?.data??{},grants=el('div',{class:'background-grants'});
+        for(const [fr,en,values] of [
+          ['Compétences maîtrisées','Skill proficiencies',data.skills??[]],
+          ['Outils et autres maîtrises','Tools and proficiencies',data.proficiencies??[]],
+          ['Langues','Languages',data.languages??[]],
+        ])if(values.length)grants.append(el('p',{},el('strong',{},w(fr,en)+' : '),values.map(id=>optionName(id,a)).join(' · ')));
+        const feature=data.feature;
+        body.append(el('section',{class:'background-preview','aria-label':w('Avantages de l’historique','Background benefits')},
+          el('h2',{},a.name(background)),
+          el('p',{},data.summary?.[a.state.locale]??data.description??''),
+          grants,
+          feature?el('p',{},el('strong',{},(feature.name?.[a.state.locale]??w('Capacité d’historique','Background feature'))+' : '),feature.description??''):null,
+          (data.choices??[]).length?el('p',{},w('Choix à compléter dans les étapes de maîtrises : ','Choices to complete in proficiency steps: ')+(data.choices??[]).map(c=>c.label?.[a.state.locale]??c.key).join(' · ')):null,
+          (data.equipment??[]).length?el('details',{},el('summary',{},w('Équipement de départ','Starting equipment')),(data.equipment??[]).map(e=>el('p',{},e.name?.[a.state.locale]??e.id))):null,
+          button(w('Voir le détail complet','View full details'),()=>details(background),'subtle')));
+      }
     }
     if(current.kind==='scores'){
       body.append(field(text('method'),select(['standard','point-buy','rolled','manual'].map(k=>[k,text(k==='manual'?'manualScores':k)]),d.scoreMethod,e=>update(x=>{x.scoreMethod=e.target.value;x.scoresAreBase=true;if(x.scoreMethod==='standard')x.scores=templateScores(x.classes[0].id);if(x.scoreMethod==='point-buy')x.scores=Object.fromEntries(ABILITIES.map(k=>[k,10]));}))));
@@ -285,7 +301,20 @@ export async function renderCreator(main,input,a) {
         const selected=values[0]??'',isFeat=selected&&!selected.startsWith('asi:'),feats=q.options.filter(id=>!id.startsWith('asi:'));
         const state=filters.get(q.id)??{mode:isFeat?'feat':'scores',pair:selected.startsWith('asi:')?selected.split(':').slice(1):['','']};filters.set(q.id,state);
         body.append(el('div',{class:'asi-switch',role:'group','aria-label':w('Amélioration ou don','Ability increase or feat')},button([el('strong',{},w('Améliorer les caractéristiques','Improve abilities')),el('small',{},w('+2 ou +1 / +1','+2 or +1 / +1'))],()=>{state.mode='scores';saveChoice([]);},state.mode==='scores'?'selected':''),button([el('strong',{},w('Choisir un don','Choose a feat')),el('small',{},w('Une nouvelle aptitude','A new feature'))],()=>{state.mode='feat';saveChoice([]);},state.mode==='feat'?'selected':'')));
-        if(state.mode==='feat')body.append(field(w('Don','Feat'),select([['',w('Choisir un don','Choose a feat')],...feats.map(id=>[id,optionName(id,a)])],isFeat?selected:'',e=>saveChoice(e.target.value?[e.target.value]:[]))));
+        if(state.mode==='feat'){
+          const normalize=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
+          const search=el('input',{type:'search',value:state.featQuery??'',placeholder:w('Rechercher un don (FR / EN)…','Find a feat (FR / EN)…'),'aria-label':w('Rechercher un don','Search feats'),oninput:e=>{state.featQuery=e.target.value;refresh();}});
+          const picker=select([],isFeat?selected:'',e=>saveChoice(e.target.value?[e.target.value]:[]));
+          const status=el('small',{role:'status'});
+          function refresh(){
+            const query=normalize(state.featQuery);
+            const matches=feats.filter(id=>{const feat=a.context.index.get(id);return normalize([id,...Object.values(feat?.name??{}),...(feat?.data.aliases??[])].join(' ')).includes(query);});
+            if(isFeat&&feats.includes(selected)&&!matches.includes(selected))matches.unshift(selected);
+            picker.replaceChildren(el('option',{value:''},w('Choisir un don','Choose a feat')),matches.map(id=>el('option',{value:id},optionName(id,a))));
+            picker.value=isFeat?selected:'';status.textContent=matches.length+' / '+feats.length+' '+w('dons accessibles','eligible feats');
+          }
+          body.append(search,field(w('Don','Feat'),picker),status,isFeat?button(w('Voir le don choisi','View selected feat'),()=>details(a.context.index.get(selected)),'subtle'):null);refresh();
+        }
         else for(const i of [0,1])body.append(field('+1 · '+(i+1),select([['',w('Choisir une caractéristique','Choose an ability')],...ABILITIES.map(id=>[id,a.label(id)])],state.pair[i],e=>{state.pair[i]=e.target.value;const [x,y]=state.pair,id=q.options.find(id=>id===`asi:${x}:${y}`||id===`asi:${y}:${x}`);saveChoice(id?[id]:[]);})));
       }else body.append(choiceList(q,values,saveChoice));
       if(q.id==='cleric:nature-cantrip')body.append(el('p',{class:'single-help'},w('Le domaine de la Nature accorde un sort mineur de druide. Il reste un sort de clerc pour vous.','The Nature domain grants one druid cantrip, which counts as a cleric cantrip for you.')));

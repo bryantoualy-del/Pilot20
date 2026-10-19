@@ -78,12 +78,14 @@ export async function renderGrimoire(main,characterId,a){
     for(const id of ritualOptions)ids.add(id);
     const choices=view.choices.filter(c=>ui.classId==='all'||c.classId===ui.classId);
     for(const choice of choices)for(const id of choice.options)ids.add(id);
-    if(!view.classIds.length)for(const entry of a.context.index.list('spell'))ids.add(entry.id);
+    // The catalogue is a reference search over ALL installed spells. Grant/availability
+    // remains separate: only "My spells" indicates what this character can cast.
+    for(const entry of a.context.index.list('spell'))ids.add(entry.id);
    }
    let rows=[...ids].map(id=>a.context.index.get(id)??a.context.installed.get(id)).filter(e=>e?.type==='spell');
    if(editing)rows=rows.filter(e=>q.options.includes(e.id)||currentGrants.some(g=>g.spellId===e.id&&g.preparation==='always'));
    const acquired=new Set(currentGrants.map(g=>g.spellId)),dailyCount=q?(draft.selections[q.id]?.length??0):0;
-   status.textContent=`${acquired.size} `+w('sorts acquis','acquired spells')+(q?` · ${dailyCount} / ${q.count} `+w('préparés','prepared'):'');
+   status.textContent=`${acquired.size} `+w('sorts acquis','acquired spells')+(q?` · ${dailyCount} / ${q.count} `+w('préparés','prepared'):'')+(ui.tab==='catalogue'?w(' · catalogue de référence (non acquis automatiquement)',' · reference catalogue (not automatically acquired)'):'');
    rows=rows.filter(e=>spellMatches(e.id,ui.query,e)&&(ui.level==='all'||e.data.level===Number(ui.level))&&(ui.school==='all'||e.data.school===ui.school)&&(!ui.favorites||record.preferences.favorites.includes(e.id))&&(!ui.concentration||e.data.concentration)&&(!ui.ritual||e.data.ritual)&&(ui.source==='all'||spellReference(e.id)?.sourceIds.includes(ui.source))).sort((x,y)=>x.data.level-y.data.level||a.name(x).localeCompare(a.name(y)));
    const pageCount=Math.max(1,Math.ceil(rows.length/12));page=Math.min(page,pageCount-1);list.replaceChildren();
    if(!rows.length&&!(ui.tab==='mine'&&!currentGrants.length))list.append(el('p',{},w('Aucun résultat avec ces filtres.','No results match these filters.')),button(w('Effacer les filtres','Clear filters'),async()=>{ui.level='all';ui.school='all';ui.favorites=false;ui.concentration=false;ui.ritual=false;ui.source='all';page=0;await remember();draw();}));

@@ -61,7 +61,7 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       "Private content cannot be distributed",
     );
     check(i.data && i.data.ruleset === c.ruleset, "Entry ruleset");
-    if(i.source.kind==='reference') check(['xge','tce','phb14','ravenloft','volo','motm','eberron','scag','strixhaven','fizban'].includes(i.data.rulesSourceId),'Referenced 2014 source');
+    if(i.source.kind==='reference') check(['xge','tce','phb14','ravenloft','volo','motm','eberron','scag','strixhaven','fizban','bgg'].includes(i.data.rulesSourceId),'Referenced 2014 source');
     const a = i.data.automation;
     keys(a, ["status", "handler", "limits"]);
     check(
@@ -146,7 +146,7 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       list(d.incompatible, "Incompatible entries");
     if (["race", "background"].includes(i.type)) {
       for (const owner of [d, ...(d.subraces ?? [])]) {
-        if(owner.source){source(owner.source);check(distribution!=='public'||owner.source.kind!=='private','Private subrace cannot be distributed');if(owner.source.kind==='reference')check(['xge','tce','phb14','ravenloft','volo','motm','eberron','scag','strixhaven','fizban'].includes(owner.rulesSourceId),'Referenced subrace source');}
+        if(owner.source){source(owner.source);check(distribution!=='public'||owner.source.kind!=='private','Private subrace cannot be distributed');if(owner.source.kind==='reference')check(['xge','tce','phb14','ravenloft','volo','motm','eberron','scag','strixhaven','fizban','bgg'].includes(owner.rulesSourceId),'Referenced subrace source');}
         if(owner.flexibleAbilityBoosts!==undefined)check(owner.flexibleAbilityBoosts===true,'Flexible racial bonuses');
         if(owner.sizes)check(Array.isArray(owner.sizes)&&owner.sizes.length>0&&owner.sizes.every(s=>['small','medium'].includes(s)),'Racial size choices');
         if(owner.movementModes){keys(owner.movementModes,['climb','swim','fly','climbMatchesWalk','flyMatchesWalk','flightArmorRestricted'],[]);for(const key of ['climb','swim','fly'])if(owner.movementModes[key]!==undefined)check(integer(owner.movementModes[key],0,200),'Racial movement');if(owner.movementModes.climbMatchesWalk!==undefined)check(typeof owner.movementModes.climbMatchesWalk==='boolean','Racial climbing policy');}

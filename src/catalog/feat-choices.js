@@ -19,15 +19,17 @@ export function featEligible(index,feat,{classes,scores,origin,selections,exclud
  const d=feat.data,r=d.requirements??{},family=origin.race?.id.split(':').at(-1)??'',sub=origin.subrace?.id??'';
  if((d.requiresScores??[]).some(p=>scores[p.score]<p.minimum)||(r.scores??[]).some(p=>scores[p.score]<p.minimum))return false;
  if(r.scoreAny&&!r.scoreAny.some(p=>scores[p.score]>=p.minimum))return false;
+ if(r.minimumCharacterLevel&&total(classes)<r.minimumCharacterLevel)return false;
+ if(r.giantStrike&&(!(Object.values(selections??{}).flat().includes('bgg:feat:strike-of-the-giants'))||!(selections['bgg:feat:strike-of-the-giants:giant']??[]).includes(r.giantStrike)))return false;
  if(r.raceFamilies&&!r.raceFamilies.includes(family))return false;
  if(r.subraceTokens&&!r.subraceTokens.some(t=>sub.includes(t)))return false;
  if(r.smallOrDwarf&&family!=='dwarf'&&origin.size!=='small')return false;
  const classCasting=classes.some(c=>{const data=index.get(c.subclassId)?.data.casting??index.class(c.id).data.casting;return data&&c.level>=(data.startsAtClassLevel??(data.progression==='half'?2:data.progression==='third'?3:1));});
  if(r.classCasting&&!classCasting)return false;
- if(r.casting&&!classCasting&&!origin.spells?.length&&!Object.values(selections).flat().some(id=>id!==excludeId&&index.get(id)?.data.spellPackage))return false;
+ if(r.casting&&!classCasting&&!origin.spells?.length&&!Object.values(selections).flat().some(id=>id!==excludeId&&index.get(id)?.data.spellPackage)&&!r.backgroundNames?.includes(origin.background?.name))return false;
  const{profs}=trained(index,classes,origin,selections);for(const id of Object.values(selections).flat()){const e=index.get(id);if(id===excludeId)continue;for(const p of e?.data.buildEffects?.proficiencies??[])profs.add(p);if(Object.values(WEAPONS).some(w=>w.proficiency===id))profs.add(id);}
  if(r.armor&&!profs.has('all-armor')&&!profs.has(r.armor))return false;
- if(r.martialWeapon&&!profs.has('martial-weapons')&&!Object.values(WEAPONS).some(w=>w.category==='martial'&&profs.has(w.proficiency)))return false;
+ if(r.martialWeapon&&!profs.has('martial-weapons')&&!Object.values(WEAPONS).some(w=>w.category==='martial'&&profs.has(w.proficiency))&&!r.backgroundNames?.includes(origin.background?.name))return false;
  return true;
 }
 /** Feat decisions are inert inputs to the same character compiler, never a second character store. */
@@ -44,6 +46,7 @@ export function resolveFeatChoices(index,{classes,scores,selections,campaignOpti
   for(const cap of d.draconicCapabilities??[])pool(cap.key,cap.maximum==='proficiency'?pb:cap.maximum,cap.recovery);
   if(d.featResource)pool('uses',d.featResource.maximum==='proficiency'?pb:d.featResource.maximum,d.featResource.recovery);
   if(d.elementalChoice)ask('element','feat-option',1,['acid','cold','fire','lightning','thunder'].filter(type=>!instances.some(other=>other.prefix!==prefix&&other.id===feat.id&&(selections[other.prefix+':element']??[]).includes(type))));
+  if(d.giantStrikeChoices)ask('giant','feat-option',1,d.giantStrikeChoices);
   for(const[key,count,options,kind]of [
    ['training',d.trainingCount,[...Object.keys(SKILLS),...TOOL_PROFICIENCIES],'training'],['skill',d.skillCount,d.skillOptions??Object.keys(SKILLS),'skill'],['tool',d.toolCount,TOOL_PROFICIENCIES,'proficiency'],['artisan-tool',d.artisanToolCount,TOOL_PROFICIENCIES.slice(0,17),'proficiency'],['language',d.languageCount,LANGUAGES.map(k=>'language:'+k),'proficiency'],['weapons',d.weaponCount,[...new Set(Object.values(WEAPONS).map(w=>w.proficiency))],'proficiency'],
   ])if(count){const previous=selections[prefix+':'+key]??[],owned=key==='skill'||key==='training'?new Set([...allTraining.skills,...allTraining.profs]):key==='language'?new Set((origin.languages??[]).map(l=>'language:'+l)):allTraining.profs;const values=ask(key,kind,count,options.filter(v=>key==='weapons'||!owned.has(v)));for(const v of values)if(Object.hasOwn(SKILLS,v))allTraining.skills.add(v);else allTraining.profs.add(v);}
@@ -60,6 +63,15 @@ export function resolveFeatChoices(index,{classes,scores,selections,campaignOpti
   const selectSpells=(key,count,lists,min,max,{schools=null,ritual=false,attack=false,...extra}={})=>{const options=index.list('spell').filter(s=>s.data.level>=min&&s.data.level<=max&&s.data.classIds.some(id=>lists.includes(id))&&(!schools||schools.includes(s.data.school))&&(!ritual||s.data.ritual)&&(!attack||attackCantrip(s))).map(s=>s.id);return ask(key,'feat-spell',count,options,extra);};
   let pkg=d.spellPackage;
   if(pkg==='draconic-healing'){const castAbility=ask('casting-ability','feat-option',1,d.castingAbilityOptions)[0];if(castAbility)addSpell(d.draconicHealing.spellId,castAbility,pool('draconic-healing',1),false,d.description);}
+  if(d.runeShaper){
+   const castAbility=ask('casting-ability','feat-option',1,['int','wis','cha'])[0];
+   const runeSpells=['srd51:fog-cloud','srd51:inflict-wounds','phb14:spell:chromatic-orb','srd51:disguise-self','srd51:burning-hands','srd51:speak-with-animals','phb14:spell:armor-of-agathys','srd51:goodberry','srd51:longstrider','srd51:command','srd51:entangle','srd51:sanctuary','srd51:thunderwave'].filter(id=>index.get(id)?.type==='spell');
+   const chosen=ask('runes','feat-spell',Math.floor(pb/2),runeSpells);
+   if(castAbility){
+    addSpell('srd51:comprehend-languages',castAbility,pool('comprehend-languages',1),false,'Une incantation gratuite par repos long, ou un emplacement de sort.');
+    for(const id of chosen)addSpell(id,castAbility,pool('rune-'+id.replace(/[^a-z0-9]+/g,'-'),1),false,'Rune inscrite après un repos long : une incantation gratuite par sort et par repos long, ou un emplacement.');
+   }
+  }
 
   if(['magic-initiate','ritual-caster','spell-sniper'].includes(pkg)){
    const cls=ask('spell-class','feat-option',1,['bard','cleric','druid','sorcerer','warlock','wizard'].filter(cls=>pkg!=='spell-sniper'||index.list('spell').some(s=>s.data.classIds.includes(cls)&&attackCantrip(s))))[0];if(cls){const castAbility=abilityOf[cls];if(pkg==='magic-initiate'){for(const id of selectSpells('cantrips',2,[cls],0,0))addSpell(id,castAbility);for(const id of selectSpells('spell',1,[cls],1,1))addSpell(id,castAbility,pool('spell',1),'',d.description);}

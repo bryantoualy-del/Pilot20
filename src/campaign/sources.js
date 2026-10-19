@@ -15,6 +15,7 @@ export const SOURCES = Object.freeze([
     motm: "Monsters of the Multiverse (2022)",
     eberron: "Eberron",
     fizban: "Fizban",
+    bgg: "Glory of the Giants (2023)",
     scag: "Sword Coast Adventurer’s Guide",
     mtf: "Mordenkainen’s Tome of Foes",
     eepc: "Elemental Evil",

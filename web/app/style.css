@@ -1890,3 +1890,9 @@ button.primary,.single-actions .primary{color:#191b1f}
 /* Optical correction (not geometric centering): source has generous transparent margins.
    Keep a common 40px layout box, scale only the painted Ensorceleur glyph. */
 .single-classes img.class-icon--sorcerer{transform:scale(1.30);transform-origin:50% 50%;}
+
+/* Background benefits and feat discovery — keep the existing compact creator layout. */
+.single-creator .background-preview{margin:12px 0;padding:12px 14px;border:1px solid var(--border);border-radius:6px;background:var(--surface)}
+.single-creator .background-preview h2{font-size:15px;margin:0 0 6px}
+.single-creator .background-preview p{margin:6px 0;font-size:13px;line-height:1.5}
+.single-creator .background-preview button{margin-top:6px}
