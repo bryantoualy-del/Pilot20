@@ -61,7 +61,7 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       "Private content cannot be distributed",
     );
     check(i.data && i.data.ruleset === c.ruleset, "Entry ruleset");
-    if(i.source.kind==='reference') check(['xge','tce','phb14','ravenloft','volo','motm','eberron','scag','strixhaven'].includes(i.data.rulesSourceId),'Referenced 2014 source');
+    if(i.source.kind==='reference') check(['xge','tce','phb14','ravenloft','volo','motm','eberron','scag','strixhaven','fizban'].includes(i.data.rulesSourceId),'Referenced 2014 source');
     const a = i.data.automation;
     keys(a, ["status", "handler", "limits"]);
     check(
@@ -91,6 +91,15 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       for(const key of ['cantripsKnown','spellsKnown','unrestrictedSpellsKnown'])check(d[key]?.length===20&&d[key].every(n=>integer(n,0,100)),'Subclass known progression');
       check(Array.isArray(d.restrictedSpellSchools)&&d.restrictedSpellSchools.length===2,'Subclass spell schools');
     }
+    if(d.draconicCapabilities){
+      check(i.type==='feat'&&d.rulesSourceId==='fizban'&&Array.isArray(d.draconicCapabilities),'Draconic feat capabilities');
+      for(const c of d.draconicCapabilities){
+        keys(c,['key','summary','name','economy','maximum','recovery','trigger','mechanics','automation']);
+        check(id(c.key)&&typeof c.summary==='string'&&['bonus','reaction'].includes(c.economy)&&(c.maximum===1||c.maximum==='proficiency')&&c.recovery==='long'&&id(c.trigger),'Draconic capability contract');
+        check(c.automation.status==='partial'&&c.automation.handler===null&&c.automation.limits.length>0,'Draconic partial support only');
+      }
+    }
+    if(d.castingAbilityOptions)check(i.type==='feat'&&d.castingAbilityOptions.length===3&&d.castingAbilityOptions.every(a=>['int','wis','cha'].includes(a))&&!d.abilityOptions,'Casting choice is not an ability score increase');
     if(d.buildEffects){
       keys(d.buildEffects,['proficiencies','attacksPerAction','resistances','minimumClassLevel','movement','scoreIncreases','hpPerClassLevel','naturalArmor','halfProficiency','defenseStyle','rangedWeaponAttackBonus','skills','immunities','heavyArmorBonus','initiativeAbility','saves','skillAbilityBonuses','expertiseSkills','speedBonus','existingMovementBonus','checkAbilityBonuses','unarmoredSpeedByClassLevel','initiativeBonus','hpPerCharacterLevel','passiveSkillBonuses','mediumArmorDexCap','movementMatchWalk'],[]);
       check(['feature','feat'].includes(i.type),'Build effects belong to features or feats');
@@ -137,7 +146,7 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
       list(d.incompatible, "Incompatible entries");
     if (["race", "background"].includes(i.type)) {
       for (const owner of [d, ...(d.subraces ?? [])]) {
-        if(owner.source){source(owner.source);check(distribution!=='public'||owner.source.kind!=='private','Private subrace cannot be distributed');if(owner.source.kind==='reference')check(['xge','tce','phb14','ravenloft','volo','motm','eberron','scag','strixhaven'].includes(owner.rulesSourceId),'Referenced subrace source');}
+        if(owner.source){source(owner.source);check(distribution!=='public'||owner.source.kind!=='private','Private subrace cannot be distributed');if(owner.source.kind==='reference')check(['xge','tce','phb14','ravenloft','volo','motm','eberron','scag','strixhaven','fizban'].includes(owner.rulesSourceId),'Referenced subrace source');}
         if(owner.flexibleAbilityBoosts!==undefined)check(owner.flexibleAbilityBoosts===true,'Flexible racial bonuses');
         if(owner.sizes)check(Array.isArray(owner.sizes)&&owner.sizes.length>0&&owner.sizes.every(s=>['small','medium'].includes(s)),'Racial size choices');
         if(owner.movementModes){keys(owner.movementModes,['climb','swim','fly','climbMatchesWalk','flyMatchesWalk','flightArmorRestricted'],[]);for(const key of ['climb','swim','fly'])if(owner.movementModes[key]!==undefined)check(integer(owner.movementModes[key],0,200),'Racial movement');if(owner.movementModes.climbMatchesWalk!==undefined)check(typeof owner.movementModes.climbMatchesWalk==='boolean','Racial climbing policy');}

@@ -41,6 +41,7 @@ export function resolveFeatChoices(index,{classes,scores,selections,campaignOpti
   const pool=(key,maximum,recovery='long')=>{const id=prefix+':'+key;resources.push({id,max:maximum,recovery,unlimited:false,classId,ownerId:feat.id});return id;};
   let ability=d.abilityOptions?(d.abilityOptions.length===1?d.abilityOptions[0]:ask('ability','feat-ability',1,d.abilityOptions)[0]):null;
   if(ability){if(featScores[ability]>=20)issues.push({code:'feat-score-cap',featureId:feat.id,choiceId:prefix+':ability'});else featScores[ability]++;if(d.saveFromAbility)additionalSaves.push(ability);}
+  for(const cap of d.draconicCapabilities??[])pool(cap.key,cap.maximum==='proficiency'?pb:cap.maximum,cap.recovery);
   if(d.featResource)pool('uses',d.featResource.maximum==='proficiency'?pb:d.featResource.maximum,d.featResource.recovery);
   if(d.elementalChoice)ask('element','feat-option',1,['acid','cold','fire','lightning','thunder'].filter(type=>!instances.some(other=>other.prefix!==prefix&&other.id===feat.id&&(selections[other.prefix+':element']??[]).includes(type))));
   for(const[key,count,options,kind]of [
@@ -58,6 +59,8 @@ export function resolveFeatChoices(index,{classes,scores,selections,campaignOpti
   const addSpell=(id,castAbility,resourceId=null,ritualOnly=false,note='',tag='magic')=>{if(!index.get(id))return;spells.push({id,level,ability:castAbility,ownerId:feat.id,featureOwnerId:feat.id,...(resourceId?{resourceId}:{}),...(ritualOnly?{ritualOnly:true}:{}),source:feat.source,requirements:note||d.description});};
   const selectSpells=(key,count,lists,min,max,{schools=null,ritual=false,attack=false,...extra}={})=>{const options=index.list('spell').filter(s=>s.data.level>=min&&s.data.level<=max&&s.data.classIds.some(id=>lists.includes(id))&&(!schools||schools.includes(s.data.school))&&(!ritual||s.data.ritual)&&(!attack||attackCantrip(s))).map(s=>s.id);return ask(key,'feat-spell',count,options,extra);};
   let pkg=d.spellPackage;
+  if(pkg==='draconic-healing'){const castAbility=ask('casting-ability','feat-option',1,d.castingAbilityOptions)[0];if(castAbility)addSpell(d.draconicHealing.spellId,castAbility,pool('draconic-healing',1),false,d.description);}
+
   if(['magic-initiate','ritual-caster','spell-sniper'].includes(pkg)){
    const cls=ask('spell-class','feat-option',1,['bard','cleric','druid','sorcerer','warlock','wizard'].filter(cls=>pkg!=='spell-sniper'||index.list('spell').some(s=>s.data.classIds.includes(cls)&&attackCantrip(s))))[0];if(cls){const castAbility=abilityOf[cls];if(pkg==='magic-initiate'){for(const id of selectSpells('cantrips',2,[cls],0,0))addSpell(id,castAbility);for(const id of selectSpells('spell',1,[cls],1,1))addSpell(id,castAbility,pool('spell',1),'',d.description);}
     if(pkg==='spell-sniper')for(const id of selectSpells('cantrip',1,[cls],0,0,{attack:true}))addSpell(id,castAbility);
