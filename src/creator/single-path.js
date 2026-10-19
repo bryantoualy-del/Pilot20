@@ -1,4 +1,4 @@
-import {validateScoreMethod} from '../catalog/origins.js';
+import {validateScoreMethod,POINT_COST} from '../catalog/origins.js';
 import {draftProgression} from './model.js';
 
 /** Legacy data is preserved; only the navigation presentation is migrated. */
@@ -44,7 +44,7 @@ export function decisionReady(decision,report,draft) {
     case 'class':return draft.classChosen!==false&&draft.classes.every(c=>c.level>=1&&c.level<=20)&&!report.issues.some(i=>['unavailable-class','multiclass-prerequisite','multiclass-option-disabled'].includes(i.code));
     case 'background':return !!draft.backgroundId||!!draft.background.name.trim()&&draft.background.skills.length===2;
     case 'training':return decision.originChoices.every(choice=>decisionReady({kind:'origin-choice',choice},report,draft))&&decision.classChoices.every(choice=>decisionReady({kind:'class-choice',choice},report,draft));
-    case 'scores':return validateScoreMethod(draft.scores,draft.scoreMethod,draft.scoreRolls)&&!report.issues.some(i=>/score-method|origin-score-cap|asi-cap|origin-bonus-duplicate/.test(i.code)||(report.origin?.choices??[]).some(q=>(q.kind==='score'||q.key==='ability-pattern')&&q.id===i.choiceId));
+    case 'scores':return validateScoreMethod(draft.scores,draft.scoreMethod,draft.scoreRolls)&&(draft.scoreMethod!=='point-buy'||Object.values(draft.scores).reduce((total,score)=>total+POINT_COST[score],0)===27)&&!report.issues.some(i=>/score-method|origin-score-cap|asi-cap|origin-bonus-duplicate/.test(i.code)||(report.origin?.choices??[]).some(q=>(q.kind==='score'||q.key==='ability-pattern')&&q.id===i.choiceId));
     case 'hit-points':return report.hitPoints?.valid===true;
     case 'equipment':return report.economy?.valid!==false&&report.startingEquipment?.valid!==false;
     case 'summary':return report.valid;
