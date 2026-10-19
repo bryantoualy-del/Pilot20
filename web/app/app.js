@@ -12,6 +12,7 @@ import { messages, labels, classNames } from "./i18n.js";
 import { el, button, field, select, check, badge, download } from "./dom.js";
 import { renderCreator as renderEditor } from "./creator.js";
 import { newDraft } from "../../src/creator/model.js";
+import { ABILITIES } from "../../src/character/contracts.js";
 import { renderCompanion } from "./companion.js";
 const root = document.querySelector("#app"),
   dialog = document.querySelector("#dialog");
@@ -305,7 +306,10 @@ async function render() {
 }
 async function start() {
   const d = newDraft(state.campaignId);
-  d.startingEquipmentEnabled=true;d.startingEquipmentChoices={};d.scoreMethod='point-buy';
+  d.startingEquipmentEnabled=true;d.startingEquipmentChoices={};
+  d.scoreMethod='point-buy';
+  // AideDD 2014: six valeurs brutes de 10 au départ (12 points sur 27).
+  d.scores=Object.fromEntries(ABILITIES.map(ability=>[ability,10]));
   await autosave(d);
   await nav("creator", d.id);
 }

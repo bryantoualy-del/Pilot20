@@ -132,17 +132,35 @@ export async function renderCreator(main,input,a) {
       else body.append(button(w('Détail de l’historique','Background details'),()=>details(a.context.index.get(d.backgroundId))));
     }
     if(current.kind==='scores'){
-      body.append(field(text('method'),select(['standard','point-buy','rolled','manual'].map(k=>[k,text(k==='manual'?'manualScores':k)]),d.scoreMethod,e=>update(x=>{x.scoreMethod=e.target.value;x.scoresAreBase=true;if(x.scoreMethod==='standard')x.scores=templateScores(x.classes[0].id);if(x.scoreMethod==='point-buy')x.scores=Object.fromEntries(ABILITIES.map(k=>[k,8]));}))),
+      body.append(field(text('method'),select(['standard','point-buy','rolled','manual'].map(k=>[k,text(k==='manual'?'manualScores':k)]),d.scoreMethod,e=>update(x=>{x.scoreMethod=e.target.value;x.scoresAreBase=true;if(x.scoreMethod==='standard')x.scores=templateScores(x.classes[0].id);if(x.scoreMethod==='point-buy')x.scores=Object.fromEntries(ABILITIES.map(k=>[k,10]));}))),
         d.scoreMethod==='point-buy'?null:check(w('Ajouter les bonus raciaux aux valeurs ci-dessous','Add racial bonuses to the scores below'),d.scoresAreBase,e=>update(x=>{x.scoresAreBase=e.target.checked;})));
       if(d.scoreMethod==='rolled')body.append(button(text('rollScores'),()=>update(x=>{const r=rollAbilityScores();x.scoreRolls=r.rolls;x.scores=Object.fromEntries(ABILITIES.map((k,i)=>[k,r.values[i]]));})));
       const spent=Object.values(d.scores).reduce((sum,n)=>sum+(POINT_COST[n]??100),0);
+      if(d.scoreMethod==='point-buy'){
+        const validScores=Object.values(d.scores).every(n=>Object.hasOwn(POINT_COST,n));
+        const remaining=Math.max(0,27-spent);
+        body.append(el('section',{class:'score-budget point-budget','aria-label':w('Budget de points','Point-buy budget')},
+          el('div',{class:'score-budget-head'},el('span',{},w('Points utilisés','Points spent')),
+            el('strong',{class:'score-budget-total',role:'status','aria-live':'polite'},validScores?spent+' / 27':w('Valeurs invalides','Invalid scores'))),
+          el('progress',{value:validScores?Math.min(27,spent):0,max:27,'aria-label':w('Points utilisés sur 27','Points spent out of 27')}),
+          el('p',{class:'single-help'},validScores?(remaining?remaining+' '+w('points restants · utilisez les + et − pour les répartir.','points remaining · use + and − to allocate them.'):w('27 points attribués.','All 27 points allocated.')):w('Les valeurs de base doivent être comprises entre 8 et 15.','Base scores must be between 8 and 15.'))));
+      }else if(d.scoreMethod==='standard'){
+        body.append(el('div',{class:'score-mode-hint'},el('span',{},w('Le tableau standard est fixe. Le budget de 27 points appartient à la méthode Achat de points.','The standard array is fixed. The 27-point budget is available with Point buy.')),
+          button(w('Répartir 27 points','Use 27-point buy'),()=>update(x=>{x.scoreMethod='point-buy';x.scoresAreBase=true;x.scores=Object.fromEntries(ABILITIES.map(k=>[k,10]));}),'subtle')));
+      }
       const grid=el('table',{class:'score-table'},el('thead',{},el('tr',{},['',w('Valeur brute','Base'),w('Coût','Cost'),w('Bonus racial','Racial bonus'),w('Valeur finale','Final')].map(t=>el('th',{},t))))),rows=el('tbody',{});
       const scoreChoices=(report.origin?.choices??[]).filter(q=>q.kind==='score');
       const patterns=(report.origin?.choices??[]).filter(q=>q.key==='ability-pattern');
       for(const q of patterns)body.append(field(q.label[a.state.locale],select([['',w('Choisir','Choose')],...q.options.map(id=>[id,optionName(id,a)])],d.originSelections?.[q.id]?.[0]??'',e=>update(x=>{x.originSelections??={};x.originSelections[q.id]=e.target.value?[e.target.value]:[];for(const key of Object.keys(x.originSelections))if(key.startsWith(q.ownerId+':ability-bonus-'))delete x.originSelections[key];}))));
       for(const ability of ABILITIES){
         const n=d.scores[ability],min=d.scoreMethod==='point-buy'?8:1,max=d.scoreMethod==='point-buy'?15:30;
-        const change=delta=>update(x=>{x.scores[ability]+=delta;});
+        const change=delta=>update(x=>{
+          const current=x.scores[ability],next=current+delta;
+          if(next<min||next>max)return;
+          const total=Object.values(x.scores).reduce((sum,v)=>sum+(POINT_COST[v]??100),0);
+          if(x.scoreMethod==='point-buy'&&total+(POINT_COST[next]??100)-(POINT_COST[current]??100)>27)return;
+          x.scores[ability]=next;
+        });
         const minus=button('−',()=>change(-1)),plus=button('+',()=>change(1));
         minus.setAttribute('aria-label',w('Diminuer ','Decrease ')+a.label(ability));plus.setAttribute('aria-label',w('Augmenter ','Increase ')+a.label(ability));
         minus.disabled=n<=min;plus.disabled=n>=max||(d.scoreMethod==='point-buy'&&spent+POINT_COST[n+1]-POINT_COST[n]>27);
@@ -153,7 +171,6 @@ export async function renderCreator(main,input,a) {
         rows.append(el('tr',{},el('th',{scope:'row'},a.label(ability)),el('td',{},el('div',{class:'score-stepper'},minus,el('output',{},n),plus)),el('td',{},d.scoreMethod==='point-buy'?(POINT_COST[n]??'—'):'—'),el('td',{},bonus),el('td',{},el('strong',{},final+' ('+(mod>=0?'+':'')+mod+')'))));
       }
       grid.append(rows);body.append(grid);
-      if(d.scoreMethod==='point-buy')body.append(el('p',{class:'point-budget',role:'status'},w('Coût en points : ','Point cost: '),el('strong',{},Object.values(d.scores).some(n=>!Object.hasOwn(POINT_COST,n))?w('Score brut hors de 8–15','Base score outside 8–15'):spent+' / 27')));
       body.append(el('p',{},w('Points de vie prévus : ','Estimated hit points: ')+(report.hpPreview??'—')));
     }
     if(current.kind==='hit-points'){
@@ -215,6 +232,73 @@ export async function renderCreator(main,input,a) {
       const compiled=compileDraft(a.context,a.config,{...d,confirmed:true});
       body.append(el('p',{},d.classes.map(c=>a.cls(c.id)+' '+c.level).join(' / ')));
       if(compiled.stats)body.append(el('div',{class:'single-summary'},el('p',{},text('hp')+' '+compiled.stats.maxHp),el('p',{},text('ac')+' '+compiled.stats.ac)));
+      // Le récapitulatif se construit à partir du même état que le parcours :
+      // aucun choix manquant n'est remplacé par une suggestion silencieuse.
+      const recap=el('div',{class:'single-recap','aria-label':w('Récapitulatif des choix','Choice recap')});
+      const recapRow=(name,value,target,valid=true)=>{
+        const row=el('div',{class:'recap-row'+(valid?'':' recap-incomplete')},
+          el('div',{class:'recap-content'},el('strong',{},name),
+            el('p',{},value||w('À compléter','To complete'))),
+          button(w('Modifier','Edit'),()=>go(target),'subtle'));
+        return row;
+      };
+      const recapSection=(heading,rows)=>{
+        if(!rows.length)return;
+        recap.append(el('section',{class:'recap-section'},el('h2',{},heading),...rows));
+      };
+      const chosen=x=>{
+        const q=x.choice;
+        if(x.kind==='origin-choice')return d.originSelections?.[q.id]??[];
+        if(q.kind==='subclass')return [d.classes.find(c=>c.id===q.classId)?.subclassId].filter(Boolean);
+        return report.selections?.[q.id]??d.selections?.[q.id]??[];
+      };
+      const decisionRow=x=>{
+        const values=chosen(x),readyChoice=decisionReady(x,report,d);
+        const name=x.kind==='origin-choice'?(x.choice.label?.[a.state.locale]??optionName(x.choice.key,a)):choiceName(x.choice,a);
+        const empty=readyChoice?w('Aucun choix requis','No selection required'):w('À compléter','To complete');
+        return recapRow(name,values.map(id=>optionName(id,a)).join(' · ')||empty,x.id,readyChoice);
+      };
+      const origin=report.origin??{};
+      const ancestry=[origin.race&&a.name(origin.race),origin.subrace&&a.name(origin.subrace)].filter(Boolean).join(' · ');
+      const classes=d.classes.map(c=>{
+        const subclass=c.subclassId?a.context.index.get(c.subclassId):null;
+        return a.cls(c.id)+' '+c.level+(subclass?' · '+a.name(subclass):'');
+      }).join(' / ');
+      const backgroundEntry=d.backgroundId?a.context.index.get(d.backgroundId):null;
+      const background=backgroundEntry?a.name(backgroundEntry):d.background.name;
+      const points=Object.values(d.scores).reduce((total,n)=>total+(POINT_COST[n]??100),0);
+      const scores=ABILITIES.map(key=>{
+        const n=report.scores?.[key]??d.scores[key],mod=Math.floor((n-10)/2);
+        return a.label(key)+' '+n+' ('+(mod>=0?'+':'')+mod+')';
+      }).join(' · ');
+      recapSection(w('Personnage','Character'),[
+        recapRow(w('Nom','Name'),d.name,'identity'),
+        recapRow(w('Race et ascendance','Race and ancestry'),ancestry,'race',!!origin.race),
+        recapRow(w('Classe, niveau et spécialisation','Class, level and specialization'),classes,'class'),
+        recapRow(w('Historique','Background'),background,'background',!!background),
+        recapRow(w('Caractéristiques finales','Final ability scores'),scores+(d.scoreMethod==='point-buy'?' · '+points+' / 27':''),'scores',decisionReady({kind:'scores'},report,d)),
+        recapRow(w('Points de vie','Hit points'),String(report.hpPreview??'—'),'hit-points',report.hitPoints?.valid===true)
+      ]);
+      const training=decisions.find(x=>x.kind==='training');
+      const fixedTraining=[...(origin.background?.skills??[]),...(origin.languages??[]),...(origin.background?.proficiencies??[])];
+      const trainingRows=fixedTraining.length?[recapRow(w('Accordées par l’origine','Granted by origin'),[...new Set(fixedTraining)].map(id=>optionName(id,a)).join(' · '),'training')]:[];
+      if(training)for(const q of [...training.classChoices,...training.originChoices]){
+        const x={kind:training.originChoices.includes(q)?'origin-choice':'class-choice',choice:q,id:'training'};
+        trainingRows.push(recapRow(q.classId?choiceName(q,a):(q.label?.[a.state.locale]??optionName(q.key,a)),
+          chosen(x).map(id=>optionName(id,a)).join(' · ')||w('À compléter','To complete'),'training',decisionReady(x,report,d)));
+      }
+      recapSection(w('Maîtrises et langues','Proficiencies and languages'),trainingRows);
+      const extraChoices=decisions.filter(x=>['origin-choice','class-choice'].includes(x.kind));
+      const magicKinds=new Set(['spell','spellbook','prepared']);
+      recapSection(w('Capacités, dons et autres choix','Features, feats and other choices'),extraChoices.filter(x=>!magicKinds.has(x.choice.kind)).map(decisionRow));
+      recapSection(w('Sorts et grimoire','Spells and spellbook'),extraChoices.filter(x=>magicKinds.has(x.choice.kind)).map(decisionRow));
+      const equipment=[...(report.startingEquipment?.items??[]),...(origin.equipment??[])].map(item=>(item.quantity??1)+' × '+(item.name?.[a.state.locale]??item.id));
+      const additional=(d.inventoryLedger??[]).map(item=>item.quantity+' × '+(item.customName||item.itemId));
+      recapSection(w('Équipement','Equipment'),[
+        recapRow(w('Méthode','Method'),d.equipmentMethod==='wealth'?w('Richesse initiale et achats','Starting wealth and purchases'):w('Matériel de départ','Starting equipment'),'equipment'),
+        recapRow(w('Équipement choisi','Chosen equipment'),[...equipment,...additional].join(' · ')||w('Aucun équipement sélectionné','No equipment selected'),'equipment',report.economy?.valid!==false)
+      ]);
+      body.append(recap);
       const events=d.advancementEvents??[];body.append(el('details',{},el('summary',{},w('Historique de progression','Advancement history')),el('p',{},d.advancementHistory?.length?w('Historique complet renseigné ; sa validité est contrôlée à la sauvegarde.','Complete history supplied; validation runs on save.'):w('Création directe au niveau choisi : les acquisitions antérieures ne sont pas connues. Aucun niveau passé n’a été inventé.','Created directly at the selected level: earlier acquisitions are unknown. No past levels were invented.')),events.map(e=>el('p',{},a.cls(e.classId)+' · '+e.from.classes.reduce((n,c)=>n+c.level,0)+' → '+e.to.classes.reduce((n,c)=>n+c.level,0)+' · '+new Date(e.recordedAt).toLocaleDateString(a.state.locale)))));
       if(d.finalized&&!externalEdits&&!d.pendingAdvancement&&d.classes.reduce((n,c)=>n+c.level,0)<20)body.append(el('details',{},el('summary',{},w('Gagner un niveau','Gain a level')),d.classes.map(c=>button(a.cls(c.id)+' → '+(c.level+1),async()=>{const next=beginAdvancement(d,c.id);Object.keys(d).forEach(k=>delete d[k]);Object.assign(d,next);await a.autosave(d);await draw(true);})),a.config.enabledOptions.includes('multiclass')?a.context.index.list('class').filter(c=>!d.classes.some(x=>x.id===c.data.classId)).map(c=>button(w('Nouvelle classe : ','New class: ')+a.cls(c.data.classId),async()=>{const next=beginAdvancement(d,c.data.classId);Object.keys(d).forEach(k=>delete d[k]);Object.assign(d,next);await a.autosave(d);await draw(true);})):null));
       for(const issue of compiled.issues){const item=el('div',{class:'single-issue'},el('p',{},issueMessage(issue,report,a)));

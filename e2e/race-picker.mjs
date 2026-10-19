@@ -54,7 +54,9 @@ try {
   const option=dialog.getByLabel('Autoriser l’option Lignée sur mesure dans cette campagne',{exact:true});
   const old=await option.elementHandle();await option.check();await p.waitForFunction(e=>!e.isConnected,old);await old.dispose();
   await dialog.getByLabel('Caractéristique +2',{exact:true}).selectOption('str');
-  await dialog.getByLabel('Don installé',{exact:true}).selectOption('srd51:grappler');
+  // Le départ à 10 en Force + le bonus racial +2 donne 12 : Lutteur exige 13.
+  // Tester ici un don sans prérequis pour vérifier la sauvegarde de Lignée sur mesure.
+  await dialog.getByLabel('Don installé',{exact:true}).selectOption('phb14:feat:alert');
   await dialog.getByLabel('Le MJ autorise cette lignée et cette langue',{exact:true}).check();
   await dialog.getByRole('button',{name:'Enregistrer et utiliser',exact:true}).click();
   await dialog.waitFor({state:'hidden'});

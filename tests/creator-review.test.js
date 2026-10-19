@@ -4,12 +4,25 @@ import {playerCatalogs} from '../src/catalog/player-catalogs.js';
 import {defaultCampaign,campaignCatalog} from '../src/campaign/sources.js';
 import {newDraft} from '../src/creator/model.js';
 import {singlePath,decisionReady} from '../src/creator/single-path.js';
+import {validateScoreMethod,POINT_COST} from '../src/catalog/origins.js';
 import {subclassSummary} from '../src/catalog/subclass-summaries.js';
 import {readableText} from '../src/catalog/readable-text.js';
 const config=defaultCampaign(),ctx=campaignCatalog(playerCatalogs,[],config);
-test('point buy rejects raw 16 and 28 points but permits 27 or fewer before racial bonuses',()=>{
+test('point-buy rules allow underbudget scores but the creator requires all 27 points to continue',()=>{
  const d=newDraft();d.scoreMethod='point-buy';d.raceId='srd51:race:human';
- for(const [scores,valid]of [[{str:15,dex:14,con:13,int:12,wis:10,cha:8},true],[{str:16,dex:8,con:8,int:8,wis:8,cha:8},false],[{str:15,dex:15,con:15,int:9,wis:8,cha:8},false],[{str:8,dex:8,con:8,int:8,wis:8,cha:8},true]]){d.scores=scores;const p=singlePath(ctx,config,d);assert.equal(decisionReady({kind:'scores'},p.report,d),valid);}
+ for(const [scores,validRules,ready]of [
+   [{str:15,dex:14,con:13,int:12,wis:10,cha:8},true,true],
+   [{str:16,dex:8,con:8,int:8,wis:8,cha:8},false,false],
+   [{str:15,dex:15,con:15,int:9,wis:8,cha:8},false,false],
+   [{str:8,dex:8,con:8,int:8,wis:8,cha:8},true,false],
+   [{str:10,dex:10,con:10,int:10,wis:10,cha:10},true,false]
+ ]){
+   d.scores=scores;
+   assert.equal(validateScoreMethod(scores,'point-buy'),validRules);
+   const plan=singlePath(ctx,config,d);
+   assert.equal(decisionReady({kind:'scores'},plan.report,d),ready);
+ }
+ assert.equal(Object.values({str:10,dex:10,con:10,int:10,wis:10,cha:10}).reduce((sum,n)=>sum+POINT_COST[n],0),12);
 });
 test('all built-in subclasses have separate French and English editorial introductions',()=>{
  for(const entry of ctx.index.list('subclass'))for(const lang of ['fr','en'])assert.ok(subclassSummary(entry,lang),entry.id);

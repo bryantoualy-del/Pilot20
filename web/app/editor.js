@@ -137,7 +137,11 @@ export function optionName(value, a) {
     'woodcarvers-tools':['Outils de menuisier','Woodcarver’s tools'],
     common: ["Commun", "Common"],
   };
-  return terms[value]?.[a.state.locale === "fr" ? 0 : 1] ?? human(value);
+  // Le catalogue historique contient aussi des identifiants singuliers :
+  // "alchemist-supplies", "brewer-supplies", "cook-utensils", etc.
+  const key=String(value).trim().toLowerCase().replace(/[’']/g,'').replace(/\s+/g,'-');
+  const pluralToolKey=key.replace(/^([a-z]+)-(tools|supplies|utensils)$/,'$1s-$2');
+  return (terms[value]??terms[key]??terms[pluralToolKey])?.[a.state.locale === "fr" ? 0 : 1] ?? human(value);
 }
 export function choiceName(q, a) {
   const owner=a.context.installed.get(q.ownerId),key=owner?.type==='feat'?q.id.split(':').at(-1):q.id.slice(q.classId.length+1),label=choiceLabels[key]?.[a.state.locale==='fr'?0:1];
