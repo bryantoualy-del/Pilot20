@@ -1883,6 +1883,6 @@ button.primary,.single-actions .primary{color:#191b1f}
 }
 
 /* Advanced decision menu is optional and placed after the active step. */
-.single-creator>.single-plan{margin:2px 0 12px;opacity:.9}
+.single-creator>.single-plan{margin:2px 0 0;opacity:.9}
 .single-creator>.single-plan>summary{font-size:11px;letter-spacing:.2px;text-transform:none;color:var(--muted);min-height:34px}
 .single-creator>.single-plan nav button{font-size:12px}

@@ -30,6 +30,9 @@ try{
   await navigate(()=>page.locator('.journey-steps button[aria-label="Classe"]').click());
   await navigate(()=>page.locator('.single-classes button').filter({hasText:'Guerrier'}).first().click());
   assert.equal(await page.locator('.single-classes button').count(),13);
+  await page.waitForFunction(()=>[...document.querySelectorAll('.single-classes img.class-icon')]
+    .length===13&&[...document.querySelectorAll('.single-classes img.class-icon')]
+    .every(img=>img.complete&&img.naturalWidth>0));
   const loaded=await page.locator('.single-classes img.class-icon').evaluateAll(nodes=>
     nodes.length===13&&nodes.every(img=>img.complete&&img.naturalWidth>0));
   assert.ok(loaded,'existing local class icons loaded');
