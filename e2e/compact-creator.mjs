@@ -15,6 +15,17 @@ try{
  await p.reload();await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();await p.locator('article').filter({has:p.getByRole('heading',{name:'Compact',exact:true})}).getByRole('button',{name:/^Reprendre/}).click();
  await p.locator('.score-table').waitFor();assert.equal(await p.locator('.score-table tbody tr').count(),6);assert.equal(await p.locator('.point-budget strong').innerText(),'0 / 27');assert.equal(await p.getByRole('button',{name:'Diminuer Force',exact:true}).isDisabled(),true);
  await p.getByRole('button',{name:'Augmenter Force',exact:true}).click();await p.getByText('1 / 27',{exact:true}).waitFor();
+ // No native text node must render "null" for the absent racial-bonus checkbox.
+ const literalNull=()=>p.locator('.single-body').evaluate(e=>[...e.childNodes].some(n=>n.nodeType===Node.TEXT_NODE&&n.textContent.trim()==='null'));
+ assert.equal(await literalNull(),false);
+ assert.equal(await p.getByText('Ajouter les bonus raciaux aux valeurs ci-dessous',{exact:true}).count(),0);
+ // Check the other method still displays its control, then return to point buy.
+ await p.locator('.single-body select').first().selectOption('standard');
+ await p.getByText('Ajouter les bonus raciaux aux valeurs ci-dessous',{exact:true}).waitFor();
+ assert.equal(await literalNull(),false);
+ await p.locator('.single-body select').first().selectOption('point-buy');
+ await p.getByText('12 / 27',{exact:true}).waitFor();
+ assert.equal(await literalNull(),false);
  await p.locator('.single-plan summary').click();assert.ok(await p.locator('.single-plan nav button').count()<=11);assert.equal(await p.getByText('Un choix de votre origine',{exact:true}).count(),0);
  await mkdir('artifacts',{recursive:true});
  for(const width of [375,390,1180]){await p.setViewportSize({width,height:820});assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await p.screenshot({path:`artifacts/compact-scores-${width}.png`,fullPage:true});}
