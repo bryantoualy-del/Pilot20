@@ -1,3 +1,4 @@
+import {selectBackground} from '../../src/creator/background-selection.js';
 import {choiceLabels,languageLabels,extraTrainingLabels} from './choice-labels.js';
 import { renderQuick } from "./quick.js";
 import { appearanceControls } from "./appearance.js";
@@ -91,7 +92,7 @@ const human = (v) =>
     .replace(/[-_]/g, " ")
     .replace(/^./, (x) => x.toUpperCase());
 export function optionName(value, a) {
-  const giantChoices={cloud:['Nuages','Cloud'],fire:['Feu','Fire'],frost:['Givre','Frost'],hill:['Collines','Hill'],stone:['Pierres','Stone'],storm:['Tempêtes','Storm']};
+  const giantChoices={chaotic:['Plan chaotique','Chaotic plane'],evil:['Plan mauvais','Evil plane'],good:['Plan bon','Good plane'],lawful:['Plan loyal','Lawful plane'],outlands:['Terres extérieures','Outlands'],'game-instrument':['Jeu et instrument','Game and instrument'],'game-thieves':['Jeu et outils de voleur','Game and thieves tools'],'instrument-thieves':['Instrument et outils de voleur','Instrument and thieves tools'],'air-vehicles':['Véhicules aériens','Air vehicles'],cloud:['Nuages','Cloud'],fire:['Feu','Fire'],frost:['Givre','Frost'],hill:['Collines','Hill'],stone:['Pierres','Stone'],storm:['Tempêtes','Storm']};
   if(Object.hasOwn(giantChoices,value))return giantChoices[value][a.state.locale==='fr'?0:1];
   const entry = a.context.installed.get(value);
   if (entry) return a.name(entry);
@@ -853,7 +854,7 @@ export async function renderEditor(main, d, a) {
             d.backgroundId ?? "",
             (e) =>
               update((x) => {
-                x.backgroundId = e.target.value || null;
+                selectBackground(a.context,x,e.target.value);
               }),
           ),
         ),

@@ -47,7 +47,7 @@ try{
  assert.equal(await p.locator('.single-body').getAttribute('data-kind'),'scores');
  // The validated six-stage UX now places abilities before background (stage 3 then 4).
  await step('Historique');
- await changed(()=>p.locator('.single-body select').first().selectOption('phb14:background:guild-merchant'));
+ await changed(()=>p.getByLabel('Historique',{exact:true}).selectOption('phb14:background:guild-merchant'));
  await step('Caractéristiques');
  assert.equal(await p.locator('.single-body').getAttribute('data-kind'),'scores');
  // La création AideDD démarre avec six valeurs de 10 : 12 points déjà dépensés.

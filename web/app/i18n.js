@@ -472,7 +472,7 @@ Object.assign(messages.fr, {
   preparationHelp:
     "Les préparations dépendent de vos caractéristiques : elles seront revalidées après modification.",
   backgroundCatalogHelp:
-    "Acolyte est l’historique SRD 5.1. Les autres historiques officiels nécessitent un pack privé autorisé.",
+    "Les historiques intégrés suivent les règles 2014 et les sources autorisées de votre campagne.",
   saveThrows: "Sauvegardes",
   weapons: "Armes",
   provenance: "Origine",
@@ -551,7 +551,7 @@ Object.assign(messages.en, {
   preparationHelp:
     "Preparation depends on ability scores and is revalidated when they change.",
   backgroundCatalogHelp:
-    "Acolyte is the SRD 5.1 background. Other official backgrounds need an authorized private pack.",
+    "Built-in backgrounds follow the 2014 rules and your campaign’s allowed sources.",
   saveThrows: "Saving throws",
   weapons: "Weapons",
   provenance: "Origin",

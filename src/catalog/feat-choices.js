@@ -1,3 +1,4 @@
+import {planarInfusions} from './backgrounds-2014.js';
 import {ABILITIES,SKILLS} from '../character/contracts.js';
 import {LANGUAGES} from './origins.js';
 import {TOOL_PROFICIENCIES} from './proficiencies.js';
@@ -20,7 +21,7 @@ export function featEligible(index,feat,{classes,scores,origin,selections,exclud
  if((d.requiresScores??[]).some(p=>scores[p.score]<p.minimum)||(r.scores??[]).some(p=>scores[p.score]<p.minimum))return false;
  if(r.scoreAny&&!r.scoreAny.some(p=>scores[p.score]>=p.minimum))return false;
  if(r.minimumCharacterLevel&&total(classes)<r.minimumCharacterLevel)return false;
- if(r.giantStrike&&(!(Object.values(selections??{}).flat().includes('bgg:feat:strike-of-the-giants'))||!(selections['bgg:feat:strike-of-the-giants:giant']??[]).includes(r.giantStrike)))return false;
+ if(r.giantStrike&&(!([...Object.values(selections??{}).flat(),...origin.featIds??[]].includes('bgg:feat:strike-of-the-giants'))||!(selections['bgg:feat:strike-of-the-giants:giant']??[]).includes(r.giantStrike)))return false;
  if(r.raceFamilies&&!r.raceFamilies.includes(family))return false;
  if(r.subraceTokens&&!r.subraceTokens.some(t=>sub.includes(t)))return false;
  if(r.smallOrDwarf&&family!=='dwarf'&&origin.size!=='small')return false;
@@ -61,6 +62,7 @@ export function resolveFeatChoices(index,{classes,scores,selections,campaignOpti
   }
   const addSpell=(id,castAbility,resourceId=null,ritualOnly=false,note='',tag='magic')=>{if(!index.get(id))return;spells.push({id,level,ability:castAbility,ownerId:feat.id,featureOwnerId:feat.id,...(resourceId?{resourceId}:{}),...(ritualOnly?{ritualOnly:true}:{}),source:feat.source,requirements:note||d.description});};
   const selectSpells=(key,count,lists,min,max,{schools=null,ritual=false,attack=false,...extra}={})=>{const options=index.list('spell').filter(s=>s.data.level>=min&&s.data.level<=max&&s.data.classIds.some(id=>lists.includes(id))&&(!schools||schools.includes(s.data.school))&&(!ritual||s.data.ritual)&&(!attack||attackCantrip(s))).map(s=>s.id);return ask(key,'feat-spell',count,options,extra);};
+  if(d.planarInfusion){const plane=ask('plane','feat-option',1,Object.keys(planarInfusions))[0],castAbility=ask('casting-ability','feat-option',1,['int','wis','cha'])[0];if(plane&&castAbility)addSpell(planarInfusions[plane].spell,castAbility,null,false,'Ce sort mineur ne nécessite pas de composante matérielle.');}
   let pkg=d.spellPackage;
   if(pkg==='draconic-healing'){const castAbility=ask('casting-ability','feat-option',1,d.castingAbilityOptions)[0];if(castAbility)addSpell(d.draconicHealing.spellId,castAbility,pool('draconic-healing',1),false,d.description);}
   if(d.runeShaper){

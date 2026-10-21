@@ -31,6 +31,8 @@ jobs:
       - name: Verify unified sources and reversible MJ restrictions
         run: node e2e/unified-sources.mjs
       - run: node e2e/compact-creator.mjs
+      - name: Verify 2014 backgrounds and Compagnie Creole aliases
+        run: node e2e/backgrounds-2014.mjs
       - name: Verify Fizban feat selector on phone and iPad widths
         run: node e2e/fizban-feats.mjs
       - name: Verify approved iPad/phone six-stage journey

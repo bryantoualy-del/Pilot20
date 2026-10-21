@@ -215,6 +215,7 @@ export function resolveOrigins(index, request) {
       issues.push({ code: "origin-option-disabled", option: flag });
 
   for (const { entry, data: d } of data) {
+    for(const fid of d.grantedFeatIds??[]){if(index.get(fid)?.type==='feat')featIds.push(fid);else issues.push({code:'unavailable-origin',id:fid});}
     if(d.sizes){const chosen=ask(entry,{key:'size',kind:'ancestry-option',count:1,options:d.sizes,label:{fr:'Taille du personnage',en:'Character size'}});if(chosen[0])selectedSize=chosen[0];}
     if(d.flexibleAbilityBoosts){
       const pattern=ask(entry,{key:'ability-pattern',kind:'ancestry-option',count:1,options:['two-one','three-ones'],label:{fr:'Répartition des bonus de caractéristiques',en:'Ability score increases'}})[0];
@@ -285,7 +286,8 @@ export function resolveOrigins(index, request) {
         })[0];
       if (v) grant(entry, "skill", v);
     }
-    for (const v of d.proficiencies ?? []) {
+    const conditional=(d.conditionalProficiencies??[]).filter(row=>(originSelections[entry.id+':'+row.key]??[]).includes(row.optionId)).flatMap(row=>row.values);
+    for (const v of [...d.proficiencies??[],...conditional]) {
       let value = v;
       if(entry.type==='background'&&TOOL_PROFICIENCIES.includes(canonicalProficiency(v))&&(classTools.has(canonicalProficiency(v))||[...proficiencies].some(p=>canonicalProficiency(p)===canonicalProficiency(v))))value=ask(entry,{key:'replace-tool-'+v,kind:'proficiency',count:1,options:TOOL_PROFICIENCIES.filter(p=>!classTools.has(p)&&![...proficiencies].some(v=>canonicalProficiency(v)===p)),label:{fr:'Remplacer une maîtrise d’outil déjà acquise',en:'Replace an already known tool proficiency'}})[0];
       if (value===v && originAdjustments.proficiencies && policy.proficiencies) {
@@ -325,6 +327,7 @@ export function resolveOrigins(index, request) {
           .map((s) => s.id);
       if (spec.kind === "language")
         options = options.filter((k) => !languages.has(k)&&!classLanguages.has(k));
+      if(spec.kind==='proficiency'&&options.length===1&&(classTools.has(canonicalProficiency(options[0]))||[...proficiencies].some(p=>canonicalProficiency(p)===canonicalProficiency(options[0]))))options=TOOL_PROFICIENCIES;
       if(spec.kind==='proficiency')options=options.filter(v=>![...proficiencies].some(p=>canonicalProficiency(p)===canonicalProficiency(v))&&!classTools.has(canonicalProficiency(v)));
       if (spec.kind === "skill")
         options = options.filter((k) => !grantedSkills.has(k));
@@ -416,6 +419,7 @@ export function resolveOrigins(index, request) {
         p,
       );
   }
+  if(bg?.data.specialties?.includes(request.background?.specialty))traits.push({id:'specialty',name:{fr:request.background.specialty,en:request.background.specialty},description:'Spécialité narrative de l’historique, sans maîtrise supplémentaire.',automation:'manual',source:bg.source,ownerId:bg.id});
   const background = {
     name: bg?.name.en ?? request.background?.name ?? "",
     skills: [
