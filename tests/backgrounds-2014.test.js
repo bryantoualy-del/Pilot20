@@ -1,3 +1,4 @@
+import {selectBackground} from '../src/creator/background-selection.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {playerCatalogs} from '../src/catalog/player-catalogs.js';
@@ -41,4 +42,10 @@ test('source restrictions invalidate but never mutate a saved background; legacy
  assert.ok(!off.index.get(d.backgroundId));assert.equal(compileDraft(off,restricted,d).valid,false);assert.deepEqual(d,saved);assert.equal(off.index.list('background').length,18);build(d);
  for(const b of off.index.list('background'))build(draft(b.id,{startingEquipmentVersion:1}));
  assert.equal(backgroundKit({backgroundId:'private:background:custom'},()=>null,()=>null),null);
+});
+
+test('switching background retains old decisions without orphan feat or equipment choices',()=>{
+ const {d}=build(draft('bgg:background:rune-carver'));const oldOrigin=structuredClone(d.originSelections),oldFeat=structuredClone(d.selections);
+ selectBackground(ctx,d,'cos:background:haunted-one');assert.ok(!Object.keys(d.originSelections).some(k=>k.startsWith('bgg:background:')));assert.ok(!Object.keys(d.selections).some(k=>k.startsWith('bgg:feat:rune-shaper:')));assert.ok(d.retainedDecisions.some(r=>r.kind==='class'&&r.choiceId.startsWith('bgg:feat:rune-shaper:')));build(d);
+ const {d:specialty,r}=build(draft('phb14:background:soldier',{background:{name:'',skills:[],proficiencies:[],specialty:'Infanterie'}}));assert.ok(r.character.features.includes('phb14:background:soldier:specialty'));selectBackground(ctx,specialty,'phb14:background:criminal');assert.equal(specialty.background.specialty,undefined);
 });

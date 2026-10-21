@@ -1,3 +1,4 @@
+import {selectBackground} from '../../src/creator/background-selection.js';
 import {SOURCES} from '../../src/campaign/sources.js';
 import {inventoryControls} from './inventory.js';
 import {beginAdvancement,cancelAdvancement} from '../../src/creator/advancement.js';
@@ -212,7 +213,7 @@ export async function renderCreator(main,input,a) {
     if(current.kind==='background'){
       const backgrounds=a.context.index.list('background');
        const searchState=filters.get('background-search')??{query:'',source:'all'};filters.set('background-search',searchState);
-       const backgroundPicker=select([],d.backgroundId??'',e=>update(x=>{const previous=x.backgroundId;for(const key of Object.keys(x.originSelections??{}))if(previous&&key.startsWith(previous+':'))delete x.originSelections[key];x.backgroundId=e.target.value||null;delete x.background.specialty;}));
+       const backgroundPicker=select([],d.backgroundId??'',e=>update(x=>{selectBackground(a.context,x,e.target.value);}));
        const backgroundStatus=el('small',{role:'status'});
        const normalizeBackground=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
        function refreshBackgrounds(){

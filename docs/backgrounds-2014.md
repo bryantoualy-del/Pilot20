@@ -57,3 +57,5 @@ Les six libellés ont été vérifiés sur les fiches fournies. Ce test couvre l
 Maintenance des tests préexistants : le journal CI de `main` (31fc376, run 39679891407) montrait trois assertions obsolètes sur les dons désactivés par défaut. Les tests respectent maintenant la valeur actuelle (`feats` activé), et vérifient toujours explicitement sa désactivation. Le fixture navigateur Fizban utilisait également un identifiant de Champion inexistant ; seul cet identifiant a été corrigé.
 
 Le premier passage navigateur a aussi révélé un défaut réel préexistant : `replaceChildren` recevait un tableau d’options au lieu de nœuds individuels. Les listes recherchables d’historiques et de dons sont corrigées ; le test exige désormais la présence effective des 30 options d’historique.
+
+Le changement d’historique conserve les anciens choix dans les décisions retenues et retire les questions de dons devenues inapplicables. Un historique de Bigby peut ainsi être remplacé sans bloquer la finalisation par des choix invisibles. Tests Chromium locaux réussis aux largeurs 390 et 1180 px ; cela ne remplace pas un test sur iPad physique.

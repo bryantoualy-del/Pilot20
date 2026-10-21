@@ -1,3 +1,4 @@
+import {selectBackground} from '../../src/creator/background-selection.js';
 import {choiceLabels,languageLabels,extraTrainingLabels} from './choice-labels.js';
 import { renderQuick } from "./quick.js";
 import { appearanceControls } from "./appearance.js";
@@ -853,7 +854,7 @@ export async function renderEditor(main, d, a) {
             d.backgroundId ?? "",
             (e) =>
               update((x) => {
-                x.backgroundId = e.target.value || null;
+                selectBackground(a.context,x,e.target.value);
               }),
           ),
         ),
