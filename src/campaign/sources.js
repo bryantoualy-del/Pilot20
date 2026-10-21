@@ -41,7 +41,7 @@ export function defaultCampaign(campaignId = "default") {
     revision: 1,
     ruleset: "dnd5e-2014",
     enabledSourceIds: ["srd51", "xge", "tce", "phb14"],
-    enabledOptions: [],
+    enabledOptions: ["feats"],
     sourceRestrictions: false,
   };
 }

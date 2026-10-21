@@ -22,7 +22,7 @@ const rows={
  ],
  "Ability Score Improvement": [
   "Amélioration de caractéristiques",
-  "Augmentez les caractéristiques selon les choix proposés, sans dépasser les plafonds. Un don est possible si cette option de campagne est activée."
+  "Augmentez les caractéristiques selon les choix proposés, sans dépasser les plafonds. Vous pouvez choisir un don à la place de cette amélioration, en respectant les prérequis."
  ],
  "Extra Attack": [
   "Attaque supplémentaire",
@@ -225,7 +225,7 @@ const rows={
   "L’archétype de guerrier fournit ses capacités et éventuels choix aux niveaux indiqués."
  ],
  "Indomitable": [
-  "Indomptable",
+  "Inflexible",
   "Relancez une sauvegarde ratée et conservez le nouveau résultat ; le nombre d’utilisations dépend du niveau de guerrier."
  ],
  "Improved Critical": [
