@@ -189,7 +189,7 @@ export function compileDraft(context, config, d) {
   if(d.startingEquipmentEnabled===true)for(const item of r.origin?.equipment??[]){const row=c.equipment.find(e=>e.id==='background:'+item.id);if(row&&item.name){row.name=structuredClone(item.name);row.quantity=1;}}
   const money=economy(d);if(!money.valid)return{...r,character:null,valid:false,issues:money.issues,status:'draft'};
   if(money.wealth||gear.backgroundItems)c.equipment=c.equipment.filter(e=>!e.id.startsWith('background:'));
-  if(!money.wealth&&gear.backgroundItems)for(const item of gear.backgroundItems){const weapon=weaponProfile(item.id,c.scores,c.proficiencies);c.equipment.push({id:'background:'+item.id,name:item.name,quantity:item.quantity,kind:weapon?'weapon':'item',weapon,armor:null,equipped:!!weapon,source:SRD_SOURCE});}
+  if(!money.wealth&&gear.backgroundItems)for(const item of gear.backgroundItems){const weapon=weaponProfile(item.id,c.scores,c.proficiencies);c.equipment.push({id:'background:'+item.id,name:item.name,quantity:item.quantity,kind:weapon?'weapon':'item',weapon,armor:null,equipped:!!weapon,source:context.index.get(d.backgroundId)?.source??SRD_SOURCE});}
   c.equipment.push(...compileStartingEquipment(d,c),...compileInventory(d,c));
   if ((d.customOriginRequiresReview || d.background.customized) && !d.reviewed)
     issues.push({ code: "creator-custom-review" });

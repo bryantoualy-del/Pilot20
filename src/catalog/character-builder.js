@@ -1,3 +1,4 @@
+import {planarInfusions} from './backgrounds-2014.js';
 import { averageHpProgression } from "../character/derive.js";
 import {
   validateAdvancementHistory,
@@ -115,7 +116,9 @@ export function buildCharacter(
   const featureMovement={},movementMatchWalk=new Set();
   // Ancestry/background remain editable; no racial bonuses are silently added to supplied scores.
   for(const featureId of d.features){
-    const feature=index.get(featureId),effect=feature?.data.buildEffects;if(!effect)continue;
+    const feature=index.get(featureId),effect=feature?.data.buildEffects;
+    if(feature?.data.planarInfusion){const plane=planarInfusions[selections?.[featureId+':plane']?.[0]];if(plane)d.defenses.resistances.push(plane.resistance);}
+    if(!effect)continue;
     if((definitions.find(c=>c.id===(report.featureClassOverrides?.[featureId]??feature.data.classId))?.level??(feature.type==='feat'?1:0))<(effect.minimumClassLevel??1))continue;
     Object.assign(featureMovement,effect.movement??{});for(const mode of effect.movementMatchWalk??[])movementMatchWalk.add(mode);
     const owner=definitions.find(c=>c.id===(report.featureClassOverrides?.[featureId]??feature.data.classId))??(feature.type==='feat'?definitions[0]:null),pb=2+Math.floor((definitions.reduce((n,c)=>n+c.level,0)-1)/4);

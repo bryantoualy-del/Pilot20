@@ -1,5 +1,7 @@
+import {backgrounds2014} from '../catalog/backgrounds-2014.js';
 /** PHB 2014 factual equipment lists; prose and labels are original. */
 export const BACKGROUND_GOLD={acolyte:15,charlatan:15,criminal:15,spy:15,entertainer:15,gladiator:15,'folk-hero':10,'guild-artisan':15,'guild-merchant':15,hermit:5,noble:25,knight:25,outlander:10,sage:10,sailor:10,pirate:10,soldier:10,urchin:10};
+for(const bg of backgrounds2014.items)BACKGROUND_GOLD[bg.id.split(':').at(-1)]=bg.data.startingGold;
 const names={
  'prayer-book':['Livre de prières','Prayer book'],'prayer-wheel':['Moulin à prières','Prayer wheel'],vestments:['Vêtements liturgiques','Vestments'],incense:['Bâton d’encens','Incense stick'],
  'weighted-dice':['Dés pipés','Weighted dice'],'marked-cards':['Cartes marquées','Marked cards'],'fake-signet':['Fausse chevalière','False signet ring'],
@@ -10,6 +12,16 @@ const tools=[['alchemists-supplies','Matériel d’alchimiste','Alchemist’s su
 export const ARTISAN_TOOLS=tools;
 for(const[id,fr,en]of [...instruments,...tools])names[id]=[fr,en];
 export function backgroundKit(d,choose,gearName){
+ const extended=backgrounds2014.items.find(b=>b.id===d.backgroundId);
+ if(extended){
+  const data=extended.data,parts=data.equipment[0].name.fr.split(', '),rows=[];
+  for(const [i,label]of parts.entries()){
+   const variable=label.startsWith('instrument ou jeu')||label==='jeu'||label.startsWith('Outils d’artisan');
+   if(variable){const q=data.choices.find(q=>q.kind==='proficiency');const chosen=d.originSelections?.[extended.id+':'+q?.key]??[];const ids=chosen.length?chosen:q?.options??[];const selected=choose('background-tool','Votre matériel d’historique','Background equipment',ids.map(id=>({id,name:gearName(id)??{fr:names[id]?.[0]??id,en:names[id]?.[1]??id},items:[]})));if(selected)rows.push({id:selected,quantity:1,name:gearName(selected)??{fr:names[selected]?.[0]??selected,en:names[selected]?.[1]??selected}});}
+   else rows.push({id:extended.id.split(':').at(-1)+'-gear-'+i,quantity:1,name:{fr:label,en:label}});
+  }
+  rows.push({id:'pouch',quantity:1,name:{fr:'Bourse',en:'Pouch'}});return rows;
+ }
  const original=d.backgroundId?.split(':').at(-1),key=({spy:'criminal',gladiator:'entertainer','guild-merchant':'guild-artisan',knight:'noble',pirate:'sailor'})[original]??original,rows=[];
  const add=(id,quantity=1)=>rows.push({id,quantity,name:gearName(id)??(names[id]?{fr:names[id][0],en:names[id][1]}:{fr:id,en:id})});
  const pick=(key,fr,en,ids)=>{const selected=choose('background-'+key,fr,en,ids.map(row=>{const[id,fr,en]=Array.isArray(row)?row:[row,names[row]?.[0]??gearName(row)?.fr,names[row]?.[1]??gearName(row)?.en];return{id,name:{fr,en},items:[]};}));if(selected)add(selected);return selected;};
@@ -26,5 +38,5 @@ export function backgroundKit(d,choose,gearName){
  if(key==='sailor'){for(const id of ['club','rope-silk','lucky-charm','common-clothes'])add(id);}
  if(key==='soldier'){add('rank-insignia');add('enemy-trophy');pick('gaming','Votre jeu','Your gaming set',[['gaming-set','Jeu de dés','Dice set'],'playing-cards']);add('common-clothes');}
  if(key==='urchin')for(const id of ['small-knife','city-map','mouse','family-token','common-clothes'])add(id);
- if(BACKGROUND_GOLD[original])add('pouch');return rows;
+ if(BACKGROUND_GOLD[original])add('pouch');return Object.hasOwn(BACKGROUND_GOLD,original)?rows:null;
 }

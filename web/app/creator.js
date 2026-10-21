@@ -1,3 +1,4 @@
+import {SOURCES} from '../../src/campaign/sources.js';
 import {inventoryControls} from './inventory.js';
 import {beginAdvancement,cancelAdvancement} from '../../src/creator/advancement.js';
 import {sameDefinition} from '../../src/creator/revision.js';
@@ -211,12 +212,12 @@ export async function renderCreator(main,input,a) {
     if(current.kind==='background'){
       const backgrounds=a.context.index.list('background');
        const searchState=filters.get('background-search')??{query:'',source:'all'};filters.set('background-search',searchState);
-       const backgroundPicker=select([],d.backgroundId??'',e=>update(x=>{x.backgroundId=e.target.value||null;}));
+       const backgroundPicker=select([],d.backgroundId??'',e=>update(x=>{const previous=x.backgroundId;for(const key of Object.keys(x.originSelections??{}))if(previous&&key.startsWith(previous+':'))delete x.originSelections[key];x.backgroundId=e.target.value||null;delete x.background.specialty;}));
        const backgroundStatus=el('small',{role:'status'});
        const normalizeBackground=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
        function refreshBackgrounds(){
          const query=normalizeBackground(searchState.query);
-         const matches=backgrounds.filter(b=>(searchState.source==='all'||(b.data?.rulesSourceId??'srd51')===searchState.source)&&normalizeBackground([b.id,...Object.values(b.name??{}),b.source?.document??'',b.data?.rulesSourceId??''].join(' ')).includes(query));
+         const matches=backgrounds.filter(b=>(searchState.source==='all'||(b.data?.rulesSourceId??'srd51')===searchState.source)&&normalizeBackground([b.id,...Object.values(b.name??{}),...(b.data.aliases??[]),...(b.data.specialties??[]),b.source?.document??'',b.data?.rulesSourceId??''].join(' ')).includes(query));
          const chosen=backgrounds.find(b=>b.id===d.backgroundId);
          if(chosen&&!matches.some(b=>b.id===chosen.id))matches.unshift(chosen);
          backgroundPicker.replaceChildren(el('option',{value:''},w('Historique sur mesure','Custom background')),matches.map(b=>el('option',{value:b.id},a.name(b))));
@@ -225,7 +226,7 @@ export async function renderCreator(main,input,a) {
        }
        const backgroundSearch=el('input',{type:'search',value:searchState.query,placeholder:w('Rechercher un historique (nom ou source)…','Search background (name or source)…'),'aria-label':w('Rechercher un historique','Search backgrounds'),oninput:e=>{searchState.query=e.target.value;refreshBackgrounds();}});
        const backgroundSources=[...new Set(backgrounds.map(b=>b.data?.rulesSourceId??'srd51'))];
-       const sourceNames={srd51:'SRD 5.1',phb14:w('Manuel des joueurs 2014','Player Handbook 2014'),xge:'Xanathar',tce:'Tasha'};
+       const sourceNames=Object.fromEntries(SOURCES.map(s=>[s.id,s.name]));
        const backgroundSource=select([['all',w('Toutes les sources','All sources')],...backgroundSources.map(id=>[id,sourceNames[id]??id])],searchState.source??'all',e=>{searchState.source=e.target.value;refreshBackgrounds();});
        body.append(backgroundSearch,field(w('Source','Source'),backgroundSource),field(text('background'),backgroundPicker),backgroundStatus);refreshBackgrounds();
       if(!d.backgroundId){body.append(field(text('name'),el('input',{value:d.background.name,onchange:e=>update(x=>{x.background.name=e.target.value;})})),choiceList({id:'custom:background-skills',key:text('skills'),kind:'skill',options:Object.keys(SKILLS),count:2},d.background.skills,values=>update(x=>{x.background.skills=values;})),el('p',{},w('Langues, outils et capacité de cet historique restent à vérifier avec votre MJ.','Languages, tools and the background feature still need review with your GM.')));}
@@ -236,9 +237,12 @@ export async function renderCreator(main,input,a) {
           ['Outils et autres maîtrises','Tools and proficiencies',data.proficiencies??[]],
           ['Langues','Languages',data.languages??[]],
         ])if(values.length)grants.append(el('p',{},el('strong',{},w(fr,en)+' : '),values.map(id=>optionName(id,a)).join(' · ')));
+        if(data.specialties)body.append(field(w('Spécialité (facultatif)','Specialty (optional)'),select([['','—'],...data.specialties.map(v=>[v,v])],d.background.specialty??'',e=>update(x=>{x.background.specialty=e.target.value;}))));
+        if(data.equipmentNote)grants.append(el('details',{},el('summary',{},w('Contenu du paquetage','Pack contents')),el('p',{},data.equipmentNote)));
         const feature=data.feature;
         body.append(el('section',{class:'background-preview','aria-label':w('Avantages de l’historique','Background benefits')},
           el('h2',{},a.name(background)),
+          el('small',{},background.source.document),
           el('p',{},data.summary?.[a.state.locale]??data.description??''),
           grants,
           feature?el('p',{},el('strong',{},(feature.name?.[a.state.locale]??w('Capacité d’historique','Background feature'))+' : '),feature.description??''):null,
