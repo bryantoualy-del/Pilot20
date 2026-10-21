@@ -14,7 +14,7 @@ try{
   await p.reload();await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();await p.locator('article').filter({has:p.getByRole('heading',{name:'Background browser',exact:true})}).getByRole('button',{name:/^Reprendre/}).click();
   const search=p.getByRole('searchbox',{name:'Rechercher un historique'});await search.waitFor();
   const picker=p.locator('select').filter({has:p.locator('option[value="srd51:background:acolyte"]')});await picker.waitFor();assert.equal(await picker.locator('option').count(),31);
-  for(const [query,id,name]of [['hante','cos:background:haunted-one','Hanté'],['grand voyageur','scag:background:far-traveler','Grand voyageur'],['infanterie','phb14:background:soldier','Soldat'],['arnaqueur','phb14:background:criminal','Criminel']]){
+  for(const [query,id,name]of [['hante','cos:background:haunted-one','Hanté'],['grand voyageur','scag:background:far-traveler','Grand voyageur'],['infanterie','phb14:background:soldier','Soldat'],['arnaqueur','phb14:background:charlatan','Charlatan']]){
    await search.fill(query);const selected=p.locator('select').filter({has:p.locator(`option[value="${id}"]`)});await selected.selectOption(id);await p.getByRole('heading',{name,exact:true}).waitFor();
    if(query==='infanterie')await p.getByLabel('Spécialité (facultatif)').selectOption('Infanterie');
   }

@@ -37,6 +37,6 @@ export function enrichBackgrounds(catalogs){
  const find=key=>catalogs.flatMap(c=>c.items).find(e=>e.id===key);
  const soldier=find('phb14:background:soldier'),criminal=find('phb14:background:criminal');
  soldier.data.aliases=['Infanterie'];soldier.data.specialties=['Officier','Éclaireur','Infanterie','Cavalerie','Guérisseur','Intendant','Porte-étendard','Personnel de soutien'];
- criminal.data.aliases=['Arnaqueur'];criminal.data.specialties=['Maître chanteur','Cambrioleur','Homme de main','Receleur','Arnaqueur','Tueur à gages','Pickpocket','Contrebandier'];
+ find('phb14:background:charlatan').data.aliases=['Arnaqueur'];criminal.data.specialties=['Maître chanteur','Cambrioleur','Homme de main','Receleur','Voleur de grand chemin','Tueur à gages','Pickpocket','Contrebandier'];
  for(const [variant,parent]of Object.entries({spy:'criminal',gladiator:'entertainer','guild-merchant':'guild-artisan',knight:'noble',pirate:'sailor'}))find('phb14:background:'+variant).data.variantOf='phb14:background:'+parent;
 }

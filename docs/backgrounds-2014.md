@@ -15,7 +15,7 @@ Avant : 18 entrées PHB/SRD, soit 13 historiques et 5 variantes. Après : **30 e
 | Planescape 2023 | 2 | Gardien des portails, Philosophe planaire et don Scion des plans extérieurs |
 | Eberron 2019 | 1 | Agent de maison : choix parmi 13 maisons |
 
-Les variantes Espion, Gladiateur, Négociant de guilde, Chevalier et Pirate gardent leur ID et sont reliées à leur historique de base. Les spécialités Infanterie et Arnaqueur sont recherchables et sélectionnables, sans dupliquer Soldat ou Criminel. Aucun bonus de caractéristique d’historique 2024.
+Les variantes Espion, Gladiateur, Négociant de guilde, Chevalier et Pirate gardent leur ID et sont reliées à leur historique de base. Infanterie est une spécialité de Soldat ; Arnaqueur est un alias de recherche de Charlatan, conformément aux maîtrises de déguisement et de contrefaçon de la fiche de Rufus. Aucun historique supplémentaire n’est créé. Aucun bonus de caractéristique d’historique 2024.
 
 ## Compagnie Créole
 
@@ -24,7 +24,7 @@ Les variantes Espion, Gladiateur, Négociant de guilde, Chevalier et Pirate gard
 | Brack — Infanterie | Soldat, spécialité Infanterie |
 | Nans — Sauvageon | Sauvageon |
 | Zéphyr — Acolyte | Acolyte |
-| Rufus — Arnaqueur | Criminel, spécialité Arnaqueur |
+| Rufus — Arnaqueur | Charlatan (alias Arnaqueur), déguisement et contrefaçon |
 | Samoth — Hanté | Hanté |
 | Kentaro — Grand Voyageur | Grand voyageur |
 

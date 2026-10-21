@@ -18,9 +18,10 @@ test('30 stable unique entries: all official AideDD builder backgrounds plus Ebe
  for(const name of ['Captif','Idiot du village','Voyageur'])assert.ok(!all.some(b=>b.name.fr===name));
 });
 test('Compagnie Creole backgrounds and specialty aliases resolve without duplicate entries',()=>{
- const pairs=[['Infanterie','phb14:background:soldier'],['Sauvageon','phb14:background:outlander'],['Acolyte','srd51:background:acolyte'],['Arnaqueur','phb14:background:criminal'],['Hanté','cos:background:haunted-one'],['Grand voyageur','scag:background:far-traveler']];
+ const pairs=[['Infanterie','phb14:background:soldier'],['Sauvageon','phb14:background:outlander'],['Acolyte','srd51:background:acolyte'],['Arnaqueur','phb14:background:charlatan'],['Hanté','cos:background:haunted-one'],['Grand voyageur','scag:background:far-traveler']];
  for(const [name,id]of pairs){const entry=ctx.index.get(id);assert.ok([entry.name.fr,...entry.data.aliases??[]].includes(name));build(draft(id));}
  assert.equal(ctx.index.list('background').filter(b=>b.data.variantOf).length,5);
+ const {r:rufus}=build(draft('phb14:background:charlatan',{classes:[{id:'rogue',level:10,subclassId:'tce:rogue:soulknife'}]}));for(const tool of ['disguise-kit','forgery-kit','thieves-tools'])assert.ok(rufus.character.proficiencies.includes(tool));
 });
 test('Haunted One receives two distinct languages, including one exotic, and 1 sp',()=>{
  const {d,r}=build(draft('cos:background:haunted-one'));const langs=r.origin.ledger.filter(l=>l.origin===d.backgroundId&&l.kind==='language').map(l=>l.value);
