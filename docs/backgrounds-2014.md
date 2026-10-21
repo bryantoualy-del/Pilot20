@@ -59,3 +59,7 @@ Maintenance des tests préexistants : le journal CI de `main` (31fc376, run 3967
 Le premier passage navigateur a aussi révélé un défaut réel préexistant : `replaceChildren` recevait un tableau d’options au lieu de nœuds individuels. Les listes recherchables d’historiques et de dons sont corrigées ; le test exige désormais la présence effective des 30 options d’historique.
 
 Le changement d’historique conserve les anciens choix dans les décisions retenues et retire les questions de dons devenues inapplicables. Un historique de Bigby peut ainsi être remplacé sans bloquer la finalisation par des choix invisibles. Tests Chromium locaux réussis aux largeurs 390 et 1180 px ; cela ne remplace pas un test sur iPad physique.
+
+Recette supplémentaire : compilation des historiques avec les six classes/sous-classes au niveau 10 (Guerrier Maître de guerre, Barbare Berserker, Paladin Conquête, Roublard Âme acérée, Ensorceleur draconique et Occultiste Magelame) réussie. Les autres décisions sont des choix synthétiques de test, pas une reconstitution des fiches.
+
+Le test de parcours historique utilise maintenant le libellé « Historique » au lieu du premier menu déroulant, qui est le filtre de source. Le parcours Chromium valide création, sauvegarde, réouverture et accès hors ligne.
