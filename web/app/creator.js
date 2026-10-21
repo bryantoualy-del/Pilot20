@@ -209,7 +209,22 @@ export async function renderCreator(main,input,a) {
       }
     }
     if(current.kind==='background'){
-      body.append(field(text('background'),select([['',w('Historique sur mesure','Custom background')],...a.context.index.list('background').map(b=>[b.id,a.name(b)])],d.backgroundId??'',e=>update(x=>{x.backgroundId=e.target.value||null;}))));
+      const backgrounds=a.context.index.list('background');
+       const searchState=filters.get('background-search')??{query:''};filters.set('background-search',searchState);
+       const backgroundPicker=select([],d.backgroundId??'',e=>update(x=>{x.backgroundId=e.target.value||null;}));
+       const backgroundStatus=el('small',{role:'status'});
+       const normalizeBackground=v=>String(v??'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase();
+       function refreshBackgrounds(){
+         const query=normalizeBackground(searchState.query);
+         const matches=backgrounds.filter(b=>normalizeBackground([b.id,...Object.values(b.name??{}),b.source?.document??'',b.data?.rulesSourceId??''].join(' ')).includes(query));
+         const chosen=backgrounds.find(b=>b.id===d.backgroundId);
+         if(chosen&&!matches.some(b=>b.id===chosen.id))matches.unshift(chosen);
+         backgroundPicker.replaceChildren(el('option',{value:''},w('Historique sur mesure','Custom background')),matches.map(b=>el('option',{value:b.id},a.name(b))));
+         backgroundPicker.value=d.backgroundId??'';
+         backgroundStatus.textContent=matches.length+' / '+backgrounds.length+' '+w('historiques disponibles','available backgrounds');
+       }
+       const backgroundSearch=el('input',{type:'search',value:searchState.query,placeholder:w('Rechercher un historique (nom ou source)…','Search background (name or source)…'),'aria-label':w('Rechercher un historique','Search backgrounds'),oninput:e=>{searchState.query=e.target.value;refreshBackgrounds();}});
+       body.append(backgroundSearch,field(text('background'),backgroundPicker),backgroundStatus);refreshBackgrounds();
       if(!d.backgroundId){body.append(field(text('name'),el('input',{value:d.background.name,onchange:e=>update(x=>{x.background.name=e.target.value;})})),choiceList({id:'custom:background-skills',key:text('skills'),kind:'skill',options:Object.keys(SKILLS),count:2},d.background.skills,values=>update(x=>{x.background.skills=values;})),el('p',{},w('Langues, outils et capacité de cet historique restent à vérifier avec votre MJ.','Languages, tools and the background feature still need review with your GM.')));}
       else {
         const background=a.context.index.get(d.backgroundId),data=background?.data??{},grants=el('div',{class:'background-grants'});
