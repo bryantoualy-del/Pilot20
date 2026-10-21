@@ -220,7 +220,7 @@ export async function renderCreator(main,input,a) {
          const matches=backgrounds.filter(b=>(searchState.source==='all'||(b.data?.rulesSourceId??'srd51')===searchState.source)&&normalizeBackground([b.id,...Object.values(b.name??{}),...(b.data.aliases??[]),...(b.data.specialties??[]),b.source?.document??'',b.data?.rulesSourceId??''].join(' ')).includes(query));
          const chosen=backgrounds.find(b=>b.id===d.backgroundId);
          if(chosen&&!matches.some(b=>b.id===chosen.id))matches.unshift(chosen);
-         backgroundPicker.replaceChildren(el('option',{value:''},w('Historique sur mesure','Custom background')),matches.map(b=>el('option',{value:b.id},a.name(b))));
+         backgroundPicker.replaceChildren(el('option',{value:''},w('Historique sur mesure','Custom background')),...matches.map(b=>el('option',{value:b.id},a.name(b))));
          backgroundPicker.value=d.backgroundId??'';
          backgroundStatus.textContent=matches.length+' / '+backgrounds.length+' '+w('historiques disponibles','available backgrounds');
        }
@@ -332,7 +332,7 @@ export async function renderCreator(main,input,a) {
             const query=normalize(state.featQuery);
             const matches=feats.filter(id=>{const feat=a.context.index.get(id);return normalize([id,...Object.values(feat?.name??{}),...(feat?.data.aliases??[])].join(' ')).includes(query);});
             if(isFeat&&feats.includes(selected)&&!matches.includes(selected))matches.unshift(selected);
-            picker.replaceChildren(el('option',{value:''},w('Choisir un don','Choose a feat')),matches.map(id=>el('option',{value:id},optionName(id,a))));
+            picker.replaceChildren(el('option',{value:''},w('Choisir un don','Choose a feat')),...matches.map(id=>el('option',{value:id},optionName(id,a))));
             picker.value=isFeat?selected:'';status.textContent=matches.length+' / '+feats.length+' '+w('dons accessibles','eligible feats');
           }
           body.append(search,field(w('Don','Feat'),picker),status,isFeat?button(w('Voir le don choisi','View selected feat'),()=>details(a.context.index.get(selected)),'subtle'):null);refresh();

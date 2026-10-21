@@ -53,3 +53,7 @@ Les six libellés ont été vérifiés sur les fiches fournies. Ce test couvre l
 `tests/backgrounds-2014.test.js` vérifie le décompte, la validation publique, la compilation guerrier/roublard, les six correspondances CC, les 13 maisons, l’errata Hanté, les dons, toutes les infusions planaires, la désactivation de source et les anciens identifiants.
 
 `e2e/backgrounds-2014.mjs` vérifie le sélecteur réel aux largeurs 390 et 1180 px dans Chromium et WebKit via la CI.
+
+Maintenance des tests préexistants : le journal CI de `main` (31fc376, run 39679891407) montrait trois assertions obsolètes sur les dons désactivés par défaut. Les tests respectent maintenant la valeur actuelle (`feats` activé), et vérifient toujours explicitement sa désactivation. Le fixture navigateur Fizban utilisait également un identifiant de Champion inexistant ; seul cet identifiant a été corrigé.
+
+Le premier passage navigateur a aussi révélé un défaut réel préexistant : `replaceChildren` recevait un tableau d’options au lieu de nœuds individuels. Les listes recherchables d’historiques et de dons sont corrigées ; le test exige désormais la présence effective des 30 options d’historique.

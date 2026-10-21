@@ -13,7 +13,7 @@ try{
   await p.evaluate(async()=>{const{openIndexedDB}=await import('/src/persistence/adapters.js');const storage=await openIndexedDB(),rows=await storage.list('meta','creator:draft:'),d=rows[0].value;Object.assign(d,{name:'Background browser',mode:'single',step:'background',classChosen:true,raceId:'srd51:race:human',backgroundId:null,classes:[{id:'fighter',level:1,subclassId:null}]});await storage.batch([],[{store:'meta',key:'creator:draft:'+d.id,value:d}]);storage.close();});
   await p.reload();await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();await p.locator('article').filter({has:p.getByRole('heading',{name:'Background browser',exact:true})}).getByRole('button',{name:/^Reprendre/}).click();
   const search=p.getByRole('searchbox',{name:'Rechercher un historique'});await search.waitFor();
-  const picker=p.locator('select').filter({has:p.locator('option[value="srd51:background:acolyte"]')});assert.equal(await picker.locator('option').count(),31);
+  const picker=p.locator('select').filter({has:p.locator('option[value="srd51:background:acolyte"]')});await picker.waitFor();assert.equal(await picker.locator('option').count(),31);
   for(const [query,id,name]of [['hante','cos:background:haunted-one','Hanté'],['grand voyageur','scag:background:far-traveler','Grand voyageur'],['infanterie','phb14:background:soldier','Soldat'],['arnaqueur','phb14:background:criminal','Criminel']]){
    await search.fill(query);const selected=p.locator('select').filter({has:p.locator(`option[value="${id}"]`)});await selected.selectOption(id);await p.getByRole('heading',{name,exact:true}).waitFor();
    if(query==='infanterie')await p.getByLabel('Spécialité (facultatif)').selectOption('Infanterie');

@@ -6,7 +6,7 @@ import {newDraft,suggestChoices,compileDraft,draftProgression} from '../src/crea
 const config={...defaultCampaign(),enabledOptions:['feats']},ctx=campaignCatalog(playerCatalogs,[],config);
 function fighter(level=8){return Object.assign(newDraft(),{name:'Géant synthétique',raceId:'srd51:race:human',backgroundId:'srd51:background:acolyte',scores:{str:16,dex:16,con:16,int:16,wis:16,cha:16},classes:[{id:'fighter',level,subclassId:'phb14:fighter:eldritch-knight'}],classChosen:true});}
 test('83 AideDD feats including 8 Bigby giants; source can be restricted by DM',()=>{
- assert.equal(ctx.index.list('feat').length,83);
+ assert.equal(ctx.index.list('feat').filter(f=>f.data.rulesSourceId!=='planescape').length,83);
  const giants=ctx.index.list('feat').filter(f=>f.data.rulesSourceId==='bgg');
  assert.equal(giants.length,8);
  const restricted={...defaultCampaign(),sourceRestrictions:true,enabledSourceIds:['srd51','phb14','xge','tce']};
