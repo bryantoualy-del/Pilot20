@@ -213,7 +213,7 @@ export async function renderCreator(main,input,a) {
        const searchState=filters.get('background-search')??{query:''};filters.set('background-search',searchState);
        const backgroundPicker=select([],d.backgroundId??'',e=>update(x=>{x.backgroundId=e.target.value||null;}));
        const backgroundStatus=el('small',{role:'status'});
-       const normalizeBackground=v=>String(v??'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase();
+       const normalizeBackground=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
        function refreshBackgrounds(){
          const query=normalizeBackground(searchState.query);
          const matches=backgrounds.filter(b=>normalizeBackground([b.id,...Object.values(b.name??{}),b.source?.document??'',b.data?.rulesSourceId??''].join(' ')).includes(query));
