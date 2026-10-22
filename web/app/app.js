@@ -306,6 +306,7 @@ async function render() {
 }
 async function start() {
   const d = newDraft(state.campaignId);
+  if(context.index.get('srd51:background:acolyte'))d.backgroundId='srd51:background:acolyte';
   d.startingEquipmentEnabled=true;d.startingEquipmentChoices={};
   d.scoreMethod='point-buy';
   // AideDD 2014: six valeurs brutes de 10 au départ (12 points sur 27).

@@ -1,5 +1,25 @@
-import assert from 'node:assert/strict';import {chromium,webkit}from'playwright';import{spawn}from'node:child_process';
+import assert from 'node:assert/strict';import {chromium,webkit}from'playwright';import{spawn}from'node:child_process';import{mkdir}from'node:fs/promises';
 const port=4196,engine=process.env.PILOT20_E2E_BROWSER==='webkit'?webkit:chromium,server=spawn(process.execPath,['scripts/serve-web.mjs'],{env:{...process.env,PORT:String(port)},stdio:'pipe'});let browser;
 try{await new Promise((r,j)=>{server.stdout.once('data',r);server.once('error',j)});browser=await engine.launch(engine===webkit?{}:{executablePath:process.env.E2E_CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox','--disable-dev-shm-usage','--disable-gpu']});for(const width of[390,1180]){const p=await browser.newPage({viewport:{width,height:820}}),errors=[];p.on('pageerror',e=>errors.push(e.message));p.setDefaultTimeout(20000);await p.goto(`http://127.0.0.1:${port}/web/index.html`);await p.getByRole('button',{name:'Créer un personnage',exact:true}).click();await p.locator('#character-name').waitFor();
  await p.evaluate(async()=>{const{openIndexedDB}=await import('/src/persistence/adapters.js'),{campaignRepository}=await import('/src/campaign/repository.js'),{playerCatalogs}=await import('/src/catalog/player-catalogs.js');const storage=await openIndexedDB(),campaigns=campaignRepository(storage,playerCatalogs),c=await campaigns.get('default');await campaigns.save({...c,revision:c.revision+1,enabledOptions:['feats']},{expectedRevision:c.revision});const rows=await storage.list('meta','creator:draft:'),d=rows[0].value;Object.assign(d,{name:'Fizban browser',mode:'single',step:'choice:fighter:asi-4',classChosen:true,raceId:'srd51:race:human',backgroundId:'srd51:background:acolyte',classes:[{id:'fighter',level:4,subclassId:'srd51:champion'}],scores:{str:15,dex:14,con:14,int:12,wis:12,cha:12},selections:{'fighter:asi-4':['fizban:feat:gift-of-the-metallic-dragon']}});await storage.batch([],[{store:'meta',key:'creator:draft:'+d.id,value:d}]);storage.close();});
- await p.reload();await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();await p.locator('article').filter({has:p.getByRole('heading',{name:'Fizban browser',exact:true})}).getByRole('button',{name:/^Reprendre/}).click();const selector=p.locator('select').filter({has:p.locator('option[value="fizban:feat:gift-of-the-metallic-dragon"]')});await selector.waitFor();assert.equal(await selector.locator('option[value^="fizban:feat:"]').count(),3);await selector.selectOption('fizban:feat:gift-of-the-gem-dragon');await p.waitForFunction(()=>document.querySelector('select option[value="fizban:feat:gift-of-the-gem-dragon"]')?.parentElement.value==='fizban:feat:gift-of-the-gem-dragon');assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);assert.deepEqual(errors,[]);console.log(`${engine.name()} ${width}: three feats in real ASI selector, selection and layout passed`);await p.close();}}finally{await browser?.close();server.kill()}
+ await p.reload();await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();await p.locator('article').filter({has:p.getByRole('heading',{name:'Fizban browser',exact:true})}).getByRole('button',{name:/^Reprendre/}).click();const selector=p.locator('.feat-picker');await selector.waitFor();
+ await selector.locator('summary').click();
+ assert.equal(await selector.getByRole('button').filter({hasText:/Don des dragons/}).count(),3);
+ await selector.getByRole('searchbox').fill('Sen');
+ await selector.getByRole('button',{name:'Sentinelle',exact:true}).click();
+ await p.locator('.feat-preview').getByRole('heading',{name:'Sentinelle',exact:true}).waitFor();
+ assert.equal(await selector.getAttribute('open'),null);
+ assert.ok((await p.locator('.feat-effects li').count())>=2);
+ await mkdir('docs/screenshots/feats',{recursive:true});await p.screenshot({path:`docs/screenshots/feats/${engine.name()}-${width}.png`,fullPage:true});
+ await selector.locator('summary').click();
+ await selector.getByRole('searchbox').fill('diamantin');
+ await selector.getByRole('button',{name:'Don des dragons diamantins',exact:true}).click();
+ await p.locator('.feat-preview').getByRole('heading',{name:'Don des dragons diamantins',exact:true}).waitFor();
+ assert.ok(await p.locator('.feat-preview [data-choice-id]').count());
+ assert.equal(await p.getByRole('button',{name:'Continuer',exact:true}).isDisabled(),true);
+ const oldRadio=await p.locator('.feat-preview').getByRole('radio',{name:'Intelligence',exact:true}).elementHandle();
+ await p.locator('.feat-preview').getByRole('radio',{name:'Intelligence',exact:true}).check();
+ await p.waitForFunction(input=>!input.isConnected,oldRadio);
+ await p.reload();await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();await p.locator('article').filter({has:p.getByRole('heading',{name:'Fizban browser',exact:true})}).getByRole('button',{name:/^Reprendre/}).click();await p.locator('.feat-preview').getByRole('heading',{name:'Don des dragons diamantins',exact:true}).waitFor();
+ assert.equal(await p.locator('.feat-preview').getByRole('radio',{name:'Intelligence',exact:true}).isChecked(),true);
+ assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);assert.deepEqual(errors,[]);console.log(`${engine.name()} ${width}: three feats in real ASI selector, selection and layout passed`);await p.close();}}finally{await browser?.close();server.kill()}
