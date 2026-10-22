@@ -39,6 +39,7 @@ try{
   assert.ok(m.scrollWidth<=m.width,JSON.stringify(m));assert.ok(m.buttonSizes.every(b=>b.width>=44&&b.height>=44));metrics.push(m);
  }
  await p.setViewportSize({width:390,height:844});await next();
+ await changed(()=>p.getByRole('button',{name:'Humain standard',exact:true}).click());await next();
  await changed(()=>p.locator('.single-classes').getByRole('button',{name:'Guerrier',exact:true}).click());
  await p.waitForFunction(()=>document.querySelectorAll('.single-classes img.class-icon').length===13&&[...document.querySelectorAll('.single-classes img.class-icon')].every(img=>img.complete&&img.naturalWidth>0));
  assert.equal(await p.locator('.single-classes button').count(),13);assert.equal(await p.locator('.single-classes').getByRole('button',{name:'Guerrier',exact:true}).getAttribute('aria-pressed'),'true');

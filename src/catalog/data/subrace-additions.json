@@ -85,8 +85,8 @@
         {
           "id": "superior-darkvision",
           "name": {
-            "fr": "Vision dans le noir36 m",
-            "en": "Superior Darkvision120 ft."
+            "fr": "Vision dans le noir supérieure (36 m)",
+            "en": "Superior Darkvision (120 ft.)"
           },
           "description": "Remplace la vision dans le noir de l’elfe.",
           "automation": "manual"

@@ -2,6 +2,7 @@ import {backgrounds2014,backgroundFeats,enrichBackgrounds} from './backgrounds-2
 import {fizbanFeats} from './fizban-feats.js';
 import {giantFeats} from './giant-feats.js';
 import {extendedRaces} from './races-extended.js';
+import {compagnieCreole} from './compagnie-creole.js';
 import {localizeCore} from './core-french.js';
 import {tashaOptions} from './tasha-options.js';
 import {integrateInvocationSpells} from './invocation-spells.js';
@@ -74,4 +75,5 @@ playerClasses.items.find(i=>i.type==='class'&&i.data.classId==='sorcerer').data.
 const depth=warlockInvocations.items.find(i=>i.id==='xge:warlock:gift-of-the-depths');depth.data.buildEffects={movementMatchWalk:['swim']};
 
 enrichBackgrounds(playerCatalogs);
+playerCatalogs.push(compagnieCreole);
 localizeCore(playerCatalogs);

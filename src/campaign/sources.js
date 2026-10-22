@@ -134,8 +134,8 @@ export function campaignCatalog(publicPacks, privatePacks, campaign) {
   for(const pack of publicPacks)validateCatalogV3(pack,{distribution:'public'});
   check(
     Array.isArray(publicPacks) &&
-      publicPacks.every((p) => p.items.every((i) => ['srd','reference'].includes(i.source.kind))),
-    "Only SRD and original referenced summaries in built-in catalogues",
+      publicPacks.every((p) => p.items.every((i) => ['srd','reference'].includes(i.source.kind) || (i.source.kind === 'homebrew' && i.source.license === 'Pilot20-original-summary'))),
+    "Only SRD, original referenced summaries and original homebrew summaries in built-in catalogues",
   );
   const wrappers = privatePacks.map((p) =>
     parsePrivatePack(JSON.stringify(p), { authorized: true }),
@@ -149,7 +149,7 @@ export function campaignCatalog(publicPacks, privatePacks, campaign) {
     ),
   ];
   const installed = createCatalogIndex(packs, {
-    enabledPackIds: wrappers.map((p) => p.catalog.id),
+    enabledPackIds: packs.map((p) => p.id),
     enabledOptions: options,
   });
   const origins = new Map(
@@ -157,7 +157,7 @@ export function campaignCatalog(publicPacks, privatePacks, campaign) {
       p.items.map((i) => [
         i.id,
         n < publicPacks.length
-          ? i.source.kind==='reference'?i.data.rulesSourceId:"srd51"
+          ? i.source.kind==='homebrew'?'homebrew':i.source.kind==='reference'?i.data.rulesSourceId:"srd51"
           : wrappers[n - publicPacks.length].sourceId,
       ]),
     ),

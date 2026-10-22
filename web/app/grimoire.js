@@ -3,21 +3,22 @@ import {grimoireView,grimoireService,ritualCopyOptions} from '../../src/spellboo
 import {spellMatches,spellReference} from '../../src/catalog/spell-reference.js';
 import {choiceName} from './editor.js';
 import {showEntryDetails} from './spell-detail.js';
-import {spellSchool} from '../../src/catalog/localization.js';
+import {spellStatus,spellStatusLabels} from '../../src/spellbook/presentation.js';
+import {spellSchool,spellTerms} from '../../src/catalog/localization.js';
 
-export async function renderGrimoire(main,characterId,a){
+export async function renderGrimoire(main,characterId,a,{embedded=false}={}){
  const record=await a.library.get(characterId);
  if(!record){main.append(el('p',{},a.t('emptyLibrary')));return;}
  const draft=await a.drafts.get(characterId),view=grimoireView(a.context,a.config,draft,record);
  const w=(fr,en)=>a.state.locale==='fr'?fr:en,metaKey='grimoire:view:'+characterId;
  const persisted=await a.storage.get('meta',metaKey);
- const ui={tab:'mine',classId:view.book.grants.some(g=>g.classId===null)?'all':view.classIds[0]??'all',query:'',level:'all',school:'all',favorites:false,concentration:false,ritual:false,source:'all',...persisted};
+ const ui={tab:'mine',classId:'all',query:'',level:'all',school:'all',favorites:false,concentration:false,ritual:false,source:'all',...persisted};
  if(!['all',...view.classIds].includes(ui.classId))ui.classId=view.classIds[0]??'all';
  let editing=false,staged=[],page=0;
  const service=grimoireService({library:a.library,drafts:a.drafts,campaigns:a.campaigns});
  const shell=el('section',{class:'grimoire','data-character-id':characterId,'data-character-revision':record.definition.revision});main.append(shell);
  const grants=()=>view.book.grants.filter(g=>ui.classId==='all'||g.classId===ui.classId);
- const prepared=()=>view.choices.find(q=>q.kind==='prepared'&&q.classId===ui.classId);
+ const prepared=()=>view.choices.find(q=>q.kind==='prepared'&&q.classId===(ui.classId==='all'&&view.classIds.length===1?view.classIds[0]:ui.classId));
  const wizardBook=()=>view.choices.find(q=>q.kind==='spellbook'&&q.classId==='wizard');
  async function remember(){await a.storage.batch([],[{store:'meta',key:metaKey,value:ui}]);}
  async function toggleFavorite(id){
@@ -42,19 +43,20 @@ export async function renderGrimoire(main,characterId,a){
   const header=el('div',{class:'section-head'},el('div',{},el('p',{class:'eyebrow'},record.definition.identity.name),el('h1',{},w('Votre grimoire','Your spellbook'))),button(w('Modifier le personnage','Edit character'),()=>a.nav('creator',characterId)));
   const tabs=el('div',{class:'grimoire-tabs',role:'tablist','aria-label':w('Vue du Grimoire','Spellbook view')});
   for(const [id,title]of [['mine',w('Mes sorts','My spells')],['catalogue',w('Catalogue','Catalogue')]]){const b=button(title,async()=>{ui.tab=id;page=0;await remember();await draw();},ui.tab===id?'active':'');b.setAttribute('role','tab');b.setAttribute('aria-selected',String(ui.tab===id));tabs.append(b);}
-  const toolbar=el('div',{class:'grimoire-toolbar'});
-  if(view.classIds.length>1||view.book.grants.some(g=>g.classId===null))toolbar.append(field(w('Origine de magie','Spellcasting origin'),select([['all',w('Toutes les origines','All origins')],...view.classIds.map(id=>[id,a.cls(id)])],ui.classId,async e=>{ui.classId=e.target.value;editing=false;page=0;await remember();await draw();})));
+  const toolbar=el('div',{class:'grimoire-toolbar'}),originControls=el('div',{class:'grimoire-origin-controls'});
+  if(view.classIds.length>1||view.book.grants.some(g=>g.classId===null))originControls.append(field(w('Origine de magie','Spellcasting origin'),select([['all',w('Toutes les origines','All origins')],...view.classIds.map(id=>[id,a.cls(id)])],ui.classId,async e=>{ui.classId=e.target.value;editing=false;page=0;await remember();await draw();})));
   const search=el('input',{type:'search',value:ui.query,placeholder:w('Nom français ou anglais…','French or English name…'),'aria-label':w('Rechercher un sort','Search spells'),oninput:async e=>{ui.query=e.target.value;page=0;await remember();fill();}});
   toolbar.append(search);
   const status=el('div',{class:'grimoire-status',role:'status'}),list=el('div',{class:'grimoire-list'}),pages=el('div',{class:'single-pages'});
-  const filters=el('details',{},el('summary',{},w('Filtres','Filters')),
-   field(a.t('level'),select([['all',w('Tous les niveaux','All levels')],...Array.from({length:10},(_,n)=>[String(n),n===0?w('Sorts mineurs','Cantrips'):String(n)])],ui.level,async e=>{ui.level=e.target.value;page=0;await remember();fill();})),
+  const filters=el('details',{class:'grimoire-filters'},el('summary',{},w('Filtres','Filters')),originControls,
    field(w('École','School'),select([['all',w('Toutes les écoles','All schools')],...['abjuration','conjuration','divination','enchantment','evocation','illusion','necromancy','transmutation'].map(id=>[id,spellSchool(id,a.state.locale)])],ui.school,async e=>{ui.school=e.target.value;page=0;await remember();fill();})),
    field(w('Source','Source'),select([['all',w('Toutes les sources','All sources')],...a.context.statuses.filter(s=>s.selected&&s.installedEntries>0).map(s=>[s.id,s.name])],ui.source,async e=>{ui.source=e.target.value;page=0;await remember();fill();})),
    check(w('Concentration','Concentration'),ui.concentration,async e=>{ui.concentration=e.target.checked;page=0;await remember();fill();}),
    check(w('Rituel','Ritual'),ui.ritual,async e=>{ui.ritual=e.target.checked;page=0;await remember();fill();}),
    check(w('Favoris uniquement','Favorites only'),ui.favorites,async e=>{ui.favorites=e.target.checked;page=0;await remember();fill();}));
-  shell.replaceChildren(header,tabs,toolbar,filters,status,list,pages);
+  const levels=el('nav',{class:'grimoire-levels','aria-label':w('Niveau des sorts','Spell levels')});
+  toolbar.append(filters);
+  shell.replaceChildren(...(embedded?[]:[header]),tabs,toolbar,levels,status,list,pages);
   if(!currentGrants.length&&ui.tab==='mine')shell.insertBefore(el('p',{},w('Vous n’avez aucun sort acquis pour cette origine.','No spells have been acquired for this origin.')),list);
   if(view.book.unresolved.includes('legacy-origins-and-acquisition-levels'))shell.insertBefore(el('p',{},w('Les sorts de cette ancienne fiche sont conservés. Vérifiez leurs origines dans le Créateur avant de les modifier.','Spells from this older character have been preserved. Review their origins in the creator before editing.')),list);
   const formulas=view.choices.find(q=>q.id==='wizard:cantrips'&&q.mutableAtRest);
@@ -67,7 +69,7 @@ export async function renderGrimoire(main,characterId,a){
    const prep=el('div',{class:'grimoire-preparation'});
    if(!editing)prep.append(button(w('Modifier la préparation','Change preparation'),()=>{editing=true;staged=[...(draft.selections[q.id]??[])];ui.tab='catalogue';page=0;draw();}));
    else{
-    const save=button(w('Enregistrer la préparation','Save preparation'),()=>apply({type:'prepare',classId:ui.classId,spellIds:staged}),'primary');save.disabled=staged.length>q.count||staged.length<(q.minimumCount??q.count);
+    const save=button(w('Enregistrer la préparation','Save preparation'),()=>apply({type:'prepare',classId:q.classId,spellIds:staged}),'primary');save.disabled=staged.length>q.count||staged.length<(q.minimumCount??q.count);
     prep.append(el('p',{},`${staged.length} / ${q.count} `+w('sorts préparés au maximum — les sorts toujours préparés sont à part.','prepared spells maximum — always-prepared spells are separate.')),save,button(w('Annuler','Cancel'),()=>{editing=false;draw();}));
    }
    shell.insertBefore(prep,list);
@@ -87,21 +89,28 @@ export async function renderGrimoire(main,characterId,a){
    const acquired=new Set(currentGrants.map(g=>g.spellId)),dailyCount=q?(draft.selections[q.id]?.length??0):0;
    status.textContent=`${acquired.size} `+w('sorts acquis','acquired spells')+(q?` · ${dailyCount} / ${q.count} `+w('préparés','prepared'):'')+(ui.tab==='catalogue'?w(' · catalogue de référence (non acquis automatiquement)',' · reference catalogue (not automatically acquired)'):'');
    rows=rows.filter(e=>spellMatches(e.id,ui.query,e)&&(ui.level==='all'||e.data.level===Number(ui.level))&&(ui.school==='all'||e.data.school===ui.school)&&(!ui.favorites||record.preferences.favorites.includes(e.id))&&(!ui.concentration||e.data.concentration)&&(!ui.ritual||e.data.ritual)&&(ui.source==='all'||spellReference(e.id)?.sourceIds.includes(ui.source))).sort((x,y)=>x.data.level-y.data.level||a.name(x).localeCompare(a.name(y)));
-   const pageCount=Math.max(1,Math.ceil(rows.length/12));page=Math.min(page,pageCount-1);list.replaceChildren();
-   if(!rows.length&&!(ui.tab==='mine'&&!currentGrants.length))list.append(el('p',{},w('Aucun résultat avec ces filtres.','No results match these filters.')),button(w('Effacer les filtres','Clear filters'),async()=>{ui.level='all';ui.school='all';ui.favorites=false;ui.concentration=false;ui.ritual=false;ui.source='all';page=0;await remember();draw();}));
-   for(const entry of rows.slice(page*12,(page+1)*12)){
+   const pageCount=Math.max(1,Math.ceil(rows.length/24));page=Math.min(page,pageCount-1);list.replaceChildren();
+   if(!rows.length&&!(ui.tab==='mine'&&!currentGrants.length))list.append(el('p',{},w('Aucun résultat avec ces filtres.','No results match these filters.')),button(w('Effacer les filtres','Clear filters'),async()=>{ui.query='';ui.level='all';ui.school='all';ui.favorites=false;ui.concentration=false;ui.ritual=false;ui.source='all';page=0;await remember();draw();}));
+   levels.replaceChildren();
+   const available=[...new Set([...ids].map(id=>(a.context.index.get(id)??a.context.installed.get(id))?.data.level).filter(n=>Number.isInteger(n)))].sort((a,b)=>a-b);
+   if(ui.level!=='all'&&!available.includes(Number(ui.level)))available.push(Number(ui.level));
+   for(const level of ['all',...available.sort((a,b)=>a-b).map(String)]){const b=button(level==='all'?w('Tous','All'):level==='0'?w('Mineurs','Cantrips'):level,async()=>{ui.level=level;page=0;await remember();fill();});b.setAttribute('aria-pressed',String(ui.level===level));b.setAttribute('aria-label',level==='all'?w('Tous les niveaux','All levels'):level==='0'?w('Sorts mineurs','Cantrips'):w('Niveau ','Level ')+level);levels.append(b);}
+   let previousLevel=null;
+   for(const entry of rows.slice(page*24,(page+1)*24)){
+    if(entry.data.level!==previousLevel){previousLevel=entry.data.level;list.append(el('h2',{class:'grimoire-level-heading'},previousLevel===0?w('Sorts mineurs','Cantrips'):w('Niveau ','Level ')+previousLevel));}
     const own=currentGrants.filter(g=>g.spellId===entry.id),always=own.some(g=>g.preparation==='always'),isPrepared=always||own.some(g=>selected.has(g.id));
-    const row=el('article',{class:'grimoire-spell','data-spell-id':entry.id},el('div',{},button(a.name(entry),()=>showEntryDetails(entry,a),'spell-title'),el('small',{},(entry.data.level===0?w('Sort mineur','Cantrip'):w('Niveau ','Level ')+entry.data.level)+(entry.data.concentration?' · '+a.t('concentration'):'')+(entry.data.ritual?' · '+a.t('ritual'):''))));
-    if(own.length)row.append(el('div',{class:'grimoire-badges'},badge(always?own.every(g=>g.classId===null)?w('Octroyé par une capacité','Granted by a feature'):w('Toujours préparé','Always prepared'):isPrepared?w('Préparé','Prepared'):own.some(g=>['book','copy'].includes(g.acquisition))?w('Inscrit','In book'):w('Connu','Known')),own.length>1?badge(w('Plusieurs origines','Multiple origins')):null));
-    if(own.length)row.append(el('details',{},el('summary',{},w('Origines','Origins')),own.map(g=>{if(g.classId)return el('p',{},view.choices.find(q=>q.id===g.originId)?a.cls(g.classId)+' · '+choiceName(view.choices.find(q=>q.id===g.originId),a):a.cls(g.classId)+' · '+w('Octroi automatique','Automatic grant'));const owner=a.context.installed.get(g.originId)??a.context.installed.get(g.originId.replace(/:(ritual|innate)$/,''));return el('p',{},owner?button(a.name(owner),()=>showEntryDetails(owner,a),'subtle'):w('Autre origine à vérifier','Other origin to review'),g.castingAbility?' · '+a.label(g.castingAbility):'');})));
+    const origins=own.length?el('details',{class:'grimoire-origins'},el('summary',{},w('Origines','Origins')),own.map(g=>{if(g.classId)return el('p',{},view.choices.find(q=>q.id===g.originId)?a.cls(g.classId)+' · '+choiceName(view.choices.find(q=>q.id===g.originId),a):a.cls(g.classId)+' · '+w('Octroi automatique','Automatic grant'));const owner=a.context.installed.get(g.originId)??a.context.installed.get(g.originId.replace(/:(ritual|innate)$/,''));return el('p',{},owner?button(a.name(owner),()=>showEntryDetails(owner,a),'subtle'):w('Autre origine à vérifier','Other origin to review'),g.castingAbility?' · '+a.label(g.castingAbility):'');})):null;
+    const terms=spellTerms(entry,a.state.locale),state=spellStatus(own,view.book.preparedGrantIds,{eligible:!!q?.options.includes(entry.id),staged:editing?staged:null,spellId:entry.id});
+    const row=el('article',{class:'grimoire-spell','data-spell-id':entry.id},el('div',{class:'grimoire-spell-main'},button(a.name(entry),()=>showEntryDetails(entry,a,{extra:origins?[origins]:[]}),'spell-title'),el('small',{},[terms.castingTime?.split(/[,;\n]/)[0],terms.range,entry.data.concentration?a.t('concentration'):null,entry.data.ritual?a.t('ritual'):null].filter(Boolean).join(' · ')),el('span',{class:'spell-preparation '+state},spellStatusLabels[state][a.state.locale==='fr'?0:1])));
+
     if(editing&&q.options.includes(entry.id))row.append(check(w('Préparer','Prepare'),staged.includes(entry.id),e=>{staged=e.target.checked?[...staged,entry.id]:staged.filter(id=>id!==entry.id);draw();},{disabled:!staged.includes(entry.id)&&staged.length>=q.count}));
-    if(!editing&&ui.classId==='wizard'&&view.editable&&!record.definition.spells.known.includes(entry.id)&&wizardBook()?.options.includes(entry.id)&&entry.data.level>0)row.append(button(w('Inscrire','Copy to book'),()=>copy(entry)));
+    if(!editing&&(ui.classId==='wizard'||(ui.classId==='all'&&view.classIds.length===1&&view.classIds[0]==='wizard'))&&view.editable&&!record.definition.spells.known.includes(entry.id)&&wizardBook()?.options.includes(entry.id)&&entry.data.level>0)row.append(button(w('Inscrire','Copy to book'),()=>copy(entry)));
     if(!editing&&view.editable)for(const bookId of ['feat','pact'])if(ritualBooks[bookId].includes(entry.id))row.append(button(bookId==='pact'?w('Copier dans le Livre des ombres','Copy to Book of Shadows'):w('Copier dans le livre de rituels','Copy to ritual book'),()=>copy(entry,true,bookId)));
     row.append(button(record.preferences.favorites.includes(entry.id)?'★':'☆',()=>toggleFavorite(entry.id),'favorite'));
     row.querySelector('.favorite').setAttribute('aria-label',(record.preferences.favorites.includes(entry.id)?w('Retirer des favoris : ','Remove favorite: '):w('Ajouter aux favoris : ','Favorite: '))+a.name(entry));
     list.append(row);
    }
-   pages.replaceChildren();if(rows.length>12){const previous=button(w('Précédent','Previous'),()=>{page--;fill();}),next=button(w('Suivant','Next'),()=>{page++;fill();});previous.disabled=page===0;next.disabled=page===pageCount-1;pages.append(previous,el('span',{},`${page+1} / ${pageCount}`),next);}
+   pages.replaceChildren();if(rows.length>24){const previous=button(w('Précédent','Previous'),()=>{page--;fill();}),next=button(w('Suivant','Next'),()=>{page++;fill();});previous.disabled=page===0;next.disabled=page===pageCount-1;pages.append(previous,el('span',{},`${page+1} / ${pageCount}`),next);}
   }
   fill();
  }
