@@ -460,6 +460,9 @@ export function buildCharacter(
     d.defenses.resistances = [
       ...new Set([...d.defenses.resistances, ...o.resistances]),
     ];
+    d.defenses.vulnerabilities = [
+      ...new Set([...d.defenses.vulnerabilities, ...o.vulnerabilities]),
+    ];
     if(o.naturalArmor)d.armorRules.push({id:o.race.id+':natural-armor',...structuredClone(o.naturalArmor),allowWithArmor:true,source:o.race.source});
     if(o.armorBonus)d.modifiers.push({id:o.race.id+':armor-bonus',stat:'ac',operation:'add',value:o.armorBonus,reason:'Racial armor bonus',source:o.race.source});
     if(o.initiativeProficiency)d.modifiers.push({id:o.race.id+':initiative',stat:'initiative',operation:'add',value:2+Math.floor((definitions.reduce((n,c)=>n+c.level,0)-1)/4),reason:'Hare-Trigger',source:o.race.source});

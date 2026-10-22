@@ -141,6 +141,7 @@ export async function renderCreator(main,input,a) {
         body.append(el('section',{class:'race-facts','aria-live':'polite'},
           el('div',{class:'race-facts-top'},el('h2',{},a.name(o.race)),button(w('Fiche complète','Full entry'),()=>details(o.race),'subtle')),
           el('p',{class:'race-summary'},summary),
+          o.race.source.kind==='homebrew'&&o.race.data.summary?el('p',{},o.race.data.summary[a.state.locale]):null,
           el('div',{class:'race-trait-tags'},traits.slice(0,5).map(t=>el('span',{},t.name?.[a.state.locale]??t.id))),
           el('details',{},el('summary',{},w('Tous les traits raciaux','All racial traits')),
             traits.map(t=>el('p',{},el('strong',{},t.name?.[a.state.locale]??t.id),t.description?el('span',{},' · '+t.description):null)))));

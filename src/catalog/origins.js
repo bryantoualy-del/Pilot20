@@ -459,6 +459,10 @@ export function resolveOrigins(index, request) {
       ...(race?.data.resistances ?? []),
       ...(sub?.resistances ?? []),
     ],
+    vulnerabilities: [
+      ...(race?.data.vulnerabilities ?? []),
+      ...(sub?.vulnerabilities ?? []),
+    ],
     equipment: bg?.data.equipment ?? [],
   };
 }
