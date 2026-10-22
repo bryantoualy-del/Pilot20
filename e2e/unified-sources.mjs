@@ -7,7 +7,7 @@ let browser;
 try{
  await new Promise((resolve,reject)=>{server.stdout.once('data',resolve);server.once('error',reject);});
  const engine=process.env.PILOT20_E2E_BROWSER==='webkit'?webkit:chromium;
- browser=await engine.launch(engine===webkit?{}:{args:['--no-sandbox']});
+ browser=await engine.launch(engine===webkit?{}:{executablePath:process.env.PILOT20_CHROMIUM,args:['--no-sandbox']});
  const p=await browser.newPage({viewport:{width:1180,height:820}}),errors=[];
  p.on('pageerror',e=>errors.push(e.message));
  await p.goto(`http://127.0.0.1:${port}/web/index.html`);
@@ -25,7 +25,7 @@ try{
  await next(async()=>{await p.locator('#character-name').fill('Dhampir sources');await p.locator('#character-name').blur();});
  await next(()=>p.locator('.single-actions .primary').click());
  await p.getByRole('searchbox',{name:'Rechercher une race',exact:true}).fill('dhampir');
- await next(()=>p.locator('.single-races button').click());
+ await next(()=>p.getByRole('button',{name:'Dhampir',exact:true}).click());
  assert.equal(await p.locator('#dialog[open]').count(),0);
  const read=()=>p.evaluate(async()=>{
   const {openIndexedDB}=await import('/src/persistence/adapters.js'),s=await openIndexedDB();

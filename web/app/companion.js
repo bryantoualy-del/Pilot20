@@ -1,10 +1,10 @@
+import {characterSheet} from './character-sheet.js';
 import { derive } from "../../src/character/derive.js";
 import { createCombat } from "../../src/character/session.js";
 import { combatRepository } from "../../src/persistence/combat-repository.js";
 import { validateSavedPlan } from "../../src/campaign/sources.js";
 import { pendingDecisions } from "../../src/rules/reactive.js";
 import { diceSpec } from "../../src/model.js";
-import { ABILITIES } from "../../src/character/contracts.js";
 import { el, button, field, select, check, badge } from "./dom.js";
 import { optionName, inspectEntry } from "./editor.js";
 const words = {
@@ -14,6 +14,8 @@ const words = {
   rage: ["Rages", "Rages"],
   "sorcery-points": ["Points de sorcellerie", "Sorcery points"],
   ki: ["Points de ki", "Ki points"],
+  "arcane-recovery": ["Récupération arcanique", "Arcane Recovery"],
+  "lay-on-hands": ["Imposition des mains", "Lay on Hands"],
 };
 function resourceName(id, a) {
   if (/^slot\d$/.test(id)) return a.t("slot") + " " + id.slice(4);
@@ -41,6 +43,7 @@ export async function renderCompanion(main, id, a) {
   const shell = el("div", {});
   main.append(shell);
   let lastResult = "";
+  let sheetTab=await a.storage.get("meta","sheet:tab:"+id)??"overview";
   const abilityName = (ability) =>
     a.name(a.context.installed.get(ability.combat?.spell?.id ?? ability.id)) ||
     ability.name;
@@ -91,115 +94,8 @@ export async function renderCompanion(main, id, a) {
   function draw() {
     const runtime = session?.engine.actors.hero,
       abilities = d.abilities,
-      resourceRows = Object.entries(stats.resources),
       fr = a.state.locale === "fr";
-    shell.replaceChildren(
-      el(
-        "div",
-        { class: "section-head" },
-        button("← " + t("library"), () => a.nav("library")),
-        draft ? button(t("edit"), () => a.nav("creator", id)) : null,
-      ),
-      el(
-        "div",
-        { class: "companion-head" },
-        el(
-          "div",
-          { class: "avatar" },
-          d.identity.portrait
-            ? el("img", { src: d.identity.portrait, alt: "" })
-            : "◈",
-        ),
-        el(
-          "div",
-          {},
-          badge(t("preview")),
-          el("h1", {}, d.identity.name),
-          el(
-            "p",
-            {},
-            d.classes.map((c) => a.cls(c.id) + " " + c.level).join(" / "),
-          ),
-        ),
-      ),
-      d.identity.gender
-        ? el(
-            "p",
-            {},
-            a.state.locale === "fr"
-              ? d.identity.gender === "femme"
-                ? "Femme"
-                : "Homme"
-              : d.identity.gender === "femme"
-                ? "Woman"
-                : "Man",
-          )
-        : "",
-      el("p", {}, d.identity.description),
-    );
-    if (!compatible)
-      shell.append(
-        el("p", { class: "warning-text" }, t("sourceAbsent")),
-        button(t("sources"), () => a.nav("sources")),
-      );
-    const left = el(
-      "section",
-      {},
-      el(
-        "div",
-        { class: "stat-grid" },
-        el(
-          "div",
-          { class: "stat" },
-          el("small", {}, t("hp")),
-          el(
-            "strong",
-            {},
-            runtime ? runtime.hp.current + " / " + runtime.hp.max : stats.maxHp,
-          ),
-        ),
-        el(
-          "div",
-          { class: "stat" },
-          el("small", {}, t("ac")),
-          el("strong", {}, stats.ac),
-        ),
-        el(
-          "div",
-          { class: "stat" },
-          el("small", {}, t("level")),
-          el("strong", {}, stats.level),
-        ),
-      ),
-      el(
-        "div",
-        { class: "score-grid" },
-        ABILITIES.map((k) =>
-          el(
-            "div",
-            { class: "stat" },
-            el("small", {}, a.label(k)),
-            el("strong", {}, d.scores[k]),
-            el(
-              "small",
-              {},
-              (stats.modifiers[k] >= 0 ? "+" : "") + stats.modifiers[k],
-            ),
-          ),
-        ),
-      ),
-      el(
-        "details",
-        {},
-        el("summary", {}, t("skills")),
-        el(
-          "div",
-          { class: "grid2" },
-          Object.entries(stats.skills).map(([k, v]) =>
-            el("span", {}, a.label(k) + " " + (v >= 0 ? "+" : "") + v),
-          ),
-        ),
-      ),
+    const left = el("section", {},
       el("h2", {}, t("actions")),
       el(
         "div",
@@ -250,27 +146,6 @@ export async function renderCompanion(main, id, a) {
     const right = el(
       "aside",
       {},
-      el(
-        "section",
-        { class: "panel" },
-        el("h2", {}, t("resource")),
-        el(
-          "div",
-          { class: "resource-list" },
-          resourceRows.map(([key, r]) =>
-            el(
-              "div",
-              { class: "resource-row" },
-              el("span", {}, resourceName(key, a)),
-              el(
-                "strong",
-                {},
-                (runtime?.resources[key] ?? r.max) + " / " + r.max,
-              ),
-            ),
-          ),
-        ),
-      ),
       el(
         "section",
         { class: "panel" },
@@ -365,7 +240,11 @@ export async function renderCompanion(main, id, a) {
           el("div", { class: "log", role: "status" }, lastResult),
         ),
       );
-    shell.append(el("div", { class: "companion-grid" }, left, right));
+    // Keep the existing simulation/action engine; only reorganize its presentation.
+    const simulation=el('div',{class:'sheet-simulation-panels'},[...right.children]);
+    shell.replaceChildren(characterSheet({record,draft,stats,runtime,a,tab:sheetTab,
+      onTab:key=>{sheetTab=key;a.storage.batch([],[{store:'meta',key:'sheet:tab:'+id,value:key}]).catch(a.fail);},
+      actions:left,simulation,resourceName,compatible}));
   }
   function inspectAbility(ability) {
     const entry = a.context.installed.get(
