@@ -188,6 +188,9 @@ export function resolveOrigins(index, request) {
       values.some((v) => !options.includes(v))
     ) {
       issues.push({ code: "origin-choice", choiceId: q.id });
+      // Preview each valid allocated point while the remaining choices stay mandatory.
+      if (spec.kind === 'score' && values.length < q.count &&
+          new Set(values).size === values.length && values.every(v => options.includes(v))) return values;
       return [];
     }
     return values;
@@ -317,6 +320,8 @@ export function resolveOrigins(index, request) {
       if((spec.minimumCharacterLevel??1)>(request.classes??[]).reduce((n,c)=>n+c.level,0))continue;
       if(spec.requiresChoice&&!(originSelections[entry.id+':'+spec.requiresChoice.key]??[]).includes(spec.requiresChoice.optionId))continue;
       let options = spec.options;
+      if (spec.kind === 'score') options =
+        (originAdjustments.abilities && policy.abilities ? ABILITIES : options).filter(k => !bonuses[k]);
       if(spec.kind==='feat')options=index.list('feat').filter(f=>!f.data.requires?.length&&(f.data.requiresScores??[]).every(p=>scores[p.score]+(scoresAreBase?bonuses[p.score]:0)>=p.minimum)).map(f=>f.id);
       if (spec.kind === "racial-spell")
         options = index

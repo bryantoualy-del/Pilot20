@@ -110,6 +110,7 @@ export function optionName(value, a) {
   const weapon=Object.values(WEAPONS).find(w=>w.proficiency===value);if(weapon)return weapon.name[a.state.locale];
   if(extraTrainingLabels[value])return extraTrainingLabels[value][a.state.locale==='fr'?0:1];
   const terms = {
+    'light-armor':['Armures légères','Light armor'], 'medium-armor':['Armures intermédiaires','Medium armor'], 'heavy-armor':['Armures lourdes','Heavy armor'], shields:['Boucliers','Shields'], 'simple-weapons':['Armes courantes','Simple weapons'], 'martial-weapons':['Armes de guerre','Martial weapons'],
     'two-one':['+2 à une caractéristique, +1 à une autre','+2 to one ability, +1 to another'],
     'three-ones':['+1 à trois caractéristiques différentes','+1 to three different abilities'],
     small:['Petite','Small'],medium:['Moyenne','Medium'],

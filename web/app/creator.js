@@ -13,6 +13,9 @@ import {el,button,field,select,check,badge} from './dom.js';
 import {migrateSingleDraft,singlePath,decisionReady} from '../../src/creator/single-path.js';
 import {compileDraft,retainDecision,restoreDecision,templateScores,changePrimaryClass} from '../../src/creator/model.js';
 import {renderRacePicker} from './race-picker.js';
+import {raceTraitList,ancestryChoiceCards} from './race-facts.js';
+import {abilityBonusSummary,racialBonusCell} from '../../src/creator/race-presentation.js';
+import {humanVariants,selectRace} from '../../src/creator/race-selection.js';
 import {ABILITIES,SKILLS} from '../../src/character/contracts.js';
 import {POINT_COST,rollAbilityScores} from '../../src/catalog/origins.js';
 import {ARMORS,WEAPONS} from '../../src/catalog/equipment.js';
@@ -31,7 +34,7 @@ export async function renderCreator(main,input,a) {
   const filters=new Map();
   const swaps=new Map();
   const text=key=>a.t(key);
-  const label=decision=>({identity:w('Votre personnage','Your character'),race:w('Choisissez votre race','Choose your race'),subrace:text('subrace'),class:w('Classe et niveau','Class and level'),background:text('background'),scores:text('scores'),'hit-points':w('Points de vie','Hit points'),'equipment-method':w('Votre équipement de départ','Your starting equipment'),equipment:text('equipment'),training:w('Maîtrises','Proficiencies'),summary:w('Votre personnage est-il prêt ?','Is your character ready?')})[decision.kind]??(decision.kind==='origin-choice'?(decision.choice.label?.[a.state.locale]??optionName(decision.choice.key,a)):decision.kind==='equipment-choice'?decision.choice.label[a.state.locale]:choiceName(decision.choice,a));
+  const label=decision=>({identity:w('Votre personnage','Your character'),race:w('Choisissez votre race','Choose your race'),'human-variant':w('Choisissez votre variante humaine','Choose your human variant'),subrace:text('subrace'),class:w('Classe et niveau','Class and level'),background:text('background'),scores:text('scores'),'hit-points':w('Points de vie','Hit points'),'equipment-method':w('Votre équipement de départ','Your starting equipment'),equipment:text('equipment'),training:w('Maîtrises','Proficiencies'),summary:w('Votre personnage est-il prêt ?','Is your character ready?')})[decision.kind]??(decision.kind==='origin-choice'?(decision.choice.label?.[a.state.locale]??optionName(decision.choice.key,a)):decision.kind==='equipment-choice'?decision.choice.label[a.state.locale]:choiceName(decision.choice,a));
   async function update(fn,{navigation=false}={}) {
     d.finalized=false;d.status='draft';d.confirmed=false;d.reviewed=false;fn(d);
     await equipmentDefaults();await a.autosave(d);await draw(navigation);
@@ -135,16 +138,14 @@ export async function renderCreator(main,input,a) {
       body.append(renderRacePicker(d,a,update,filters));
       if(report.origin?.race){
         const o=report.origin,traits=(o.traits??[]).filter(t=>[o.race.id,o.subrace?.id].includes(t.ownerId)),
-          bonuses=Object.entries(o.bonuses??{}).filter(([,v])=>v).map(([k,v])=>a.label(k)+' +'+v).join(' · '),
+          bonuses=abilityBonusSummary(o.race.data,a.label,a.state.locale),
           summary=[bonuses||(o.race.data.flexibleAbilityBoosts?w('+2 et +1, ou trois +1, sur des caractéristiques différentes','+2 and +1, or three +1s, to different abilities'):w('Bonus à répartir','Bonuses to assign')),(o.speed/5*1.5).toLocaleString(a.state.locale)+' m',
             (o.languages??[]).map(id=>optionName(id,a)).join(', ')].filter(Boolean).join(' · ');
         body.append(el('section',{class:'race-facts','aria-live':'polite'},
           el('div',{class:'race-facts-top'},el('h2',{},a.name(o.race)),button(w('Fiche complète','Full entry'),()=>details(o.race),'subtle')),
           el('p',{class:'race-summary'},summary),
           o.race.source.kind==='homebrew'&&o.race.data.summary?el('p',{},o.race.data.summary[a.state.locale]):null,
-          el('div',{class:'race-trait-tags'},traits.slice(0,5).map(t=>el('span',{},t.name?.[a.state.locale]??t.id))),
-          el('details',{},el('summary',{},w('Tous les traits raciaux','All racial traits')),
-            traits.map(t=>el('p',{},el('strong',{},t.name?.[a.state.locale]??t.id),t.description?el('span',{},' · '+t.description):null)))));
+          raceTraitList({...o.race.data,traits},a)));
       }
     }
     if(current.kind==='race'&&report.origin?.race?.id==='motm:race:kobold'){
@@ -156,7 +157,12 @@ export async function renderCreator(main,input,a) {
     }
     if(current.kind==='subrace'){
       const race=report.origin.race;
-      for(const sub of race.data.subraces)body.append(button(sub.name[a.state.locale],()=>update(x=>{x.subraceId=sub.id;}),d.subraceId===sub.id?'selected':''));
+      body.append(el('p',{},w('Ces bénéfices s’ajoutent aux traits communs de votre race, sauf remplacement indiqué.','These benefits add to the shared racial traits, unless a replacement is stated.')),
+        ancestryChoiceCards(race.data.subraces,d.subraceId,id=>update(x=>{x.subraceId=id;}),a));
+    }
+    if(current.kind==='human-variant'){
+      body.append(el('p',{},w('La variante avec don remplace le +1 dans chaque caractéristique par deux +1 au choix, une compétence et un don.','The feat variant replaces +1 in every ability with two chosen +1s, one skill and one feat.')),
+        ancestryChoiceCards(humanVariants(a.context,d.raceId),d.raceId,id=>update(x=>{if(x.raceId!==id)selectRace(a.context,x,id,a.state.locale);}),a,{human:true}));
     }
     if(current.kind==='class'){
       const cls=d.classes[0],classLayout=el('div',{class:'class-layout'}),
@@ -273,6 +279,7 @@ export async function renderCreator(main,input,a) {
       const scoreChoices=(report.origin?.choices??[]).filter(q=>q.kind==='score');
       const patterns=(report.origin?.choices??[]).filter(q=>q.key==='ability-pattern');
       for(const q of patterns)body.append(field(q.label[a.state.locale],select([['',w('Choisir','Choose')],...q.options.map(id=>[id,optionName(id,a)])],d.originSelections?.[q.id]?.[0]??'',e=>update(x=>{x.originSelections??={};x.originSelections[q.id]=e.target.value?[e.target.value]:[];for(const key of Object.keys(x.originSelections))if(key.startsWith(q.ownerId+':ability-bonus-'))delete x.originSelections[key];}))));
+      for(const q of scoreChoices){const count=(d.originSelections?.[q.id]??[]).filter(id=>q.options.includes(id)).length;body.append(el('p',{class:'racial-choice-status',role:'status'},w('Bonus au choix : ','Chosen bonus: ')+'+'+(q.amount??1)+' · '+count+' / '+q.count+' '+w('caractéristiques sélectionnées','abilities selected')));}
       for(const ability of ABILITIES){
         const n=d.scores[ability],min=d.scoreMethod==='point-buy'?8:1,max=d.scoreMethod==='point-buy'?15:30;
         const change=delta=>update(x=>{
@@ -286,8 +293,10 @@ export async function renderCreator(main,input,a) {
         minus.setAttribute('aria-label',w('Diminuer ','Decrease ')+a.label(ability));plus.setAttribute('aria-label',w('Augmenter ','Increase ')+a.label(ability));
         minus.disabled=n<=min;plus.disabled=n>=max||(d.scoreMethod==='point-buy'&&spent+POINT_COST[n+1]-POINT_COST[n]>27);
         const bonus=el('div',{class:'racial-bonus'});
-        for(const q of scoreChoices){const values=d.originSelections?.[q.id]??[],selected=values.includes(ability);bonus.append(el('label',{},el('input',{type:q.count===1?'radio':'checkbox',name:q.id,checked:selected,disabled:!selected&&(!q.options.includes(ability)||values.length>=q.count&&q.count!==1),'aria-label':a.label(ability)+' +'+q.amount,onchange:e=>update(x=>{x.originSelections??={};x.originSelections[q.id]=e.target.checked?(q.count===1?[ability]:[...values,ability]):values.filter(v=>v!==ability);})}),el('span',{},'+'+q.amount)));}
-        if(!scoreChoices.length)bonus.append(el('span',{},'+'+(report.origin?.bonuses?.[ability]??0)));
+        const cell=racialBonusCell(report.origin,d.originSelections,ability);
+        if(cell.fixed)bonus.append(el('span',{class:'racial-fixed'},'+'+cell.fixed+' '+w('fixe','fixed')));
+        for(const q of cell.choices){const values=d.originSelections?.[q.id]??[],selected=values.includes(ability);bonus.append(el('label',{},el('input',{type:q.count===1?'radio':'checkbox',name:q.id,checked:selected,disabled:!selected&&values.length>=q.count&&q.count!==1,'aria-label':a.label(ability)+' +'+(q.amount??1),onchange:e=>update(x=>{x.originSelections??={};x.originSelections[q.id]=e.target.checked?(q.count===1?[ability]:[...values,ability]):values.filter(v=>v!==ability);})}),el('span',{},'+'+(q.amount??1))));}
+        if(!cell.fixed&&!cell.choices.length)bonus.append(el('span',{},'—'));
         const final=report.scores?.[ability]??n,mod=Math.floor((final-10)/2);
         rows.append(el('tr',{class:'score-row'},el('th',{scope:'row'},a.label(ability)),el('td',{class:'score-base','data-label':w('Valeur brute','Base')},el('div',{class:'score-stepper'},minus,el('output',{},n),plus)),el('td',{class:'score-cost','data-label':w('Coût','Cost')},d.scoreMethod==='point-buy'?(POINT_COST[n]??'—'):'—'),el('td',{class:'score-bonus','data-label':w('Bonus racial','Racial bonus')},bonus),el('td',{class:'score-final','data-label':w('Final','Final')},el('strong',{},final+' ('+(mod>=0?'+':'')+mod+')'))));
       }
@@ -311,7 +320,15 @@ export async function renderCreator(main,input,a) {
       for(const q of current.classChoices)body.append(el('section',{},el('h2',{},choiceName(q,a)),choiceList(q,report.selections?.[q.id]??d.selections[q.id]??[],values=>update(x=>{x.selections[q.id]=values;}))));
       for(const q of current.originChoices)body.append(el('section',{},el('h2',{},q.label?.[a.state.locale]??optionName(q.key,a)),choiceList(q,d.originSelections?.[q.id]??[],values=>update(x=>{selectOriginChoice(x,q,values,a.context.index.get(q.ownerId));}))));
     }
-    if(current.kind==='origin-choice')body.append(choiceList(current.choice,d.originSelections?.[current.choice.id]??[],values=>update(x=>{selectOriginChoice(x,current.choice,values,a.context.index.get(current.choice.ownerId));}),{origin:true}));
+    if(current.kind==='origin-choice'){
+      const q=current.choice,values=d.originSelections?.[q.id]??[];
+      const save=values=>update(x=>{selectOriginChoice(x,q,values,a.context.index.get(q.ownerId));});
+      if(q.kind==='feat'){
+        body.append(featPicker(q.options,values[0]??'',a,id=>save([id])));
+        const feat=a.context.index.get(values[0]);
+        if(feat)body.append(featPreview(feat,a,(report.choices??[]).filter(child=>child.ownerId===feat.id).map(child=>choiceList(child,report.selections?.[child.id]??d.selections[child.id]??[],values=>update(x=>{x.selections[child.id]=values;})))));
+      }else body.append(choiceList(q,values,save,{origin:true}));
+    }
     if(current.kind==='class-choice'){
       const q=current.choice;body.append(el('p',{},a.cls(q.classId)+' · '+text('level')+' '+q.level));
       const values=q.kind==='subclass'?[d.classes.find(c=>c.id===q.classId)?.subclassId].filter(Boolean):report.selections?.[q.id]??d.selections[q.id]??[];

@@ -54,7 +54,7 @@ export function renderRacePicker(d, a, update, filters) {
   fill();
   const family = raceLibrary(a.context).find(f => f.versions.some(v => v.entry.id === d.raceId));
   const versions = family?.versions.filter(v => v.available) ?? [];
-  if (versions.length > 1) wrapper.append(field(w('Version de la race', 'Race version'),
+  if (versions.length > 1 && family?.raceFamilyId !== 'humain') wrapper.append(field(w('Version de la race', 'Race version'),
     select(versions.map(v => [v.entry.id, a.name(v.entry) + ' · ' + v.entry.source.document]), d.raceId,
       e => update(x => selectRace(a.context, x, e.target.value, a.state.locale)))));
   if (d.manualRace || (!d.raceId && d.origin)) wrapper.append(el('p', { role: 'status' },

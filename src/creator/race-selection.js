@@ -5,6 +5,10 @@ import {
 } from "../catalog/race-discovery.js";
 import variants from "../catalog/data/race-variants.json" with { type: "json" };
 import { refreshPortrait } from "./appearance.js";
+export function humanVariants(context, raceId) {
+  const ids = ['srd51:race:human', 'phb14:race:variant-human'];
+  return ids.includes(raceId) ? ids.map(id => context.index.get(id)).filter(Boolean) : [];
+}
 export function raceOptions(context, locale = "fr") {
   return raceLibrary(context).flatMap((f) => {
     const active = f.versions.filter((v) => v.available);

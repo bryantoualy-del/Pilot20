@@ -5,9 +5,12 @@ import {optionName} from './editor.js';
 import {spellTerms} from '../../src/catalog/localization.js';
 import {spellReference} from '../../src/catalog/spell-reference.js';
 import {spellNotesFr} from '../../src/catalog/spell-notes-fr.js';
+import {raceTraitList} from './race-facts.js';
+import {abilityBonusSummary} from '../../src/creator/race-presentation.js';
 export function showEntryDetails(entry,a){
  if(!entry)return;
  const w=(fr,en)=>a.state.locale==='fr'?fr:en,data=entry.data,body=el('section',{},el('h2',{},a.name(entry)));
+ if(entry.type==='race')body.append(el('p',{},abilityBonusSummary(data,a.label,a.state.locale)),raceTraitList(data,a));
  if(entry.type==='spell'){
   const terms=spellTerms(entry,a.state.locale);
   body.append(el('dl',{class:'spell-facts'},...['level','school','castingTime','range','duration','components'].flatMap(k=>[el('dt',{},el('strong',{},a.t(k))),el('dd',{},terms[k])])),...(data.concentration?[el('p',{},a.t('concentration'))]:[]),...(data.ritual?[el('p',{},a.t('ritual'))]:[]));

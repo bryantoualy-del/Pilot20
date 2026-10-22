@@ -10,7 +10,7 @@ export const JOURNEY_STAGES = Object.freeze([
 
 export function journeyStage(decision) {
   if(!decision)return 'origin';
-  if(['identity','race','subrace'].includes(decision.kind))return 'origin';
+  if(['identity','race','subrace','human-variant'].includes(decision.kind))return 'origin';
   if(decision.kind==='class'||decision.kind==='class-choice'&&decision.choice?.kind==='subclass')return 'class';
   if(['scores','hit-points'].includes(decision.kind))return 'scores';
   if(['equipment','equipment-method','equipment-choice'].includes(decision.kind))return 'magic';
@@ -29,7 +29,7 @@ export function orderJourney(decisions) {
 
 /** Optional duplicate steps are bypassed only if the actual rules resolver accepts them. */
 export function resolvedInlineDecision(decision,report,draft,ready) {
-  const inlineFeat=decision.kind==='class-choice'&&Object.values(draft.selections??{}).some(values=>values.includes(decision.choice?.ownerId))&&decision.choice?.ownerId?.includes(':feat:');
+  const inlineFeat=decision.kind==='class-choice'&&[...Object.values(draft.selections??{}),...Object.values(draft.originSelections??{})].some(values=>values.includes(decision.choice?.ownerId))&&decision.choice?.ownerId?.includes(':feat:');
   return (inlineFeat||decision.kind==='subrace'||decision.kind==='class-choice'&&decision.choice?.kind==='subclass')
     && ready(decision,report,draft);
 }

@@ -1,5 +1,6 @@
 import {validateScoreMethod,POINT_COST} from '../catalog/origins.js';
 import {draftProgression} from './model.js';
+import {humanVariants} from './race-selection.js';
 
 /** Legacy data is preserved; only the navigation presentation is migrated. */
 export function migrateSingleDraft(input) {
@@ -14,6 +15,7 @@ export function migrateSingleDraft(input) {
 export function singlePath(context,config,draft) {
   const report=draftProgression(context,config,draft),race=report.origin?.race;
   const decisions=[{id:'identity',kind:'identity'},{id:'race',kind:'race'}];
+  if(humanVariants(context,draft.raceId).length>1)decisions.push({id:'human-variant',kind:'human-variant'});
   if(race?.data.subraces.length)decisions.push({id:'subrace',kind:'subrace'});
   decisions.push({id:'class',kind:'class'},{id:'background',kind:'background'},{id:'scores',kind:'scores'},{id:'hit-points',kind:'hit-points'});
   const training=q=>['skill','proficiency','language','tool','training'].includes(q.kind)||q.ownerId===draft.backgroundId;
