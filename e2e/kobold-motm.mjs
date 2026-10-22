@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import {chromium} from 'playwright';
+import {spawn} from 'node:child_process';
+const port=4192,server=spawn(process.execPath,['scripts/serve-web.mjs'],{env:{...process.env,PORT:String(port)},stdio:'pipe'});
+let browser;
+try{
+ await new Promise((resolve,reject)=>{server.stdout.once('data',resolve);server.once('error',reject);});
+ browser=await chromium.launch({args:['--no-sandbox']});
+ const p=await browser.newPage({viewport:{width:1180,height:820}});p.setDefaultTimeout(15000);
+ await p.goto(`http://127.0.0.1:${port}/web/index.html`);
+ await p.getByRole('button',{name:'Créer un personnage',exact:true}).click();
+ const changed=async action=>{const old=await p.locator('.single-body').elementHandle();await action();await p.waitForFunction(e=>!e.isConnected,old);await old.dispose();};
+ await changed(async()=>{await p.locator('#character-name').fill('Kobold MotM');await p.locator('#character-name').blur();});
+ await changed(()=>p.locator('.single-actions .primary').click());
+ await changed(()=>p.getByRole('button',{name:'Kobold',exact:true}).click());
+ if(await p.getByLabel('Version de la race').inputValue()!=='motm:race:kobold')await changed(()=>p.getByLabel('Version de la race').selectOption('motm:race:kobold'));
+ assert.ok((await p.locator('.race-summary').textContent()).includes('+2 et +1'));
+ assert.equal(await p.getByRole('heading',{name:'Héritage draconique (héritage kobold)',exact:true}).count(),1);
+ await changed(()=>p.getByRole('radio',{name:'Sorcellerie draconique',exact:true}).check());
+ const ability=p.locator('[data-choice-id="motm:race:kobold:draconic-ability"]');
+ await changed(()=>ability.getByRole('radio',{name:'Charisme',exact:true}).check());
+ await changed(()=>p.locator('[data-choice-id="motm:race:kobold:draconic-cantrip"] input').first().check());
+ await p.reload();await p.getByRole('radio',{name:'Sorcellerie draconique',exact:true}).waitFor();
+ assert.equal(await p.getByRole('radio',{name:'Sorcellerie draconique',exact:true}).isChecked(),true);
+ await changed(()=>p.getByRole('radio',{name:'Astuce',exact:true}).check());
+ assert.equal(await p.locator('[data-choice-id="motm:race:kobold:draconic-cantrip"]').count(),0);
+ assert.equal(await p.locator('[data-choice-id="motm:race:kobold:craftiness-skill"]').count(),1);
+ await changed(()=>p.getByRole('radio',{name:'Défiance',exact:true}).check());
+ assert.equal(await p.locator('[data-choice-id="motm:race:kobold:craftiness-skill"]').count(),0);
+ assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ await changed(()=>p.getByLabel('Version de la race').selectOption('volo:race:kobold'));
+ assert.equal(await p.getByRole('heading',{name:'Héritage draconique (héritage kobold)',exact:true}).count(),0);
+ console.log('Kobold MotM: heritage, conditional choices, persistence, Volo isolation and iPad layout OK');
+}finally{await browser?.close();server.kill();}

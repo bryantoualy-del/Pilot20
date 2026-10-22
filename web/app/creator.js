@@ -1,3 +1,4 @@
+import {selectOriginChoice} from '../../src/creator/origin-selection.js';
 import {selectBackground} from '../../src/creator/background-selection.js';
 import {SOURCES} from '../../src/campaign/sources.js';
 import {inventoryControls} from './inventory.js';
@@ -76,13 +77,14 @@ export async function renderCreator(main,input,a) {
       for(const id of options.slice(filter.page*8,(filter.page+1)*8)){
         const entry=a.context.index.get(id),selected=values.includes(id),disabled=!selected&&(!single&&values.length>=q.count||others.has(id));
         const input=el('input',{type:single?'radio':'checkbox',name:q.id,checked:selected,disabled:disabled||q.requiredOptions?.includes(id),'aria-label':optionName(id,a),onchange:e=>onchange(e.target.checked?single?[id]:[...values,id]:values.filter(x=>x!==id))});
-        list.append(el('div',{class:'single-option'+(selected?' selected':'')},el('label',{},input,el('span',{},optionName(id,a))),entry?button(w('Détail','Details'),()=>details(entry),'subtle'):null));
+        list.append(el('div',{class:'single-option'+(selected?' selected':'')},el('label',{},input,el('span',{},optionName(id,a),q.optionDescriptions?.[id]?.[a.state.locale]?el('small',{},q.optionDescriptions[id][a.state.locale]):null)),entry?button(w('Détail','Details'),()=>details(entry),'subtle'):null));
       }
       pages.replaceChildren();
       if(options.length>8){const prev=button(w('Page précédente','Previous page'),()=>{filter.page--;fill();}),next=button(w('Page suivante','Next page'),()=>{filter.page++;fill();});prev.disabled=filter.page===0;next.disabled=filter.page===pageCount-1;pages.append(prev,el('span',{},`${filter.page+1} / ${pageCount}`),next);}
     }
     wrap.append(list,pages);fill();return wrap;
   }
+  const originChange=(q,values)=>update(x=>selectOriginChoice(x,q,values,a.context.index.get(q.ownerId)));
   async function draw(focus=false) {
     const plan=singlePath(a.context,a.config,d),report=plan.report,decisions=orderJourney(plan.decisions),current=decisions.find(x=>x.id===plan.current.id)??decisions[0],position=decisions.indexOf(current);
     if(d.step!==current.id){d.step=current.id;await a.autosave(d);}
@@ -134,7 +136,7 @@ export async function renderCreator(main,input,a) {
       if(report.origin?.race){
         const o=report.origin,traits=(o.traits??[]).filter(t=>[o.race.id,o.subrace?.id].includes(t.ownerId)),
           bonuses=Object.entries(o.bonuses??{}).filter(([,v])=>v).map(([k,v])=>a.label(k)+' +'+v).join(' · '),
-          summary=[bonuses||w('Bonus à répartir','Bonuses to assign'),(o.speed/5*1.5).toLocaleString(a.state.locale)+' m',
+          summary=[bonuses||(o.race.data.flexibleAbilityBoosts?w('+2 et +1, ou trois +1, sur des caractéristiques différentes','+2 and +1, or three +1s, to different abilities'):w('Bonus à répartir','Bonuses to assign')),(o.speed/5*1.5).toLocaleString(a.state.locale)+' m',
             (o.languages??[]).map(id=>optionName(id,a)).join(', ')].filter(Boolean).join(' · ');
         body.append(el('section',{class:'race-facts','aria-live':'polite'},
           el('div',{class:'race-facts-top'},el('h2',{},a.name(o.race)),button(w('Fiche complète','Full entry'),()=>details(o.race),'subtle')),
@@ -143,6 +145,13 @@ export async function renderCreator(main,input,a) {
           el('details',{},el('summary',{},w('Tous les traits raciaux','All racial traits')),
             traits.map(t=>el('p',{},el('strong',{},t.name?.[a.state.locale]??t.id),t.description?el('span',{},' · '+t.description):null)))));
       }
+    }
+    if(current.kind==='race'&&report.origin?.race?.id==='motm:race:kobold'){
+      const heritage=el('section',{class:'race-facts','aria-label':w('Héritage draconique','Kobold Legacy')});
+      for(const q of report.origin.choices.filter(q=>q.ownerId==='motm:race:kobold'&&['legacy','craftiness-skill','draconic-ability','draconic-cantrip'].includes(q.key))){
+        heritage.append(el('h2',{},q.label[a.state.locale]),choiceList(q,d.originSelections?.[q.id]??[],values=>originChange(q,values),{origin:true}));
+      }
+      body.append(heritage);
     }
     if(current.kind==='subrace'){
       const race=report.origin.race;
@@ -310,9 +319,9 @@ export async function renderCreator(main,input,a) {
       const fixed=[...(report.origin?.background?.skills??[]),...(report.origin?.languages??[]),...(report.origin?.background?.proficiencies??[])];
       if(fixed.length)body.append(el('p',{},w('Déjà accordées : ','Already granted: ')+[...new Set(fixed)].map(id=>optionName(id,a)).join(', ')));
       for(const q of current.classChoices)body.append(el('section',{},el('h2',{},choiceName(q,a)),choiceList(q,report.selections?.[q.id]??d.selections[q.id]??[],values=>update(x=>{x.selections[q.id]=values;}))));
-      for(const q of current.originChoices)body.append(el('section',{},el('h2',{},q.label?.[a.state.locale]??optionName(q.key,a)),choiceList(q,d.originSelections?.[q.id]??[],values=>update(x=>{x.originSelections??={};x.originSelections[q.id]=values;}))));
+      for(const q of current.originChoices)body.append(el('section',{},el('h2',{},q.label?.[a.state.locale]??optionName(q.key,a)),choiceList(q,d.originSelections?.[q.id]??[],values=>update(x=>{selectOriginChoice(x,q,values,a.context.index.get(q.ownerId));}))));
     }
-    if(current.kind==='origin-choice')body.append(choiceList(current.choice,d.originSelections?.[current.choice.id]??[],values=>update(x=>{x.originSelections??={};x.originSelections[current.choice.id]=values;}),{origin:true}));
+    if(current.kind==='origin-choice')body.append(choiceList(current.choice,d.originSelections?.[current.choice.id]??[],values=>update(x=>{selectOriginChoice(x,current.choice,values,a.context.index.get(current.choice.ownerId));}),{origin:true}));
     if(current.kind==='class-choice'){
       const q=current.choice;body.append(el('p',{},a.cls(q.classId)+' · '+text('level')+' '+q.level));
       const values=q.kind==='subclass'?[d.classes.find(c=>c.id===q.classId)?.subclassId].filter(Boolean):report.selections?.[q.id]??d.selections[q.id]??[];

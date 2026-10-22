@@ -1919,8 +1919,22 @@
               "draconic-sorcery"
             ],
             "label": {
-              "fr": "Héritage kobold",
-              "en": "Legacy"
+              "fr": "Héritage draconique (héritage kobold)",
+              "en": "Kobold Legacy"
+            },
+            "optionDescriptions": {
+              "craftiness": {
+                "fr": "Maîtrise d’une compétence : Arcanes, Investigation, Médecine, Escamotage ou Survie.",
+                "en": "Gain proficiency in Arcana, Investigation, Medicine, Sleight of Hand, or Survival."
+              },
+              "defiance": {
+                "fr": "Avantage aux sauvegardes pour éviter ou terminer l’état effrayé.",
+                "en": "Advantage on saves to avoid or end the frightened condition."
+              },
+              "draconic-sorcery": {
+                "fr": "Un sort mineur d’ensorceleur ; choisissez Intelligence, Sagesse ou Charisme pour le lancer.",
+                "en": "Learn a sorcerer cantrip and choose Intelligence, Wisdom, or Charisma to cast it."
+              }
             }
           },
           {
@@ -1987,6 +2001,15 @@
               "en": "Darkvision60 ft."
             },
             "description": "Pénombre comme lumière vive, obscurité comme pénombre.",
+            "automation": "manual"
+          },
+          {
+            "id": "kobold-legacy",
+            "name": {
+              "fr": "Héritage draconique",
+              "en": "Kobold Legacy"
+            },
+            "description": "Choisissez un héritage : Astuce (compétence), Défiance (résistance à la peur) ou Sorcellerie draconique (sort mineur d’ensorceleur).",
             "automation": "manual"
           },
           {
