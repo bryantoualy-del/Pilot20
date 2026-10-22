@@ -1,6 +1,6 @@
 import {selectOriginChoice} from '../../src/creator/origin-selection.js';
 import {selectBackground} from '../../src/creator/background-selection.js';
-import {SOURCES} from '../../src/campaign/sources.js';
+import {featPicker,featPreview} from './feat-picker.js';
 import {inventoryControls} from './inventory.js';
 import {beginAdvancement,cancelAdvancement} from '../../src/creator/advancement.js';
 import {sameDefinition} from '../../src/creator/revision.js';
@@ -221,25 +221,15 @@ export async function renderCreator(main,input,a) {
     }
     if(current.kind==='background'){
       const backgrounds=a.context.index.list('background');
-       const searchState=filters.get('background-search')??{query:'',source:'all'};filters.set('background-search',searchState);
-       const backgroundPicker=select([],d.backgroundId??'',e=>update(x=>{selectBackground(a.context,x,e.target.value);}));
-       const backgroundStatus=el('small',{role:'status'});
-       const normalizeBackground=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-       function refreshBackgrounds(){
-         const query=normalizeBackground(searchState.query);
-         const matches=backgrounds.filter(b=>(searchState.source==='all'||(b.data?.rulesSourceId??'srd51')===searchState.source)&&normalizeBackground([b.id,...Object.values(b.name??{}),...(b.data.aliases??[]),...(b.data.specialties??[]),b.source?.document??'',b.data?.rulesSourceId??''].join(' ')).includes(query));
-         const chosen=backgrounds.find(b=>b.id===d.backgroundId);
-         if(chosen&&!matches.some(b=>b.id===chosen.id))matches.unshift(chosen);
-         backgroundPicker.replaceChildren(el('option',{value:''},w('Historique sur mesure','Custom background')),...matches.map(b=>el('option',{value:b.id},a.name(b))));
-         backgroundPicker.value=d.backgroundId??'';
-         backgroundStatus.textContent=matches.length+' / '+backgrounds.length+' '+w('historiques disponibles','available backgrounds');
-       }
-       const backgroundSearch=el('input',{type:'search',value:searchState.query,placeholder:w('Rechercher un historique (nom ou source)…','Search background (name or source)…'),'aria-label':w('Rechercher un historique','Search backgrounds'),oninput:e=>{searchState.query=e.target.value;refreshBackgrounds();}});
-       const backgroundSources=[...new Set(backgrounds.map(b=>b.data?.rulesSourceId??'srd51'))];
-       const sourceNames=Object.fromEntries(SOURCES.map(s=>[s.id,s.name]));
-       const backgroundSource=select([['all',w('Toutes les sources','All sources')],...backgroundSources.map(id=>[id,sourceNames[id]??id])],searchState.source??'all',e=>{searchState.source=e.target.value;refreshBackgrounds();});
-       body.append(backgroundSearch,field(w('Source','Source'),backgroundSource),field(text('background'),backgroundPicker),backgroundStatus);refreshBackgrounds();
-      if(!d.backgroundId){body.append(field(text('name'),el('input',{value:d.background.name,onchange:e=>update(x=>{x.background.name=e.target.value;})})),choiceList({id:'custom:background-skills',key:text('skills'),kind:'skill',options:Object.keys(SKILLS),count:2},d.background.skills,values=>update(x=>{x.background.skills=values;})),el('p',{},w('Langues, outils et capacité de cet historique restent à vérifier avec votre MJ.','Languages, tools and the background feature still need review with your GM.')));}
+      body.append(field(text('background'),select([...backgrounds.map(b=>[b.id,a.name(b)]),['',w('Historique sur mesure','Custom background')]],d.backgroundId??'',e=>update(x=>selectBackground(a.context,x,e.target.value)))));
+      if(!d.backgroundId){
+        body.append(el('section',{class:'background-preview','aria-label':w('Historique sur mesure','Custom background')},
+          el('h2',{},w('Créez votre historique','Create your background')),
+          el('p',{},w('Donnez un nom à votre historique, puis choisissez deux compétences qui représentent le passé de votre personnage.','Name your background, then choose two skills that reflect your character’s past.')),
+          el('p',{},w('Définissez avec votre MJ les langues, outils, équipement et capacité associés. Ce formulaire enregistre le nom et les deux compétences.','Agree on languages, tools, equipment and a feature with your GM. This form records the name and two skills.')),
+          field(w('Nom de l’historique','Background name'),el('input',{value:d.background.name,onchange:e=>update(x=>{x.background.name=e.target.value;})})),
+          choiceList({id:'custom:background-skills',key:text('skills'),kind:'skill',options:Object.keys(SKILLS),count:2},d.background.skills,values=>update(x=>{x.background.skills=values;}))));
+      }
       else {
         const background=a.context.index.get(d.backgroundId),data=background?.data??{},grants=el('div',{class:'background-grants'});
         for(const [fr,en,values] of [
@@ -252,13 +242,12 @@ export async function renderCreator(main,input,a) {
         const feature=data.feature;
         body.append(el('section',{class:'background-preview','aria-label':w('Avantages de l’historique','Background benefits')},
           el('h2',{},a.name(background)),
-          el('small',{},background.source.document),
           el('p',{},data.summary?.[a.state.locale]??data.description??''),
           grants,
           feature?el('p',{},el('strong',{},(feature.name?.[a.state.locale]??w('Capacité d’historique','Background feature'))+' : '),feature.description??''):null,
           (data.choices??[]).length?el('p',{},w('Choix à compléter dans les étapes de maîtrises : ','Choices to complete in proficiency steps: ')+(data.choices??[]).map(c=>c.label?.[a.state.locale]??c.key).join(' · ')):null,
           (data.equipment??[]).length?el('details',{},el('summary',{},w('Équipement de départ','Starting equipment')),(data.equipment??[]).map(e=>el('p',{},e.name?.[a.state.locale]??e.id))):null,
-          button(w('Voir le détail complet','View full details'),()=>details(background),'subtle')));
+          ));
       }
     }
     if(current.kind==='scores'){
@@ -334,18 +323,12 @@ export async function renderCreator(main,input,a) {
         const state=filters.get(q.id)??{mode:isFeat?'feat':'scores',pair:selected.startsWith('asi:')?selected.split(':').slice(1):['','']};filters.set(q.id,state);
         body.append(el('div',{class:'asi-switch',role:'group','aria-label':w('Amélioration ou don','Ability increase or feat')},button([el('strong',{},w('Améliorer les caractéristiques','Improve abilities')),el('small',{},w('+2 ou +1 / +1','+2 or +1 / +1'))],()=>{state.mode='scores';saveChoice([]);},state.mode==='scores'?'selected':''),button([el('strong',{},w('Choisir un don','Choose a feat')),el('small',{},w('Une nouvelle aptitude','A new feature'))],()=>{state.mode='feat';saveChoice([]);},state.mode==='feat'?'selected':'')));
         if(state.mode==='feat'){
-          const normalize=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
-          const search=el('input',{type:'search',value:state.featQuery??'',placeholder:w('Rechercher un don (FR / EN)…','Find a feat (FR / EN)…'),'aria-label':w('Rechercher un don','Search feats'),oninput:e=>{state.featQuery=e.target.value;refresh();}});
-          const picker=select([],isFeat?selected:'',e=>saveChoice(e.target.value?[e.target.value]:[]));
-          const status=el('small',{role:'status'});
-          function refresh(){
-            const query=normalize(state.featQuery);
-            const matches=feats.filter(id=>{const feat=a.context.index.get(id);return normalize([id,...Object.values(feat?.name??{}),...(feat?.data.aliases??[])].join(' ')).includes(query);});
-            if(isFeat&&feats.includes(selected)&&!matches.includes(selected))matches.unshift(selected);
-            picker.replaceChildren(el('option',{value:''},w('Choisir un don','Choose a feat')),...matches.map(id=>el('option',{value:id},optionName(id,a))));
-            picker.value=isFeat?selected:'';status.textContent=matches.length+' / '+feats.length+' '+w('dons accessibles','eligible feats');
+          body.append(featPicker(feats,isFeat?selected:'',a,id=>saveChoice([id])));
+          if(isFeat&&a.context.index.get(selected)){
+            const feat=a.context.index.get(selected);
+            const children=(report.choices??[]).filter(child=>child.ownerId===selected&&child.classId===q.classId&&child.level===q.level);
+            body.append(featPreview(feat,a,children.map(child=>choiceList(child,report.selections?.[child.id]??d.selections[child.id]??[],values=>update(x=>{x.selections[child.id]=values;})))));
           }
-          body.append(search,field(w('Don','Feat'),picker),status,isFeat?button(w('Voir le don choisi','View selected feat'),()=>details(a.context.index.get(selected)),'subtle'):null);refresh();
         }
         else for(const i of [0,1])body.append(field('+1 · '+(i+1),select([['',w('Choisir une caractéristique','Choose an ability')],...ABILITIES.map(id=>[id,a.label(id)])],state.pair[i],e=>{state.pair[i]=e.target.value;const [x,y]=state.pair,id=q.options.find(id=>id===`asi:${x}:${y}`||id===`asi:${y}:${x}`);saveChoice(id?[id]:[]);})));
       }else body.append(choiceList(q,values,saveChoice));
@@ -464,7 +447,8 @@ export async function renderCreator(main,input,a) {
         }catch(e){a.fail(e);}
       },'primary');save.disabled=!compiled.valid||!!externalEdits;body.append(save);
     }
-    const ready=decisionReady(current,report,d);
+    const inlineFeat=current.choice?.kind==='asi'?(report.selections?.[current.choice.id]??d.selections[current.choice.id]??[])[0]:null;
+    const ready=decisionReady(current,report,d)&&(report.choices??[]).filter(q=>q.ownerId===inlineFeat&&q.classId===current.choice?.classId&&q.level===current.choice?.level).every(choice=>decisionReady({kind:'class-choice',choice},report,d));
     const errors=current.choice?report.issues.filter(i=>i.choiceId===current.choice.id):[];
     if(errors.length)body.append(el('p',{class:'single-help',role:'status'},issueMessage(errors[0],report,a)));
     const actions=el('div',{class:'single-actions'}),back=button(text('back'),()=>position?go(decisions[position-1].id):a.nav('library'));

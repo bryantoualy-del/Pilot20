@@ -31,3 +31,11 @@ test('a subclass is not bypassed if its mandatory choice is missing',()=>{
   assert.equal(resolvedInlineDecision(q,report,draft,()=>true),true);
   assert.equal(resolvedInlineDecision({kind:'class'},report,draft,()=>true),false);
 });
+
+test('a feat child completed in its card is skipped, but an incomplete child is retained',()=>{
+ const decision={kind:'class-choice',choice:{ownerId:'fizban:feat:gift-of-the-gem-dragon',kind:'feat-ability'}};
+ const draft={selections:{'fighter:asi-4':['fizban:feat:gift-of-the-gem-dragon']}};
+ assert.equal(resolvedInlineDecision(decision,{},draft,()=>true),true);
+ assert.equal(resolvedInlineDecision(decision,{},draft,()=>false),false);
+ assert.equal(resolvedInlineDecision(decision,{}, {selections:{}},()=>true),false);
+});
