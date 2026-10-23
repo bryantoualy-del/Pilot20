@@ -59,6 +59,7 @@ try{
   await creatorRepository(s,characterLibrary(s)).save(suggestChoices(ctx,c,d));s.close();
  });
  await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();await p.locator('article').filter({has:p.getByRole('heading',{name:'Parcours Barde 10',exact:true})}).getByRole('button',{name:/^Reprendre/}).click();
+ await p.locator('.single-body').waitFor();
  assert.equal((await drafts()).find(d=>d.id==='journey-bard10').mode,'single');
  await stage('Capacités & progression');assert.equal(await p.locator('.progression-level').count(),10);
  const subclass=p.locator('[data-choice-id="bard:subclass"]');assert.equal(await subclass.count(),1);assert.match(await subclass.locator('xpath=ancestor::details[1]/summary').innerText(),/Niveau 3/);
