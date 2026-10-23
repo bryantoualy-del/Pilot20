@@ -94,6 +94,14 @@ export async function renderCreator(main,input,a) {
   const originChange=(q,values)=>update(x=>selectOriginChoice(x,q,values,a.context.index.get(q.ownerId)));
   async function draw(focus=false) {
     const plan=path(d),report=plan.report,decisions=orderJourney(plan.decisions);
+    function readyDecision(decision){
+      const q=decision.choice;
+      if(q?.allocation)return allocatedValues(d,q,report.selections?.[q.id]??d.selections[q.id]??[]).length===q.count;
+      if(!decisionReady(decision,report,d))return false;
+      if(!['asi','feat'].includes(q?.kind))return true;
+      const selected=(decision.kind==='origin-choice'?d.originSelections?.[q.id]:report.selections?.[q.id]??d.selections[q.id])??[];
+      return (report.choices??[]).filter(child=>selected.includes(child.ownerId)&&(!q.classId||child.classId===q.classId&&child.level===q.level)).every(choice=>decisionReady({kind:'class-choice',choice},report,d));
+    }
     const requested=JOURNEY_STAGES.find(s=>d.step==='stage:'+s.id);
     const current=decisions.find(x=>x.id===plan.current.id)??decisions[0];
     const stageId=requested?.id??journeyStage(current),stageIndex=JOURNEY_STAGES.findIndex(s=>s.id===stageId);
@@ -108,7 +116,7 @@ export async function renderCreator(main,input,a) {
         const b=button([el('span',{class:'journey-number'},String(i+1).padStart(2,'0')),el('span',{class:'journey-name'},w(stage.fr,stage.en))],()=>go('stage:'+stage.id),'journey-stage');
         b.setAttribute('aria-label',w(stage.fr,stage.en));if(stageId===stage.id)b.setAttribute('aria-current','step');
         const entries=decisions.filter(x=>journeyStage(x)===stage.id);
-        if(entries.length&&entries.every(x=>decisionReady(x,report,d)))b.classList.add('journey-done');return b;
+        if(entries.length&&entries.every(readyDecision))b.classList.add('journey-done');return b;
       }));
     const progress=el('progress',{class:'single-progress',value:stageIndex+1,max:JOURNEY_STAGES.length,'aria-label':w('Progression de la création','Character creation progress'),'aria-valuetext':(stageIndex+1)+' / 10 · '+w(JOURNEY_STAGES[stageIndex].fr,JOURNEY_STAGES[stageIndex].en)});
     const substep=el('p',{class:'journey-substep'},w('ÉTAPE ','STEP ')+(stageIndex+1)+' / '+JOURNEY_STAGES.length);
@@ -436,7 +444,7 @@ export async function renderCreator(main,input,a) {
     }
     }
     const visible=progressionChoices(a.context.index,d,withinStage.filter(x=>!inlineDecision(x,report,d)));
-    const blockReady=x=>x.choice?.allocation?allocatedValues(d,x.choice,report.selections?.[x.choice.id]??d.selections[x.choice.id]??[]).length===x.choice.count:decisionReady(x,report,d);
+
     const renderBlock=(decision,parent)=>{
       const block=el('section',{class:'journey-decision','data-decision-id':decision.id,'data-kind':decision.kind},el('h2',{},label(decision)));
       renderDecision(decision,block);
@@ -451,7 +459,7 @@ export async function renderCreator(main,input,a) {
         const level=row.classLevel;
         const grants=[...(effectiveClassData(a.context.index,cls).grants??[]),...(a.context.index.get(cls.subclassId)?.data.grants??[]),...(report.features??[]).map(id=>a.context.index.get(id)).filter(f=>f?.data.optional&&f.data.classId===cls.id).map(f=>({level:f.data.minimumClassLevel??1,featureIds:[f.id]}))];
         const entries=visible.filter(x=>(x.choice?.classId??d.classes[0].id)===cls.id&&(x.choice?.level??1)===level);
-        const complete=entries.every(blockReady);
+        const complete=entries.every(readyDecision);
         const key=cls.id+':'+level;
         const panel=el('details',{class:'progression-level',open:levelOpen.get(key)??(entries.some(x=>x.id===d.step||x.id.split('@')[0]===d.step)||!complete)},el('summary',{},w('Niveau ','Level ')+row.characterLevel+' · '+a.cls(cls.id)+' '+level+' · '+(complete?w('Terminé','Complete'):w('À compléter','To complete'))));
         panel.addEventListener('toggle',()=>levelOpen.set(key,panel.open));
@@ -463,7 +471,7 @@ export async function renderCreator(main,input,a) {
       if(d.classes.length>1&&!d.advancementHistory?.length)body.prepend(el('p',{class:'single-help'},w('Les niveaux sont regroupés dans l’ordre des classes de la fiche ; l’ordre historique du multiclassage n’est pas déduit.','Levels follow the class order on the sheet; historical multiclass order is not inferred.')));
     }else for(const entry of visible)renderBlock(entry,body);
     if(!visible.length&&stageId==='spells')body.append(el('p',{},w('Aucun sort à choisir pour ce personnage à ce niveau.','No spell choices for this character at this level.')));
-    const ready=withinStage.every(x=>decisionReady(x,report,d));
+    const ready=withinStage.every(readyDecision);
     const actions=el('div',{class:'single-actions'}),back=button(text('back'),()=>stageIndex?go('stage:'+JOURNEY_STAGES[stageIndex-1].id):a.nav('library'));
     actions.append(back);
     if(stageIndex<JOURNEY_STAGES.length-1){const next=button(text('next'),()=>go('stage:'+JOURNEY_STAGES[stageIndex+1].id),'primary');next.disabled=!ready;actions.append(next);}

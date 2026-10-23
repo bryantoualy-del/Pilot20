@@ -21,7 +21,7 @@ try{
   assert.ok(guard++<40,'bounded selections: '+await p.locator('.single-body').innerText());
   const groups=p.locator('.single-choice');let group;
   for(let i=0;i<await groups.count();i++){const q=groups.nth(i),m=(await q.locator('.single-choice-count').innerText()).match(/· (\d+) \/ (\d+)/);if(m&&+m[1]<+m[2]){group=q;break;}}
-  assert.ok(group,'missing choice control');await change(()=>group.locator('input:enabled:not(:checked)').first().click());
+  assert.ok(group,'missing choice control');await change(()=>group.locator('.single-options input:enabled:not(:checked)').first().click());
  }}
  await p.goto(url);await p.getByRole('button',{name:'Créer un personnage',exact:true}).click();await p.locator('.race-picker').waitFor();
  assert.equal(await p.locator('.journey-steps button').count(),10);
