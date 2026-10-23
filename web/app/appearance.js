@@ -1,13 +1,17 @@
 import { el, button, field, select } from "./dom.js";
 import { refreshPortrait } from "../../src/creator/appearance.js";
 import { PHYSICAL_FIELDS, portraitPrompt } from '../../src/creator/portrait-prompt.js';
-import { compileDraft } from '../../src/creator/model.js';
+import { classNames } from "./i18n.js";
+import { SHOP } from "../../src/creator/equipment-economy.js";
+import { compileDraft,draftProgression } from '../../src/creator/model.js';
 export function appearanceControls(a, d, update) {
   const w = (fr, en) => (a.state.locale === "fr" ? fr : en);
   const physical=el('div',{class:'physical-fields'},PHYSICAL_FIELDS.map(([key,fr,en])=>field(w(fr,en),el('input',{value:d.physicalDetails?.[key]??'',maxlength:200,onchange:e=>update(x=>{x.physicalDetails??={};x.physicalDetails[key]=e.target.value;})}))));
   const built=compileDraft(a.context,a.config,{...d,confirmed:true});
-  const equipment=(built.character?.equipment??built.equipmentPreview??built.startingEquipment?.items??[]).map(e=>e.name?.fr??e.customName??e.id);
-  const prompt=portraitPrompt(d,a.context,equipment);
+  const plan=draftProgression(a.context,a.config,d);
+  const fallback=[...(plan.startingEquipment?.items??[]),...(d.equipmentMethod==='wealth'?[]:plan.origin?.equipment??[]),...(d.inventoryLedger??[]).map(e=>({name:{fr:e.customName||SHOP[e.itemId]?.name.fr||e.itemId}}))];
+  const equipment=(built.character?.equipment??built.equipmentPreview??fallback).map(e=>e.name?.fr??e.customName??e.id);
+  const prompt=portraitPrompt(d,a.context,equipment,classNames.fr);
   const promptBox=el('textarea',{readonly:true,rows:8,'aria-label':w('Prompt du portrait','Portrait prompt'),value:prompt});
   const promptDetails=el('details',{},el('summary',{},w('Afficher le prompt','Show prompt')),promptBox);
   const copyStatus=el('p',{role:'status'});

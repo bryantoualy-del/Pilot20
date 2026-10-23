@@ -47,7 +47,15 @@ export async function renderCreator(main,input,a) {
     if(!d.startingEquipmentEnabled||d.equipmentMethod==='wealth')return;
     for(let pass=0;pass<8;pass++){const report=path(d).report;const missing=(report.startingEquipment?.choices??[]).filter(q=>!d.startingEquipmentChoices?.[q.id]?.length);if(!missing.length)return;d.startingEquipmentChoices??={};for(const q of missing)if(q.options[0])d.startingEquipmentChoices[q.id]=[q.options[0].id];}
   }
-  async function go(id){d.step=id;await a.autosave(d);await draw(true);}
+  async function go(id){
+    const report=path(d).report,child=(report.choices??[]).find(q=>'choice:'+q.id===id);
+    if(child&&inlineDecision({kind:'class-choice',choice:child},report,d)){
+      const parent=(report.choices??[]).find(q=>q.kind==='asi'&&q.classId===child.classId&&q.level===child.level&&(d.selections[q.id]??[]).includes(child.ownerId));
+      const origin=(report.origin?.choices??[]).find(q=>q.kind==='feat'&&(d.originSelections?.[q.id]??[]).includes(child.ownerId));
+      id=parent?'choice:'+parent.id:origin?'origin:'+origin.id:id;
+    }
+    d.step=id;await a.autosave(d);await draw(true);
+  }
   const details=entry=>showEntryDetails(entry,a);
   function originSpellExchanges(classId){
     const c=d.classes.find(c=>c.id===classId),sub=a.context.index.get(c?.subclassId);if(!sub?.data.spellGrantReplacement)return null;
@@ -288,7 +296,7 @@ export async function renderCreator(main,input,a) {
     if(current.kind==='training'){
       const fixed=[...(report.origin?.background?.skills??[]),...(report.origin?.languages??[]),...(report.origin?.background?.proficiencies??[])];
       if(fixed.length)body.append(el('p',{},w('Déjà accordées : ','Already granted: ')+[...new Set(fixed)].map(id=>optionName(id,a)).join(', ')));
-      for(const q of current.classChoices)body.append(el('section',{},el('h2',{},choiceName(q,a)),choiceList(q,report.selections?.[q.id]??d.selections[q.id]??[],values=>update(x=>{x.selections[q.id]=values;}))));
+      for(const q of current.classChoices.filter(choice=>!inlineDecision({kind:'class-choice',choice},report,d)))body.append(el('section',{},el('h2',{},choiceName(q,a)),choiceList(q,report.selections?.[q.id]??d.selections[q.id]??[],values=>update(x=>{x.selections[q.id]=values;}))));
       for(const q of current.originChoices)body.append(el('section',{},el('h2',{},q.label?.[a.state.locale]??optionName(q.key,a)),choiceList(q,d.originSelections?.[q.id]??[],values=>update(x=>{selectOriginChoice(x,q,values,a.context.index.get(q.ownerId));}))));
     }
     if(current.kind==='origin-choice'){
