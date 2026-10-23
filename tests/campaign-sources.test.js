@@ -49,3 +49,15 @@ test('campaign wrapper requires explicit multiclass permission and class prepara
 test('campaign and character namespaces cannot alias through colon-containing IDs',async()=>{const repo=campaignRepository(new MemoryStorage(),publicPacks);await repo.savePlan('a:b','c',{value:1});await repo.savePlan('a','b:c',{value:2});assert.equal((await repo.getPlan('a:b','c')).request.value,1);assert.equal((await repo.getPlan('a','b:c')).request.value,2);});
 test('private subclasses contribute real choices through the production resolver',()=>{const p=structuredClone(glam);p.catalog.items[0].data.choices=[{key:'original-subclass-choice',kind:'proficiency',level:3,count:1,options:['original:drum','original:bell']}];const r=ctx(defaultCampaign(),[p]);const req={classes:[{id:'bard',level:3,subclassId:'test:glamour'}],scores:{str:10,dex:14,con:14,int:12,wis:12,cha:16},selections:{}};assert.ok(resolveProgression(r.index,req).choices.some(q=>q.id==='bard:original-subclass-choice'));p.catalog.items[0].data.choices[0].count=-1;assert.throws(()=>ctx(defaultCampaign(),[p]));});
 test('optional feature incompatibilities are checked independently of source selection',()=>{const p=artificerPack();p.catalog.items.find(i=>i.id==='test:tool-option').data.incompatible=['test:second-option'];const c={...defaultCampaign(),enabledOptions:['tce:test-tools','tce:test-second']},r=ctx(c,[p]);const req=catalogRequest(r.index,'artificer',{level:10});assert.ok(resolveProgression(r.index,{...req,campaignOptions:c.enabledOptions}).issues.some(i=>i.code==='optional-feature-incompatible'));});
+
+test('UI context cache invalidates on config changes and pack imports from another repository',async()=>{
+ const storage=new MemoryStorage(),repo=campaignRepository(storage,publicPacks,{cacheContexts:true}),other=campaignRepository(storage,publicPacks),config=defaultCampaign();
+ const first=await repo.context(config);
+ assert.equal(await repo.context(structuredClone(config)),first);
+ const restricted={...config,sourceRestrictions:true,enabledSourceIds:['srd51']};
+ assert.notEqual(await repo.context(restricted),first);
+ await other.importPack(JSON.stringify(glam),{authorized:true});
+ const after=await repo.context(config);assert.notEqual(after,first);assert.ok(after.index.get('test:glamour'));
+ assert.equal(await repo.context(config),after);
+ assert.equal((await repo.context(restricted)).index.get('test:glamour'),undefined);
+});

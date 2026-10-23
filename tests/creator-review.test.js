@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {playerCatalogs} from '../src/catalog/player-catalogs.js';
 import {defaultCampaign,campaignCatalog} from '../src/campaign/sources.js';
 import {newDraft} from '../src/creator/model.js';
-import {singlePath,decisionReady} from '../src/creator/single-path.js';
+import {singlePath,singlePathReader,decisionReady} from '../src/creator/single-path.js';
 import {validateScoreMethod,POINT_COST} from '../src/catalog/origins.js';
 import {subclassSummary} from '../src/catalog/subclass-summaries.js';
 import {readableText} from '../src/catalog/readable-text.js';
@@ -43,4 +43,12 @@ test('conditional background training stays in the same proficiency screen',()=>
  d.originSelections['phb14:background:guild-merchant:trade-training']=['artisan'];p=singlePath(ctx,config,d);
  const training=p.decisions.find(x=>x.kind==='training');assert.ok(training.originChoices.some(q=>q.ownerId===d.backgroundId&&q.kind==='proficiency'));
  assert.ok(!p.decisions.some(x=>x.kind==='origin-choice'&&x.choice.ownerId===d.backgroundId));
+});
+
+test('creator navigation reuses rule resolution but score and choice edits invalidate it',()=>{
+ const d=newDraft();d.raceId='srd51:race:human';const read=singlePathReader(ctx,config),first=read(d);
+ d.step='scores';d.updatedAt='later';d.revision++;
+ const navigated=read(d);assert.equal(navigated.report,first.report);assert.equal(navigated.current.kind,'scores');
+ d.scores.str++;const changed=read(d);assert.notEqual(changed.report,first.report);assert.deepEqual(changed.report,singlePath(ctx,config,d).report);
+ d.originSelections={test:['a']};assert.notEqual(read(d).report,changed.report);
 });

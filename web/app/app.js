@@ -704,7 +704,7 @@ let cacheReady = false;
 try {
   storage = await openIndexedDB();
   library = characterLibrary(storage);
-  campaigns = campaignRepository(storage,playerCatalogs);
+  campaigns = campaignRepository(storage,playerCatalogs,{cacheContexts:true});
   drafts = creatorRepository(storage, library);
   state.locale = (await storage.get("meta", "creator:locale")) ?? "fr";
   state.campaignId =
