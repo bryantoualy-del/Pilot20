@@ -28,7 +28,7 @@ export function characterSheet({record,draft,stats,runtime,a,tab,onTab,actions,s
  const attacks=el('section',{},el('h2',{},w('Attaques','Attacks')));
  for(const item of d.equipment.filter(e=>e.equipped&&stats.weapons[e.id])){const v=stats.weapons[item.id];attacks.append(line(itemName(item),signed(v.attack),[item.weapon?.dice??item.weapon?.damageDice,w('Bonus aux dégâts ','Damage bonus ')+signed(v.damageBonus)].filter(Boolean).join(' · ')));}
  attacks.append(line(w('Action Attaquer','Attack action'),stats.attacksPerAction+' '+w('attaque(s)','attack(s)')));
- const resources=el('section',{},el('h2',{},a.t('resource')));
+ const resources=el('section',{},el('h2',{},w('Ressources','Resources')));
  for(const [key,r]of Object.entries(stats.resources))resources.append(line(resourceName(key,a),(runtime?.resources[key]??r.max)+' / '+r.max,r.recovery==='short'?w('Repos court','Short rest'):r.recovery==='long'?w('Repos long','Long rest'):null));
  if(!Object.keys(stats.resources).length)resources.append(el('p',{class:'sheet-note'},w('Aucune réserve limitée.','No limited resources.')));
  overview.append(el('div',{class:'sheet-columns'},attacks,resources));
