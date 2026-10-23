@@ -9,10 +9,10 @@ try{
  browser=await engine.launch(engine===webkit?{}:{executablePath:process.env.E2E_CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox','--disable-dev-shm-usage']});
  for(const width of [390,1180]){
   const p=await browser.newPage({viewport:{width,height:820}}),errors=[];p.on('pageerror',e=>errors.push(e.message));p.setDefaultTimeout(30000);
-  await p.goto(`http://127.0.0.1:${port}/web/index.html`);await p.getByRole('button',{name:'Créer un personnage',exact:true}).click();await p.locator('#character-name').waitFor();
+  await p.goto(`http://127.0.0.1:${port}/web/index.html`);await p.getByRole('button',{name:'Créer un personnage',exact:true}).click();await p.locator('.race-picker').waitFor();
   await p.evaluate(async()=>{const{openIndexedDB}=await import('/src/persistence/adapters.js');const storage=await openIndexedDB(),rows=await storage.list('meta','creator:draft:'),d=rows[0].value;if(d.backgroundId!=='srd51:background:acolyte')throw new Error('New drafts must start with Acolyte');Object.assign(d,{name:'Background browser',mode:'single',step:'background',classChosen:true,raceId:'srd51:race:human',backgroundId:'srd51:background:acolyte',classes:[{id:'fighter',level:1,subclassId:null}]});await storage.batch([],[{store:'meta',key:'creator:draft:'+d.id,value:d}]);storage.close();});
   await p.reload();await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();await p.locator('article').filter({has:p.getByRole('heading',{name:'Background browser',exact:true})}).getByRole('button',{name:/^Reprendre/}).click();
-  const picker=p.getByLabel('Historique',{exact:true});await picker.waitFor();assert.equal(await picker.locator('option').count(),31);
+  const picker=p.locator('.single-body').getByLabel('Historique',{exact:true});await picker.waitFor();assert.equal(await picker.locator('option').count(),31);
   assert.equal(await picker.inputValue(),'srd51:background:acolyte');
   assert.equal(await p.getByRole('searchbox',{name:'Rechercher un historique'}).count(),0);
   assert.equal(await p.getByLabel('Source',{exact:true}).count(),0);

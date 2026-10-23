@@ -89,15 +89,15 @@ try{
  results.push('Artificer10 has daily preparation and fixed subclass grants; an XGE spell has local French effects and a collapsed reference');
  await open('fighter');assert.equal((await read('fighter')).definition.classes[0].casting.progression,'third');assert.equal(await p.getByRole('button',{name:'Modifier la préparation',exact:true}).count(),0);results.push('Eldritch Knight10 opens a known-spell Grimoire without daily preparation');
  await open('sorcerer');assert.equal(await p.getByRole('button',{name:'Modifier la préparation',exact:true}).count(),0);
- await p.getByRole('button',{name:'Modifier le personnage',exact:true}).click();await p.locator('#character-name').waitFor();
- await p.locator('.single-plan summary').click();await creatorChange(()=>p.locator('.single-plan nav').getByRole('button',{name:'Sorts',exact:true}).click());let spellGuard=0;while(await p.locator('.single-body').getAttribute('data-decision-id')!=='choice:sorcerer:known-spells'){assert.ok(spellGuard++<25);await creatorChange(()=>p.locator('.single-actions .primary').click());}
+ await p.getByRole('button',{name:'Modifier le personnage',exact:true}).click();await p.locator('.single-body').waitFor();
+ await creatorChange(()=>p.locator('.journey-steps').getByRole('button',{name:'Sorts',exact:true}).click());
  await p.locator('.single-body details').filter({has:p.getByText('Remplacer un sort d’origine — facultatif',{exact:true})}).locator('summary').click();
  await creatorChange(()=>p.getByLabel('Niveau d’ensorceleur du remplacement',{exact:true}).selectOption('2'));
  await p.locator('.single-body details').filter({has:p.getByText('Remplacer un sort d’origine — facultatif',{exact:true})}).locator('summary').click();
  await creatorChange(()=>p.getByLabel('Sort accordé à remplacer',{exact:true}).selectOption('phb14:spell:arms-of-hadar'));
  await p.locator('.single-body details').filter({has:p.getByText('Remplacer un sort d’origine — facultatif',{exact:true})}).locator('summary').click();
  await creatorChange(()=>p.getByLabel('Nouveau sort',{exact:true}).selectOption('srd51:identify'));
- await p.locator('.single-plan summary').click();await creatorChange(()=>p.locator('.single-plan nav').getByRole('button',{name:'Récapitulatif',exact:true}).click());
+ await creatorChange(()=>p.locator('.journey-steps').getByRole('button',{name:'Résumé',exact:true}).click());
  await creatorChange(()=>p.locator('.single-body input[type=checkbox]').check());await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).click();
  await p.getByRole('heading',{name:'Grimoire sorcerer',exact:true}).waitFor();const exchanged=await read('sorcerer');assert.ok(exchanged.definition.spells.known.includes('srd51:identify'));assert.ok(!exchanged.definition.spells.known.includes('phb14:spell:arms-of-hadar'));assert.ok(!exchanged.definition.spells.prepared.includes('srd51:identify'));
  results.push('Aberrant Mind origin spell exchange is recorded through the Creator and saved as known, not prepared');

@@ -8,7 +8,7 @@ try{
  await new Promise((resolve,reject)=>{server.stdout.once('data',resolve);server.once('error',reject)});
  browser=await engine.launch(engine===webkit?{}:{args:['--no-sandbox']});
  const p=await browser.newPage({viewport:{width:390,height:844}}),errors=[];p.on('pageerror',e=>errors.push(e.message));
- await p.goto(`http://127.0.0.1:${port}/web/index.html`);await p.getByRole('button',{name:'Créer un personnage',exact:true}).click();await p.locator('#character-name').waitFor();
+ await p.goto(`http://127.0.0.1:${port}/web/index.html`);await p.getByRole('button',{name:'Créer un personnage',exact:true}).click();await p.locator('.race-picker').waitFor();
  const id=await p.evaluate(async()=>{
   const{openIndexedDB}=await import('/src/persistence/adapters.js'),s=await openIndexedDB();const rows=await s.list('meta','creator:draft:');const d=rows[0].value;Object.assign(d,{name:'Compact',step:'scores',scoreMethod:'point-buy',scoresAreBase:true,raceId:'srd51:race:human',scores:{str:8,dex:8,con:8,int:8,wis:8,cha:8}});await s.batch([],[{store:'meta',key:'creator:draft:'+d.id,value:d}]);s.close();return d.id;
  });
@@ -20,13 +20,13 @@ try{
  assert.equal(await literalNull(),false);
  assert.equal(await p.getByText('Ajouter les bonus raciaux aux valeurs ci-dessous',{exact:true}).count(),0);
  // Check the other method still displays its control, then return to point buy.
- await p.locator('.single-body select').first().selectOption('standard');
+ await p.locator('#score-method').selectOption('standard');
  await p.getByText('Ajouter les bonus raciaux aux valeurs ci-dessous',{exact:true}).waitFor();
  assert.equal(await literalNull(),false);
- await p.locator('.single-body select').first().selectOption('point-buy');
+ await p.locator('#score-method').selectOption('point-buy');
  await p.getByText('12 / 27',{exact:true}).waitFor();
  assert.equal(await literalNull(),false);
- await p.locator('.single-plan summary').click();assert.ok(await p.locator('.single-plan nav button').count()<=11);assert.equal(await p.getByText('Un choix de votre origine',{exact:true}).count(),0);
+ assert.equal(await p.locator('.journey-steps button').count(),10);assert.equal(await p.getByText('Un choix de votre origine',{exact:true}).count(),0);
  await mkdir('artifacts',{recursive:true});
  for(const width of [375,390,1180]){await p.setViewportSize({width,height:820});assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await p.screenshot({path:`artifacts/compact-scores-${width}.png`,fullPage:true});}
  await p.evaluate(async()=>{const{showEntryDetails}=await import('/web/app/spell-detail.js');const{playerCatalogs}=await import('/src/catalog/player-catalogs.js');const{campaignCatalog,defaultCampaign}=await import('/src/campaign/sources.js');const{messages}=await import('/web/app/i18n.js');const c=campaignCatalog(playerCatalogs,[],defaultCampaign());showEntryDetails(c.index.get('srd51:fire-bolt'),{state:{locale:'fr'},context:c,name:e=>e.name.fr,t:k=>messages.fr[k]??k,modal:body=>{document.querySelector('main').append(body)}});});
