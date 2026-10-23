@@ -1,3 +1,4 @@
+import {resourceLabel} from './resource-labels.js';
 import {characterSheet} from './character-sheet.js';
 import { derive } from "../../src/character/derive.js";
 import { createCombat } from "../../src/character/session.js";
@@ -7,21 +8,6 @@ import { pendingDecisions } from "../../src/rules/reactive.js";
 import { diceSpec } from "../../src/model.js";
 import { el, button, field, select, check, badge } from "./dom.js";
 import { optionName, inspectEntry } from "./editor.js";
-const words = {
-  inspiration: ["Inspiration bardique", "Bardic Inspiration"],
-  "second-wind": ["Second souffle", "Second Wind"],
-  "action-surge": ["Fougue", "Action Surge"],
-  rage: ["Rages", "Rages"],
-  "sorcery-points": ["Points de sorcellerie", "Sorcery points"],
-  ki: ["Points de ki", "Ki points"],
-  "arcane-recovery": ["Récupération arcanique", "Arcane Recovery"],
-  "lay-on-hands": ["Imposition des mains", "Lay on Hands"],
-};
-function resourceName(id, a) {
-  if (/^slot\d$/.test(id)) return a.t("slot") + " " + id.slice(4);
-  const suffix = id.split(":").at(-1);
-  return words[suffix]?.[a.state.locale === "fr" ? 0 : 1] ?? optionName(id, a);
-}
 export async function renderCompanion(main, id, a) {
   const { t } = a,
     record = await a.library.get(id);
@@ -29,6 +15,7 @@ export async function renderCompanion(main, id, a) {
     await a.nav("library");
     return;
   }
+  const resourceName = (key) => resourceLabel(key, a, record.definition);
   const d = record.definition,
     stats = derive(d),
     draft = await a.drafts.get(id),

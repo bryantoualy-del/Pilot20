@@ -24,7 +24,17 @@ try{
   await p.setViewportSize({width,height:844});
   for(const name of ['Fiche','Compétences','Capacités','Inventaire','Sorts']){
    await p.locator('.sheet-tabs').getByRole('button',{name,exact:true}).click();
-   if(name==='Sorts')await p.locator('.grimoire').waitFor();
+   if(name==='Sorts'){
+    await p.locator('.grimoire').waitFor();
+    await p.locator('.grimoire-filters>summary').click();
+    const controls=await p.locator('.grimoire-filters>.check').evaluateAll(labels=>labels.map(label=>{
+     const input=label.querySelector('input').getBoundingClientRect(),text=label.querySelector('span').getBoundingClientRect();
+     return {width:input.width,height:input.height,gap:text.left-input.right,target:label.getBoundingClientRect().height};
+    }));
+    assert.equal(controls.length,3);assert.ok(controls.every(c=>c.width===18&&c.height===18&&c.gap>=8&&c.gap<=10&&c.target>=44),JSON.stringify(controls));
+    await p.screenshot({path:`artifacts/filters-${width}.png`,fullPage:true});
+    await p.locator('.grimoire-filters>summary').click();
+   }
    assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),name+' overflow at '+width);
   }
   await p.locator('.sheet-tabs').getByRole('button',{name:'Fiche',exact:true}).click();await p.screenshot({path:`artifacts/sheet-${width}.png`,fullPage:true});
