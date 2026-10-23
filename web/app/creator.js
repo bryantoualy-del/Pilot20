@@ -10,7 +10,7 @@ import {rollHitDie} from '../../src/creator/hit-points.js';
 import {showEntryDetails} from './spell-detail.js';
 import {spellMatches} from '../../src/catalog/spell-reference.js';
 import {el,button,field,select,check,badge} from './dom.js';
-import {migrateSingleDraft,singlePath,decisionReady} from '../../src/creator/single-path.js';
+import {migrateSingleDraft,singlePathReader,decisionReady} from '../../src/creator/single-path.js';
 import {compileDraft,retainDecision,restoreDecision,templateScores,changePrimaryClass} from '../../src/creator/model.js';
 import {renderRacePicker} from './race-picker.js';
 import {raceTraitList,ancestryChoiceCards} from './race-facts.js';
@@ -31,6 +31,7 @@ export async function renderCreator(main,input,a) {
   const expectedBaseDefinition=d.buildBaseline??initialBuild.character;
   const externalEdits=initialRecord&&!sameDefinition(initialRecord.definition,expectedBaseDefinition);
   const shell=el('section',{class:'single-creator'});main.append(shell);
+  const path=singlePathReader(a.context,a.config);
   const filters=new Map();
   const swaps=new Map();
   const text=key=>a.t(key);
@@ -41,7 +42,7 @@ export async function renderCreator(main,input,a) {
   }
   async function equipmentDefaults(){
     if(!d.startingEquipmentEnabled||d.equipmentMethod==='wealth')return;
-    for(let pass=0;pass<8;pass++){const report=singlePath(a.context,a.config,d).report;const missing=(report.startingEquipment?.choices??[]).filter(q=>!d.startingEquipmentChoices?.[q.id]?.length);if(!missing.length)return;d.startingEquipmentChoices??={};for(const q of missing)if(q.options[0])d.startingEquipmentChoices[q.id]=[q.options[0].id];}
+    for(let pass=0;pass<8;pass++){const report=path(d).report;const missing=(report.startingEquipment?.choices??[]).filter(q=>!d.startingEquipmentChoices?.[q.id]?.length);if(!missing.length)return;d.startingEquipmentChoices??={};for(const q of missing)if(q.options[0])d.startingEquipmentChoices[q.id]=[q.options[0].id];}
   }
   async function go(id){d.step=id;await a.autosave(d);await draw(true);}
   const details=entry=>showEntryDetails(entry,a);
@@ -76,7 +77,7 @@ export async function renderCreator(main,input,a) {
       const pageCount=Math.max(1,Math.ceil(options.length/8));filter.page=Math.min(filter.page,pageCount-1);
       list.replaceChildren();
       if(!options.length)list.append(el('p',{},w('Aucun résultat. Essayez un autre nom.','No results. Try another name.')));
-      const others=new Set(q.kind==='skill'?[...(singlePath(a.context,a.config,d).report.origin?.background.skills??[]),...Object.entries(d.selections).filter(([id])=>id!==q.id&&id.endsWith(':skills')).flatMap(([,v])=>v)]:[]);
+      const others=new Set(q.kind==='skill'?[...(path(d).report.origin?.background.skills??[]),...Object.entries(d.selections).filter(([id])=>id!==q.id&&id.endsWith(':skills')).flatMap(([,v])=>v)]:[]);
       for(const id of options.slice(filter.page*8,(filter.page+1)*8)){
         const entry=a.context.index.get(id),selected=values.includes(id),disabled=!selected&&(!single&&values.length>=q.count||others.has(id));
         const input=el('input',{type:single?'radio':'checkbox',name:q.id,checked:selected,disabled:disabled||q.requiredOptions?.includes(id),'aria-label':optionName(id,a),onchange:e=>onchange(e.target.checked?single?[id]:[...values,id]:values.filter(x=>x!==id))});
@@ -89,7 +90,7 @@ export async function renderCreator(main,input,a) {
   }
   const originChange=(q,values)=>update(x=>selectOriginChoice(x,q,values,a.context.index.get(q.ownerId)));
   async function draw(focus=false) {
-    const plan=singlePath(a.context,a.config,d),report=plan.report,decisions=orderJourney(plan.decisions),current=decisions.find(x=>x.id===plan.current.id)??decisions[0],position=decisions.indexOf(current);
+    const plan=path(d),report=plan.report,decisions=orderJourney(plan.decisions),current=decisions.find(x=>x.id===plan.current.id)??decisions[0],position=decisions.indexOf(current);
     if(d.step!==current.id){d.step=current.id;await a.autosave(d);}
     const body=el('div',{class:'single-body','data-decision-id':current.id,'data-kind':current.kind},el('h1',{tabindex:-1},label(current)),el('p',{class:'single-edition'},'D&D 2014'));
     const saveState=el('span',{id:'draft-save-state',role:'status'},text(d.finalized?'saved':'draftSaved'));

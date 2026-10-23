@@ -719,6 +719,7 @@ const invocationNotes={
  'witch-sight':'Vous percevez la véritable forme des métamorphes et des créatures cachées par illusion ou transmutation visibles à 9 m.'
 };
 export function localizeCore(catalogs){for(const entry of catalogs.flatMap(c=>c.items)){
+ if(entry.id==='srd51:grappler'){entry.name.fr='Lutteur';entry.data.aliases=[...new Set([...(entry.data.aliases??[]),'Empoigneur'])];}
  if(entry.type==='subclass'&&subclasses[entry.name.en])entry.name.fr=subclasses[entry.name.en];
  if(entry.type!=='feature'||!entry.id.startsWith('srd51:'))continue;
  const row=rows[entry.name.en];if(row){entry.name.fr=row[0];if(entry.data.language!=='fr'){if(entry.data.description)entry.data.descriptionEn=entry.data.description;entry.data.description=row[1];entry.data.language='fr';}}

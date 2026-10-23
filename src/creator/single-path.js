@@ -12,8 +12,8 @@ export function migrateSingleDraft(input) {
   }
   return d;
 }
-export function singlePath(context,config,draft) {
-  const report=draftProgression(context,config,draft),race=report.origin?.race;
+export function singlePath(context,config,draft,report=draftProgression(context,config,draft)) {
+  const race=report.origin?.race;
   const decisions=[{id:'identity',kind:'identity'},{id:'race',kind:'race'}];
   if(humanVariants(context,draft.raceId).length>1)decisions.push({id:'human-variant',kind:'human-variant'});
   if(race?.data.subraces.length)decisions.push({id:'subrace',kind:'subrace'});
@@ -52,4 +52,15 @@ export function decisionReady(decision,report,draft) {
     case 'summary':return report.valid;
     default:return true;
   }
+}
+
+/** Reuse rule resolution while navigating the same draft; every choice still invalidates it. */
+export function singlePathReader(context,config) {
+  let previousKey,report;
+  return draft => {
+    const {step,revision,updatedAt,...inputs}=draft;
+    const key=JSON.stringify(inputs);
+    if(key!==previousKey){report=draftProgression(context,config,draft);previousKey=key;}
+    return singlePath(context,config,draft,report);
+  };
 }

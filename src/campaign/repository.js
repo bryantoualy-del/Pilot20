@@ -8,7 +8,11 @@ import {
 } from "./sources.js";
 
 /** Versioned records in existing IndexedDB meta store; no character/session migration. */
-export function campaignRepository(storage, publicPacks) {
+export function campaignRepository(storage, publicPacks, {cacheContexts = false} = {}) {
+  // UI callers use immutable bundled catalogues. Other callers retain fresh contexts.
+  const contexts = new Map();
+  let cachedRegistry;
+
   const planKey = (campaignId, characterId) =>
     "campaign:plan:" + JSON.stringify([campaignId, characterId]);
   const configKey = (id) => "campaign:sources:" + id,
@@ -71,7 +75,19 @@ export function campaignRepository(storage, publicPacks) {
       return structuredClone(config);
     },
     async context(config) {
-      return campaignCatalog(publicPacks, await packs(), config);
+      if (!cacheContexts) return campaignCatalog(publicPacks, await packs(), config);
+      validateCampaign(config);
+      const registry = await storage.get("meta", "campaign:pack-registry");
+      if (registry !== cachedRegistry) { contexts.clear(); cachedRegistry = registry; }
+      const key = JSON.stringify(config);
+      if (contexts.has(key)) return contexts.get(key);
+      const privatePacks = await packs();
+      // An import in another tab must not publish a context from mixed revisions.
+      if (registry !== await storage.get("meta", "campaign:pack-registry")) return this.context(config);
+      const result = campaignCatalog(publicPacks, privatePacks, config);
+      if (contexts.size >= 4) contexts.delete(contexts.keys().next().value);
+      contexts.set(key, result);
+      return result;
     },
     async importPack(raw, authorization) {
       const pack = parsePrivatePack(raw, authorization),

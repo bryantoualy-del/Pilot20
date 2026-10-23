@@ -19,8 +19,25 @@ test('saved paladin and feat resources display localized labels and actual spell
  assert.equal(resourceLabel('monk:ki',a,{abilities:[{resource:{id:'monk:ki'},combat:{spell:{id:'srd51:misty-step'}}}]}),'Points de ki');
  assert.equal(resourceLabel('feat:chosen-spell',a),'Sort choisi par un don');
 });
-test('owned catalogue features provide resource names without exposing technical IDs',()=>{
+test('owned catalogue features provide names and unknown resources are explicitly identified',()=>{
  const id='fighter:indomitable',entry=entries.get('srd51:fighter:indomitable');
  assert.equal(resourceLabel(id,api('fr'),{features:[entry.id]}),entry.name.fr);
- assert.equal(resourceLabel('private:custom-pool',api('fr')),'Utilisations de capacité');
+ assert.equal(resourceLabel('private:custom-pool',api('fr')),'Ressource à identifier · private:custom-pool');
+});
+
+test('every bundled resource has an explicit label with its owning features',()=>{
+ let count=0;
+ for(const entry of entries.values())for(const resource of entry.data.resources??[]){
+  const features=entry.type==='feature'?[entry.id]:(entry.data.grants??[]).flatMap(g=>g.featureIds??[]);
+  const label=resourceLabel(entry.data.classId+':'+resource.id,api('fr'),{features});
+  assert.ok(!label.startsWith('Ressource à identifier'),entry.id+' / '+resource.id);count++;
+ }
+ assert.ok(count>=181);
+});
+test('shared oath reserves keep the selected oath name, and rune grammar is French',()=>{
+ const owners=[...entries.values()].filter(e=>e.type==='feature'&&e.data.resources?.some(r=>r.id==='oath-avatar'));
+ for(const owner of owners)assert.equal(resourceLabel('paladin:oath-avatar',api('fr'),{features:[owner.id]}),owner.name.fr);
+ assert.equal(entries.get('srd51:grappler').name.fr,'Lutteur');
+ assert.equal(entries.get('tce:fighter:rune:fire').name.fr,'Rune du feu');
+ assert.equal(entries.get('tce:fighter:rune:frost').name.fr,'Rune de givre');
 });
