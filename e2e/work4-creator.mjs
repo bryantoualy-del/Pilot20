@@ -40,7 +40,7 @@ try{
  for(const [name,value] of [['Âge','32 ans'],['Peau','cuivrée'],['Yeux','rouges']])await change(async()=>{await p.getByLabel(name,{exact:true}).fill(value);await p.getByLabel(name,{exact:true}).blur();});
  await change(async()=>{await p.getByLabel('Description physique libre',{exact:true}).fill('Visage marqué, cheveux courts');await p.getByLabel('Description physique libre',{exact:true}).blur();});
  assert.equal(await p.getByLabel('Description physique libre',{exact:true}).inputValue(),'Visage marqué, cheveux courts');
- const prompt=await p.getByLabel('Prompt du portrait',{exact:true}).inputValue();assert.match(prompt,/Guerrier/);assert.match(prompt,/32 ans/);assert.match(prompt,/Équipement visible/);
+ const prompt=await p.getByLabel('Prompt du portrait',{exact:true}).inputValue();assert.match(prompt,/Guerrier/);assert.doesNotMatch(prompt,/Fighter|common-clothes/);assert.match(prompt,/32 ans/);assert.match(prompt,/Équipement visible/);
  await p.evaluate(()=>{window.__opened=null;window.open=(url)=>{window.__opened=url;return null;};Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>{window.__copied=text;}}});});
  await p.getByRole('button',{name:'Générer avec ChatGPT',exact:true}).click();assert.equal(await p.evaluate(()=>window.__opened),'https://chatgpt.com/');assert.equal(await p.evaluate(()=>window.__copied),prompt);
  await p.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw Error('denied')}}}));await p.getByRole('button',{name:'Copier le prompt',exact:true}).click();await p.getByText(/La copie automatique est indisponible/).waitFor();await layout('identity');await next();

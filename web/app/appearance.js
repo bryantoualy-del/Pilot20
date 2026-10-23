@@ -10,7 +10,7 @@ export function appearanceControls(a, d, update) {
   const built=compileDraft(a.context,a.config,{...d,confirmed:true});
   const plan=draftProgression(a.context,a.config,d);
   const fallback=[...(plan.startingEquipment?.items??[]),...(d.equipmentMethod==='wealth'?[]:plan.origin?.equipment??[]),...(d.inventoryLedger??[]).map(e=>({name:{fr:e.customName||SHOP[e.itemId]?.name.fr||e.itemId}}))];
-  const equipment=(built.character?.equipment??built.equipmentPreview??fallback).map(e=>e.name?.fr??e.customName??e.id);
+  const equipment=(built.character?.equipment??built.equipmentPreview??fallback).map(e=>{const label=e.customName??e.name?.fr;return SHOP[label]?.name.fr??label??SHOP[e.itemId??e.id]?.name.fr??e.id;});
   const prompt=portraitPrompt(d,a.context,equipment,classNames.fr);
   const promptBox=el('textarea',{readonly:true,rows:8,'aria-label':w('Prompt du portrait','Portrait prompt'),value:prompt});
   const promptDetails=el('details',{},el('summary',{},w('Afficher le prompt','Show prompt')),promptBox);
