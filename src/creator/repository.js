@@ -115,6 +115,7 @@ export function validateDraft(d) {
         ),
       "Retained decisions",
     );
+  if (d.physicalDetails !== undefined) check(d.physicalDetails && typeof d.physicalDetails === 'object' && !Array.isArray(d.physicalDetails) && Object.entries(d.physicalDetails).every(([key,value])=>['age','height','weight','gender','skin','hair','eyes','facialHair','marks'].includes(key)&&typeof value==='string'&&value.length<=200), 'Draft physical details');
   if (d.gender !== undefined) check(GENDERS.includes(d.gender), "Draft gender");
   if (d.manualSpeed !== undefined)
     check(

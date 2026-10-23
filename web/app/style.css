@@ -1936,3 +1936,17 @@ button.primary,.single-actions .primary{color:#191b1f}
 .grimoire-filters>.check{display:flex;justify-content:flex-start;align-items:center;gap:9px;min-height:44px;padding:4px 0;margin:0;font-size:14px}
 .grimoire-filters>.check input{flex:0 0 18px;width:18px;height:18px;min-width:18px;min-height:18px;max-width:18px;max-height:18px;margin:0;accent-color:var(--accent)}
 .grimoire-filters>.check span{flex:0 1 auto;text-align:left;overflow-wrap:normal}
+
+/* Ten-stage navigation uses the existing palette, controls and typography. */
+.journey-steps{grid-template-columns:repeat(5,minmax(0,1fr))}
+.journey-decision{min-width:0;margin:18px 0;padding-top:8px}
+.journey-decision>h2{font-size:1.15rem}
+.progression-level{margin:12px 0;padding:12px;border:1px solid var(--border);border-radius:4px}
+.progression-level>summary{cursor:pointer;min-height:44px;align-content:center}
+.progression-level>.subtle{margin:6px}
+.physical-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.physical-fields>*{min-width:0}
+.portrait-generator textarea{width:100%;box-sizing:border-box}
+.journey-decision input,.journey-decision select,.journey-decision textarea{max-width:100%;box-sizing:border-box}
+@media(min-width:1024px){.journey-decision .single-options{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.journey-steps{grid-template-columns:repeat(5,minmax(0,1fr))}.physical-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.journey-name{overflow-wrap:anywhere}.progression-level{padding:8px}}

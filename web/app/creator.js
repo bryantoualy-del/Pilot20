@@ -22,7 +22,7 @@ import {ARMORS,WEAPONS} from '../../src/catalog/equipment.js';
 import {optionName,choiceName,issueMessage} from './editor.js';
 import {appearanceControls} from './appearance.js';
 import {replacementOptions} from '../../src/catalog/spell-grants.js';
-import {JOURNEY_STAGES,journeyStage,orderJourney,resolvedInlineDecision} from './creator-journey.js';
+import {JOURNEY_STAGES,journeyStage,orderJourney,inlineDecision} from './creator-journey.js';
 
 export async function renderCreator(main,input,a) {
   const d=migrateSingleDraft(input),w=(fr,en)=>a.state.locale==='fr'?fr:en;
@@ -34,8 +34,9 @@ export async function renderCreator(main,input,a) {
   const path=singlePathReader(a.context,a.config);
   const filters=new Map();
   const swaps=new Map();
+  const levelOpen=new Map();
   const text=key=>a.t(key);
-  const label=decision=>({identity:w('Votre personnage','Your character'),race:w('Choisissez votre race','Choose your race'),'human-variant':w('Choisissez votre variante humaine','Choose your human variant'),subrace:text('subrace'),class:w('Classe et niveau','Class and level'),background:text('background'),scores:text('scores'),'hit-points':w('Points de vie','Hit points'),'equipment-method':w('Votre équipement de départ','Your starting equipment'),equipment:text('equipment'),training:w('Maîtrises','Proficiencies'),summary:w('Votre personnage est-il prêt ?','Is your character ready?')})[decision.kind]??(decision.kind==='origin-choice'?(decision.choice.label?.[a.state.locale]??optionName(decision.choice.key,a)):decision.kind==='equipment-choice'?decision.choice.label[a.state.locale]:choiceName(decision.choice,a));
+  const label=decision=>({identity:w('Votre personnage','Your character'),race:w('Choisissez votre race','Choose your race'),'human-variant':w('Choisissez votre variante humaine','Choose your human variant'),subrace:text('subrace'),class:w('Choisissez votre classe','Choose your class'),background:text('background'),scores:text('scores'),'hit-points':w('Points de vie','Hit points'),'equipment-method':w('Votre équipement de départ','Your starting equipment'),equipment:text('equipment'),training:w('Maîtrises','Proficiencies'),summary:w('Votre personnage est-il prêt ?','Is your character ready?')})[decision.kind]??(decision.kind==='origin-choice'?(decision.choice.label?.[a.state.locale]??optionName(decision.choice.key,a)):decision.kind==='equipment-choice'?decision.choice.label[a.state.locale]:choiceName(decision.choice,a));
   async function update(fn,{navigation=false}={}) {
     d.finalized=false;d.status='draft';d.confirmed=false;d.reviewed=false;fn(d);
     await equipmentDefaults();await a.autosave(d);await draw(navigation);
@@ -90,50 +91,32 @@ export async function renderCreator(main,input,a) {
   }
   const originChange=(q,values)=>update(x=>selectOriginChoice(x,q,values,a.context.index.get(q.ownerId)));
   async function draw(focus=false) {
-    const plan=path(d),report=plan.report,decisions=orderJourney(plan.decisions),current=decisions.find(x=>x.id===plan.current.id)??decisions[0],position=decisions.indexOf(current);
-    if(d.step!==current.id){d.step=current.id;await a.autosave(d);}
-    const body=el('div',{class:'single-body','data-decision-id':current.id,'data-kind':current.kind},el('h1',{tabindex:-1},label(current)),el('p',{class:'single-edition'},'D&D 2014'));
+    const plan=path(d),report=plan.report,decisions=orderJourney(plan.decisions);
+    const requested=JOURNEY_STAGES.find(s=>d.step==='stage:'+s.id);
+    const current=decisions.find(x=>x.id===plan.current.id)??decisions[0];
+    const stageId=requested?.id??journeyStage(current),stageIndex=JOURNEY_STAGES.findIndex(s=>s.id===stageId);
+    const withinStage=decisions.filter(x=>journeyStage(x)===stageId);
+    const body=el('div',{class:'single-body','data-stage':stageId,'data-kind':current.kind},el('h1',{tabindex:-1},w(JOURNEY_STAGES[stageIndex].fr,JOURNEY_STAGES[stageIndex].en)),el('p',{class:'single-edition'},'D&D 2014'));
     const saveState=el('span',{id:'draft-save-state',role:'status'},text(d.finalized?'saved':'draftSaved'));
     const exit=button(w('Quitter','Exit'),async()=>{try{await a.autosave(d);await a.nav('library');}catch(e){a.fail(e);}});
     exit.setAttribute('aria-label',text('saveAndExit'));exit.title=text('saveAndExit');
     const header=el('div',{class:'single-heading'},el('span',{},d.name||w('Nouveau personnage','New character')),saveState,exit);
-    const stageId=journeyStage(current),stageIndex=JOURNEY_STAGES.findIndex(s=>s.id===stageId);
-    const withinStage=decisions.filter(x=>journeyStage(x)===stageId);
-    const withinPosition=withinStage.findIndex(x=>x.id===current.id);
-    const sectionNav=el('nav',{class:'journey-steps','aria-label':w('Six étapes de création','Six creation stages')},
+    const sectionNav=el('nav',{class:'journey-steps','aria-label':w('Dix étapes de création','Ten creation stages')},
       JOURNEY_STAGES.map((stage,i)=>{
-        const first=decisions.find(x=>journeyStage(x)===stage.id);
-        const b=button([el('span',{class:'journey-number'},String(i+1).padStart(2,'0')),el('span',{class:'journey-name'},w(stage.fr,stage.en))],()=>first?go(first.id):null,'journey-stage');
+        const b=button([el('span',{class:'journey-number'},String(i+1).padStart(2,'0')),el('span',{class:'journey-name'},w(stage.fr,stage.en))],()=>go('stage:'+stage.id),'journey-stage');
         b.setAttribute('aria-label',w(stage.fr,stage.en));if(stageId===stage.id)b.setAttribute('aria-current','step');
-        if(i<stageIndex)b.classList.add('journey-done');return b;
+        const entries=decisions.filter(x=>journeyStage(x)===stage.id);
+        if(entries.length&&entries.every(x=>decisionReady(x,report,d)))b.classList.add('journey-done');return b;
       }));
-    const progress=el('progress',{class:'single-progress',value:stageIndex+1,max:JOURNEY_STAGES.length,
-      'aria-label':w('Progression de la création','Character creation progress'),
-      'aria-valuetext':(stageIndex+1)+' / '+JOURNEY_STAGES.length+' · '+w(JOURNEY_STAGES[stageIndex].fr,JOURNEY_STAGES[stageIndex].en)+' · '+label(current)});
-    const substep=el('p',{class:'journey-substep'},w('ÉTAPE ','STEP ')+(stageIndex+1)+' / 6'+
-      (withinStage.length>1?' · '+w('Décision ','Decision ')+(withinPosition+1)+' / '+withinStage.length:''));
-    // Detailed navigation remains available on demand for advanced users and older drafts.
-    const groupOf=x=>x.kind==='origin-choice'?'origin':x.kind==='class-choice'?
-      (['spell','spellbook','prepared'].includes(x.choice.kind)?'spells':'features'):
-      ['equipment-choice','equipment-method'].includes(x.kind)?'equipment':x.kind==='subrace'?'race':x.kind;
-    const groups=[...new Set(decisions.map(groupOf))];
-    const groupNames={identity:text('name'),race:text('race'),class:text('class'),background:text('background'),
-      scores:text('scores'),'hit-points':text('hp'),origin:w('Origine et maîtrises','Origin and training'),
-      features:w('Capacités','Features'),spells:w('Sorts','Spells'),equipment:text('equipment'),
-      training:w('Maîtrises','Proficiencies'),summary:w('Récapitulatif','Summary')};
-    const detailedNav=el('details',{class:'single-plan'},el('summary',{},
-      el('span',{},w('Accéder à un choix précis','Jump to a specific choice')),
-      el('span',{class:'single-step-count'},(position+1)+' / '+decisions.length)),
-      el('nav',{'aria-label':w('Choix détaillés','Detailed choices')},groups.map(group=>{
-        const decision=decisions.find(x=>groupOf(x)===group),b=button(groupNames[group],()=>go(decision.id));
-        if(group===groupOf(current))b.setAttribute('aria-current','step');return b;
-      })));
-    shell.replaceChildren(header,sectionNav,progress,substep,body,detailedNav);
+    const progress=el('progress',{class:'single-progress',value:stageIndex+1,max:JOURNEY_STAGES.length,'aria-label':w('Progression de la création','Character creation progress'),'aria-valuetext':(stageIndex+1)+' / 10 · '+w(JOURNEY_STAGES[stageIndex].fr,JOURNEY_STAGES[stageIndex].en)});
+    const substep=el('p',{class:'journey-substep'},w('ÉTAPE ','STEP ')+(stageIndex+1)+' / '+JOURNEY_STAGES.length);
+    shell.replaceChildren(header,sectionNav,progress,substep,body);
+    function renderDecision(current,body){
     if(d.pendingAdvancement)body.append(el('p',{role:'status'},w('Progression en cours : ','Level gain in progress: ')+a.cls(d.pendingAdvancement.classId)),button(w('Annuler ce gain de niveau','Cancel this level gain'),async()=>{const restored=cancelAdvancement(d);Object.keys(d).forEach(k=>delete d[k]);Object.assign(d,restored);await a.autosave(d);await draw(true);}));
     if(current.kind==='identity'){
       body.append(field(text('name'),el('input',{id:'character-name',value:d.name,maxlength:200,autocomplete:'off',onchange:e=>update(x=>{x.name=e.target.value;})})),
         el('p',{},w('Un nom suffit pour commencer. Vous pourrez le changer ensuite.','Start with a name. You can change it later.')),
-        el('details',{},el('summary',{},w('Portrait et apparence — facultatif','Portrait and appearance — optional')),appearanceControls(a,d,update)));
+        appearanceControls(a,d,update));
     }
     if(current.kind==='race'){
       body.append(renderRacePicker(d,a,update,filters));
@@ -148,13 +131,6 @@ export async function renderCreator(main,input,a) {
           o.race.source.kind==='homebrew'&&o.race.data.summary?el('p',{},o.race.data.summary[a.state.locale]):null,
           raceTraitList({...o.race.data,traits},a)));
       }
-    }
-    if(current.kind==='race'&&report.origin?.race?.id==='motm:race:kobold'){
-      const heritage=el('section',{class:'race-facts','aria-label':w('Héritage draconique','Kobold Legacy')});
-      for(const q of report.origin.choices.filter(q=>q.ownerId==='motm:race:kobold'&&['legacy','craftiness-skill','draconic-ability','draconic-cantrip'].includes(q.key))){
-        heritage.append(el('h2',{},q.label[a.state.locale]),choiceList(q,d.originSelections?.[q.id]??[],values=>originChange(q,values),{origin:true}));
-      }
-      body.append(heritage);
     }
     if(current.kind==='subrace'){
       const race=report.origin.race;
@@ -181,51 +157,7 @@ export async function renderCreator(main,input,a) {
         const primary=Object.entries(templateScores(cls.id)).find(([,value])=>value===15)?.[0];
         if(primary)setup.append(el('p',{class:'single-help'},w('Caractéristique conseillée : ','Suggested ability: ')+a.label(primary)));
       }
-      const changeLevel=n=>{
-        const others=d.classes.slice(1).reduce((sum,c)=>sum+c.level,0);
-        if(!Number.isInteger(n)||n<1||n+others>20){a.notice(w('Le niveau total doit rester entre 1 et 20.','Total level must stay between 1 and 20.'));return;}
-        return update(x=>{x.classes[0].level=n;});
-      };
-      const levelInput=el('input',{type:'number',min:1,max:20,value:cls.level,'aria-label':text('level'),
-        onchange:e=>changeLevel(Number(e.target.value))});
-      const minus=button('−',()=>changeLevel(cls.level-1),'level-control'),
-        plus=button('+',()=>changeLevel(cls.level+1),'level-control');
-      minus.setAttribute('aria-label',w('Réduire le niveau','Decrease level'));plus.setAttribute('aria-label',w('Augmenter le niveau','Increase level'));
-      minus.disabled=cls.level<=1;plus.disabled=d.classes.reduce((sum,c)=>sum+c.level,0)>=20;
-      setup.append(field(text('level'),el('div',{class:'level-stepper'},minus,levelInput,plus)));
-      const subclassDecision=decisions.find(x=>x.kind==='class-choice'&&x.choice?.kind==='subclass'&&x.choice.classId===cls.id);
-      if(subclassDecision){
-        const q=subclassDecision.choice,chosen=a.context.index.get(cls.subclassId);
-        setup.append(field(w('Sous-classe','Subclass'),
-          select([['',w('Choisir une spécialisation','Choose specialization')],...q.options.map(id=>[id,a.name(a.context.index.get(id))])],
-            cls.subclassId??'',e=>update(x=>{
-              const c=x.classes.find(c=>c.id===cls.id);
-              if(c.subclassId&&c.subclassId!==e.target.value)retainDecision(x,'subclass',cls.id);
-              c.subclassId=e.target.value||null;
-            }))));
-        if(chosen)setup.append(el('div',{class:'class-specialization'},el('strong',{},a.name(chosen)),
-          button(w('Voir les aptitudes','View features'),()=>details(chosen),'subtle')));
-      }else setup.append(el('p',{class:'single-help'},w('Votre spécialisation apparaît lorsqu’elle est disponible à ce niveau.','Your specialization appears when it unlocks at this level.')));
-      const grants=[...(a.context.index.class(cls.id)?.data.grants??[]),...(a.context.index.get(cls.subclassId)?.data.grants??[])].filter(row=>row.level<=cls.level);
-      const levels=[...new Set(grants.map(row=>row.level))].sort((a,b)=>a-b);
-      setup.append(el('details',{},el('summary',{},w('Capacités par niveau','Features by level')),
-        levels.map(level=>el('div',{class:'feature-level'},el('strong',{},text('level')+' '+level),
-          el('div',{class:'feature-buttons'},grants.filter(row=>row.level===level).flatMap(row=>row.featureIds)
-            .map(id=>{const entry=a.context.index.get(id);return entry?button(a.name(entry),()=>details(entry),'subtle'):null;}))))));
       classLayout.append(classes,setup);body.append(classLayout);
-      if(a.config.enabledOptions.includes('multiclass')){
-        const advanced=el('details',{},el('summary',{},w('Ajouter une classe','Add a class')));
-        for(const [i,c]of d.classes.entries())if(i>0)advanced.append(el('p',{},a.cls(c.id)),
-          field(text('level'),el('input',{type:'number',min:1,max:20,value:c.level,onchange:e=>{
-            const n=Number(e.target.value);
-            if(Number.isInteger(n)&&n>=1&&d.classes.reduce((s,c,j)=>s+(i===j?n:c.level),0)<=20)update(x=>{x.classes[i].level=n;});
-          }})),button(w('Retirer cette classe','Remove this class'),()=>update(x=>{x.classes.splice(i,1);})));
-        let id='';advanced.append(select([['',w('Choisir une classe','Choose a class')],...a.context.index.list('class')
-          .filter(c=>!d.classes.some(x=>x.id===c.data.classId)).map(c=>[c.data.classId,a.cls(c.data.classId)])],'',
-          e=>{id=e.target.value;}),button(text('add'),()=>{
-            if(id&&d.classes.reduce((n,c)=>n+c.level,0)<20)update(x=>{x.classes.push({id,level:1,subclassId:null});});
-          }));body.append(advanced);
-      }
     }
     if(current.kind==='background'){
       const backgrounds=a.context.index.list('background');
@@ -259,6 +191,33 @@ export async function renderCreator(main,input,a) {
       }
     }
     if(current.kind==='scores'){
+      const cls=d.classes[0];
+      const changeLevel=n=>{
+        const others=d.classes.slice(1).reduce((sum,c)=>sum+c.level,0);
+        if(!Number.isInteger(n)||n<1||n+others>20){a.notice(w('Le niveau total doit rester entre 1 et 20.','Total level must stay between 1 and 20.'));return;}
+        return update(x=>{x.classes[0].level=n;});
+      };
+      const levelInput=el('input',{type:'number',min:1,max:20,value:cls.level,'aria-label':text('level'),
+        onchange:e=>changeLevel(Number(e.target.value))});
+      const minus=button('−',()=>changeLevel(cls.level-1),'level-control'),
+        plus=button('+',()=>changeLevel(cls.level+1),'level-control');
+      minus.setAttribute('aria-label',w('Réduire le niveau','Decrease level'));plus.setAttribute('aria-label',w('Augmenter le niveau','Increase level'));
+      minus.disabled=cls.level<=1;plus.disabled=d.classes.reduce((sum,c)=>sum+c.level,0)>=20;
+      body.append(field(text('level'),el('div',{class:'level-stepper'},minus,levelInput,plus)));
+      if(a.config.enabledOptions.includes('multiclass')){
+        const advanced=el('details',{},el('summary',{},w('Ajouter une classe','Add a class')));
+        for(const [i,c]of d.classes.entries())if(i>0)advanced.append(el('p',{},a.cls(c.id)),
+          field(text('level'),el('input',{type:'number',min:1,max:20,value:c.level,onchange:e=>{
+            const n=Number(e.target.value);
+            if(Number.isInteger(n)&&n>=1&&d.classes.reduce((s,c,j)=>s+(i===j?n:c.level),0)<=20)update(x=>{x.classes[i].level=n;});
+          }})),button(w('Retirer cette classe','Remove this class'),()=>update(x=>{x.classes.splice(i,1);})));
+        let id='';advanced.append(select([['',w('Choisir une classe','Choose a class')],...a.context.index.list('class')
+          .filter(c=>!d.classes.some(x=>x.id===c.data.classId)).map(c=>[c.data.classId,a.cls(c.data.classId)])],'',
+          e=>{id=e.target.value;}),button(text('add'),()=>{
+            if(id&&d.classes.reduce((n,c)=>n+c.level,0)<20)update(x=>{x.classes.push({id,level:1,subclassId:null});});
+          }));body.append(advanced);
+      }
+
       body.append(field(text('method'),select(['standard','point-buy','rolled','manual'].map(k=>[k,text(k==='manual'?'manualScores':k)]),d.scoreMethod,e=>update(x=>{x.scoreMethod=e.target.value;x.scoresAreBase=true;if(x.scoreMethod==='standard')x.scores=templateScores(x.classes[0].id);if(x.scoreMethod==='point-buy')x.scores=Object.fromEntries(ABILITIES.map(k=>[k,10]));}))));
       // Native Element.append(null) renders the literal text "null"; only append the checkbox when applicable.
       if(d.scoreMethod!=='point-buy')body.append(check(w('Ajouter les bonus raciaux aux valeurs ci-dessous','Add racial bonuses to the scores below'),d.scoresAreBase,e=>update(x=>{x.scoresAreBase=e.target.checked;})));
@@ -466,13 +425,39 @@ export async function renderCreator(main,input,a) {
         }catch(e){a.fail(e);}
       },'primary');save.disabled=!compiled.valid||!!externalEdits;body.append(save);
     }
-    const inlineFeat=current.choice?.kind==='asi'?(report.selections?.[current.choice.id]??d.selections[current.choice.id]??[])[0]:null;
-    const ready=decisionReady(current,report,d)&&(report.choices??[]).filter(q=>q.ownerId===inlineFeat&&q.classId===current.choice?.classId&&q.level===current.choice?.level).every(choice=>decisionReady({kind:'class-choice',choice},report,d));
-    const errors=current.choice?report.issues.filter(i=>i.choiceId===current.choice.id):[];
-    if(errors.length)body.append(el('p',{class:'single-help',role:'status'},issueMessage(errors[0],report,a)));
-    const actions=el('div',{class:'single-actions'}),back=button(text('back'),()=>position?go(decisions[position-1].id):a.nav('library'));
+    }
+    const visible=withinStage.filter(x=>!inlineDecision(x,report,d));
+    const renderBlock=(decision,parent)=>{
+      const block=el('section',{class:'journey-decision','data-decision-id':decision.id,'data-kind':decision.kind},el('h2',{},label(decision)));
+      renderDecision(decision,block);
+      const errors=decision.choice?report.issues.filter(i=>i.choiceId===decision.choice.id):[];
+      if(errors.length)block.append(el('p',{class:'single-help',role:'status'},issueMessage(errors[0],report,a)));
+      parent.append(block);
+    };
+    if(stageId==='progression'){
+      let offset=0;
+      for(const cls of d.classes){
+        const grants=[...(a.context.index.class(cls.id)?.data.grants??[]),...(a.context.index.get(cls.subclassId)?.data.grants??[])];
+        for(let level=1;level<=cls.level;level++){
+          const entries=visible.filter(x=>(x.choice?.classId??d.classes[0].id)===cls.id&&(x.choice?.level??1)===level);
+          const complete=entries.every(x=>decisionReady(x,report,d));
+          const key=cls.id+':'+level;
+          const panel=el('details',{class:'progression-level',open:levelOpen.get(key)??(entries.some(x=>x.id===d.step)||!complete)},el('summary',{},w('Niveau ','Level ')+(offset+level)+' · '+a.cls(cls.id)+' '+level+' · '+(complete?w('Terminé','Complete'):w('À compléter','To complete'))));
+          panel.addEventListener('toggle',()=>levelOpen.set(key,panel.open));
+          for(const id of [...new Set(grants.filter(g=>g.level===level).flatMap(g=>g.featureIds))]){const entry=a.context.index.get(id);if(entry)panel.append(button(a.name(entry),()=>details(entry),'subtle'));}
+          if(!entries.length&&!grants.some(g=>g.level===level))panel.append(el('p',{},w('Aucun choix supplémentaire à ce niveau.','No additional choice at this level.')));
+          for(const entry of entries)renderBlock(entry,panel);
+          body.append(panel);
+        }
+        offset+=cls.level;
+      }
+      if(d.classes.length>1)body.prepend(el('p',{class:'single-help'},w('Les niveaux sont regroupés dans l’ordre des classes de la fiche ; l’ordre historique du multiclassage n’est pas déduit.','Levels follow the class order on the sheet; historical multiclass order is not inferred.')));
+    }else for(const entry of visible)renderBlock(entry,body);
+    if(!visible.length&&stageId==='spells')body.append(el('p',{},w('Aucun sort à choisir pour ce personnage à ce niveau.','No spell choices for this character at this level.')));
+    const ready=withinStage.every(x=>decisionReady(x,report,d));
+    const actions=el('div',{class:'single-actions'}),back=button(text('back'),()=>stageIndex?go('stage:'+JOURNEY_STAGES[stageIndex-1].id):a.nav('library'));
     actions.append(back);
-    if(current.kind!=='summary'){let nextIndex=position+1;while(nextIndex<decisions.length-1&&resolvedInlineDecision(decisions[nextIndex],report,d,decisionReady))nextIndex++;const next=button(text('next'),()=>go(decisions[nextIndex].id),'primary');next.disabled=!ready;actions.append(next);}
+    if(stageIndex<JOURNEY_STAGES.length-1){const next=button(text('next'),()=>go('stage:'+JOURNEY_STAGES[stageIndex+1].id),'primary');next.disabled=!ready;actions.append(next);}
     shell.append(actions);
     if(focus){body.querySelector('h1').focus({preventScroll:true});window.scrollTo({top:0});}
   }
