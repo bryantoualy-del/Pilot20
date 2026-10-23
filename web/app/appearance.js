@@ -9,15 +9,16 @@ export function appearanceControls(a, d, update) {
   const equipment=(built.character?.equipment??built.equipmentPreview??built.startingEquipment?.items??[]).map(e=>e.name?.fr??e.customName??e.id);
   const prompt=portraitPrompt(d,a.context,equipment);
   const promptBox=el('textarea',{readonly:true,rows:8,'aria-label':w('Prompt du portrait','Portrait prompt'),value:prompt});
+  const promptDetails=el('details',{},el('summary',{},w('Afficher le prompt','Show prompt')),promptBox);
   const copyStatus=el('p',{role:'status'});
   async function copyPrompt(){
     try{await navigator.clipboard.writeText(prompt);copyStatus.textContent=w('Prompt copié. Collez-le dans ChatGPT, puis importez votre image ici.','Prompt copied. Paste it into ChatGPT, then import your image here.');}
-    catch{promptBox.focus();promptBox.select();copyStatus.textContent=w('La copie automatique est indisponible. Sélectionnez et copiez le prompt ci-dessous.','Automatic copy is unavailable. Select and copy the prompt below.');}
+    catch{promptDetails.open=true;promptBox.focus();promptBox.select();copyStatus.textContent=w('La copie automatique est indisponible. Sélectionnez et copiez le prompt ci-dessous.','Automatic copy is unavailable. Select and copy the prompt below.');}
   }
   const generator=el('section',{class:'portrait-generator'},
     button(w('Générer avec ChatGPT','Generate with ChatGPT'),()=>{window.open('https://chatgpt.com/','_blank','noopener,noreferrer');void copyPrompt();}),
     button(w('Copier le prompt','Copy prompt'),copyPrompt,'subtle'),copyStatus,
-    el('p',{},w('Collez le prompt dans ChatGPT, générez le portrait, puis importez l’image ci-dessus. Le portrait est facultatif et reste modifiable.','Paste the prompt in ChatGPT, generate a portrait, then import the image above. Portraits are optional and can be changed.')),promptBox);
+    el('p',{},w('Collez le prompt dans ChatGPT, générez le portrait, puis importez l’image ci-dessus. Le portrait est facultatif et reste modifiable.','Paste the prompt in ChatGPT, generate a portrait, then import the image above. Portraits are optional and can be changed.')),promptDetails);
   return el(
     "section",
     { class: "appearance-controls" },

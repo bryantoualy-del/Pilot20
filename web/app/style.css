@@ -1950,3 +1950,10 @@ button.primary,.single-actions .primary{color:#191b1f}
 .journey-decision input,.journey-decision select,.journey-decision textarea{max-width:100%;box-sizing:border-box}
 @media(min-width:1024px){.journey-decision .single-options{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.journey-steps{grid-template-columns:repeat(5,minmax(0,1fr))}.physical-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.journey-name{overflow-wrap:anywhere}.progression-level{padding:8px}}
+
+.appearance-controls{display:block}
+.appearance-controls>.field,.appearance-controls>.physical-fields,.appearance-controls>section,.appearance-controls>small{display:block;margin:16px 0}
+.appearance-controls>.physical-fields{display:grid}
+.appearance-controls textarea{width:100%;box-sizing:border-box}
+.portrait-generator>button{margin:0 8px 8px 0}
+.portrait-generator details{margin-top:12px}

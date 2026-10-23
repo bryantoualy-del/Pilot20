@@ -38,6 +38,8 @@ try{
  assert.equal(await p.locator('.single-body').getAttribute('data-stage'),'spells');assert.match(await p.locator('.single-body').innerText(),/Aucun sort/);await next();await layout('equipment');await next();
  await change(async()=>{await p.locator('#character-name').fill('Parcours Guerrier 1');await p.locator('#character-name').blur();});
  for(const [name,value] of [['Âge','32 ans'],['Peau','cuivrée'],['Yeux','rouges']])await change(async()=>{await p.getByLabel(name,{exact:true}).fill(value);await p.getByLabel(name,{exact:true}).blur();});
+ await change(async()=>{await p.getByLabel('Description physique libre',{exact:true}).fill('Visage marqué, cheveux courts');await p.getByLabel('Description physique libre',{exact:true}).blur();});
+ assert.equal(await p.getByLabel('Description physique libre',{exact:true}).inputValue(),'Visage marqué, cheveux courts');
  const prompt=await p.getByLabel('Prompt du portrait',{exact:true}).inputValue();assert.match(prompt,/Guerrier/);assert.match(prompt,/32 ans/);assert.match(prompt,/Équipement visible/);
  await p.evaluate(()=>{window.__opened=null;window.open=(url)=>{window.__opened=url;return null;};Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>{window.__copied=text;}}});});
  await p.getByRole('button',{name:'Générer avec ChatGPT',exact:true}).click();assert.equal(await p.evaluate(()=>window.__opened),'https://chatgpt.com/');assert.equal(await p.evaluate(()=>window.__copied),prompt);

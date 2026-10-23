@@ -1,3 +1,4 @@
+import {effectiveClassData} from '../../src/catalog/progression.js';
 import {progressionChoices,allocatedValues,selectAllocation} from './progression-choices.js';
 import {selectOriginChoice} from '../../src/creator/origin-selection.js';
 import {selectBackground} from '../../src/creator/background-selection.js';
@@ -220,7 +221,7 @@ export async function renderCreator(main,input,a) {
       }
 
       const scoreMethod=field(text('method'),select(['standard','point-buy','rolled','manual'].map(k=>[k,text(k==='manual'?'manualScores':k)]),d.scoreMethod,e=>update(x=>{x.scoreMethod=e.target.value;x.scoresAreBase=true;if(x.scoreMethod==='standard')x.scores=templateScores(x.classes[0].id);if(x.scoreMethod==='point-buy')x.scores=Object.fromEntries(ABILITIES.map(k=>[k,10]));})));
-      scoreMethod.querySelector('select').id='score-method';body.append(scoreMethod);
+      scoreMethod.querySelector('select').id='score-method';scoreMethod.querySelector('label').htmlFor='score-method';body.append(scoreMethod);
       // Native Element.append(null) renders the literal text "null"; only append the checkbox when applicable.
       if(d.scoreMethod!=='point-buy')body.append(check(w('Ajouter les bonus raciaux aux valeurs ci-dessous','Add racial bonuses to the scores below'),d.scoresAreBase,e=>update(x=>{x.scoresAreBase=e.target.checked;})));
       if(d.scoreMethod==='rolled')body.append(button(text('rollScores'),()=>update(x=>{const r=rollAbilityScores();x.scoreRolls=r.rolls;x.scores=Object.fromEntries(ABILITIES.map((k,i)=>[k,r.values[i]]));})));
@@ -448,13 +449,13 @@ export async function renderCreator(main,input,a) {
       for(const row of chronology){
         const cls=d.classes.find(c=>c.id===row.classId);if(!cls)continue;
         const level=row.classLevel;
-        const grants=[...(a.context.index.class(cls.id)?.data.grants??[]),...(a.context.index.get(cls.subclassId)?.data.grants??[])];
+        const grants=[...(effectiveClassData(a.context.index,cls).grants??[]),...(a.context.index.get(cls.subclassId)?.data.grants??[]),...(report.features??[]).map(id=>a.context.index.get(id)).filter(f=>f?.data.optional&&f.data.classId===cls.id).map(f=>({level:f.data.minimumClassLevel??1,featureIds:[f.id]}))];
         const entries=visible.filter(x=>(x.choice?.classId??d.classes[0].id)===cls.id&&(x.choice?.level??1)===level);
         const complete=entries.every(blockReady);
         const key=cls.id+':'+level;
         const panel=el('details',{class:'progression-level',open:levelOpen.get(key)??(entries.some(x=>x.id===d.step||x.id.split('@')[0]===d.step)||!complete)},el('summary',{},w('Niveau ','Level ')+row.characterLevel+' · '+a.cls(cls.id)+' '+level+' · '+(complete?w('Terminé','Complete'):w('À compléter','To complete'))));
         panel.addEventListener('toggle',()=>levelOpen.set(key,panel.open));
-        for(const id of [...new Set(grants.filter(g=>g.level===level).flatMap(g=>g.featureIds))]){const entry=a.context.index.get(id);if(entry)panel.append(button(a.name(entry),()=>details(entry),'subtle'));}
+        for(const id of [...new Set(grants.filter(g=>g.level===level).flatMap(g=>g.featureIds).filter(id=>(report.features??[]).includes(id)))]){const entry=a.context.index.get(id);if(entry)panel.append(button(a.name(entry),()=>details(entry),'subtle'));}
         if(!entries.length&&!grants.some(g=>g.level===level))panel.append(el('p',{},w('Aucun choix supplémentaire à ce niveau.','No additional choice at this level.')));
         for(const entry of entries)renderBlock(entry,panel);
         body.append(panel);
