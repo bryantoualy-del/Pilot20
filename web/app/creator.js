@@ -1,3 +1,4 @@
+import {progressionChoices,allocatedValues,selectAllocation} from './progression-choices.js';
 import {selectOriginChoice} from '../../src/creator/origin-selection.js';
 import {selectBackground} from '../../src/creator/background-selection.js';
 import {featPicker,featPreview} from './feat-picker.js';
@@ -6,7 +7,7 @@ import {beginAdvancement,cancelAdvancement} from '../../src/creator/advancement.
 import {sameDefinition} from '../../src/creator/revision.js';
 import {classIcon} from './class-icons.js';
 import {classInfo} from './class-info.js';
-import {rollHitDie} from '../../src/creator/hit-points.js';
+import {hitPointPlan,rollHitDie} from '../../src/creator/hit-points.js';
 import {showEntryDetails} from './spell-detail.js';
 import {spellMatches} from '../../src/catalog/spell-reference.js';
 import {el,button,field,select,check,badge} from './dom.js';
@@ -81,7 +82,7 @@ export async function renderCreator(main,input,a) {
       const others=new Set(q.kind==='skill'?[...(path(d).report.origin?.background.skills??[]),...Object.entries(d.selections).filter(([id])=>id!==q.id&&id.endsWith(':skills')).flatMap(([,v])=>v)]:[]);
       for(const id of options.slice(filter.page*8,(filter.page+1)*8)){
         const entry=a.context.index.get(id),selected=values.includes(id),disabled=!selected&&(!single&&values.length>=q.count||others.has(id));
-        const input=el('input',{type:single?'radio':'checkbox',name:q.id,checked:selected,disabled:disabled||q.requiredOptions?.includes(id),'aria-label':optionName(id,a),onchange:e=>onchange(e.target.checked?single?[id]:[...values,id]:values.filter(x=>x!==id))});
+        const input=el('input',{type:single?'radio':'checkbox',name:q.uiId??q.id,checked:selected,disabled:disabled||q.requiredOptions?.includes(id),'aria-label':optionName(id,a),onchange:e=>onchange(e.target.checked?single?[id]:[...values,id]:values.filter(x=>x!==id))});
         list.append(el('div',{class:'single-option'+(selected?' selected':'')},el('label',{},input,el('span',{},optionName(id,a),q.optionDescriptions?.[id]?.[a.state.locale]?el('small',{},q.optionDescriptions[id][a.state.locale]):null)),entry?button(w('Détail','Details'),()=>details(entry),'subtle'):null));
       }
       pages.replaceChildren();
@@ -218,7 +219,8 @@ export async function renderCreator(main,input,a) {
           }));body.append(advanced);
       }
 
-      body.append(field(text('method'),select(['standard','point-buy','rolled','manual'].map(k=>[k,text(k==='manual'?'manualScores':k)]),d.scoreMethod,e=>update(x=>{x.scoreMethod=e.target.value;x.scoresAreBase=true;if(x.scoreMethod==='standard')x.scores=templateScores(x.classes[0].id);if(x.scoreMethod==='point-buy')x.scores=Object.fromEntries(ABILITIES.map(k=>[k,10]));}))));
+      const scoreMethod=field(text('method'),select(['standard','point-buy','rolled','manual'].map(k=>[k,text(k==='manual'?'manualScores':k)]),d.scoreMethod,e=>update(x=>{x.scoreMethod=e.target.value;x.scoresAreBase=true;if(x.scoreMethod==='standard')x.scores=templateScores(x.classes[0].id);if(x.scoreMethod==='point-buy')x.scores=Object.fromEntries(ABILITIES.map(k=>[k,10]));})));
+      scoreMethod.querySelector('select').id='score-method';body.append(scoreMethod);
       // Native Element.append(null) renders the literal text "null"; only append the checkbox when applicable.
       if(d.scoreMethod!=='point-buy')body.append(check(w('Ajouter les bonus raciaux aux valeurs ci-dessous','Add racial bonuses to the scores below'),d.scoresAreBase,e=>update(x=>{x.scoresAreBase=e.target.checked;})));
       if(d.scoreMethod==='rolled')body.append(button(text('rollScores'),()=>update(x=>{const r=rollAbilityScores();x.scoreRolls=r.rolls;x.scores=Object.fromEntries(ABILITIES.map((k,i)=>[k,r.values[i]]));})));
@@ -255,7 +257,7 @@ export async function renderCreator(main,input,a) {
         const bonus=el('div',{class:'racial-bonus'});
         const cell=racialBonusCell(report.origin,d.originSelections,ability);
         if(cell.fixed)bonus.append(el('span',{class:'racial-fixed'},'+'+cell.fixed+' '+w('fixe','fixed')));
-        for(const q of cell.choices){const values=d.originSelections?.[q.id]??[],selected=values.includes(ability);bonus.append(el('label',{},el('input',{type:q.count===1?'radio':'checkbox',name:q.id,checked:selected,disabled:!selected&&values.length>=q.count&&q.count!==1,'aria-label':a.label(ability)+' +'+(q.amount??1),onchange:e=>update(x=>{x.originSelections??={};x.originSelections[q.id]=e.target.checked?(q.count===1?[ability]:[...values,ability]):values.filter(v=>v!==ability);})}),el('span',{},'+'+(q.amount??1))));}
+        for(const q of cell.choices){const values=d.originSelections?.[q.id]??[],selected=values.includes(ability);bonus.append(el('label',{},el('input',{type:q.count===1?'radio':'checkbox',name:q.uiId??q.id,checked:selected,disabled:!selected&&values.length>=q.count&&q.count!==1,'aria-label':a.label(ability)+' +'+(q.amount??1),onchange:e=>update(x=>{x.originSelections??={};x.originSelections[q.id]=e.target.checked?(q.count===1?[ability]:[...values,ability]):values.filter(v=>v!==ability);})}),el('span',{},'+'+(q.amount??1))));}
         if(!cell.fixed&&!cell.choices.length)bonus.append(el('span',{},'—'));
         const final=report.scores?.[ability]??n,mod=Math.floor((final-10)/2);
         rows.append(el('tr',{class:'score-row'},el('th',{scope:'row'},a.label(ability)),el('td',{class:'score-base','data-label':w('Valeur brute','Base')},el('div',{class:'score-stepper'},minus,el('output',{},n),plus)),el('td',{class:'score-cost','data-label':w('Coût','Cost')},d.scoreMethod==='point-buy'?(POINT_COST[n]??'—'):'—'),el('td',{class:'score-bonus','data-label':w('Bonus racial','Racial bonus')},bonus),el('td',{class:'score-final','data-label':w('Final','Final')},el('strong',{},final+' ('+(mod>=0?'+':'')+mod+')'))));
@@ -291,9 +293,10 @@ export async function renderCreator(main,input,a) {
     }
     if(current.kind==='class-choice'){
       const q=current.choice;body.append(el('p',{},a.cls(q.classId)+' · '+text('level')+' '+q.level));
-      const values=q.kind==='subclass'?[d.classes.find(c=>c.id===q.classId)?.subclassId].filter(Boolean):report.selections?.[q.id]??d.selections[q.id]??[];
+      const allValues=q.kind==='subclass'?[d.classes.find(c=>c.id===q.classId)?.subclassId].filter(Boolean):report.selections?.[q.id]??d.selections[q.id]??[];
+      const values=allocatedValues(d,q,allValues);
       const saveChoice=values=>update(x=>{
-        if(q.kind==='subclass'){const c=x.classes.find(c=>c.id===q.classId);if(c.subclassId&&c.subclassId!==values[0])retainDecision(x,'subclass',q.classId);c.subclassId=values[0]??null;}else x.selections[q.id]=values;
+        if(q.kind==='subclass'){const c=x.classes.find(c=>c.id===q.classId);if(c.subclassId&&c.subclassId!==values[0])retainDecision(x,'subclass',q.classId);c.subclassId=values[0]??null;}else if(q.allocation)selectAllocation(x,q,values,progressionChoices(a.context.index,d,withinStage).filter(s=>s.choice?.id===q.id));else x.selections[q.id]=values;
       });
       if(q.kind==='asi'){
         if(!a.config.enabledOptions.includes('feats'))body.append(el('p',{},w('Les dons sont désactivés dans cette campagne. Vous pouvez les autoriser ci-dessous.','Feats are disabled for this campaign. You can enable them below.')),button(w('Autoriser les dons pour cette campagne','Enable feats for this campaign'),async()=>{const next={...a.config,revision:a.config.revision+1,enabledOptions:[...a.config.enabledOptions,'feats']};await a.campaigns.save(next,{expectedRevision:a.config.revision});await a.nav('creator',d.id);}));
@@ -309,7 +312,12 @@ export async function renderCreator(main,input,a) {
           }
         }
         else for(const i of [0,1])body.append(field('+1 · '+(i+1),select([['',w('Choisir une caractéristique','Choose an ability')],...ABILITIES.map(id=>[id,a.label(id)])],state.pair[i],e=>{state.pair[i]=e.target.value;const [x,y]=state.pair,id=q.options.find(id=>id===`asi:${x}:${y}`||id===`asi:${y}:${x}`);saveChoice(id?[id]:[]);})));
-      }else body.append(choiceList(q,values,saveChoice));
+      }else {
+        const other=allValues.filter(id=>!values.includes(id));
+        const shown=q.allocation?{...q,options:q.options.filter(id=>!other.includes(id)&&(values.includes(id)||(a.context.index.get(id)?.data.minimumClassLevel??1)<=q.level)),uiId:q.id+'@'+q.level}:q;
+        body.append(choiceList(shown,values,saveChoice));
+        if(q.allocation&&values.some(id=>(a.context.index.get(id)?.data.minimumClassLevel??1)>q.level))body.append(el('p',{class:'single-help'},w('Choix existants conservés : certains peuvent résulter d’un remplacement à un niveau ultérieur. Leur date d’acquisition n’est pas connue.','Existing selections retained: some may come from a later replacement. Their acquisition date is unknown.')));
+      }
       if(q.id==='cleric:nature-cantrip')body.append(el('p',{class:'single-help'},w('Le domaine de la Nature accorde un sort mineur de druide. Il reste un sort de clerc pour vous.','The Nature domain grants one druid cantrip, which counts as a cleric cantrip for you.')));
       if(q.id==='ranger:beast-companion'&&values.includes('phb14:ranger:companion:other'))body.append(field(w('Nom de la bête, FP et référence du profil','Beast name, CR and profile reference'),el('textarea',{value:d.companionNotes??'',maxlength:3000,onchange:e=>update(x=>{x.companionNotes=e.target.value;})})));
       if(q.id===q.classId+':known-spells'){const exchanges=originSpellExchanges(q.classId);if(exchanges)body.append(exchanges);}
@@ -426,7 +434,8 @@ export async function renderCreator(main,input,a) {
       },'primary');save.disabled=!compiled.valid||!!externalEdits;body.append(save);
     }
     }
-    const visible=withinStage.filter(x=>!inlineDecision(x,report,d));
+    const visible=progressionChoices(a.context.index,d,withinStage.filter(x=>!inlineDecision(x,report,d)));
+    const blockReady=x=>x.choice?.allocation?allocatedValues(d,x.choice,report.selections?.[x.choice.id]??d.selections[x.choice.id]??[]).length===x.choice.count:decisionReady(x,report,d);
     const renderBlock=(decision,parent)=>{
       const block=el('section',{class:'journey-decision','data-decision-id':decision.id,'data-kind':decision.kind},el('h2',{},label(decision)));
       renderDecision(decision,block);
@@ -435,23 +444,22 @@ export async function renderCreator(main,input,a) {
       parent.append(block);
     };
     if(stageId==='progression'){
-      let offset=0;
-      for(const cls of d.classes){
+      const chronology=hitPointPlan(a.context.index,d).levels;
+      for(const row of chronology){
+        const cls=d.classes.find(c=>c.id===row.classId);if(!cls)continue;
+        const level=row.classLevel;
         const grants=[...(a.context.index.class(cls.id)?.data.grants??[]),...(a.context.index.get(cls.subclassId)?.data.grants??[])];
-        for(let level=1;level<=cls.level;level++){
-          const entries=visible.filter(x=>(x.choice?.classId??d.classes[0].id)===cls.id&&(x.choice?.level??1)===level);
-          const complete=entries.every(x=>decisionReady(x,report,d));
-          const key=cls.id+':'+level;
-          const panel=el('details',{class:'progression-level',open:levelOpen.get(key)??(entries.some(x=>x.id===d.step)||!complete)},el('summary',{},w('Niveau ','Level ')+(offset+level)+' · '+a.cls(cls.id)+' '+level+' · '+(complete?w('Terminé','Complete'):w('À compléter','To complete'))));
-          panel.addEventListener('toggle',()=>levelOpen.set(key,panel.open));
-          for(const id of [...new Set(grants.filter(g=>g.level===level).flatMap(g=>g.featureIds))]){const entry=a.context.index.get(id);if(entry)panel.append(button(a.name(entry),()=>details(entry),'subtle'));}
-          if(!entries.length&&!grants.some(g=>g.level===level))panel.append(el('p',{},w('Aucun choix supplémentaire à ce niveau.','No additional choice at this level.')));
-          for(const entry of entries)renderBlock(entry,panel);
-          body.append(panel);
-        }
-        offset+=cls.level;
+        const entries=visible.filter(x=>(x.choice?.classId??d.classes[0].id)===cls.id&&(x.choice?.level??1)===level);
+        const complete=entries.every(blockReady);
+        const key=cls.id+':'+level;
+        const panel=el('details',{class:'progression-level',open:levelOpen.get(key)??(entries.some(x=>x.id===d.step||x.id.split('@')[0]===d.step)||!complete)},el('summary',{},w('Niveau ','Level ')+row.characterLevel+' · '+a.cls(cls.id)+' '+level+' · '+(complete?w('Terminé','Complete'):w('À compléter','To complete'))));
+        panel.addEventListener('toggle',()=>levelOpen.set(key,panel.open));
+        for(const id of [...new Set(grants.filter(g=>g.level===level).flatMap(g=>g.featureIds))]){const entry=a.context.index.get(id);if(entry)panel.append(button(a.name(entry),()=>details(entry),'subtle'));}
+        if(!entries.length&&!grants.some(g=>g.level===level))panel.append(el('p',{},w('Aucun choix supplémentaire à ce niveau.','No additional choice at this level.')));
+        for(const entry of entries)renderBlock(entry,panel);
+        body.append(panel);
       }
-      if(d.classes.length>1)body.prepend(el('p',{class:'single-help'},w('Les niveaux sont regroupés dans l’ordre des classes de la fiche ; l’ordre historique du multiclassage n’est pas déduit.','Levels follow the class order on the sheet; historical multiclass order is not inferred.')));
+      if(d.classes.length>1&&!d.advancementHistory?.length)body.prepend(el('p',{class:'single-help'},w('Les niveaux sont regroupés dans l’ordre des classes de la fiche ; l’ordre historique du multiclassage n’est pas déduit.','Levels follow the class order on the sheet; historical multiclass order is not inferred.')));
     }else for(const entry of visible)renderBlock(entry,body);
     if(!visible.length&&stageId==='spells')body.append(el('p',{},w('Aucun sort à choisir pour ce personnage à ce niveau.','No spell choices for this character at this level.')));
     const ready=withinStage.every(x=>decisionReady(x,report,d));

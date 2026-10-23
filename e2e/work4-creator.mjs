@@ -30,9 +30,9 @@ try{
  await change(()=>p.getByRole('button',{name:'Humain standard',exact:true}).click());await layout('race');await next();
  await change(()=>p.locator('.single-classes').getByRole('button',{name:'Guerrier',exact:true}).click());
  assert.equal(await p.locator('.level-stepper').count(),0);assert.equal(await p.getByLabel('Sous-classe',{exact:true}).count(),0);await next();
- assert.equal(await p.getByLabel('Historique',{exact:true}).inputValue(),'srd51:background:acolyte');await next();
+ assert.equal(await p.locator('.single-body').getByLabel('Historique',{exact:true}).inputValue(),'srd51:background:acolyte');await next();
  assert.equal(await p.locator('.single-body').getAttribute('data-stage'),'scores');
- await change(()=>p.locator('[data-decision-id=scores] select').first().selectOption('standard'));await layout('scores');await next();
+ await change(()=>p.locator('#score-method').selectOption('standard'));await layout('scores');await next();
  assert.equal(await p.locator('.progression-level').count(),1);assert.equal(await p.locator('[data-choice-id="fighter:subclass"]').count(),0);
  await fillChoices();await next();await fillChoices();await next();
  assert.equal(await p.locator('.single-body').getAttribute('data-stage'),'spells');assert.match(await p.locator('.single-body').innerText(),/Aucun sort/);await next();await layout('equipment');await next();

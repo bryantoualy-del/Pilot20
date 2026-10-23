@@ -20,10 +20,10 @@ try{
  assert.equal(await literalNull(),false);
  assert.equal(await p.getByText('Ajouter les bonus raciaux aux valeurs ci-dessous',{exact:true}).count(),0);
  // Check the other method still displays its control, then return to point buy.
- await p.locator('[data-decision-id=scores] select').first().selectOption('standard');
+ await p.locator('#score-method').selectOption('standard');
  await p.getByText('Ajouter les bonus raciaux aux valeurs ci-dessous',{exact:true}).waitFor();
  assert.equal(await literalNull(),false);
- await p.locator('[data-decision-id=scores] select').first().selectOption('point-buy');
+ await p.locator('#score-method').selectOption('point-buy');
  await p.getByText('12 / 27',{exact:true}).waitFor();
  assert.equal(await literalNull(),false);
  assert.equal(await p.locator('.journey-steps button').count(),10);assert.equal(await p.getByText('Un choix de votre origine',{exact:true}).count(),0);
