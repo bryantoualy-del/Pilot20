@@ -2,6 +2,7 @@ import { el, button, field, select } from "./dom.js";
 import { refreshPortrait } from "../../src/creator/appearance.js";
 export function appearanceControls(a, d, update) {
   const w = (fr, en) => (a.state.locale === "fr" ? fr : en);
+  refreshPortrait(a.context, d);
   return el(
     "section",
     { class: "appearance-controls" },

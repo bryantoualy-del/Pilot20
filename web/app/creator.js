@@ -492,9 +492,10 @@ export async function renderCreator(main,input,a) {
     const ready=decisionReady(current,report,d)&&(report.choices??[]).filter(q=>q.ownerId===inlineFeat&&q.classId===current.choice?.classId&&q.level===current.choice?.level).every(choice=>decisionReady({kind:'class-choice',choice},report,d));
     const errors=current.choice?report.issues.filter(i=>i.choiceId===current.choice.id):[];
     if(errors.length)body.append(el('p',{class:'single-help',role:'status'},issueMessage(errors[0],report,a)));
+    if(!ready&&!['race','subrace','human-variant','class','summary'].includes(current.kind))body.append(el('p',{class:'single-help'},w('Vous pouvez continuer et compléter ce choix depuis le Résumé.','You can continue and complete this choice from Summary.')));
     const actions=el('div',{class:'single-actions'}),back=button(text('back'),()=>position?go(decisions[position-1].id):a.nav('library'));
     actions.append(back);
-    if(current.kind!=='summary'){let nextIndex=position+1;while(nextIndex<decisions.length-1&&resolvedInlineDecision(decisions[nextIndex],report,d,decisionReady))nextIndex++;const next=button(text('next'),()=>go(decisions[nextIndex].id),'primary');next.disabled=!ready;actions.append(next);}
+    if(current.kind!=='summary'){let nextIndex=position+1;while(nextIndex<decisions.length-1&&resolvedInlineDecision(decisions[nextIndex],report,d,decisionReady))nextIndex++;const next=button(text('next'),()=>go(decisions[nextIndex].id),'primary');next.disabled=!ready&&['race','subrace','human-variant','class'].includes(current.kind);actions.append(next);}
     shell.append(actions);
     if(focus){body.querySelector('h1').focus({preventScroll:true});window.scrollTo({top:0});}
   }
