@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {JOURNEY_STAGES,journeyStage,orderJourney,resolvedInlineDecision} from '../web/app/creator-journey.js';
 
-test('the approved journey exposes exactly ten stages in the approved order',()=>{
-  assert.deepEqual(JOURNEY_STAGES.map(s=>s.id),['origin','class','background','scores','progression','training','spells','equipment','identity','validation']);
+test('the approved journey exposes exactly six stages in the approved order',()=>{
+  assert.deepEqual(JOURNEY_STAGES.map(s=>s.id),['origin','class','scores','choices','magic','validation']);
 });
 test('2014 conditional decisions are retained while visually regrouped',()=>{
   const decisions=[
@@ -21,14 +21,14 @@ test('2014 conditional decisions are retained while visually regrouped',()=>{
     {id:'summary',kind:'summary'}
   ];
   const ordered=orderJourney(decisions);
-  assert.deepEqual(ordered.map(x=>x.id),['race','class','background','scores','hp','subclass','asi','training','spell','equipment','identity','summary']);
+  assert.deepEqual(ordered.map(x=>x.id),['identity','race','class','subclass','scores','hp','background','training','asi','spell','equipment','summary']);
   assert.equal(ordered.length,decisions.length);
 });
 test('a subclass is not bypassed if its mandatory choice is missing',()=>{
   const q={kind:'class-choice',choice:{kind:'subclass'}},report={},draft={};
-  assert.equal(journeyStage(q),'progression');
+  assert.equal(journeyStage(q),'class');
   assert.equal(resolvedInlineDecision(q,report,draft,()=>false),false);
-  assert.equal(resolvedInlineDecision(q,report,draft,()=>true),false);
+  assert.equal(resolvedInlineDecision(q,report,draft,()=>true),true);
   assert.equal(resolvedInlineDecision({kind:'class'},report,draft,()=>true),false);
 });
 

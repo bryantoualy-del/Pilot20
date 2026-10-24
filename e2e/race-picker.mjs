@@ -14,9 +14,9 @@ try {
   await p.goto(`http://127.0.0.1:${port}/web/index.html`);
   await p.getByRole('button',{name:'Créer un personnage',exact:true}).click();
   async function changed(action){const old=await p.locator('.single-body').elementHandle();await action();await p.waitForFunction(e=>!e.isConnected,old);await old.dispose();}
-  await p.locator('.journey-steps').getByRole('button',{name:'Identité & portrait',exact:true}).click();await p.locator('#character-name').waitFor();
+  await p.locator('#character-name').waitFor();
   await changed(async()=>{await p.locator('#character-name').fill('Lignée test');await p.locator('#character-name').blur();});
-  await changed(()=>p.locator('.journey-steps').getByRole('button',{name:'Race',exact:true}).click());
+  await changed(()=>p.locator('.single-actions .primary').click());
   assert.ok(await p.locator('.single-races button').count()>=44);
   assert.equal(await p.getByRole('progressbar').getAttribute('value'),'1'); // Name and race share the Origine chapter.
   // Every installed family uses the transparent icon set, including label aliases.

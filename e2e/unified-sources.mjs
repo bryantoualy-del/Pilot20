@@ -20,10 +20,10 @@ try{
  await p.reload();
  await p.getByRole('button',{name:'Créer un personnage',exact:true}).click();
  const next=async action=>{const old=await p.locator('.single-body').elementHandle();await action();await p.waitForFunction(e=>!e.isConnected,old);await old.dispose();};
- await p.locator('.journey-steps').getByRole('button',{name:'Identité & portrait',exact:true}).click();await p.locator('#character-name').waitFor();
+ await p.locator('#character-name').waitFor();
  assert.equal(await p.locator('.single-body').getByText('Modifier les sources',{exact:true}).count(),0);
  await next(async()=>{await p.locator('#character-name').fill('Dhampir sources');await p.locator('#character-name').blur();});
- await next(()=>p.locator('.journey-steps').getByRole('button',{name:'Race',exact:true}).click());
+ await next(()=>p.locator('.single-actions .primary').click());
  await p.getByRole('searchbox',{name:'Rechercher une race',exact:true}).fill('dhampir');
  await next(()=>p.getByRole('button',{name:'Dhampir',exact:true}).click());
  assert.equal(await p.locator('#dialog[open]').count(),0);

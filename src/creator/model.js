@@ -1,4 +1,3 @@
-import {physicalDescription} from "./portrait-prompt.js";
 import {economy,compileInventory} from './equipment-economy.js';
 import {validateLevelGain} from './advancement.js';
 import {hitPointPlan} from './hit-points.js';
@@ -50,7 +49,7 @@ export const newDraft = (campaignId = "default", id = crypto.randomUUID()) => ({
   shield: false,
   reviewed: false,
   confirmed: false,
-  step: "race",
+  step: "identity",
   scoresAreBase: true,
   scoreMethod: "manual",
   originSelections: {},
@@ -202,7 +201,6 @@ export function compileDraft(context, config, d) {
     gender: d.gender ?? "",
     description: [
       d.description,
-      physicalDescription(d),
       context.index.get(d.raceId)?.data.homebrewDefinition?.description,
       context.index.get(d.raceId)?.data.homebrewDefinition?.appearance,
       d.origin,

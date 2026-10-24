@@ -4,7 +4,6 @@ export function el(tag, attrs = {}, ...children) {
     if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
     else if (k === "class") e.className = v;
     else if (k === "text") e.textContent = v;
-    else if (k === "value" && tag === "textarea") e.value = v;
     else if (
       k === "checked" ||
       k === "disabled" ||

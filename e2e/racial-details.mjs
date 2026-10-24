@@ -12,7 +12,7 @@ try {
  const p=await browser.newPage({viewport:{width:390,height:844}}),errors=[];
  p.on('pageerror',e=>errors.push(e.message));
  await p.goto(`http://127.0.0.1:${port}/web/index.html`);
- await p.getByRole('button',{name:'Créer un personnage',exact:true}).click();await p.locator('.race-picker').waitFor();
+ await p.getByRole('button',{name:'Créer un personnage',exact:true}).click();await p.locator('#character-name').waitFor();
  async function seed(raceId,step){
   await p.evaluate(async({raceId,step})=>{
    const {openIndexedDB}=await import('/src/persistence/adapters.js'),s=await openIndexedDB();
@@ -50,6 +50,7 @@ try {
  await p.setViewportSize({width:390,height:844});
  await seed('srd51:race:human','race');
  await p.locator('.race-facts').waitFor();
+ await changed(()=>p.locator('.single-actions .primary').click());
  await p.getByRole('button',{name:'Humain avec don',exact:true}).waitFor();
  assert.equal(await p.locator('.ancestry-choice').count(),2);
  await changed(()=>p.getByRole('button',{name:'Humain avec don',exact:true}).click());

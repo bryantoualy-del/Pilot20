@@ -39,7 +39,7 @@ jobs:
         run: node e2e/backgrounds-2014.mjs
       - name: Verify Fizban feat selector on phone and iPad widths
         run: node e2e/fizban-feats.mjs
-      - name: Verify approved iPad/phone ten-stage journey
+      - name: Verify approved iPad/phone six-stage journey
         run: node e2e/validated-journey.mjs
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
