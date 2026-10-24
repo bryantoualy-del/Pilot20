@@ -1939,6 +1939,7 @@ button.primary,.single-actions .primary{color:#191b1f}
 /* Final review: appearance first on phones, left rail on landscape tablets. */
 .summary-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start;margin-top:16px}
 .summary-layout>*{min-width:0}
+.single-creator .summary-appearance,.summary-review .recap-section{margin:0}
 .summary-appearance{padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:6px}
 .summary-appearance>summary{font:600 18px/1.4 Georgia,serif;color:var(--accent)}
 .summary-appearance .appearance-controls{display:flex;flex-direction:column;align-items:stretch;margin:12px 0}
@@ -1955,7 +1956,7 @@ button.primary,.single-actions .primary{color:#191b1f}
 .summary-review .single-recap{gap:10px;margin:12px 0 20px}
 .summary-review .recap-section{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0 12px}
 .summary-review .recap-section>summary{font-size:15px;min-height:52px}
-.summary-review .recap-section>summary small{display:block;font:400 12px/1.4 system-ui,sans-serif;color:var(--muted);margin:3px 0 0 20px}
+.summary-review .recap-section>summary small{display:block;font:400 12px/1.4 system-ui,sans-serif;color:var(--muted);margin:3px 0 0}
 .summary-review .recap-row:last-child{border-bottom:0}
 .summary-review .recap-row button{min-height:44px}
 @media(min-width:900px){.summary-layout{grid-template-columns:minmax(260px,.75fr) minmax(0,1.7fr);gap:24px}}

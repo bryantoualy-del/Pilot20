@@ -412,7 +412,7 @@ export async function renderCreator(main,input,a) {
       const recapSection=(heading,rows)=>{
         if(!rows.length)return;
         const incomplete=rows.some(row=>row.classList.contains('recap-incomplete'));
-        recap.append(summaryDisclosure('recap:'+heading,[el('span',{},heading),el('small',{},incomplete?w('À compléter','To complete'):rows.length+' '+w('élément(s)','item(s)'))],rows,incomplete,'recap-section'));
+        recap.append(summaryDisclosure('recap:'+heading,el('span',{},heading,el('small',{},incomplete?w('À compléter','To complete'):rows.length+' '+w('élément(s)','item(s)'))),rows,incomplete,'recap-section'));
       };
       const chosen=x=>{
         const q=x.choice;
