@@ -1936,3 +1936,27 @@ button.primary,.single-actions .primary{color:#191b1f}
 .grimoire-filters>.check{display:flex;justify-content:flex-start;align-items:center;gap:9px;min-height:44px;padding:4px 0;margin:0;font-size:14px}
 .grimoire-filters>.check input{flex:0 0 18px;width:18px;height:18px;min-width:18px;min-height:18px;max-width:18px;max-height:18px;margin:0;accent-color:var(--accent)}
 .grimoire-filters>.check span{flex:0 1 auto;text-align:left;overflow-wrap:normal}
+/* Final review: appearance first on phones, left rail on landscape tablets. */
+.summary-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start;margin-top:16px}
+.summary-layout>*{min-width:0}
+.single-creator .summary-appearance,.summary-review .recap-section{margin:0}
+.summary-appearance{padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:6px}
+.summary-appearance>summary{font:600 18px/1.4 Georgia,serif;color:var(--accent)}
+.summary-appearance .appearance-controls{display:flex;flex-direction:column;align-items:stretch;margin:12px 0}
+.summary-appearance .character-portrait{order:-1;width:128px;height:128px;align-self:center}
+.summary-appearance .field,.summary-appearance input,.summary-appearance textarea{min-width:0;max-width:100%;width:100%}
+.summary-appearance input[type=file]{font-size:13px;padding:8px}
+.summary-appearance textarea{min-height:100px;resize:vertical}
+.summary-identity h2{font:600 24px/1.2 Georgia,serif;color:var(--accent);margin:0 0 6px}
+.summary-identity p{color:var(--muted);margin:0 0 14px}
+.summary-preview{padding:0 12px;border:1px solid var(--border);border-radius:6px}
+.summary-preview .sheet-vitals{grid-template-columns:repeat(3,minmax(0,1fr))}
+.summary-preview .sheet-abilities{grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:14px}
+.summary-ready{color:var(--green);font-size:14px}
+.summary-review .single-recap{gap:10px;margin:12px 0 20px}
+.summary-review .recap-section{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0 12px}
+.summary-review .recap-section>summary{font-size:15px;min-height:52px}
+.summary-review .recap-section>summary small{display:block;font:400 12px/1.4 system-ui,sans-serif;color:var(--muted);margin:3px 0 0}
+.summary-review .recap-row:last-child{border-bottom:0}
+.summary-review .recap-row button{min-height:44px}
+@media(min-width:900px){.summary-layout{grid-template-columns:minmax(260px,.75fr) minmax(0,1.7fr);gap:24px}}
