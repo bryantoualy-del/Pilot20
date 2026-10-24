@@ -209,19 +209,6 @@ export async function renderCreator(main,input,a) {
       levelField.classList.add('primary-class-level');
       const mobileLevel=el('div',{class:'class-level-mobile'});
       setup.append(el('div',{class:'class-level-desktop'},levelField));
-      const subclassDecision=decisions.find(x=>x.kind==='class-choice'&&x.choice?.kind==='subclass'&&x.choice.classId===cls.id);
-      if(subclassDecision){
-        const q=subclassDecision.choice,chosen=a.context.index.get(cls.subclassId);
-        setup.append(field(w('Sous-classe','Subclass'),
-          select([['',w('Choisir une spécialisation','Choose specialization')],...q.options.map(id=>[id,a.name(a.context.index.get(id))])],
-            cls.subclassId??'',e=>update(x=>{
-              const c=x.classes.find(c=>c.id===cls.id);
-              if(c.subclassId&&c.subclassId!==e.target.value)retainDecision(x,'subclass',cls.id);
-              c.subclassId=e.target.value||null;
-            }))));
-        if(chosen)setup.append(el('div',{class:'class-specialization'},el('strong',{},a.name(chosen)),
-          button(w('Voir les aptitudes','View features'),()=>details(chosen),'subtle')));
-      }else setup.append(el('p',{class:'single-help'},w('Votre spécialisation apparaît lorsqu’elle est disponible à ce niveau.','Your specialization appears when it unlocks at this level.')));
       const grants=[...(a.context.index.class(cls.id)?.data.grants??[]),...(a.context.index.get(cls.subclassId)?.data.grants??[])].filter(row=>row.level<=cls.level);
       const levels=[...new Set(grants.map(row=>row.level))].sort((a,b)=>a-b);
       setup.append(el('details',{},el('summary',{},w('Capacités par niveau','Features by level')),
