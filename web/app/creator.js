@@ -24,6 +24,14 @@ import {appearanceControls} from './appearance.js';
 import {replacementOptions} from '../../src/catalog/spell-grants.js';
 import {JOURNEY_STAGES,journeyStage,orderJourney,resolvedInlineDecision} from './creator-journey.js';
 
+const phoneClassLayout=window.matchMedia('(max-width:700px)');
+function placeClassLevel(root=document){
+  const control=root.querySelector('.primary-class-level');
+  const target=root.querySelector(phoneClassLayout.matches?'.class-level-mobile':'.class-level-desktop');
+  if(control&&target)target.append(control);
+}
+phoneClassLayout.addEventListener('change',()=>placeClassLevel());
+
 export async function renderCreator(main,input,a) {
   const d=migrateSingleDraft(input),w=(fr,en)=>a.state.locale==='fr'?fr:en;
   if(input.mode!=='single')await a.autosave(d);
@@ -197,7 +205,10 @@ export async function renderCreator(main,input,a) {
         plus=button('+',()=>changeLevel(cls.level+1),'level-control');
       minus.setAttribute('aria-label',w('Réduire le niveau','Decrease level'));plus.setAttribute('aria-label',w('Augmenter le niveau','Increase level'));
       minus.disabled=cls.level<=1;plus.disabled=d.classes.reduce((sum,c)=>sum+c.level,0)>=20;
-      setup.append(field(text('level'),el('div',{class:'level-stepper'},minus,levelInput,plus)));
+      const levelField=field(text('level'),el('div',{class:'level-stepper'},minus,levelInput,plus));
+      levelField.classList.add('primary-class-level');
+      const mobileLevel=el('div',{class:'class-level-mobile'});
+      setup.append(el('div',{class:'class-level-desktop'},levelField));
       const subclassDecision=decisions.find(x=>x.kind==='class-choice'&&x.choice?.kind==='subclass'&&x.choice.classId===cls.id);
       if(subclassDecision){
         const q=subclassDecision.choice,chosen=a.context.index.get(cls.subclassId);
@@ -217,7 +228,7 @@ export async function renderCreator(main,input,a) {
         levels.map(level=>el('div',{class:'feature-level'},el('strong',{},text('level')+' '+level),
           el('div',{class:'feature-buttons'},grants.filter(row=>row.level===level).flatMap(row=>row.featureIds)
             .map(id=>{const entry=a.context.index.get(id);return entry?button(a.name(entry),()=>details(entry),'subtle'):null;}))))));
-      classLayout.append(classes,setup);body.append(classLayout);
+      classLayout.append(classes,setup);body.append(mobileLevel,classLayout);placeClassLevel(body);
       if(a.config.enabledOptions.includes('multiclass')){
         const advanced=el('details',{},el('summary',{},w('Ajouter une classe','Add a class')));
         for(const [i,c]of d.classes.entries())if(i>0)advanced.append(el('p',{},a.cls(c.id)),

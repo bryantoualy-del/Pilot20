@@ -100,6 +100,12 @@ try{
   assert.ok(await page.locator('.level-stepper input').isVisible());
   for(const size of [{width:375,height:667},{width:390,height:844},{width:820,height:1180},{width:1180,height:820}]){
     await page.setViewportSize(size);
+    await page.waitForFunction(phone=>!!document.querySelector((phone?'.class-level-mobile':'.class-level-desktop')+' .primary-class-level'),size.width<=700);
+    assert.equal(await page.locator('.primary-class-level').count(),1);
+    if(size.width<=700){
+      const level=await page.locator('.primary-class-level').boundingBox(),gallery=await page.locator('.single-classes').boundingBox();
+      assert.ok(level.y+level.height<=gallery.y,'level control above class gallery');
+    }
     const measurements=await page.evaluate(()=>({
       viewport:innerWidth,
       document:document.documentElement.scrollWidth,
