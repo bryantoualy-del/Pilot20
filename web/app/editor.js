@@ -1033,6 +1033,31 @@ export async function renderEditor(main, d, a) {
               t("remaining"),
           ),
         );
+      for (const choiceClass of d.classes) {
+        const classData = a.context.index.class(choiceClass.id)?.data;
+        if (!classData || choiceClass.level < classData.subclassLevel) continue;
+        const subclasses = a.context.index
+          .list("subclass")
+          .filter((entry) => entry.data.classId === choiceClass.id);
+        body.append(
+          field(
+            a.cls(choiceClass.id) + " · " + t("subclass"),
+            select(
+              [["", t("choose")], ...subclasses.map((entry) => [entry.id, a.name(entry)])],
+              choiceClass.subclassId ?? "",
+              (e) => update((draft) => {
+                const current = draft.classes.find((entry) => entry.id === choiceClass.id);
+                if (!current) return;
+                if (current.subclassId && current.subclassId !== e.target.value)
+                  retainDecision(draft, "subclass", choiceClass.id);
+                current.subclassId = e.target.value || null;
+              }),
+            ),
+          ),
+        );
+        if (choiceClass.subclassId && !a.context.index.get(choiceClass.subclassId))
+          body.append(el("p", { class: "warning-text" }, t("unavailable")));
+      }
       const info = classInfo(c.id, a.state.locale);
       if (info)
         body.append(
@@ -1367,46 +1392,6 @@ export async function renderEditor(main, d, a) {
       );
       body.append(el("p", {}, t("preparationHelp")));
     }
-    if (d.step === "features")
-      for (const c of d.classes) {
-        const data = a.context.index.class(c.id)?.data;
-        if (
-          !data ||
-          c.level < data.subclassLevel ||
-          Number(
-            d.uiLevel ??
-              report.choices.find((q) =>
-                report.issues.some((i) => i.choiceId === q.id),
-              )?.level ??
-              1,
-          ) !== data.subclassLevel
-        )
-          continue;
-        const subs = a.context.index
-          .list("subclass")
-          .filter((i) => i.data.classId === c.id);
-        body.append(
-          field(
-            a.cls(c.id) + " · " + t("subclass"),
-            select(
-              [["", t("choose")], ...subs.map((i) => [i.id, a.name(i)])],
-              c.subclassId ?? "",
-              (e) =>
-                update((x) => {
-                  const current = x.classes.find((k) => k.id === c.id);
-                  if (
-                    current.subclassId &&
-                    current.subclassId !== e.target.value
-                  )
-                    retainDecision(x, "subclass", c.id);
-                  current.subclassId = e.target.value || null;
-                }),
-            ),
-          ),
-        );
-        if (c.subclassId && !a.context.index.get(c.subclassId))
-          body.append(el("p", { class: "warning-text" }, t("unavailable")));
-      }
     if (d.step === "skills") {
       body.append(el("p", {}, t("grantHelp")));
       const ledger = [...(report.origin?.ledger ?? [])];
@@ -1587,25 +1572,6 @@ export async function renderEditor(main, d, a) {
             badge(
               allFeatureChoices.filter(pending).length + " " + t("remaining"),
               "warning",
-            ),
-            field(
-              t("levelFocus"),
-              select(
-                levels.map((l) => [
-                  String(l),
-                  t("level") +
-                    " " +
-                    l +
-                    " · " +
-                    allFeatureChoices.filter((q) => q.level === l && pending(q))
-                      .length,
-                ]),
-                String(d.uiLevel ?? focus),
-                (e) =>
-                  viewUpdate((x) => {
-                    x.uiLevel = Number(e.target.value);
-                  }),
-              ),
             ),
           ),
         );
