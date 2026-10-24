@@ -86,6 +86,8 @@ try{
  }
  await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).waitFor();
  assert.equal(await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).isEnabled(),true,await p.locator('.single-body').innerText());
+ await changed(async()=>{await p.getByLabel('Description physique',{exact:true}).fill('Cicatrice au menton');await p.getByLabel('Description physique',{exact:true}).blur();});
+ await p.locator('.summary-preview>summary').click();assert.ok(await p.locator('.summary-preview .sheet-vitals').isVisible());
  // Leave restrictive filters in the list before finalizing. Saving must reveal the character.
  await p.getByRole('button',{name:'Enregistrer et quitter',exact:true}).click();
  await p.getByRole('heading',{name:'Mes persos',exact:true}).waitFor();
@@ -102,6 +104,7 @@ try{
  results.push('Fighter1 created through one route, race and skill decisions resolved, backtracking preserves scores, saved to library');
  const record=await p.evaluate(async()=>{const {openIndexedDB}=await import('/src/persistence/adapters.js');const s=await openIndexedDB();try{return(await s.list('characters'))[0].value;}finally{s.close();}});
  const armorClass=await p.evaluate(async d=>{const {derive}=await import('/src/character/derive.js');return derive(d).ac;},record.definition);assert.equal(armorClass,19);
+ assert.match(record.definition.identity.description,/Cicatrice au menton/);
  assert.equal(record.definition.identity.name,'Work4 Guerrier');assert.ok(record.definition.equipment.some(e=>e.id.startsWith('starting:fighter:')));assert.equal(record.definition.background,'Guild Merchant');assert.equal(record.spellbook.characterRevision,record.definition.revision);
  const savedDraft=(await drafts())[0];assert.equal(savedDraft.mode,'single');assert.equal(savedDraft.finalized,true);
  await p.reload();await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();

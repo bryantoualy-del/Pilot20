@@ -34,6 +34,12 @@ export async function renderCreator(main,input,a) {
   const path=singlePathReader(a.context,a.config);
   const filters=new Map();
   const swaps=new Map();
+  const summaryOpen=new Map();
+  function summaryDisclosure(key,title,children,initial=false,classes=''){
+    const panel=el('details',{class:classes,open:summaryOpen.get(key)??initial},el('summary',{},title),...children);
+    panel.addEventListener('toggle',()=>{if(panel.isConnected)summaryOpen.set(key,panel.open);});
+    return panel;
+  }
   const text=key=>a.t(key);
   const label=decision=>({identity:w('Votre personnage','Your character'),race:w('Choisissez votre race','Choose your race'),'human-variant':w('Choisissez votre variante humaine','Choose your human variant'),subrace:text('subrace'),class:w('Classe et niveau','Class and level'),background:text('background'),scores:text('scores'),'hit-points':w('Points de vie','Hit points'),'equipment-method':w('Votre équipement de départ','Your starting equipment'),equipment:text('equipment'),training:w('Maîtrises','Proficiencies'),summary:w('Votre personnage est-il prêt ?','Is your character ready?')})[decision.kind]??(decision.kind==='origin-choice'?(decision.choice.label?.[a.state.locale]??optionName(decision.choice.key,a)):decision.kind==='equipment-choice'?decision.choice.label[a.state.locale]:choiceName(decision.choice,a));
   async function update(fn,{navigation=false}={}) {
@@ -132,8 +138,7 @@ export async function renderCreator(main,input,a) {
     if(d.pendingAdvancement)body.append(el('p',{role:'status'},w('Progression en cours : ','Level gain in progress: ')+a.cls(d.pendingAdvancement.classId)),button(w('Annuler ce gain de niveau','Cancel this level gain'),async()=>{const restored=cancelAdvancement(d);Object.keys(d).forEach(k=>delete d[k]);Object.assign(d,restored);await a.autosave(d);await draw(true);}));
     if(current.kind==='identity'){
       body.append(field(text('name'),el('input',{id:'character-name',value:d.name,maxlength:200,autocomplete:'off',onchange:e=>update(x=>{x.name=e.target.value;})})),
-        el('p',{},w('Un nom suffit pour commencer. Vous pourrez le changer ensuite.','Start with a name. You can change it later.')),
-        el('details',{},el('summary',{},w('Portrait et apparence — facultatif','Portrait and appearance — optional')),appearanceControls(a,d,update)));
+        el('p',{},w('Un nom suffit pour commencer. Vous pourrez le changer ensuite.','Start with a name. You can change it later.')));
     }
     if(current.kind==='race'){
       body.append(renderRacePicker(d,a,update,filters));
@@ -376,8 +381,24 @@ export async function renderCreator(main,input,a) {
     if(current.kind==='equipment'){body.append(inventoryControls(d,a,update));const built=compileDraft(a.context,a.config,{...d,confirmed:true,reviewed:true});if(built.character||built.equipmentPreview)body.append(el('details',{},el('summary',{},w('Porter ou ranger le matériel','Equip or stow equipment')),(built.equipmentPreview??built.character.equipment).filter(e=>['armor','shield','weapon'].includes(e.kind)).map(e=>check(e.name?.[a.state.locale]??e.id,e.equipped,event=>update(x=>{x.unequippedItems=event.target.checked?(x.unequippedItems??[]).filter(id=>id!==e.id):[...new Set([...(x.unequippedItems??[]),e.id])];})))));} 
     if(current.kind==='summary'){
       const compiled=compileDraft(a.context,a.config,{...d,confirmed:true});
-      body.append(el('p',{},d.classes.map(c=>a.cls(c.id)+' '+c.level).join(' / ')));
-      if(compiled.stats)body.append(el('div',{class:'single-summary'},el('p',{},text('hp')+' '+compiled.stats.maxHp),el('p',{},text('ac')+' '+compiled.stats.ac)));
+      body.querySelector('h1').textContent=w('Résumé','Summary');
+      const description=el('textarea',{rows:4,maxlength:5000,onchange:e=>update(x=>{x.description=e.target.value;})},d.description??'');
+      const appearance=summaryDisclosure('appearance',w('Portrait & apparence','Portrait & appearance'),[
+        el('p',{class:'single-help'},w('Facultatif · modifiable plus tard','Optional · editable later')),
+        appearanceControls(a,d,update),field(w('Description physique','Physical description'),description)
+      ],true,'summary-appearance');
+      const review=el('section',{class:'summary-review','aria-label':w('Résumé du personnage','Character summary')});
+      const layout=el('div',{class:'summary-layout'},appearance,review);body.append(layout);
+      const heading=el('div',{class:'summary-identity'},el('h2',{},d.name||w('Votre personnage','Your character')),
+        el('p',{},[report.origin?.race?a.name(report.origin.race):'',d.classes.map(c=>a.cls(c.id)+' '+c.level).join(' / ')].filter(Boolean).join(' · ')));
+      review.append(heading);
+      const preview=summaryDisclosure('preview',w('Aperçu de la fiche','Character sheet preview'),[],false,'summary-preview');
+      if(compiled.stats){
+        const s=compiled.stats;
+        preview.append(el('div',{class:'sheet-vitals'},[[text('hp'),s.maxHp],[text('ac'),s.ac],[w('Initiative','Initiative'),(s.initiative>=0?'+':'')+s.initiative]].map(([label,value])=>el('div',{class:'sheet-vital'},el('small',{},label),el('strong',{},value)))),
+          el('div',{class:'sheet-abilities'},ABILITIES.map(key=>el('div',{class:'sheet-ability'},el('span',{class:'sheet-ability-label'},a.label(key)),el('strong',{},report.scores[key]),el('small',{},(s.modifiers[key]>=0?'+':'')+s.modifiers[key])))));
+      }else preview.append(el('p',{class:'single-help'},w('Complétez les choix ci-dessous pour calculer la fiche.','Complete the choices below to calculate the sheet.')));
+      review.append(preview,el('p',{class:compiled.valid?'summary-ready':'single-help',role:'status'},compiled.valid?w('Tous les choix obligatoires sont complétés.','All required choices are complete.'):w('Des éléments restent à vérifier ci-dessous.','Some items still need review below.')));
       // Le récapitulatif se construit à partir du même état que le parcours :
       // aucun choix manquant n'est remplacé par une suggestion silencieuse.
       const recap=el('div',{class:'single-recap','aria-label':w('Récapitulatif des choix','Choice recap')});
@@ -390,7 +411,8 @@ export async function renderCreator(main,input,a) {
       };
       const recapSection=(heading,rows)=>{
         if(!rows.length)return;
-        recap.append(el('section',{class:'recap-section'},el('h2',{},heading),...rows));
+        const incomplete=rows.some(row=>row.classList.contains('recap-incomplete'));
+        recap.append(summaryDisclosure('recap:'+heading,[el('span',{},heading),el('small',{},incomplete?w('À compléter','To complete'):rows.length+' '+w('élément(s)','item(s)'))],rows,incomplete,'recap-section'));
       };
       const chosen=x=>{
         const q=x.choice;
@@ -444,7 +466,7 @@ export async function renderCreator(main,input,a) {
         recapRow(w('Méthode','Method'),d.equipmentMethod==='wealth'?w('Richesse initiale et achats','Starting wealth and purchases'):w('Matériel de départ','Starting equipment'),'equipment'),
         recapRow(w('Équipement choisi','Chosen equipment'),[...equipment,...additional].join(' · ')||w('Aucun équipement sélectionné','No equipment selected'),'equipment',report.economy?.valid!==false)
       ]);
-      body.append(recap);
+      review.append(recap);
       const events=d.advancementEvents??[];body.append(el('details',{},el('summary',{},w('Historique de progression','Advancement history')),el('p',{},d.advancementHistory?.length?w('Historique complet renseigné ; sa validité est contrôlée à la sauvegarde.','Complete history supplied; validation runs on save.'):w('Création directe au niveau choisi : les acquisitions antérieures ne sont pas connues. Aucun niveau passé n’a été inventé.','Created directly at the selected level: earlier acquisitions are unknown. No past levels were invented.')),events.map(e=>el('p',{},a.cls(e.classId)+' · '+e.from.classes.reduce((n,c)=>n+c.level,0)+' → '+e.to.classes.reduce((n,c)=>n+c.level,0)+' · '+new Date(e.recordedAt).toLocaleDateString(a.state.locale)))));
       if(d.finalized&&!externalEdits&&!d.pendingAdvancement&&d.classes.reduce((n,c)=>n+c.level,0)<20)body.append(el('details',{},el('summary',{},w('Gagner un niveau','Gain a level')),d.classes.map(c=>button(a.cls(c.id)+' → '+(c.level+1),async()=>{const next=beginAdvancement(d,c.id);Object.keys(d).forEach(k=>delete d[k]);Object.assign(d,next);await a.autosave(d);await draw(true);})),a.config.enabledOptions.includes('multiclass')?a.context.index.list('class').filter(c=>!d.classes.some(x=>x.id===c.data.classId)).map(c=>button(w('Nouvelle classe : ','New class: ')+a.cls(c.data.classId),async()=>{const next=beginAdvancement(d,c.data.classId);Object.keys(d).forEach(k=>delete d[k]);Object.assign(d,next);await a.autosave(d);await draw(true);})):null));
       for(const issue of compiled.issues){const item=el('div',{class:'single-issue'},el('p',{},issueMessage(issue,report,a)));
