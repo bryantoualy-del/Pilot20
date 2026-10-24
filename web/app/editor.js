@@ -150,6 +150,8 @@ export function optionName(value, a) {
 export function choiceName(q, a) {
   const owner=a.context.installed.get(q.ownerId),key=owner?.type==='feat'?q.id.split(':').at(-1):q.id.slice(q.classId.length+1),label=choiceLabels[key]?.[a.state.locale==='fr'?0:1];
   if(owner?.type==='feat')return a.name(owner)+(label?' · '+label:'');
+  // A class's cantrip selection is not a feat-granted spell selection.
+  if(key==='cantrips')return a.state.locale==='fr'?'Sorts mineurs':'Cantrips';
   if(label)return label;
   if(q.kind==='subclass')return a.t('subclass');
   const suffix = q.id.slice(q.classId.length + 1),
