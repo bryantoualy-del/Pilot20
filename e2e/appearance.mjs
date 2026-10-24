@@ -65,7 +65,7 @@ try {
   await summary.focus();await p.keyboard.press('Enter');assert.equal((await style()).open,false);
   await p.locator('header').getByLabel('Langue / Language').selectOption('en');
   const english=p.getByText('Portrait & appearance',{exact:true});
-  await english.waitFor();assert.match(await english.evaluate(e=>getComputedStyle(e,'::after').content),/Show/);
+  await english.waitFor();assert.match(await english.evaluate(e=>getComputedStyle(e,'::after').content),/Hide/);
   assert.deepEqual(errors,[]);
   console.log('Appearance: warm dark palette, explicit FR/EN disclosure hints, rotating chevron, portrait section opens by touch/keyboard, responsive375/390/1180 screenshots.');
 }finally{if(browser)await browser.close();server.kill();}
