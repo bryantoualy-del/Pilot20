@@ -95,7 +95,7 @@ try{
  await p.locator('.toolbar select').selectOption('fighter');
  await p.getByLabel('En cours',{exact:true}).check();
  await p.locator('article').filter({has:p.getByRole('heading',{name:'Work4 Guerrier',exact:true})}).getByRole('button',{name:/^Reprendre/}).click();
- await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).click();
+ await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).click();await p.getByRole('heading',{name:'Mes persos',exact:true}).waitFor();
  await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).waitFor();await p.getByRole('heading',{name:'Work4 Guerrier',exact:true}).waitFor();
  assert.equal(await p.getByRole('searchbox').inputValue(),'');
  assert.equal(await p.locator('.toolbar select').inputValue(),'');

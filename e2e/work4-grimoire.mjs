@@ -98,7 +98,7 @@ try{
  await p.locator('.single-body details').filter({has:p.getByText('Remplacer un sort d’origine — facultatif',{exact:true})}).locator('summary').click();
  await creatorChange(()=>p.getByLabel('Nouveau sort',{exact:true}).selectOption('srd51:identify'));
  await p.locator('.single-plan summary').click();await creatorChange(()=>p.locator('.single-plan nav').getByRole('button',{name:'Récapitulatif',exact:true}).click());
- await creatorChange(()=>p.locator('.single-body input[type=checkbox]').check());await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).click();
+ await creatorChange(()=>p.locator('.single-body input[type=checkbox]').check());await p.getByRole('button',{name:'Enregistrer le personnage',exact:true}).click();await p.getByRole('heading',{name:'Mes persos',exact:true}).waitFor();
  await p.getByRole('heading',{name:'Grimoire sorcerer',exact:true}).waitFor();const exchanged=await read('sorcerer');assert.ok(exchanged.definition.spells.known.includes('srd51:identify'));assert.ok(!exchanged.definition.spells.known.includes('phb14:spell:arms-of-hadar'));assert.ok(!exchanged.definition.spells.prepared.includes('srd51:identify'));
  results.push('Aberrant Mind origin spell exchange is recorded through the Creator and saved as known, not prepared');
  assert.deepEqual(errors,[]);await context.close();
