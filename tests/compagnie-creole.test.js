@@ -32,8 +32,8 @@ test('campaign Dhampir is discoverable independently of Ravenloft with homebrew 
   const rows = raceLibrary(context, { query: 'dhampir' });
   assert.ok(rows.some(r => r.versions.some(v => v.entry.id === 'ravenloft:race:dhampir')));
   const homebrew = rows.find(r => r.versions.some(v => v.entry.id === raceId));
-  assert.equal(homebrew.nom_fr, 'Dhampir — Compagnie Créole');
-  assert.deepEqual(homebrew.sourceIds, ['homebrew']);
+  assert.equal(homebrew.nom_fr, 'Dhampir');
+  assert.ok(homebrew.sourceIds.includes('homebrew'));
   assert.match(context.index.get(raceId).source.document, /Création maison.*Kobold Press/);
   const restricted = { ...config, sourceRestrictions: true, enabledSourceIds: ['srd51'] };
   assert.equal(campaignCatalog(playerCatalogs, [], restricted).index.get(raceId), undefined);
@@ -73,4 +73,15 @@ test('campaign ancestry and radiant vulnerability survive character export/impor
   assert.equal((await imported.get(draft.id)).raceId, raceId);
   const restored = await characterLibrary(other).get(draft.id);
   assert.deepEqual(restored, await characterLibrary(storage).get(draft.id));
+});
+
+test('CC dhampir shares the standard family and suggested portrait',async()=>{
+ const families=raceLibrary(context),family=families.find(f=>f.raceFamilyId==='dhampir');
+ assert.ok(family.versions.some(v=>v.entry.id===raceId));
+ assert.ok(family.versions.length>=2);
+ assert.ok(!families.some(f=>f.raceFamilyId==='dhampir-compagnie-creole'));
+ const {refreshPortrait}=await import('../src/creator/appearance.js');
+ const d=Object.assign(newDraft(),{raceId,gender:'femme'});
+ refreshPortrait(context,d);assert.equal(d.portrait,'./assets/shared/races/dhampir-femme.webp');
+ d.portrait='data:image/png;base64,custom';refreshPortrait(context,d);assert.equal(d.portrait,'data:image/png;base64,custom');
 });

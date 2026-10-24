@@ -39,3 +39,16 @@ test('level reduction retains old selections for review instead of silently dele
  assert.deepEqual(d.selections,before);assert.ok(p.report.issues.some(i=>i.code==='obsolete-choice'||i.code==='inactive-subclass'));
  assert.equal(decisionReady(p.decisions.find(x=>x.id==='summary'),p.report,d),false);
 });
+
+test('target-level invocation selection follows the pact choice',async()=>{
+ const {playerCatalogs}=await import('../src/catalog/player-catalogs.js');
+ const fullContext=campaignCatalog(playerCatalogs,[],config);
+ for(const level of [3,10,12]){
+ const d=newDraft();d.classes=[{id:'warlock',level,subclassId:'srd51:the-fiend'}];
+ d.raceId='srd51:race:human';d.backgroundId='srd51:background:acolyte';
+ const {decisions}=singlePath(fullContext,config,d);
+ const pact=decisions.findIndex(x=>x.choice?.id==='warlock:pact-boon');
+ const invocations=decisions.findIndex(x=>x.choice?.id==='warlock:invocations');
+ assert.ok(pact>=0&&invocations>pact);
+ }
+});

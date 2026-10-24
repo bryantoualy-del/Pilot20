@@ -18,13 +18,17 @@ export function singlePath(context,config,draft,report=draftProgression(context,
   if(humanVariants(context,draft.raceId).length>1)decisions.push({id:'human-variant',kind:'human-variant'});
   if(race?.data.subraces.length)decisions.push({id:'subrace',kind:'subrace'});
   decisions.push({id:'class',kind:'class'},{id:'background',kind:'background'},{id:'scores',kind:'scores'},{id:'hit-points',kind:'hit-points'});
-  const training=q=>['skill','proficiency','language','tool','training'].includes(q.kind)||q.ownerId===draft.backgroundId;
+  const training=q=>['skill','proficiency','language','tool','training'].includes(q.kind)||!!draft.backgroundId&&q.ownerId===draft.backgroundId;
   const originTraining=(report.origin?.choices??[]).filter(training);
   const classTraining=(report.choices??[]).filter(training);
   decisions.push({id:'training',kind:'training',originChoices:originTraining,classChoices:classTraining});
   decisions.push(...(report.origin?.choices??[]).filter(q=>q.kind!=='score'&&q.key!=='ability-pattern'&&!training(q)).map(q=>({id:'origin:'+q.id,kind:'origin-choice',choice:q})));
   const priority={skill:0,proficiency:1,subclass:2,asi:3,feature:4,expertise:5,spellbook:7,spell:8,prepared:9};
   decisions.push(...[...(report.choices??[]).filter(q=>!training(q))].sort((a,b)=>a.level-b.level||(priority[a.kind]??6)-(priority[b.kind]??6)||a.id.localeCompare(b.id)).map(q=>({id:'choice:'+q.id,kind:'class-choice',choice:q})));
+  // The invocation screen selects the whole target-level loadout, so show its pact prerequisite first.
+  const pactIndex=decisions.findIndex(x=>x.choice?.id==='warlock:pact-boon');
+  const invocationIndex=decisions.findIndex(x=>x.choice?.id==='warlock:invocations');
+  if(pactIndex>invocationIndex&&invocationIndex>=0){const [pact]=decisions.splice(pactIndex,1);decisions.splice(invocationIndex,0,pact);}
   decisions.push({id:'equipment',kind:'equipment'},{id:'summary',kind:'summary'});
   const scoreChoice=(report.origin?.choices??[]).some(q=>'origin:'+q.id===draft.step&&(q.kind==='score'||q.key==='ability-pattern'));
   const trainingStep=[...originTraining.map(q=>'origin:'+q.id),...classTraining.map(q=>'choice:'+q.id)].includes(draft.step);

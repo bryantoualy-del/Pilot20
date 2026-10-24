@@ -18,7 +18,7 @@ export const compagnieCreole = {
     },
     data: {
       ruleset: 'dnd5e-2014', rulesSourceId: 'homebrew',
-      raceFamilyId: 'dhampir-compagnie-creole',
+      raceFamilyId: 'dhampir',
       rulesVersionId: 'dhampir-compagnie-creole/homebrew-v1',
       aliases: ['Kentaro', 'Dhampire', 'Kobold Press'],
       summary: {

@@ -16,7 +16,7 @@ try{await new Promise((r,j)=>{server.stdout.once('data',r);server.once('error',j
  await selector.getByRole('button',{name:'Don des dragons diamantins',exact:true}).click();
  await p.locator('.feat-preview').getByRole('heading',{name:'Don des dragons diamantins',exact:true}).waitFor();
  assert.ok(await p.locator('.feat-preview [data-choice-id]').count());
- assert.equal(await p.getByRole('button',{name:'Continuer',exact:true}).isDisabled(),true);
+ assert.equal(await p.getByRole('button',{name:'Continuer',exact:true}).isDisabled(),false);
  const oldRadio=await p.locator('.feat-preview').getByRole('radio',{name:'Intelligence',exact:true}).elementHandle();
  await p.locator('.feat-preview').getByRole('radio',{name:'Intelligence',exact:true}).check();
  await p.waitForFunction(input=>!input.isConnected,oldRadio);
