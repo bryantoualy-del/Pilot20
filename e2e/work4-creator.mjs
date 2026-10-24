@@ -73,9 +73,10 @@ try{
   if(['training','origin-choice','class-choice','equipment-choice'].includes(kind)){
    if(await p.locator('.single-body').getAttribute('data-decision-id')==='choice:fighter:fighting-style')await changed(()=>p.getByRole('radio',{name:'Défense',exact:true}).check());
    let guard=0;
-   while(await p.locator('.single-actions .primary').isDisabled()){
+   while(true){
     assert.ok(guard++<20,'bounded option quota');
     const groups=p.locator('.single-choice');let incomplete=-1;for(let i=0;i<await groups.count();i++){const count=(await groups.nth(i).locator('.single-choice-count').innerText()).match(/· (\d+) \/ (\d+)/);if(count&&Number(count[1])<Number(count[2])){incomplete=i;break;}}
+    if(incomplete<0)break;
     const options=incomplete>=0?groups.nth(incomplete).locator('.single-options input:enabled:not(:checked)'):p.locator('.single-options input:enabled:not(:checked)');assert.ok(await options.count(),'an eligible option remains');
     // Un clic déclenche un re-render immédiat : .check() retente sur un nouveau nœud.
     await changed(()=>options.first().click());
