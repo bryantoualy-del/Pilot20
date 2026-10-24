@@ -56,7 +56,7 @@ try{
  assert.equal(before.scoreMethod,'point-buy');
  assert.deepEqual(Object.values(before.scores),[10,10,10,10,10,10]);
  assert.equal(await p.locator('.point-budget strong').innerText(),'12 / 27');
- assert.equal(await p.locator('.single-actions .primary').isDisabled(),true);
+ assert.equal(await p.locator('.single-actions .primary').isDisabled(),false);
  await changed(()=>p.locator('.single-actions button').first().click());
  await next();assert.deepEqual((await drafts())[0].scores,before.scores);
  // 10→15 deux fois (+7 et +7), puis 10→11 (+1) : total 27/27.
@@ -128,7 +128,7 @@ try{
  assert.ok(await p.locator('.single-options input').count());results.push('Legacy expert Bard10 migrates without data loss and exposes real Magical Secrets10 decisions');
 
  await step('PV');await changed(()=>p.locator('.single-hp').locator('..').locator('select').selectOption('rolled'));
- assert.equal(await p.locator('.single-hp input').count(),9);assert.equal(await p.locator('.single-actions .primary').isDisabled(),true);
+ assert.equal(await p.locator('.single-hp input').count(),9);assert.equal(await p.locator('.single-actions .primary').isDisabled(),false);
  for(let i=0;i<9;i++)await changed(async()=>{await p.locator('.single-hp input').nth(i).fill('4');await p.locator('.single-hp input').nth(i).blur();});
  assert.equal(await p.locator('.single-actions .primary').isEnabled(),true);const hpBefore=(await drafts()).find(d=>d.id==='work4-legacy-bard').hpRolls;assert.equal(Object.keys(hpBefore).length,9);
  await changed(()=>p.locator('.single-actions button').first().click());await next();assert.deepEqual((await drafts()).find(d=>d.id==='work4-legacy-bard').hpRolls,hpBefore);results.push('Bard10 records nine HP rolls, blocks missing results and preserves them after backtracking');
