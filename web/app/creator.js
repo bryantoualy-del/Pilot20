@@ -60,7 +60,7 @@ export async function renderCreator(main,input,a) {
       const name=el('span',{class:'capability-level-title'},text('level')+' '+level);
       const meta=el('span',{class:'capability-level-meta'},
         ...(current?[el('span',{class:'capability-current'},w('Actuel','Current'))]:[]),
-        ...(future?[el('span',{class:'capability-lock','aria-label':w('Non débloqué','Not unlocked')},'♙')]:[]),
+        ...(future?[el('span',{class:'capability-lock','aria-label':w('Non débloqué','Not unlocked')},'🔒')]:[]),
         el('span',{class:'capability-level-count'},entries.length+' '+(entries.length===1?w('capacité','feature'):w('capacités','features'))));
       panel.append(el('details',{class:'capability-level'+(future?' is-future':'')+(current?' is-current':''),open:!future},
         el('summary',{},name,meta),
