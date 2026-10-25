@@ -558,8 +558,7 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
 // Keep defensive copies without the general structured-clone serialization cost.
 export function cloneCatalogValue(value) {
   if (value === null || typeof value !== "object") return value;
-  if (Array.isArray(value)) return value.map(cloneCatalogValue);
-  const copy = {};
+  const copy = Array.isArray(value) ? new Array(value.length) : {};
   for (const key of Object.keys(value)) copy[key] = cloneCatalogValue(value[key]);
   return copy;
 }

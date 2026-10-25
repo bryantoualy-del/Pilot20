@@ -26,3 +26,16 @@ test('every catalog lookup preserves values and returns independently mutable ne
   assert.equal(index.class('missing'),undefined);
   assert.deepEqual(index.list('missing'),[]);
 });
+
+// The validator allows sparse arrays and extra safe enumerable array properties.
+test('validated JSON copies preserve sparse arrays, extra properties and negative zero',async()=>{
+  const {cloneCatalogValue}=await import('../src/catalog/catalog-v3.js');
+  const {json}=await import('../src/character/contracts.js');
+  const value={array:[null, , -0, {flag:false,text:"é"}]};
+  value.array.extra={nested:[1]};
+  json(value);
+  const copy=cloneCatalogValue(value);
+  assert.deepEqual(copy,structuredClone(value));
+  copy.array.extra.nested.push(2);
+  assert.deepEqual(value.array.extra.nested,[1]);
+});
