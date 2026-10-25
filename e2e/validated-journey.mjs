@@ -121,6 +121,30 @@ try{
   assert.equal(await page.locator('.score-table .score-row').count(),6);
   assert.equal(await page.locator('.score-table .score-final').count(),6);
   assert.equal(await page.locator('.journey-steps [aria-current=step]').getAttribute('aria-label'),'Caractéristiques');
+  // A saved subclass remains reachable after Class; both capability panels share their rendering.
+  await navigate(()=>page.locator('.journey-steps button[aria-label="Classe"]').click());
+  await navigate(()=>page.locator('.single-classes button').filter({hasText:'Occultiste'}).first().click());
+  await page.locator('.class-capabilities > summary').click();
+  const classStyle=await page.locator('.capability-level-title').first().evaluate(e=>({font:getComputedStyle(e).font,fontColor:getComputedStyle(e).color}));
+  await navigate(()=>page.locator('.single-actions .primary').click());
+  const subclass=page.locator('[data-choice-id="warlock:subclass"]');
+  assert.ok(await subclass.isVisible());
+  await navigate(()=>subclass.locator('input[type=radio]').first().check());
+  assert.match(await page.locator('.class-capabilities > summary').innerText(),/Capacités de sous-classe par niveau/);
+  for(const size of [{width:390,height:844},{width:1180,height:820}]){
+    await page.setViewportSize(size);
+    await page.locator('.class-capabilities').evaluate(e=>e.open=true);
+    assert.ok(await page.locator('.capability-entry').first().isVisible());
+    assert.deepEqual(await page.locator('.capability-level-title').first().evaluate(e=>({font:getComputedStyle(e).font,fontColor:getComputedStyle(e).color})),classStyle);
+    const levels=await page.locator('.capability-level').evaluateAll(nodes=>nodes.map(e=>({future:e.classList.contains('is-future'),open:e.open,lock:!!e.querySelector('.capability-lock')})));
+    assert.ok(levels.some(e=>!e.future)&&levels.some(e=>e.future));
+    assert.ok(levels.every(e=>e.future?!e.open&&e.lock:e.open&&!e.lock));
+    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  }
+  await navigate(()=>page.locator('.journey-steps button[aria-label="Classe"]').click());
+  await navigate(()=>page.locator('.single-actions .primary').click());
+  assert.ok(await subclass.isVisible(),'saved subclass must not be skipped');
+  assert.equal(await subclass.locator('input:checked').count(),1);
   assert.deepEqual(errors,[]);
   console.log('Six-stage 2014 UX: icons, race details, class/level, scores, touch targets and four viewports validated.');
 } finally {if(browser)await browser.close();server.kill();}
