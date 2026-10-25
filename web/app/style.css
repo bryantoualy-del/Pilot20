@@ -1987,3 +1987,10 @@ button.primary,.single-actions .primary{color:#191b1f}
 .class-capabilities .capability-entry:hover,.class-capabilities .capability-entry:focus-visible{border-color:var(--accent)}
 .class-capabilities .capability-chevron{flex-shrink:0;color:var(--muted);font-size:20px;line-height:1}
 @media(max-width:700px){.class-capabilities .capability-entries{padding-left:6px}.class-capabilities .capability-level>summary{gap:6px}.class-capabilities .capability-level-meta{gap:5px}}
+
+/* Future class and subclass abilities: visible, muted, and collapsed until unlocked. */
+.class-capabilities .capability-level.is-future .capability-level-title,
+.class-capabilities .capability-level.is-future .capability-entry{opacity:.62}
+.class-capabilities .capability-lock{font-size:13px;color:var(--muted);line-height:1}
+.class-capabilities .capability-level.is-future .capability-entry:hover,
+.class-capabilities .capability-level.is-future .capability-entry:focus-visible{opacity:1}
