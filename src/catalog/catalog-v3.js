@@ -554,6 +554,14 @@ export function validateCatalogV3(c, { distribution = "private" } = {}) {
   }
   return c;
 }
+// Only used on catalog entries after validateCatalogV3 has accepted plain JSON.
+// Keep defensive copies without the general structured-clone serialization cost.
+export function cloneCatalogValue(value) {
+  if (value === null || typeof value !== "object") return value;
+  const copy = Array.isArray(value) ? new Array(value.length) : {};
+  for (const key of Object.keys(value)) copy[key] = cloneCatalogValue(value[key]);
+  return copy;
+}
 /** Sources/options default off for private packs; no implicit override or executable pack code. */
 export function createCatalogIndex(
   packs,
@@ -683,12 +691,12 @@ export function createCatalogIndex(
   for (const key of entries.keys()) visit(key);
   // Do not expose mutable cached definitions or mutable Map internals.
   return Object.freeze({
-    get: (key) => structuredClone(entries.get(key)),
+    get: (key) => cloneCatalogValue(entries.get(key)),
     list: (type) =>
       [...entries.values()]
         .filter((i) => !type || i.type === type)
-        .map((i) => structuredClone(i)),
-    class: (cls) => structuredClone(classes.get(cls)),
+        .map((i) => cloneCatalogValue(i)),
+    class: (cls) => cloneCatalogValue(classes.get(cls)),
     size: entries.size,
   });
 }
