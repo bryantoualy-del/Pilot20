@@ -190,6 +190,22 @@ try{
     assert.equal(await page.locator('.capability-chevron').count(),0);
     assert.ok(await page.locator('.capability-info').count()>0);
     await page.locator('.class-capabilities').screenshot({path:`docs/screenshots/capability-reopen/${id}-subclass-${width}.png`});
+    // The subclass information dialog must use the same cards as the creator.
+    await page.locator('.single-option').filter({has:page.locator('input:checked')}).getByRole('button',{name:'Détail',exact:true}).click();
+    const dialog=page.locator('#dialog[open]');
+    await dialog.locator('.class-capabilities > summary').click();
+    assert.ok(await dialog.locator('.capability-level').count()>0);
+    assert.equal(await dialog.locator('.capability-level.is-future[open]').count(),0);
+    assert.equal(await dialog.locator('.capability-level.is-current').count(),1);
+    assert.equal(await dialog.locator('.entry-description').count(),0);
+    assert.ok(await dialog.locator('.capability-info').count()>0);
+    await dialog.screenshot({path:`docs/screenshots/capability-reopen/${id}-dialog-${width}.png`});
+    const featureName=await dialog.locator('.capability-entry > span').first().innerText();
+    await dialog.locator('.capability-entry').first().click();
+    assert.equal(await dialog.locator('h2').innerText(),featureName);
+    await dialog.getByRole('button',{name:'Retour à la sous-classe',exact:true}).click();
+    assert.ok(await dialog.locator('.class-capabilities[open]').isVisible());
+    await page.getByRole('button',{name:'Fermer',exact:true}).click();
     await page.locator('.capability-entry').first().click();
     await page.locator('#dialog[open]').waitFor();
     await page.getByRole('button',{name:'Fermer',exact:true}).click();

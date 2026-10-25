@@ -1,3 +1,4 @@
+import {capabilityList as renderCapabilityList} from './capability-list.js';
 import {selectOriginChoice} from '../../src/creator/origin-selection.js';
 import {selectBackground} from '../../src/creator/background-selection.js';
 import {featPicker,featPreview} from './feat-picker.js';
@@ -49,28 +50,7 @@ export async function renderCreator(main,input,a) {
     return panel;
   }
   const text=key=>a.t(key);
-  function capabilityList(grants,levelNow,title){
-    const panel=el('details',{class:'class-capabilities'},el('summary',{},title));
-    const levels=[...new Set(grants.map(row=>row.level).filter(level=>level>=1&&level<=20))].sort((a,b)=>a-b);
-    for(const level of levels){
-      const ids=[...new Set(grants.filter(row=>row.level===level).flatMap(row=>row.featureIds??[]))];
-      const entries=ids.map(id=>a.context.index.get(id)).filter(Boolean);
-      if(!entries.length)continue;
-      const future=level>levelNow,current=level===levelNow;
-      const name=el('span',{class:'capability-level-title'},text('level')+' '+level);
-      const meta=el('span',{class:'capability-level-meta'},
-        ...(current?[el('span',{class:'capability-current'},w('Actuel','Current'))]:[]),
-        ...(future?[el('span',{class:'capability-lock','aria-label':w('Non débloqué','Not unlocked')},'🔒')]:[]),
-        el('span',{class:'capability-level-count'},entries.length+' '+(entries.length===1?w('capacité','feature'):w('capacités','features'))));
-      panel.append(el('details',{class:'capability-level'+(future?' is-future':'')+(current?' is-current':''),open:!future},
-        el('summary',{},name,meta),
-        el('div',{class:'capability-entries'},entries.map(entry=>el('button',{
-          type:'button',class:'capability-entry','aria-haspopup':'dialog',
-          'aria-label':w('Informations sur ','Information about ')+a.name(entry),onclick:()=>details(entry)},
-          el('span',{},a.name(entry)),el('span',{class:'capability-info','aria-hidden':'true'},'i'))))));
-    }
-    return panel;
-  }
+  const capabilityList=(grants,levelNow,title)=>renderCapabilityList(grants,levelNow,title,a,details);
 
   const label=decision=>({identity:w('Votre personnage','Your character'),race:w('Choisissez votre race','Choose your race'),'human-variant':w('Choisissez votre variante humaine','Choose your human variant'),subrace:text('subrace'),class:w('Classe et niveau','Class and level'),background:text('background'),scores:text('scores'),'hit-points':w('Points de vie','Hit points'),'equipment-method':w('Votre équipement de départ','Your starting equipment'),equipment:text('equipment'),training:w('Maîtrises','Proficiencies'),summary:w('Votre personnage est-il prêt ?','Is your character ready?')})[decision.kind]??(decision.kind==='origin-choice'?(decision.choice.label?.[a.state.locale]??optionName(decision.choice.key,a)):decision.kind==='equipment-choice'?decision.choice.label[a.state.locale]:choiceName(decision.choice,a));
   async function update(fn,{navigation=false}={}) {
@@ -82,7 +62,7 @@ export async function renderCreator(main,input,a) {
     for(let pass=0;pass<8;pass++){const report=path(d).report;const missing=(report.startingEquipment?.choices??[]).filter(q=>!d.startingEquipmentChoices?.[q.id]?.length);if(!missing.length)return;d.startingEquipmentChoices??={};for(const q of missing)if(q.options[0])d.startingEquipmentChoices[q.id]=[q.options[0].id];}
   }
   async function go(id){d.step=id;await a.autosave(d);await draw(true);}
-  const details=entry=>showEntryDetails(entry,a);
+  const details=entry=>showEntryDetails(entry,a,{levelNow:d.classes.find(c=>a.context.index.class(c.id)?.data.subclassIds?.includes(entry.id))?.level});
   function originSpellExchanges(classId){
     const c=d.classes.find(c=>c.id===classId),sub=a.context.index.get(c?.subclassId);if(!sub?.data.spellGrantReplacement)return null;
     const state=swaps.get(classId)??{level:c.level,slot:null};swaps.set(classId,state);
