@@ -24,11 +24,11 @@ test('2014 conditional decisions are retained while visually regrouped',()=>{
   assert.deepEqual(ordered.map(x=>x.id),['identity','race','class','subclass','scores','hp','background','training','asi','spell','equipment','summary']);
   assert.equal(ordered.length,decisions.length);
 });
-test('a subclass is not bypassed if its mandatory choice is missing',()=>{
+test('a subclass remains visible whether its choice is missing or already saved',()=>{
   const q={kind:'class-choice',choice:{kind:'subclass'}},report={},draft={};
   assert.equal(journeyStage(q),'class');
   assert.equal(resolvedInlineDecision(q,report,draft,()=>false),false);
-  assert.equal(resolvedInlineDecision(q,report,draft,()=>true),true);
+  assert.equal(resolvedInlineDecision(q,report,draft,()=>true),false);
   assert.equal(resolvedInlineDecision({kind:'class'},report,draft,()=>true),false);
 });
 

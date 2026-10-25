@@ -30,6 +30,7 @@ export function orderJourney(decisions) {
 /** Optional duplicate steps are bypassed only if the actual rules resolver accepts them. */
 export function resolvedInlineDecision(decision,report,draft,ready) {
   const inlineFeat=decision.kind==='class-choice'&&[...Object.values(draft.selections??{}),...Object.values(draft.originSelections??{})].some(values=>values.includes(decision.choice?.ownerId))&&decision.choice?.ownerId?.includes(':feat:');
-  return (inlineFeat||decision.kind==='subrace'||decision.kind==='class-choice'&&decision.choice?.kind==='subclass')
+  // Subclasses have their own screen; an existing choice must remain reviewable.
+  return (inlineFeat||decision.kind==='subrace')
     && ready(decision,report,draft);
 }
