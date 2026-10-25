@@ -49,6 +49,28 @@ export async function renderCreator(main,input,a) {
     return panel;
   }
   const text=key=>a.t(key);
+  function capabilityList(grants,levelNow,title){
+    const panel=el('details',{class:'class-capabilities'},el('summary',{},title));
+    const levels=[...new Set(grants.map(row=>row.level).filter(level=>level>=1&&level<=20))].sort((a,b)=>a-b);
+    for(const level of levels){
+      const ids=[...new Set(grants.filter(row=>row.level===level).flatMap(row=>row.featureIds??[]))];
+      const entries=ids.map(id=>a.context.index.get(id)).filter(Boolean);
+      if(!entries.length)continue;
+      const future=level>levelNow,current=level===levelNow;
+      const name=el('span',{class:'capability-level-title'},text('level')+' '+level);
+      const meta=el('span',{class:'capability-level-meta'},
+        ...(current?[el('span',{class:'capability-current'},w('Actuel','Current'))]:[]),
+        ...(future?[el('span',{class:'capability-lock','aria-label':w('Non débloqué','Not unlocked')},'🔒')]:[]),
+        el('span',{class:'capability-level-count'},entries.length+' '+(entries.length===1?w('capacité','feature'):w('capacités','features'))));
+      panel.append(el('details',{class:'capability-level'+(future?' is-future':'')+(current?' is-current':''),open:!future},
+        el('summary',{},name,meta),
+        el('div',{class:'capability-entries'},entries.map(entry=>button(
+          [el('span',{},a.name(entry)),el('span',{class:'capability-chevron','aria-hidden':'true'},'›')],
+          ()=>details(entry),'capability-entry')))));
+    }
+    return panel;
+  }
+
   const label=decision=>({identity:w('Votre personnage','Your character'),race:w('Choisissez votre race','Choose your race'),'human-variant':w('Choisissez votre variante humaine','Choose your human variant'),subrace:text('subrace'),class:w('Classe et niveau','Class and level'),background:text('background'),scores:text('scores'),'hit-points':w('Points de vie','Hit points'),'equipment-method':w('Votre équipement de départ','Your starting equipment'),equipment:text('equipment'),training:w('Maîtrises','Proficiencies'),summary:w('Votre personnage est-il prêt ?','Is your character ready?')})[decision.kind]??(decision.kind==='origin-choice'?(decision.choice.label?.[a.state.locale]??optionName(decision.choice.key,a)):decision.kind==='equipment-choice'?decision.choice.label[a.state.locale]:choiceName(decision.choice,a));
   async function update(fn,{navigation=false}={}) {
     d.finalized=false;d.status='draft';d.confirmed=false;d.reviewed=false;fn(d);
@@ -209,27 +231,8 @@ export async function renderCreator(main,input,a) {
       levelField.classList.add('primary-class-level');
       const mobileLevel=el('div',{class:'class-level-mobile'});
       setup.append(el('div',{class:'class-level-desktop'},levelField));
-      const grants=[...(a.context.index.class(cls.id)?.data.grants??[]),...(a.context.index.get(cls.subclassId)?.data.grants??[])].filter(row=>row.level<=cls.level);
-      const levels=[...new Set(grants.map(row=>row.level))].sort((a,b)=>a-b);
-      const capabilityPanel=el('details',{class:'class-capabilities'},
-        el('summary',{},w('Capacités par niveau','Features by level')));
-      for(const level of levels){
-        const ids=[...new Set(grants.filter(row=>row.level===level).flatMap(row=>row.featureIds))];
-        const entries=ids.map(id=>a.context.index.get(id)).filter(Boolean);
-        if(!entries.length)continue;
-        const isCurrent=level===cls.level;
-        const heading=el('span',{class:'capability-level-title'},text('level')+' '+level);
-        const count=el('span',{class:'capability-level-count'},
-          entries.length+' '+(entries.length===1?w('capacité','feature'):w('capacités','features')));
-        const current=isCurrent?el('span',{class:'capability-current'},w('Actuel','Current')):null;
-        const panel=el('details',{class:'capability-level'+(isCurrent?' is-current':''),open:true},
-          el('summary',{},heading,el('span',{class:'capability-level-meta'},...(current?[current]:[]),count)),
-          el('div',{class:'capability-entries'},
-            entries.map(entry=>button([el('span',{},a.name(entry)),el('span',{class:'capability-chevron','aria-hidden':'true'},'›')],
-              ()=>details(entry),'capability-entry'))));
-        capabilityPanel.append(panel);
-      }
-      setup.append(capabilityPanel);
+      const grants=a.context.index.class(cls.id)?.data.grants??[];
+      setup.append(capabilityList(grants,cls.level,w('Capacités par niveau','Features by level')));
       classLayout.append(classes,setup);body.append(mobileLevel,classLayout);placeClassLevel(body);
       if(a.config.enabledOptions.includes('multiclass')){
         const advanced=el('details',{},el('summary',{},w('Ajouter une classe','Add a class')));
@@ -369,6 +372,14 @@ export async function renderCreator(main,input,a) {
         }
         else for(const i of [0,1])body.append(field('+1 · '+(i+1),select([['',w('Choisir une caractéristique','Choose an ability')],...ABILITIES.map(id=>[id,a.label(id)])],state.pair[i],e=>{state.pair[i]=e.target.value;const [x,y]=state.pair,id=q.options.find(id=>id===`asi:${x}:${y}`||id===`asi:${y}:${x}`);saveChoice(id?[id]:[]);})));
       }else body.append(choiceList(q,values,saveChoice));
+      if(q.kind==='subclass'){
+        const selectedSubclass=a.context.index.get(values[0]);
+        if(selectedSubclass){
+          const subclassGrants=selectedSubclass.data?.grants??[];
+          if(subclassGrants.length)body.append(capabilityList(subclassGrants,d.classes.find(c=>c.id===q.classId)?.level??q.level,
+            w('Capacités de sous-classe par niveau','Subclass features by level')));
+        }
+      }
       if(q.id==='cleric:nature-cantrip')body.append(el('p',{class:'single-help'},w('Le domaine de la Nature accorde un sort mineur de druide. Il reste un sort de clerc pour vous.','The Nature domain grants one druid cantrip, which counts as a cleric cantrip for you.')));
       if(q.id==='ranger:beast-companion'&&values.includes('phb14:ranger:companion:other'))body.append(field(w('Nom de la bête, FP et référence du profil','Beast name, CR and profile reference'),el('textarea',{value:d.companionNotes??'',maxlength:3000,onchange:e=>update(x=>{x.companionNotes=e.target.value;})})));
       if(q.id===q.classId+':known-spells'){const exchanges=originSpellExchanges(q.classId);if(exchanges)body.append(exchanges);}
