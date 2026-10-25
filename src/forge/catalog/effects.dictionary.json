@@ -1,0 +1,845 @@
+[
+  {
+    "id": "p20:effect:modifier",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Modifier numérique",
+      "en": "modifier"
+    },
+    "classification": "calculable",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "stat": {
+          "enum": [
+            "ac",
+            "attack",
+            "damage",
+            "spell-attack",
+            "spell-save-dc",
+            "saving-throws",
+            "initiative"
+          ]
+        },
+        "value": {
+          "type": "number"
+        },
+        "operation": {
+          "enum": [
+            "add",
+            "set",
+            "multiply"
+          ]
+        },
+        "scope": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "stat",
+        "value",
+        "operation",
+        "scope"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:damage",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Dégâts",
+      "en": "damage"
+    },
+    "classification": "automatable-with-context",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "dice": {
+          "type": "string",
+          "pattern": "^(?:[1-9][0-9]*d[1-9][0-9]*(?:[+-][0-9]+)?|[0-9]+)$"
+        },
+        "damageType": {
+          "anyOf": [
+            {
+              "enum": [
+                "acid",
+                "bludgeoning",
+                "cold",
+                "fire",
+                "force",
+                "lightning",
+                "necrotic",
+                "piercing",
+                "poison",
+                "psychic",
+                "radiant",
+                "slashing",
+                "thunder"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "role": {
+          "enum": [
+            "weapon-base",
+            "additional",
+            "standalone"
+          ]
+        }
+      },
+      "required": [
+        "dice",
+        "damageType",
+        "role"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:defense",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Résistance, immunité ou vulnérabilité",
+      "en": "defense"
+    },
+    "classification": "automatable-with-context",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "resistance",
+            "immunity",
+            "vulnerability"
+          ]
+        },
+        "damageType": {
+          "enum": [
+            "acid",
+            "bludgeoning",
+            "cold",
+            "fire",
+            "force",
+            "lightning",
+            "necrotic",
+            "piercing",
+            "poison",
+            "psychic",
+            "radiant",
+            "slashing",
+            "thunder"
+          ]
+        },
+        "condition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "damageType",
+        "condition"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:ability-score",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Modification de caractéristique",
+      "en": "ability-score"
+    },
+    "classification": "calculable",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "ability": {
+          "enum": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ]
+        },
+        "operation": {
+          "enum": [
+            "floor",
+            "set",
+            "add",
+            "maximum"
+          ]
+        },
+        "value": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "ability",
+        "operation",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:healing",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Soins",
+      "en": "healing"
+    },
+    "classification": "automatable-with-context",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "dice": {
+          "type": "string",
+          "pattern": "^(?:[1-9][0-9]*d[1-9][0-9]*(?:[+-][0-9]+)?|[0-9]+)$"
+        }
+      },
+      "required": [
+        "dice"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:cast-spell",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Lancer un sort",
+      "en": "cast-spell"
+    },
+    "classification": "automatable-with-context",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "spellId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9:-]*$"
+        },
+        "level": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dc": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/dc"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "attackBonus": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "spellId",
+        "level",
+        "dc",
+        "attackBonus"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:condition",
+    "version": "1.0.0",
+    "name": {
+      "fr": "État temporaire",
+      "en": "condition"
+    },
+    "classification": "automatable-with-context",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "condition": {
+          "type": "string"
+        },
+        "operation": {
+          "enum": [
+            "apply",
+            "remove",
+            "suppress"
+          ]
+        }
+      },
+      "required": [
+        "condition",
+        "operation"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:custom",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Extension à arbitrer",
+      "en": "custom"
+    },
+    "classification": "manual",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9:-]*$"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "payload": {
+          "type": "object"
+        },
+        "fallback": {
+          "enum": [
+            "manual",
+            "narrative"
+          ]
+        }
+      },
+      "required": [
+        "key",
+        "summary",
+        "payload",
+        "fallback"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:movement",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Vitesse",
+      "en": "movement"
+    },
+    "classification": "calculable",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "walk",
+            "fly",
+            "swim",
+            "climb",
+            "burrow"
+          ]
+        },
+        "operation": {
+          "enum": [
+            "set",
+            "add",
+            "multiply"
+          ]
+        },
+        "value": {
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "ft",
+            "m"
+          ]
+        }
+      },
+      "required": [
+        "mode",
+        "operation",
+        "value",
+        "unit"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:sense",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Sens",
+      "en": "sense"
+    },
+    "classification": "calculable",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "sense": {
+          "enum": [
+            "darkvision",
+            "blindsight",
+            "truesight"
+          ]
+        },
+        "value": {
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "ft",
+            "m"
+          ]
+        },
+        "operation": {
+          "enum": [
+            "grant-or-extend",
+            "set"
+          ]
+        }
+      },
+      "required": [
+        "sense",
+        "value",
+        "unit",
+        "operation"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:proficiency",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Maîtrise",
+      "en": "proficiency"
+    },
+    "classification": "calculable",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9:-]*$"
+          }
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:spell-immunity",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Immunité à un sort",
+      "en": "spell-immunity"
+    },
+    "classification": "automatable-with-context",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "spellId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9:-]*$"
+        }
+      },
+      "required": [
+        "spellId"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:condition-defense",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Protection contre un état",
+      "en": "condition-defense"
+    },
+    "classification": "automatable-with-context",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "condition": {
+          "type": "string"
+        },
+        "operation": {
+          "enum": [
+            "immunity",
+            "suppress-existing-and-prevent-new"
+          ]
+        }
+      },
+      "required": [
+        "condition",
+        "operation"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:roll-mode",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Avantage / désavantage",
+      "en": "roll-mode"
+    },
+    "classification": "automatable-with-context",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "roll": {
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "advantage",
+            "disadvantage"
+          ]
+        },
+        "context": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "roll",
+        "mode",
+        "context"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:narrative",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Effet narratif",
+      "en": "narrative"
+    },
+    "classification": "narrative",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:critical-to-normal",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Critique converti en coup normal",
+      "en": "critical-to-normal"
+    },
+    "classification": "automatable-with-context",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "scope": {
+          "enum": [
+            "incoming"
+          ]
+        }
+      },
+      "required": [
+        "scope"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:save-outcome",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Résultat de sauvegarde",
+      "en": "save-outcome"
+    },
+    "classification": "automatable-with-context",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "enum": [
+            "failure-to-success"
+          ]
+        },
+        "ability": {
+          "enum": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ]
+        }
+      },
+      "required": [
+        "operation",
+        "ability"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:light",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Lumière",
+      "en": "light"
+    },
+    "classification": "automatable-with-context",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "radius": {
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "ft",
+            "m"
+          ]
+        },
+        "intensity": {
+          "anyOf": [
+            {
+              "enum": [
+                "bright",
+                "dim"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "radius",
+        "unit",
+        "intensity"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:mode-switch",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Changer de configuration",
+      "en": "mode-switch"
+    },
+    "classification": "automatable-with-context",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "modeId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9:-]*$"
+        },
+        "exclusiveGroup": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9:-]*$"
+        }
+      },
+      "required": [
+        "modeId",
+        "exclusiveGroup"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:resource-change",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Modifier une ressource",
+      "en": "resource-change"
+    },
+    "classification": "automatable-with-context",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "resourceId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9:-]*$"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "operation": {
+          "enum": [
+            "add",
+            "set"
+          ]
+        }
+      },
+      "required": [
+        "resourceId",
+        "amount",
+        "operation"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  },
+  {
+    "id": "p20:effect:grant-action",
+    "version": "1.0.0",
+    "name": {
+      "fr": "Accorder une capacité",
+      "en": "grant-action"
+    },
+    "classification": "automatable-with-context",
+    "implementedInPilot20": false,
+    "parameterSchema": {
+      "type": "object",
+      "properties": {
+        "abilityId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9:-]*$"
+        }
+      },
+      "required": [
+        "abilityId"
+      ],
+      "additionalProperties": false
+    },
+    "schemaDefinitions": "../schemas/magic-item.schema.json#/$defs",
+    "stacking": "source-instance-and-effect-id; never stack an item with itself",
+    "fallback": "manual",
+    "notes": "Contract only. Unknown conditions or missing type/DC must prevent automatic resolution."
+  }
+]
