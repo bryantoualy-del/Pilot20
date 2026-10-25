@@ -211,10 +211,25 @@ export async function renderCreator(main,input,a) {
       setup.append(el('div',{class:'class-level-desktop'},levelField));
       const grants=[...(a.context.index.class(cls.id)?.data.grants??[]),...(a.context.index.get(cls.subclassId)?.data.grants??[])].filter(row=>row.level<=cls.level);
       const levels=[...new Set(grants.map(row=>row.level))].sort((a,b)=>a-b);
-      setup.append(el('details',{},el('summary',{},w('Capacités par niveau','Features by level')),
-        levels.map(level=>el('div',{class:'feature-level'},el('strong',{},text('level')+' '+level),
-          el('div',{class:'feature-buttons'},grants.filter(row=>row.level===level).flatMap(row=>row.featureIds)
-            .map(id=>{const entry=a.context.index.get(id);return entry?button(a.name(entry),()=>details(entry),'subtle'):null;}))))));
+      const capabilityPanel=el('details',{class:'class-capabilities'},
+        el('summary',{},w('Capacités par niveau','Features by level')));
+      for(const level of levels){
+        const ids=[...new Set(grants.filter(row=>row.level===level).flatMap(row=>row.featureIds))];
+        const entries=ids.map(id=>a.context.index.get(id)).filter(Boolean);
+        if(!entries.length)continue;
+        const isCurrent=level===cls.level;
+        const heading=el('span',{class:'capability-level-title'},text('level')+' '+level);
+        const count=el('span',{class:'capability-level-count'},
+          entries.length+' '+(entries.length===1?w('capacité','feature'):w('capacités','features')));
+        const current=isCurrent?el('span',{class:'capability-current'},w('Actuel','Current')):null;
+        const panel=el('details',{class:'capability-level'+(isCurrent?' is-current':''),open:true},
+          el('summary',{},heading,el('span',{class:'capability-level-meta'},...(current?[current]:[]),count)),
+          el('div',{class:'capability-entries'},
+            entries.map(entry=>button([el('span',{},a.name(entry)),el('span',{class:'capability-chevron','aria-hidden':'true'},'›')],
+              ()=>details(entry),'capability-entry'))));
+        capabilityPanel.append(panel);
+      }
+      setup.append(capabilityPanel);
       classLayout.append(classes,setup);body.append(mobileLevel,classLayout);placeClassLevel(body);
       if(a.config.enabledOptions.includes('multiclass')){
         const advanced=el('details',{},el('summary',{},w('Ajouter une classe','Add a class')));
