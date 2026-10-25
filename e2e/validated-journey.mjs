@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {chromium,webkit} from 'playwright';
 import {spawn} from 'node:child_process';
+import {mkdir} from 'node:fs/promises';
 const port=Number(process.env.PILOT20_E2E_PORT??4180);
 const server=spawn(process.execPath,['scripts/serve-web.mjs'],{env:{...process.env,PORT:String(port)},stdio:'pipe'});
 let browser;
@@ -145,6 +146,58 @@ try{
   await navigate(()=>page.locator('.single-actions .primary').click());
   assert.ok(await subclass.isVisible(),'saved subclass must not be skipped');
   assert.equal(await subclass.locator('input:checked').count(),1);
+  // Finalized records must use the same navigation and panel after a full reload.
+  await page.evaluate(async()=>{
+    const {openIndexedDB}=await import('/src/persistence/adapters.js'),storage=await openIndexedDB();
+    const {playerCatalogs}=await import('/src/catalog/player-catalogs.js');
+    const {campaignRepository}=await import('/src/campaign/repository.js');
+    const {characterLibrary}=await import('/src/persistence/library.js');
+    const {creatorRepository}=await import('/src/creator/repository.js');
+    const {newDraft,suggestChoices,compileDraft}=await import('/src/creator/model.js');
+    const library=characterLibrary(storage),repo=creatorRepository(storage,library),campaigns=campaignRepository(storage,playerCatalogs);
+    const config=await campaigns.initialize(),ctx=await campaigns.context(config);
+    for(const id of ['warlock','monk']){
+      let d=Object.assign(newDraft('default','reopen-'+id),{name:'Reopen '+id,classChosen:true,raceId:'srd51:race:human',backgroundId:'srd51:background:acolyte',classes:[{id,level:3,subclassId:ctx.index.class(id).data.subclassIds[0]}],step:'summary'});
+      d=suggestChoices(ctx,config,d);d.confirmed=d.reviewed=true;
+      const result=compileDraft(ctx,config,d);if(!result.valid)throw Error(JSON.stringify(result.issues));
+      await repo.save(d);await repo.finalize(d,result.character,{expectedDraftRevision:1,spellbook:result.spellbook});
+    }
+    storage.close();
+  });
+  await mkdir('docs/screenshots/capability-reopen',{recursive:true});
+  const panelStyle=()=>page.locator('.class-capabilities').evaluate(panel=>{
+    const result={};
+    for(const selector of ['.capability-level','.capability-level>summary','.capability-entry']){
+      const style=getComputedStyle(panel.querySelector(selector));
+      result[selector]=Object.fromEntries(['fontSize','padding','margin','backgroundColor','borderRadius','display'].map(key=>[key,style[key]]));
+    }
+    return result;
+  });
+  for(const id of ['warlock','monk'])for(const width of [390,1180]){
+    await page.setViewportSize({width,height:844});await page.reload();
+    await page.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();
+    await page.locator('article').filter({has:page.getByRole('heading',{name:'Reopen '+id,exact:true})}).getByRole('button',{name:'Modifier',exact:true}).click();
+    await page.locator('.single-body').waitFor();
+    await navigate(()=>page.locator('.journey-steps button[aria-label="Classe"]').click());
+    await page.locator('.class-capabilities > summary').click();
+    const expectedStyle=await panelStyle();
+    await page.locator('.class-capabilities').screenshot({path:`docs/screenshots/capability-reopen/${id}-class-${width}.png`});
+    await navigate(()=>page.locator('.single-actions .primary').click());
+    assert.ok(await page.locator(`[data-choice-id="${id}:subclass"]`).isVisible());
+    assert.equal(await page.locator(`[data-choice-id="${id}:subclass"] input:checked`).count(),1);
+    await page.locator('.class-capabilities > summary').click();
+    assert.deepEqual(await panelStyle(),expectedStyle);
+    assert.equal(await page.locator('.capability-chevron').count(),0);
+    assert.ok(await page.locator('.capability-info').count()>0);
+    await page.locator('.class-capabilities').screenshot({path:`docs/screenshots/capability-reopen/${id}-subclass-${width}.png`});
+    await page.locator('.capability-entry').first().click();
+    await page.locator('#dialog[open]').waitFor();
+    await page.getByRole('button',{name:'Fermer',exact:true}).click();
+    await navigate(()=>page.locator('.single-actions .primary').click());
+    assert.equal(await page.locator('.journey-steps [aria-current=step]').getAttribute('aria-label'),'Caractéristiques');
+    await navigate(()=>page.locator('.single-actions').getByRole('button',{name:'Retour',exact:true}).click());
+    assert.ok(await page.locator(`[data-choice-id="${id}:subclass"]`).isVisible());
+  }
   assert.deepEqual(errors,[]);
   console.log('Six-stage 2014 UX: icons, race details, class/level, scores, touch targets and four viewports validated.');
 } finally {if(browser)await browser.close();server.kill();}

@@ -1985,7 +1985,7 @@ button.primary,.single-actions .primary{color:#191b1f}
 .class-capabilities .capability-entries{display:grid;gap:5px;padding:0 0 12px 16px}
 .class-capabilities .capability-entry{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;min-height:40px;padding:8px 11px;font-size:14px;font-weight:400;background:var(--surface);border:1px solid var(--border);border-radius:5px;white-space:normal;overflow-wrap:anywhere}
 .class-capabilities .capability-entry:hover,.class-capabilities .capability-entry:focus-visible{border-color:var(--accent)}
-.class-capabilities .capability-chevron{flex-shrink:0;color:var(--muted);font-size:20px;line-height:1}
+.class-capabilities .capability-info{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:18px;height:18px;border:1.5px solid currentColor;border-radius:50%;color:var(--muted);font-family:Georgia,serif;font-size:13px;font-weight:700;font-style:normal;line-height:1}
 @media(max-width:700px){.class-capabilities .capability-entries{padding-left:6px}.class-capabilities .capability-level>summary{gap:6px}.class-capabilities .capability-level-meta{gap:5px}}
 
 /* Future class and subclass abilities: visible, muted, and collapsed until unlocked. */

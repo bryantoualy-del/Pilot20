@@ -64,9 +64,10 @@ export async function renderCreator(main,input,a) {
         el('span',{class:'capability-level-count'},entries.length+' '+(entries.length===1?w('capacité','feature'):w('capacités','features'))));
       panel.append(el('details',{class:'capability-level'+(future?' is-future':'')+(current?' is-current':''),open:!future},
         el('summary',{},name,meta),
-        el('div',{class:'capability-entries'},entries.map(entry=>button(
-          [el('span',{},a.name(entry)),el('span',{class:'capability-chevron','aria-hidden':'true'},'›')],
-          ()=>details(entry),'capability-entry')))));
+        el('div',{class:'capability-entries'},entries.map(entry=>el('button',{
+          type:'button',class:'capability-entry','aria-haspopup':'dialog',
+          'aria-label':w('Informations sur ','Information about ')+a.name(entry),onclick:()=>details(entry)},
+          el('span',{},a.name(entry)),el('span',{class:'capability-info','aria-hidden':'true'},'i'))))));
     }
     return panel;
   }
