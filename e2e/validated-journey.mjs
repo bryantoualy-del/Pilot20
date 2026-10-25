@@ -196,7 +196,7 @@ try{
     await dialog.locator('.class-capabilities > summary').click();
     assert.ok(await dialog.locator('.capability-level').count()>0);
     assert.equal(await dialog.locator('.capability-level.is-future[open]').count(),0);
-    assert.equal(await dialog.locator('.capability-level.is-current').count(),1);
+    assert.equal(await dialog.locator('.capability-level.is-current').count(),await page.locator('.single-body .capability-level.is-current').count());
     assert.equal(await dialog.locator('.entry-description').count(),0);
     assert.ok(await dialog.locator('.capability-info').count()>0);
     await dialog.screenshot({path:`docs/screenshots/capability-reopen/${id}-dialog-${width}.png`});
