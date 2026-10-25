@@ -1,6 +1,7 @@
 import { check, json, keys, id } from "../character/contracts.js";
 import {
   createCatalogIndex,
+  cloneCatalogValue,
   validateCatalogV3,
 } from "../catalog/catalog-v3.js";
 import { buildCharacter } from "../catalog/character-builder.js";
@@ -118,16 +119,15 @@ const view = (items) => {
     items.filter((i) => i.type === "class").map((i) => [i.data.classId, i]),
   );
   return Object.freeze({
-    get: (k) => structuredClone(entries.get(k)),
+    get: (k) => cloneCatalogValue(entries.get(k)),
     list: (t) =>
       [...entries.values()]
         .filter((i) => !t || i.type === t)
-        .map(structuredCloneSafe),
-    class: (k) => structuredClone(classes.get(k)),
+        .map(cloneCatalogValue),
+    class: (k) => cloneCatalogValue(classes.get(k)),
     size: entries.size,
   });
 };
-const structuredCloneSafe = (v) => structuredClone(v);
 /** Validate the complete installed graph BEFORE filtering, including disabled packs/options. */
 export function campaignCatalog(publicPacks, privatePacks, campaign) {
   validateCampaign(campaign);
