@@ -87,7 +87,7 @@ Le document [COMPAGNIE-CREOLE.md](COMPAGNIE-CREOLE.md) conserve les notes du cat
 ## Validation
 
 - Suite existante `npm test` : 590 tests passés avant l’ajout de la suite Forge.
-- `npm run test:forge` : 14 tests passés. Les 23 catégories, toutes les définitions officielles et de campagne, les six cas, les copies, imports atomiques, révisions concurrentes, erreurs de quota, réouverture IndexedDB, conditions, équipement, phases de charges et non-interprétation du texte sont couverts.
+- `npm run test:forge` : 14 tests passés. Les 22 catégories, toutes les définitions officielles et de campagne, les six cas, les copies, imports atomiques, révisions concurrentes, erreurs de quota, réouverture IndexedDB, conditions, équipement, phases de charges et non-interprétation du texte sont couverts.
 - `npm run test:e2e:forge` : parcours réel Chromium réussi aux dimensions 1180×820, 390×844 et 375×844. Création/édition, charges/pouvoirs, duplication, export/import, catalogue, hors ligne après rechargement, absence de débordement horizontal et retour au créateur sont vérifiés.
 - `npm run build:web` réussi. Le service worker inclut les modules et données Forge.
 - WebKit/Safari et appareils physiques : non exécutés localement. Le test est ajouté à la matrice Chromium/WebKit de GitHub Actions ; son résultat distant reste à vérifier.
