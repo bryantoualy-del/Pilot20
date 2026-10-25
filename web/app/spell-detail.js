@@ -1,13 +1,14 @@
 import {subclassSummary} from '../../src/catalog/subclass-summaries.js';
 import {readableText} from '../../src/catalog/readable-text.js';
-import {el} from './dom.js';
+import {el,button} from './dom.js';
+import {capabilityList} from './capability-list.js';
 import {optionName} from './editor.js';
 import {spellTerms} from '../../src/catalog/localization.js';
 import {spellReference} from '../../src/catalog/spell-reference.js';
 import {spellNotesFr} from '../../src/catalog/spell-notes-fr.js';
 import {raceTraitList} from './race-facts.js';
 import {abilityBonusSummary} from '../../src/creator/race-presentation.js';
-export function showEntryDetails(entry,a,{extra=[]}={}){
+export function showEntryDetails(entry,a,{extra=[],levelNow=null}={}){
  if(!entry)return;
  const w=(fr,en)=>a.state.locale==='fr'?fr:en,data=entry.data,body=el('section',{},el('h2',{},a.name(entry)));
  if(entry.type==='race')body.append(el('p',{},abilityBonusSummary(data,a.label,a.state.locale)),raceTraitList(data,a));
@@ -26,7 +27,11 @@ export function showEntryDetails(entry,a,{extra=[]}={}){
   if(data.choices?.length)body.append(el('h3',{},w('Choix de l’historique','Background choices')),data.choices.map(c=>el('p',{},(c.label?.[a.state.locale]??c.key)+' · '+(c.count??1))));
   if(data.equipment?.length)body.append(el('details',{},el('summary',{},w('Équipement initial','Starting equipment')),data.equipment.map(e=>el('p',{},e.name?.[a.state.locale]??e.id))));
  }
- if(entry.type==='subclass'){const features=(data.grants??[]).flatMap(row=>row.featureIds.map(id=>({level:row.level,entry:a.context.index.get(id)}))).filter(x=>x.entry);body.append(el('p',{},subclassSummary(entry,a.state.locale)??''),el('details',{},el('summary',{},w('Capacités par niveau','Features by level')),features.map(x=>el('div',{},el('strong',{},a.t('level')+' '+x.level+' · '+a.name(x.entry)),el('p',{class:'entry-description'},readableText(a.state.locale==='en'?(x.entry.data.descriptionEn??(x.entry.data.language==='fr'?'':x.entry.data.description)):(x.entry.data.language==='en'?'':x.entry.data.description)))))));}
+ if(entry.type==='subclass'){
+  const panel=capabilityList(data.grants??[],levelNow,w('Capacités par niveau','Features by level'),a,feature=>
+   showEntryDetails(feature,a,{extra:[button(w('Retour à la sous-classe','Back to subclass'),()=>{a.modal(body);},'subtle')]}));
+  body.append(el('p',{},subclassSummary(entry,a.state.locale)??''),panel);
+ }
  const note=a.state.locale==='fr'?spellNotesFr[entry.id]:null;
  if(note)body.append(el('p',{class:'eyebrow'},w('Résumé original · règles 2014','Original summary · 2014 rules')),el('p',{class:'entry-description'},note));
  const description=a.state.locale==='en'&&data.descriptionEn?data.descriptionEn:data.description,language=a.state.locale==='en'&&data.descriptionEn?'en':data.language;
