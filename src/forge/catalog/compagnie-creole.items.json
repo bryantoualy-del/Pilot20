@@ -1,0 +1,1490 @@
+[
+  {
+    "id": "p20:mi:2014:cc:pyromerlin",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:pyromerlin",
+    "recordKind": "family",
+    "name": {
+      "fr": "PyroMerlin",
+      "en": null
+    },
+    "aliases": [],
+    "category": "weapon",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "custom",
+    "provenance": [
+      {
+        "sourceId": "cc-brack",
+        "page": 1,
+        "section": null
+      },
+      {
+        "sourceId": "cc-brack",
+        "page": 2,
+        "section": "Pyromerlin : Éveillé"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": "srd51:warhammer",
+      "label": "Marteau de guerre",
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": true,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": null,
+      "requiresEquipped": null
+    },
+    "traits": {
+      "cursed": null,
+      "sentient": null,
+      "evolving": true
+    },
+    "effects": [
+      {
+        "id": "effect-1",
+        "templateId": "p20:effect:modifier",
+        "params": {
+          "stat": "attack",
+          "value": 2,
+          "operation": "add",
+          "scope": "this-weapon"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      },
+      {
+        "id": "effect-2",
+        "templateId": "p20:effect:modifier",
+        "params": {
+          "stat": "damage",
+          "value": 2,
+          "operation": "add",
+          "scope": "this-weapon"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      },
+      {
+        "id": "effect-3",
+        "templateId": "p20:effect:damage",
+        "params": {
+          "dice": "1d10",
+          "damageType": "bludgeoning",
+          "role": "weapon-base"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": "on-hit",
+        "save": null,
+        "target": null
+      },
+      {
+        "id": "effect-4",
+        "templateId": "p20:effect:damage",
+        "params": {
+          "dice": "2d8",
+          "damageType": "fire",
+          "role": "additional"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": "on-hit",
+        "save": null,
+        "target": null
+      },
+      {
+        "id": "effect-5",
+        "templateId": "p20:effect:defense",
+        "params": {
+          "kind": "resistance",
+          "damageType": "fire",
+          "condition": null
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      },
+      {
+        "id": "effect-6",
+        "templateId": "p20:effect:light",
+        "params": {
+          "radius": 9,
+          "unit": "m",
+          "intensity": null
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [
+      {
+        "id": "souffle",
+        "name": {
+          "fr": "Souffle de la forge",
+          "en": null
+        },
+        "activation": "action",
+        "costs": [
+          {
+            "resourceId": "souffle",
+            "amount": 1,
+            "timing": "on-use"
+          }
+        ],
+        "effects": [
+          {
+            "id": "souffle-1",
+            "templateId": "p20:effect:damage",
+            "params": {
+              "dice": "6d6",
+              "damageType": "fire",
+              "role": "standalone"
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": {
+          "shape": "cone",
+          "size": 9,
+          "unit": "m"
+        },
+        "duration": null,
+        "save": {
+          "ability": "dex",
+          "dc": {
+            "kind": "fixed",
+            "value": 16
+          },
+          "success": "half-damage"
+        },
+        "prerequisites": null
+      },
+      {
+        "id": "aura",
+        "name": {
+          "fr": "Créature hostile au corps à corps",
+          "en": null
+        },
+        "activation": "triggered",
+        "costs": [],
+        "effects": [
+          {
+            "id": "aura-1",
+            "templateId": "p20:effect:damage",
+            "params": {
+              "dice": "2d6",
+              "damageType": null,
+              "role": "standalone"
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": "target-turn-start",
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": null,
+        "prerequisites": {
+          "op": "manual",
+          "text": "Créature hostile au corps à corps; distance exacte non donnée."
+        }
+      }
+    ],
+    "resources": [
+      {
+        "id": "souffle",
+        "maximum": 1,
+        "unit": "uses",
+        "recovery": {
+          "formula": null,
+          "event": "daily-unspecified",
+          "capAtMaximum": true
+        },
+        "lastCharge": null
+      }
+    ],
+    "modes": [],
+    "description": {
+      "fr": null,
+      "en": null
+    },
+    "rulesNotes": [
+      "Seul le stade Éveillé est documenté.",
+      "Aucun auto-dégât au porteur documenté dans cette fiche."
+    ],
+    "unknowns": [
+      "Rarity not documented.",
+      "Price and weight not documented.",
+      "Type des 2d6 de l’aura non explicite.",
+      "Moment de récupération du souffle, conditions de la résistance et intensité lumineuse non précisés.",
+      "1d10 indiqué : prise à deux mains ou règle propre non précisée."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Brack",
+    "observations": [
+      {
+        "key": "attackTotal",
+        "value": 11,
+        "source": {
+          "sourceId": "cc-brack",
+          "page": 1,
+          "section": null
+        },
+        "scope": "character-sheet-total"
+      },
+      {
+        "key": "damageTotal",
+        "value": "1d10+7 +2d8 feu",
+        "source": {
+          "sourceId": "cc-brack",
+          "page": 1,
+          "section": null
+        },
+        "scope": "character-sheet-total"
+      }
+    ]
+  },
+  {
+    "id": "p20:mi:2014:cc:kane",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:kane",
+    "recordKind": "family",
+    "name": {
+      "fr": "Kane",
+      "en": null
+    },
+    "aliases": [],
+    "category": "weapon",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "custom",
+    "provenance": [
+      {
+        "sourceId": "cc-kentaro",
+        "page": 1,
+        "section": null
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": "srd51:longsword",
+      "label": "Épée longue",
+      "properties": [
+        "versatile"
+      ],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": null,
+      "requiresEquipped": null
+    },
+    "traits": {
+      "cursed": null,
+      "sentient": null,
+      "evolving": null
+    },
+    "effects": [
+      {
+        "id": "effect-1",
+        "templateId": "p20:effect:modifier",
+        "params": {
+          "stat": "attack",
+          "value": 1,
+          "operation": "add",
+          "scope": "this-weapon"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      },
+      {
+        "id": "effect-2",
+        "templateId": "p20:effect:modifier",
+        "params": {
+          "stat": "damage",
+          "value": 1,
+          "operation": "add",
+          "scope": "this-weapon"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      },
+      {
+        "id": "effect-3",
+        "templateId": "p20:effect:damage",
+        "params": {
+          "dice": "1d8",
+          "damageType": "slashing",
+          "role": "weapon-base"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": "on-hit",
+        "save": null,
+        "target": null
+      },
+      {
+        "id": "effect-4",
+        "templateId": "p20:effect:damage",
+        "params": {
+          "dice": "2d6",
+          "damageType": null,
+          "role": "additional"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": "on-hit",
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": null,
+      "en": null
+    },
+    "rulesNotes": [
+      "Dégâts polyvalents 1d10 explicitement indiqués.",
+      "La mention « lié » peut concerner le pacte plutôt que l’harmonisation.",
+      "Ardente ne suffit pas à importer automatiquement toutes les règles de Flame Tongue."
+    ],
+    "unknowns": [
+      "Rarity not documented.",
+      "Price and weight not documented.",
+      "Type et activation des 2d6.",
+      "Nature exacte du lien."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Kentaro",
+    "observations": [
+      {
+        "key": "attackTotal",
+        "value": 9,
+        "source": {
+          "sourceId": "cc-kentaro",
+          "page": 1,
+          "section": null
+        },
+        "scope": "character-sheet-total"
+      },
+      {
+        "key": "damageTotal",
+        "value": "1d8 (1d10)+4(+1)(+2d6)",
+        "source": {
+          "sourceId": "cc-kentaro",
+          "page": 1,
+          "section": null
+        },
+        "scope": "character-sheet-total"
+      }
+    ]
+  },
+  {
+    "id": "p20:mi:2014:cc:solinar",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:solinar",
+    "recordKind": "family",
+    "name": {
+      "fr": "Solinar",
+      "en": null
+    },
+    "aliases": [],
+    "category": "weapon",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "custom",
+    "provenance": [
+      {
+        "sourceId": "cc-kentaro",
+        "page": 1,
+        "section": null
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": null,
+      "requiresEquipped": null
+    },
+    "traits": {
+      "cursed": null,
+      "sentient": null,
+      "evolving": null
+    },
+    "effects": [
+      {
+        "id": "effect-1",
+        "templateId": "p20:effect:damage",
+        "params": {
+          "dice": "1d8",
+          "damageType": null,
+          "role": "weapon-base"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": "on-hit",
+        "save": null,
+        "target": null
+      },
+      {
+        "id": "effect-2",
+        "templateId": "p20:effect:damage",
+        "params": {
+          "dice": "1d6",
+          "damageType": "radiant",
+          "role": "additional"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": "on-hit",
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [
+      {
+        "id": "save-effect",
+        "name": {
+          "fr": "Effet associé au jet de sauvegarde",
+          "en": null
+        },
+        "activation": "unknown",
+        "costs": [],
+        "effects": [
+          {
+            "id": "save-effect-1",
+            "templateId": "p20:effect:condition",
+            "params": {
+              "condition": "blinded",
+              "operation": "apply"
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": {
+              "value": 1,
+              "unit": "turn",
+              "endsAt": null
+            },
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": {
+          "ability": "con",
+          "dc": {
+            "kind": "fixed",
+            "value": 15
+          },
+          "success": "unknown"
+        },
+        "prerequisites": null
+      }
+    ],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": null,
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Rarity not documented.",
+      "Price and weight not documented.",
+      "Type d’arme, type du d8 et bonus magique non documentés.",
+      "Déclencheur, cible et fin exacte de l’effet non précisés."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Kentaro",
+    "observations": [
+      {
+        "key": "attackTotal",
+        "value": 10,
+        "source": {
+          "sourceId": "cc-kentaro",
+          "page": 1,
+          "section": null
+        },
+        "scope": "character-sheet-total"
+      }
+    ]
+  },
+  {
+    "id": "p20:mi:2014:cc:selhane",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:selhane",
+    "recordKind": "family",
+    "name": {
+      "fr": "Sélhane",
+      "en": null
+    },
+    "aliases": [],
+    "category": "weapon",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "custom",
+    "provenance": [
+      {
+        "sourceId": "cc-kentaro",
+        "page": 1,
+        "section": null
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": null,
+      "requiresEquipped": null
+    },
+    "traits": {
+      "cursed": null,
+      "sentient": null,
+      "evolving": null
+    },
+    "effects": [
+      {
+        "id": "effect-1",
+        "templateId": "p20:effect:damage",
+        "params": {
+          "dice": "1d8",
+          "damageType": null,
+          "role": "weapon-base"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": "on-hit",
+        "save": null,
+        "target": null
+      },
+      {
+        "id": "effect-2",
+        "templateId": "p20:effect:damage",
+        "params": {
+          "dice": "1d6",
+          "damageType": "psychic",
+          "role": "additional"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": "on-hit",
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [
+      {
+        "id": "save-effect",
+        "name": {
+          "fr": "Effet associé au jet de sauvegarde",
+          "en": null
+        },
+        "activation": "unknown",
+        "costs": [],
+        "effects": [
+          {
+            "id": "save-effect-1",
+            "templateId": "p20:effect:condition",
+            "params": {
+              "condition": "next-attack-disadvantage",
+              "operation": "apply"
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": {
+              "value": null,
+              "unit": "until-next-attack",
+              "endsAt": null
+            },
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": {
+          "ability": "wis",
+          "dc": {
+            "kind": "fixed",
+            "value": 15
+          },
+          "success": "unknown"
+        },
+        "prerequisites": null
+      }
+    ],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": null,
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Rarity not documented.",
+      "Price and weight not documented.",
+      "Type d’arme, type du d8 et bonus magique non documentés.",
+      "Déclencheur, cible et fin exacte de l’effet non précisés."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Kentaro",
+    "observations": [
+      {
+        "key": "attackTotal",
+        "value": 10,
+        "source": {
+          "sourceId": "cc-kentaro",
+          "page": 1,
+          "section": null
+        },
+        "scope": "character-sheet-total"
+      }
+    ]
+  },
+  {
+    "id": "p20:mi:2014:cc:volto-fendoir",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:volto-fendoir",
+    "recordKind": "family",
+    "name": {
+      "fr": "Volto-Fendoir",
+      "en": null
+    },
+    "aliases": [],
+    "category": "weapon",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "custom",
+    "provenance": [
+      {
+        "sourceId": "cc-nans",
+        "page": 1,
+        "section": null
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": null,
+      "requiresEquipped": null
+    },
+    "traits": {
+      "cursed": null,
+      "sentient": null,
+      "evolving": null
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [
+      {
+        "id": "sword",
+        "name": {
+          "fr": "Épée",
+          "en": null
+        },
+        "exclusiveGroup": null,
+        "baseItemId": null,
+        "properties": [
+          "finesse"
+        ],
+        "effects": [
+          {
+            "id": "sword-1",
+            "templateId": "p20:effect:damage",
+            "params": {
+              "dice": "1d6",
+              "damageType": "slashing",
+              "role": "weapon-base"
+            },
+            "conditions": [],
+            "modeId": "sword",
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ]
+      },
+      {
+        "id": "axe",
+        "name": {
+          "fr": "Hache",
+          "en": null
+        },
+        "exclusiveGroup": null,
+        "baseItemId": null,
+        "properties": [],
+        "effects": [
+          {
+            "id": "axe-1",
+            "templateId": "p20:effect:damage",
+            "params": {
+              "dice": "1d12",
+              "damageType": "slashing",
+              "role": "weapon-base"
+            },
+            "conditions": [],
+            "modeId": "axe",
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ]
+      },
+      {
+        "id": "shield",
+        "name": {
+          "fr": "Bouclier",
+          "en": null
+        },
+        "exclusiveGroup": null,
+        "baseItemId": "srd51:shield",
+        "properties": [],
+        "effects": [
+          {
+            "id": "shield-1",
+            "templateId": "p20:effect:modifier",
+            "params": {
+              "stat": "ac",
+              "value": 2,
+              "operation": "add",
+              "scope": "wearer"
+            },
+            "conditions": [],
+            "modeId": "shield",
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ]
+      }
+    ],
+    "description": {
+      "fr": null,
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Rarity not documented.",
+      "Price and weight not documented.",
+      "Action de transformation non décrite dans le PDF.",
+      "Combinaisons simultanées épée/bouclier/hache à confirmer.",
+      "Le +1 de la décomposition d’attaque n’est pas attribué explicitement à l’objet.",
+      "Le +8 aux dégâts est un total de personnage, pas un bonus magique."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Nans",
+    "observations": [
+      {
+        "key": "attackTotal",
+        "value": "4+4+1=9",
+        "source": {
+          "sourceId": "cc-nans",
+          "page": 1,
+          "section": null
+        },
+        "scope": "character-sheet-total"
+      },
+      {
+        "key": "swordDamageTotal",
+        "value": "1d6+8",
+        "source": {
+          "sourceId": "cc-nans",
+          "page": 1,
+          "section": null
+        },
+        "scope": "character-sheet-total"
+      },
+      {
+        "key": "axeDamageTotal",
+        "value": "1d12+8",
+        "source": {
+          "sourceId": "cc-nans",
+          "page": 1,
+          "section": null
+        },
+        "scope": "character-sheet-total"
+      },
+      {
+        "key": "shieldAcTotal",
+        "value": 2,
+        "source": {
+          "sourceId": "cc-nans",
+          "page": 1,
+          "section": null
+        },
+        "scope": "character-sheet-total"
+      }
+    ]
+  },
+  {
+    "id": "p20:mi:2014:cc:hexen-blade",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:hexen-blade",
+    "recordKind": "family",
+    "name": {
+      "fr": "Hexen Blade",
+      "en": null
+    },
+    "aliases": [],
+    "category": "weapon",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "custom",
+    "provenance": [
+      {
+        "sourceId": "cc-rufus",
+        "page": 1,
+        "section": null
+      },
+      {
+        "sourceId": "cc-rufus",
+        "page": 2,
+        "section": null
+      },
+      {
+        "sourceId": "cc-rufus",
+        "page": 3,
+        "section": null
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "rare",
+    "baseItem": {
+      "id": "srd51:shortsword",
+      "label": "Épée courte",
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": true,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": null,
+      "requiresEquipped": null
+    },
+    "traits": {
+      "cursed": null,
+      "sentient": null,
+      "evolving": null
+    },
+    "effects": [
+      {
+        "id": "effect-1",
+        "templateId": "p20:effect:modifier",
+        "params": {
+          "stat": "attack",
+          "value": 1,
+          "operation": "add",
+          "scope": "this-weapon"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      },
+      {
+        "id": "effect-2",
+        "templateId": "p20:effect:modifier",
+        "params": {
+          "stat": "damage",
+          "value": 1,
+          "operation": "add",
+          "scope": "this-weapon"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [
+      {
+        "id": "disguise-self",
+        "name": {
+          "fr": "Déguisement",
+          "en": null
+        },
+        "activation": "unknown",
+        "costs": [
+          {
+            "resourceId": "charges",
+            "amount": 1,
+            "timing": "on-use"
+          }
+        ],
+        "effects": [
+          {
+            "id": "disguise-self-1",
+            "templateId": "p20:effect:cast-spell",
+            "params": {
+              "spellId": "srd51:disguise-self",
+              "level": null,
+              "dc": {
+                "kind": "fixed",
+                "value": 15
+              },
+              "attackBonus": null
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": null,
+        "prerequisites": null
+      },
+      {
+        "id": "mirror-image",
+        "name": {
+          "fr": "Image miroir",
+          "en": null
+        },
+        "activation": "unknown",
+        "costs": [
+          {
+            "resourceId": "charges",
+            "amount": 2,
+            "timing": "on-use"
+          }
+        ],
+        "effects": [
+          {
+            "id": "mirror-image-1",
+            "templateId": "p20:effect:cast-spell",
+            "params": {
+              "spellId": "srd51:mirror-image",
+              "level": null,
+              "dc": {
+                "kind": "fixed",
+                "value": 15
+              },
+              "attackBonus": null
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": null,
+        "prerequisites": null
+      },
+      {
+        "id": "hypnotic-pattern",
+        "name": {
+          "fr": "Motif hypnotique",
+          "en": null
+        },
+        "activation": "unknown",
+        "costs": [
+          {
+            "resourceId": "charges",
+            "amount": 3,
+            "timing": "on-use"
+          }
+        ],
+        "effects": [
+          {
+            "id": "hypnotic-pattern-1",
+            "templateId": "p20:effect:cast-spell",
+            "params": {
+              "spellId": "srd51:hypnotic-pattern",
+              "level": null,
+              "dc": {
+                "kind": "fixed",
+                "value": 15
+              },
+              "attackBonus": null
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": null,
+        "prerequisites": null
+      }
+    ],
+    "resources": [
+      {
+        "id": "charges",
+        "maximum": 5,
+        "unit": "charges",
+        "recovery": {
+          "formula": "1d4+1",
+          "event": "dawn",
+          "capAtMaximum": true
+        },
+        "lastCharge": null
+      }
+    ],
+    "modes": [],
+    "description": {
+      "fr": null,
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Poids, prix, restrictions d’harmonisation et comportement à la dernière charge non documentés.",
+      "Temps d’activation, concentration et autres modalités des sorts à confirmer ; ne pas les importer implicitement."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Rufus",
+    "observations": [
+      {
+        "key": "attackTotal",
+        "value": 8,
+        "source": {
+          "sourceId": "cc-rufus",
+          "page": 1,
+          "section": null
+        },
+        "scope": "character-sheet-total"
+      },
+      {
+        "key": "damageTotal",
+        "value": "1d6+4",
+        "source": {
+          "sourceId": "cc-rufus",
+          "page": 1,
+          "section": null
+        },
+        "scope": "character-sheet-total"
+      }
+    ]
+  },
+  {
+    "id": "p20:mi:2014:cc:baton-givre-confluence",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:baton-givre-confluence",
+    "recordKind": "family",
+    "name": {
+      "fr": "Bâton Givre confluence",
+      "en": null
+    },
+    "aliases": [],
+    "category": "staff",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "custom",
+    "provenance": [
+      {
+        "sourceId": "cc-samoth",
+        "page": 1,
+        "section": null
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": null,
+      "requiresEquipped": null
+    },
+    "traits": {
+      "cursed": null,
+      "sentient": null,
+      "evolving": null
+    },
+    "effects": [],
+    "abilities": [
+      {
+        "id": "mains",
+        "name": {
+          "fr": "Mains (abréviation)",
+          "en": null
+        },
+        "activation": "unknown",
+        "costs": [
+          {
+            "resourceId": "charges",
+            "amount": 1,
+            "timing": "on-use"
+          }
+        ],
+        "effects": [
+          {
+            "id": "mains-1",
+            "templateId": "p20:effect:custom",
+            "params": {
+              "key": "cc:unresolved-spell",
+              "summary": "Identité du sort à confirmer.",
+              "payload": {
+                "sheetLabel": "Mains"
+              },
+              "fallback": "manual"
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": null,
+        "prerequisites": null
+      },
+      {
+        "id": "vortex",
+        "name": {
+          "fr": "Vortex (abréviation)",
+          "en": null
+        },
+        "activation": "unknown",
+        "costs": [
+          {
+            "resourceId": "charges",
+            "amount": 3,
+            "timing": "on-use"
+          }
+        ],
+        "effects": [
+          {
+            "id": "vortex-1",
+            "templateId": "p20:effect:custom",
+            "params": {
+              "key": "cc:unresolved-spell",
+              "summary": "Identité du sort à confirmer.",
+              "payload": {
+                "sheetLabel": "Vortex"
+              },
+              "fallback": "manual"
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": null,
+        "prerequisites": null
+      }
+    ],
+    "resources": [
+      {
+        "id": "charges",
+        "maximum": 10,
+        "unit": "charges",
+        "recovery": {
+          "formula": "1d6+4",
+          "event": "unknown",
+          "capAtMaximum": true
+        },
+        "lastCharge": null
+      }
+    ],
+    "modes": [],
+    "description": {
+      "fr": null,
+      "en": null
+    },
+    "rulesNotes": [
+      "Mention « lié » conservée sans assimilation certaine à l’harmonisation."
+    ],
+    "unknowns": [
+      "Rarity not documented.",
+      "Price and weight not documented.",
+      "Le +1 magique : attaques d’arme, attaques de sorts, DD ou plusieurs ?",
+      "Mains et Vortex ne sont pas des références de sort résolues.",
+      "Moment de récupération non précisé.",
+      "Aucun autre sort ni coût ajouté depuis les souvenirs de conversation."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Samoth",
+    "observations": [
+      {
+        "key": "magicBonusLabel",
+        "value": "+1 magique",
+        "source": {
+          "sourceId": "cc-samoth",
+          "page": 1,
+          "section": null
+        },
+        "scope": "character-sheet-total"
+      }
+    ]
+  },
+  {
+    "id": "p20:mi:2014:cc:bouclier-magique-3",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:bouclier-magique-3",
+    "recordKind": "family",
+    "name": {
+      "fr": "Bouclier magique +3",
+      "en": null
+    },
+    "aliases": [],
+    "category": "shield",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "official-instance",
+    "provenance": [
+      {
+        "sourceId": "cc-zephyr",
+        "page": 1,
+        "section": null
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": "srd51:shield",
+      "label": "Bouclier",
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [
+        "hand"
+      ],
+      "hands": 1,
+      "requiresEquipped": null
+    },
+    "traits": {
+      "cursed": null,
+      "sentient": null,
+      "evolving": null
+    },
+    "effects": [
+      {
+        "id": "effect-1",
+        "templateId": "p20:effect:modifier",
+        "params": {
+          "stat": "ac",
+          "value": 3,
+          "operation": "add",
+          "scope": "wearer"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": null,
+      "en": null
+    },
+    "rulesNotes": [
+      "+3 magique distinct du +2 normal : +5 total sur la fiche.",
+      "Rareté et harmonisation non copiées du catalogue officiel dans la preuve PDF."
+    ],
+    "unknowns": [
+      "Rarity not documented.",
+      "Price and weight not documented.",
+      "Harmonisation non indiquée dans la fiche."
+    ],
+    "mechanicsStatus": "structured",
+    "relatedIds": [
+      "p20:mi:2014:srd51:shield-1-2-or-3:plus-3"
+    ],
+    "ownerLabel": "Zéphyr",
+    "observations": [
+      {
+        "key": "shieldAcTotal",
+        "value": 5,
+        "source": {
+          "sourceId": "cc-zephyr",
+          "page": 1,
+          "section": null
+        },
+        "scope": "character-sheet-total"
+      }
+    ]
+  }
+]

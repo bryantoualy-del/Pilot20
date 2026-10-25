@@ -20,6 +20,8 @@ jobs:
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npx playwright install --with-deps ${{ matrix.engine }}
       - run: npm run build:web
+      - name: Verify Forge, persistence and responsive layouts
+        run: npm run test:e2e:forge
       - name: Verify dark theme and disclosure controls
         run: npm run test:e2e:appearance
       - uses: actions/upload-artifact@v4

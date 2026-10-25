@@ -1,0 +1,245 @@
+[
+  {
+    "id": "srd51-en",
+    "title": "System Reference Document 5.1 — English",
+    "edition": "2014",
+    "accessStatus": "read",
+    "url": "https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1.pdf",
+    "checkedAt": "2026-10-25",
+    "localFilename": "srd51-en.pdf",
+    "sha256": "2504d2a0abb0a4d491a939be4f17910a2dde0312570ab8d208080225ccf0a1f0",
+    "notes": [
+      "240 item families, pages 207–253; excludes general sentience rules from item counts."
+    ]
+  },
+  {
+    "id": "srd51-fr",
+    "title": "Document de Référence du Système 5.1 — français",
+    "edition": "2014",
+    "accessStatus": "read",
+    "url": "https://media.dndbeyond.com/compendium-images/srd/5.1/SRD_CC_v5.1_FR.pdf",
+    "checkedAt": "2026-10-25",
+    "localFilename": "srd51-fr.pdf",
+    "sha256": "f5cdd4d34c8e61f9c2db5cbaeaf7c75f245a3de001136b7e9037a653c7aa1ccc",
+    "notes": [
+      "240 familles, pages 227–280; noms officiels français prioritaires sur les synonymes communautaires."
+    ]
+  },
+  {
+    "id": "dmg14",
+    "title": "Dungeon Master’s Guide / Guide du Maître 2014",
+    "edition": "2014",
+    "accessStatus": "partial-secondary",
+    "url": null,
+    "checkedAt": "2026-10-25",
+    "localFilename": null,
+    "sha256": null,
+    "notes": [
+      "240 familles communes SRD vérifiées ; 35 lignes supplémentaires AideDD, dont un anneau de résistance au poison reclassé en variante SRD. Restent 34 familles à métadonnées secondaires.",
+      "Ouvrage complet non fourni ; couverture totale officielle non certifiée.",
+      "Familles nommées SRD génériques conservées : ne pas créer automatiquement une seconde copie pour Ehlonna, Heward, Daern, etc."
+    ]
+  },
+  {
+    "id": "xge17",
+    "title": "Le Guide complet de Xanathar",
+    "edition": "2014",
+    "accessStatus": "read",
+    "url": null,
+    "checkedAt": "2026-10-25",
+    "localFilename": "02-D-D-5-Le-Guide-Complet-de-Xanathar-4-1-.pdf",
+    "sha256": "1f96202fe3365d0b60d5aef8c8d39f417fdcfd651d60696f63140705a53fd147",
+    "notes": [
+      "48 objets courants identifiés via index et section dédiée, pages PDF 137–141.",
+      "Fabrication : pages PDF 128–130, notamment table page 129 ; récompenses page PDF 136 et tableaux suivants. Pas de descriptions intégrales exportées."
+    ]
+  },
+  {
+    "id": "tce20",
+    "title": "Le Chaudron des merveilles de Tasha",
+    "edition": "2014",
+    "accessStatus": "read",
+    "url": null,
+    "checkedAt": "2026-10-25",
+    "localFilename": "01-Le-Chaudron-des-Merveilles-de-Tasha-1-.pdf",
+    "sha256": "e441f4b78fe257e14ee9708c7812ce130b715950730be357c3099495e7506a90",
+    "notes": [
+      "47 familles dans la table pages PDF 118–119 (imprimées 117–118).",
+      "16 influx/infusions pages PDF 21–24, séparés des objets; tables de réplication non dédoublées en nouveaux objets.",
+      "Noms anglais associés éditorialement ; descriptions primaires consultées en français."
+    ]
+  },
+  {
+    "id": "aidedd-2014",
+    "title": "AideDD — Objets magiques D&D 5e",
+    "edition": "2014",
+    "accessStatus": "read",
+    "url": "https://www.aidedd.org/dnd-filters/objets-magiques.php",
+    "checkedAt": "2026-10-25",
+    "localFilename": null,
+    "sha256": null,
+    "notes": [
+      "323 lignes : 240 DMG SRD, 35 DMG hors SRD, 48 Xanathar.",
+      "Utilisé pour noms et métadonnées bibliographiques ; aucune description communautaire exportée."
+    ]
+  },
+  {
+    "id": "dndbeyond",
+    "title": "D&D Beyond — SRD et catalogue",
+    "edition": "mixed",
+    "accessStatus": "partial",
+    "url": "https://www.dndbeyond.com/srd",
+    "checkedAt": "2026-10-25",
+    "localFilename": null,
+    "sha256": null,
+    "notes": [
+      "SRD 5.1 choisi explicitement ; SRD 5.2/5.2.1 exclus de ce corpus.",
+      "Page Tasha redirigée vers la boutique ; aucun accès aux descriptions protégées acquis.",
+      "Une fiche bouclier tentée était inaccessible : aucun fait importé depuis cette fiche."
+    ]
+  },
+  {
+    "id": "eberron19",
+    "title": "Eberron: Rising from the Last War",
+    "edition": "2014",
+    "accessStatus": "not-covered",
+    "url": null,
+    "checkedAt": "2026-10-25",
+    "localFilename": null,
+    "sha256": null,
+    "notes": [
+      "Source pertinente pour réimpressions et artificier ; non consultée intégralement, zéro entrée attribuée comme vérifiée."
+    ]
+  },
+  {
+    "id": "fizban21",
+    "title": "Fizban’s Treasury of Dragons",
+    "edition": "2014",
+    "accessStatus": "not-covered",
+    "url": null,
+    "checkedAt": "2026-10-25",
+    "localFilename": null,
+    "sha256": null,
+    "notes": [
+      "Objets évolutifs pertinents ; source absente, aucune propriété inventée."
+    ]
+  },
+  {
+    "id": "dmg24",
+    "title": "Dungeon Master’s Guide 2024",
+    "edition": "2024",
+    "accessStatus": "excluded",
+    "url": null,
+    "checkedAt": "2026-10-25",
+    "localFilename": null,
+    "sha256": null,
+    "notes": [
+      "Aucune version révisée importée ; namespace 2024 réservé."
+    ]
+  },
+  {
+    "id": "cc-brack",
+    "title": "Fiche fournie — brack",
+    "edition": "campaign-2014",
+    "accessStatus": "read",
+    "url": null,
+    "checkedAt": "2026-10-25",
+    "localFilename": "04-Brack_niveau_10-1-.pdf",
+    "sha256": "4ad7676ab443af98f19c5784eca117e533e36f346cc9a3eb951c1eb0e0a041dd",
+    "notes": [
+      "Extraction textuelle, contrôle visuel des tableaux ; valeurs observées séparées des propriétés intrinsèques."
+    ]
+  },
+  {
+    "id": "cc-kentaro",
+    "title": "Fiche fournie — kentaro",
+    "edition": "campaign-2014",
+    "accessStatus": "read",
+    "url": null,
+    "checkedAt": "2026-10-25",
+    "localFilename": "05-Kentaro-Amane-10-1-.pdf",
+    "sha256": "8753ead77d97944ddd57dda701329ef2d15419f3b6f65807506442a476387e1c",
+    "notes": [
+      "Extraction textuelle, contrôle visuel des tableaux ; valeurs observées séparées des propriétés intrinsèques."
+    ]
+  },
+  {
+    "id": "cc-nans",
+    "title": "Fiche fournie — nans",
+    "edition": "campaign-2014",
+    "accessStatus": "read",
+    "url": null,
+    "checkedAt": "2026-10-25",
+    "localFilename": "06-Nans_niveau_10-1-.pdf",
+    "sha256": "6a4b7262b6c2464926330b95f1ea89511f9d5ea124fcc60ee67a2eaebbf767dd",
+    "notes": [
+      "Extraction textuelle, contrôle visuel des tableaux ; valeurs observées séparées des propriétés intrinsèques."
+    ]
+  },
+  {
+    "id": "cc-rufus",
+    "title": "Fiche fournie — rufus",
+    "edition": "campaign-2014",
+    "accessStatus": "read",
+    "url": null,
+    "checkedAt": "2026-10-25",
+    "localFilename": "07-Rufus_niveau_10-1-.pdf",
+    "sha256": "45302e7c8c5ae112b159285da6027fb731c5152e51adbca4673aecd905db8cff",
+    "notes": [
+      "Extraction textuelle, contrôle visuel des tableaux ; valeurs observées séparées des propriétés intrinsèques."
+    ]
+  },
+  {
+    "id": "cc-samoth",
+    "title": "Fiche fournie — samoth",
+    "edition": "campaign-2014",
+    "accessStatus": "read",
+    "url": null,
+    "checkedAt": "2026-10-25",
+    "localFilename": "08-1-Samoth-lv10-1-.pdf",
+    "sha256": "00d41601a9b08d5cfedc3fe78deb55ae4a2c082683bb374f2566953b277a966f",
+    "notes": [
+      "Extraction textuelle, contrôle visuel des tableaux ; valeurs observées séparées des propriétés intrinsèques."
+    ]
+  },
+  {
+    "id": "cc-zephyr",
+    "title": "Fiche fournie — zephyr",
+    "edition": "campaign-2014",
+    "accessStatus": "read",
+    "url": null,
+    "checkedAt": "2026-10-25",
+    "localFilename": "09-Zephyr_niveau_10-2-.pdf",
+    "sha256": "18a17f99e7e384ba8e0947357894cb1322e5d1ce77f1e11c596dc10e40d8e866",
+    "notes": [
+      "Extraction textuelle, contrôle visuel des tableaux ; valeurs observées séparées des propriétés intrinsèques."
+    ]
+  },
+  {
+    "id": "cc-promesse",
+    "title": "Une promesse à tenir",
+    "edition": "campaign-2014",
+    "accessStatus": "read",
+    "url": null,
+    "checkedAt": "2026-10-25",
+    "localFilename": "03-Une-promesse-a-tenir-1-.pdf",
+    "sha256": "9efaabad54a3e5d5101a27ba58fda1ca3c5afa137edbf712a959274403c161ef",
+    "notes": [
+      "4 pages scannées examinées visuellement : récit de Qorrashi, aucune règle d’objet cible identifiée."
+    ]
+  },
+  {
+    "id": "pilot20-repo",
+    "title": "Pilot20",
+    "edition": "2014",
+    "accessStatus": "read",
+    "url": "https://github.com/bryantoualy-del/Pilot20",
+    "checkedAt": "2026-10-25",
+    "localFilename": null,
+    "sha256": null,
+    "notes": [
+      "Commit fd83cc7e0c32b55c6a65be45a5b9f385b0a925d6, lecture seule.",
+      "Équipement de base dans src/catalog/equipment.js ; catalogue minimal src/catalog/srd51.js sans catalogue universel magique."
+    ]
+  }
+]

@@ -1,3 +1,5 @@
+let forgeModule;
+async function flushForge(){if(forgeModule)await forgeModule.flushForge();}
 import {renderGrimoire} from "./grimoire.js";
 import {playerCatalogs} from "../../src/catalog/player-catalogs.js";
 import { localizedName } from "../../src/catalog/localization.js";
@@ -136,6 +138,7 @@ function autosave(d) {
   return promise;
 }
 async function nav(route, id = null) {
+  try { await flushForge(); } catch(e) { notice(e.message); return; }
   await saveQueue;
   if (route === "library") {
     state.query = "";
@@ -199,9 +202,9 @@ async function render() {
     el(
       "nav",
       { "aria-label": "Navigation" },
-      ["home", "library", "sources"].map((route) =>
+      ["home", "library", "forge", "sources"].map((route) =>
         button(
-          t(route),
+          route === "forge" ? "Forge" : t(route),
           () => nav(route),
           (state.route === route || route === 'library' && state.route === 'creator') ? "active" : "",
         ),
@@ -214,6 +217,7 @@ async function render() {
       ],
       state.locale,
       async (e) => {
+        try { await flushForge(); } catch(error) { notice(error.message); return; }
         state.locale = e.target.value;
         await storage.batch(
           [],
@@ -291,6 +295,7 @@ async function render() {
         ),
       ),
     );
+  if (state.route === "forge") { forgeModule ??= await import("./forge.js"); await forgeModule.renderForge(main, api()); }
   if (state.route === "library") await libraryScreen(main, all);
   if (state.route === "sources") await sourcesScreen(main);
   if (state.route === "creator") {
