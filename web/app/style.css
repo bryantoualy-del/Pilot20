@@ -1970,3 +1970,20 @@ button.primary,.single-actions .primary{color:#191b1f}
   .class-level-mobile .level-stepper input{width:100%;min-width:0;font-size:18px;padding:8px 4px}
   .class-level-mobile .level-control{min-height:44px}
 }
+
+/* Compact, accessible level-by-level class features in the active creator. */
+.class-capabilities{margin-top:16px;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:6px;min-width:0;overflow:hidden}
+.class-capabilities>summary{padding:14px 12px;color:var(--accent);font-weight:700;cursor:pointer;min-height:48px}
+.class-capabilities[open]>summary{border-bottom:1px solid var(--border)}
+.class-capabilities .capability-level{border-bottom:1px solid var(--border);margin:0;padding:0 10px}
+.class-capabilities .capability-level:last-child{border-bottom:0}
+.class-capabilities .capability-level>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;padding:12px 2px;min-height:46px;list-style:revert}
+.class-capabilities .capability-level-title{font-weight:650;font-size:14px;white-space:nowrap}
+.class-capabilities .capability-level-meta{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:8px;min-width:0}
+.class-capabilities .capability-level-count{font-size:12px;color:var(--muted);white-space:nowrap}
+.class-capabilities .capability-current{font-size:12px;color:var(--accent);font-weight:650}
+.class-capabilities .capability-entries{display:grid;gap:5px;padding:0 0 12px 16px}
+.class-capabilities .capability-entry{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;min-height:40px;padding:8px 11px;font-size:14px;font-weight:400;background:var(--surface);border:1px solid var(--border);border-radius:5px;white-space:normal;overflow-wrap:anywhere}
+.class-capabilities .capability-entry:hover,.class-capabilities .capability-entry:focus-visible{border-color:var(--accent)}
+.class-capabilities .capability-chevron{flex-shrink:0;color:var(--muted);font-size:20px;line-height:1}
+@media(max-width:700px){.class-capabilities .capability-entries{padding-left:6px}.class-capabilities .capability-level>summary{gap:6px}.class-capabilities .capability-level-meta{gap:5px}}
