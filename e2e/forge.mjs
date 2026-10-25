@@ -168,7 +168,9 @@ try {
     fullPage: true,
   });
   await p.waitForFunction(() => navigator.serviceWorker.controller);
-  await context.setOffline(true);
+  // Stop the origin: WebKit automation can fail internally on setOffline + reload.
+  // A successful reload now proves assets are served from the installed cache.
+  await new Promise(resolve => { server.once("exit", resolve); server.kill(); });
   await p.reload();
   await p
     .locator("header")
@@ -185,7 +187,7 @@ try {
     await p.getByLabel("Nom", { exact: true }).inputValue(),
     "PyroMerlin (copie)",
   );
-  await context.setOffline(false);
+
   await p
     .locator("header")
     .getByRole("button", { name: "Accueil", exact: true })
