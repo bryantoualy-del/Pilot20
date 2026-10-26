@@ -3,7 +3,7 @@
 import {LANGUAGES} from './origins.js';
 import {SKILLS} from '../character/contracts.js';
 import {TOOL_PROFICIENCIES} from './proficiencies.js';
-const instruments=TOOL_PROFICIENCIES.slice(27,37), games=['dice-set','dragonchess-set','playing-card-set','three-dragon-ante-set'], tools=TOOL_PROFICIENCIES.slice(0,17);
+const instruments=[...TOOL_PROFICIENCIES.slice(27,37),'ocarina'], games=['dice-set','dragonchess-set','playing-card-set','three-dragon-ante-set'], tools=TOOL_PROFICIENCIES.slice(0,17);
 const books={scag:['Guide des aventuriers de la Côte des Épées','scag'],cos:['Curse of Strahd (2016, errata)','cos'],toa:['Tomb of Annihilation','toa'],bgg:['Bigby Presents: Glory of the Giants','gotg'],planescape:['Planescape: Adventures in the Multiverse (2023)','paitm'],eberron:['Eberron: Rising from the Last War (2019)','erftlw']};
 const source=id=>({kind:'reference',document:books[id][0],license:'Pilot20-original-summary',url:'https://www.dndbeyond.com/sources/dnd/'+books[id][1]});
 const choice=(key,kind,count,options,fr,en=fr,extra={})=>({key,kind,count,options,label:{fr,en},...extra});

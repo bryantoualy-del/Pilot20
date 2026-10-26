@@ -11,10 +11,10 @@ export const GEAR_NAMES={
  'diplomat-pack':name('Paquetage de diplomate','Diplomat’s pack'),'entertainer-pack':name('Paquetage d’artiste','Entertainer’s pack'),'burglar-pack':name('Paquetage de cambrioleur','Burglar’s pack'),
  'component-pouch':name('Sacoche à composantes','Component pouch'),'arcane-focus':name('Focaliseur arcanique','Arcane focus'),'druidic-focus':name('Focaliseur druidique','Druidic focus'),
  'holy-symbol':name('Symbole sacré','Holy symbol'),spellbook:name('Grimoire','Spellbook'),'thieves-tools':name('Outils de voleur','Thieves’ tools'),
- bagpipes:name('Cornemuse','Bagpipes'),drum:name('Tambour','Drum'),dulcimer:name('Tympanon','Dulcimer'),flute:name('Flûte','Flute'),lute:name('Luth','Lute'),lyre:name('Lyre','Lyre'),horn:name('Cor','Horn'),'pan-flute':name('Flûte de pan','Pan flute'),shawm:name('Chalemie','Shawm'),viol:name('Viole','Viol'),
+ ocarina:name('Ocarina','Ocarina'),bagpipes:name('Cornemuse','Bagpipes'),drum:name('Tambour','Drum'),dulcimer:name('Tympanon','Dulcimer'),flute:name('Flûte','Flute'),lute:name('Luth','Lute'),lyre:name('Lyre','Lyre'),horn:name('Cor','Horn'),'pan-flute':name('Flûte de pan','Pan flute'),shawm:name('Chalemie','Shawm'),viol:name('Viole','Viol'),
 };
 export const gearName=id=>ARMORS[id]?.name??WEAPONS[id]?.name??GEAR_NAMES[id];
-const instruments=['bagpipes','drum','dulcimer','flute','lute','lyre','horn','pan-flute','shawm','viol'];
+const instruments=['bagpipes','drum','dulcimer','flute','lute','lyre','horn','pan-flute','shawm','viol','ocarina'];
 const weapons=(category,melee=false)=>Object.entries(WEAPONS).filter(([,w])=>w.category===category&&(!melee||!w.ranged)).map(([id])=>id);
 const simple=weapons('simple'),simpleMelee=weapons('simple',true),martial=[...weapons('martial'),'net'],martialMelee=weapons('martial',true);
 const item=(id,quantity=1)=>({id,quantity});
