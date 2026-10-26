@@ -60,28 +60,18 @@ try {
     .click();
   await p.locator(".forge-effects summary").first().click();
   await p.getByLabel("Dés", { exact: true }).fill("1d10");
-  await p.getByRole("button", { name: "Pouvoirs", exact: true }).click();
-  await p.getByText("Charges et récupération (0)", { exact: true }).click();
-  await p
-    .getByRole("button", { name: "Ajouter une réserve", exact: true })
-    .click();
-  await p.getByText("Charges et récupération (1)", { exact: true }).click();
+  await p.getByLabel("Bonus magique").fill("1");
+  await p.getByRole("button", {name:"Réserves",exact:true}).click();
+  await p.getByRole("button", {name:"Ajouter une réserve",exact:true}).click();
   await p.getByLabel("Réserve maximale").fill("10");
-  await p
-    .getByRole("button", { name: "Ajouter un pouvoir", exact: true })
-    .click();
-  await p
-    .locator(".forge-editor summary")
-    .filter({ hasText: "Nouveau pouvoir" })
-    .click();
+  await p.getByRole("button", {name:"Capacités",exact:true}).click();
+  await p.getByLabel("Type de capacité",{exact:true}).selectOption("damage");
+  await p.getByRole("button", {name:"Ajouter une capacité",exact:true}).click();
   await p.getByLabel("Nom du pouvoir").fill("Souffle de test");
-  await p
-    .locator(".forge-editor")
-    .getByLabel("Type d’effet")
-    .selectOption("damage");
-  await p
-    .getByRole("button", { name: "Ajouter un effet", exact: true })
-    .click();
+  await p.getByRole("button", {name:"Simuler",exact:true}).click();
+  await p.getByRole("button", {name:"Lancer la simulation",exact:true}).click();
+  await p.locator(".forge-simulation").getByText(/Dégâts :/).waitFor();
+  await p.keyboard.press("Escape");
   await p.getByRole("button", { name: "Identité", exact: true }).click();
   await p
     .getByRole("status")
@@ -141,6 +131,7 @@ try {
     await p.getByLabel("Nom", { exact: true }).inputValue(),
     "PyroMerlin (copie)",
   );
+  await p.getByRole("button", {name:"Capacités",exact:true}).click();
   await p.screenshot({
     path: "docs/forge/screenshots/ipad-pyromerlin.png",
     fullPage: true,

@@ -13,6 +13,7 @@ import {
   damageTypes,
   exportItems,
 } from "../../src/forge/model.js";
+import { capabilityKinds, triggerLabels, guidedAbility, compileCapability, simulateCapability } from "../../src/forge/automation.js";
 import { spellReference } from "../../src/catalog/spell-reference.js";
 import { localizedName } from "../../src/catalog/localization.js";
 import { forgeRepository } from "../../src/forge/repository.js";
@@ -26,7 +27,7 @@ const abilities = {
   cha: "Charisme",
 };
 const activations = {
-  passive: "Permanent",
+  passive: "Sans action",
   action: "Action",
   "bonus-action": "Action bonus",
   reaction: "Réaction",
@@ -36,6 +37,7 @@ const activations = {
 };
 const triggers = {
   "": "Aucun",
+  ...triggerLabels,
   "on-attack": "Jet d’attaque",
   "on-hit": "Coup réussi",
   "damage-taken": "Dégâts subis",
@@ -140,7 +142,7 @@ function describe(e) {
     case "modifier":
       return `${{ attack: "Attaque", damage: "Dégâts", ac: "CA", "spell-attack": "Attaque de sort", "spell-save-dc": "DD des sorts", "saving-throws": "Sauvegardes", initiative: "Initiative" }[p.stat]} ${p.operation === "add" && p.value >= 0 ? "+" : ""}${p.value}`;
     case "damage":
-      return `${p.dice} ${damageTypes[p.damageType] ?? "(type à préciser)"}${p.role === "weapon-base" ? " · base" : ""}`;
+      return `${p.role === "weapon-base" ? "Dégâts de base" : e.trigger && ["target-turn-start","source-turn-start","target-turn-end","source-turn-end"].includes(e.trigger) ? "Dégâts périodiques" : p.role === "additional" ? "Dégâts supplémentaires" : "Dégâts du pouvoir"} : ${p.dice} ${damageTypes[p.damageType] ?? "(type à préciser)"}`;
     case "defense":
       return `${{ resistance: "Résistance", immunity: "Immunité", vulnerability: "Vulnérabilité" }[p.kind]} : ${damageTypes[p.damageType]}`;
     case "ability-score":
@@ -749,7 +751,7 @@ export async function renderForge(root, a) {
             "": "À préciser",
             ...damageTypes,
           }),
-          sel("Rôle", "role", {
+          sel("Nature des dégâts", "role", {
             "weapon-base": "Dégâts de base",
             additional: "Dégâts supplémentaires",
             standalone: "Dégâts du pouvoir",
@@ -972,6 +974,40 @@ export async function renderForge(root, a) {
     );
     return box;
   }
+  function capabilityStatus(b) {
+    const result = compileCapability(current.definition,b);
+    return button(result.label+" ⓘ",()=>a.modal(el("section",{},el("h2",{},result.label),
+      ...[["Exécutable",result.automated],["À compléter",result.missing],["Limites",result.limitations]].map(([title,list])=>el("div",{},el("h3",{},title),...list.map(x=>el("p",{},x)))))));
+  }
+  function contextualEffects(b) {
+    const box=effectsEditor(b.effects);
+    box.querySelector(":scope > .forge-add")?.remove();
+    for(const node of box.querySelectorAll(":scope > details")) node.open=true;
+    // Put the essential target/save questions directly in the capacity, without extra dialogs.
+    for(const node of box.querySelectorAll("details")) {
+      if(node.querySelector(":scope > summary")?.textContent==="Déclencheur, cible et durée") node.open=true;
+    }
+    box.append(detail("Combiner un autre effet", effectsEditorAdd(b)));
+    return box;
+  }
+  function effectsEditorAdd(b) {
+    let kind="damage";
+    return el("div",{class:"forge-add"},select(entries(capabilityKinds),kind,e=>kind=e.target.value,{"aria-label":"Effet complémentaire"}),
+      button("Associer",()=>change(()=>b.effects.push(...guidedAbility(kind).effects),true)));
+  }
+  function simulator(b) {
+    const opts={level:10,attackBonus:7,ac:15,attackRoll:15,saveRoll:1,saveBonus:0};
+    const result=el("ol",{class:"forge-simulation", "aria-live":"polite"});
+    const num=(label,key)=>field(label,el("input",{type:"number",value:opts[key],oninput:e=>opts[key]=Number(e.target.value)}));
+    const panel=el("section",{class:"forge-simulator"},el("h2",{},"Simuler · "+b.name.fr),
+      el("p",{},"Essai isolé utilisant le moteur de combat. Aucun personnage sauvegardé n’est modifié."),
+      grid(num("Niveau du porteur","level"),num("Bonus d’attaque total","attackBonus"),num("CA de la cible","ac"),num("Résultat du d20 d’attaque","attackRoll"),num("Résultat du d20 de sauvegarde","saveRoll"),num("Bonus de sauvegarde","saveBonus")),
+      field("Défense de la cible",select([["none","Aucune"],["resistances","Résistance"],["vulnerabilities","Vulnérabilité"],["immunities","Immunité"]],"none",e=>{for(const k of ["resistances","vulnerabilities","immunities"])opts[k]=e.target.value===k?b.effects.filter(x=>x.params.damageType).map(x=>x.params.damageType):[];})),
+      check("Réaction déjà utilisée",false,e=>opts.reactionSpent=e.target.checked),
+      ...current.definition.resources.map(r=>field("Charges disponibles (maximum "+r.maximum+")",el("input",{type:"number",min:0,max:r.maximum,value:r.maximum,oninput:e=>opts.charges=Number(e.target.value)}))),
+      button("Lancer la simulation",()=>{const out=simulateCapability(current.definition,b,opts); result.replaceChildren(...out.timeline.map(line=>el("li",{},line)));}),result);
+    a.modal(panel);
+  }
   async function drawEditor() {
     editor.replaceChildren();
     queueMicrotask(() => {
@@ -1080,7 +1116,7 @@ export async function renderForge(root, a) {
       el(
         "nav",
         { class: "forge-steps", "aria-label": "Étapes de la Forge" },
-        ["Identité", "Propriétés", "Pouvoirs", "Aperçu"].map((s) =>
+        ["Identité", "Propriétés", "Capacités", "Réserves"].map((s) =>
           button(
             s,
             () => {
@@ -1193,6 +1229,19 @@ export async function renderForge(root, a) {
       );
     }
     if (tab === "Propriétés") {
+      if(["weapon","armor","shield","ammunition","staff"].includes(d.category)) {
+        const stats=["weapon","ammunition","staff"].includes(d.category)?["attack","damage"]:["ac"];
+        const scope=stats.length===2?"this-weapon":"wearer";
+        const modifiers=d.effects.filter(e=>e.templateId==="p20:effect:modifier" && stats.includes(e.params.stat) && e.params.scope===scope && e.params.operation==="add" && !e.trigger && !e.duration && !e.modeId && !e.conditions.length);
+        editor.append(el("h2",{},"Modifications magiques"),input("Bonus magique",modifiers[0]?.params.value??0,v=>{
+          for(const stat of stats){
+            const found=modifiers.filter(e=>e.params.stat===stat);
+            if(found.length>1)throw Error("Plusieurs bonus distincts : utilisez les propriétés détaillées.");
+            if(found[0])found[0].params.value=v;
+            else {const e=effect("modifier",{stat,operation:"add",scope,value:v});d.effects.push(e);modifiers.push(e);}
+          }
+        },{number:true,min:0,max:10}),el("p",{class:"muted"},"Le bonus magique est ajouté une seule fois, séparément du profil de base."));
+      }
       editor.append(
         grid(
           input(
@@ -1355,7 +1404,7 @@ export async function renderForge(root, a) {
         }
       }
       editor.append(
-        el("h2", {}, "Propriétés permanentes"),
+        el("h2", {}, "Dégâts de base et propriétés"),
         effectsEditor(d.effects),
       );
       const modes = detail(
@@ -1407,7 +1456,7 @@ export async function renderForge(root, a) {
       );
       editor.append(modes);
     }
-    if (tab === "Pouvoirs") {
+    if (tab === "Réserves" || tab === "Capacités") {
       const resources = detail(
         `Charges et récupération (${d.resources.length})`,
       );
@@ -1454,7 +1503,7 @@ export async function renderForge(root, a) {
           change(() => d.resources.push(newResource()), true),
         ),
       );
-      editor.append(resources);
+      if(tab === "Réserves") { resources.open=true; editor.append(resources); return; }
       for (const b of d.abilities) {
         const power = detail(
           b.name.fr,
@@ -1465,7 +1514,9 @@ export async function renderForge(root, a) {
             b.activation,
             (v) => (b.activation = v),
           ),
-          effectsEditor(b.effects),
+          capabilityStatus(b),
+          button("Simuler", () => simulator(b)),
+          contextualEffects(b),
         );
         const advanced = detail("Coût, portée et limites");
         for (const c of b.costs)
@@ -1581,13 +1632,13 @@ export async function renderForge(root, a) {
         power.append(advanced, remove(d.abilities, b));
         editor.append(power);
       }
-      editor.append(
-        button(
-          "Ajouter un pouvoir",
-          () => change(() => d.abilities.push(newAbility()), true),
-          "primary",
-        ),
-      );
+      let kind = "damage";
+      editor.append(el("div", {class:"forge-add"},
+        select(entries(capabilityKinds), kind, e=>kind=e.target.value, {"aria-label":"Type de capacité"}),
+        button("Ajouter une capacité",()=>change(()=>{
+          const b=guidedAbility(kind); d.abilities.push(b); openSections.add(b.name.fr);
+        },true),"primary")));
+
     }
   }
   drawLibrary();

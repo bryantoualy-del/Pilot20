@@ -89,7 +89,7 @@ test("IndexedDB persists across close/reopen and failed write is not published",
   await assert.rejects(forgeRepository(m).save(item));
   assert.equal((await forgeRepository(m).list()).length, 0);
 });
-test("Brack: +2, 2d8 fire, resistance, exact breath and unresolved aura", () => {
+test("Brack: +2, 2d8 fire, resistance, exact breath and sourced fire aura", () => {
   const d = get("PyroMerlin"),
     i = active(d),
     s = itemSource(d, i);
@@ -109,7 +109,7 @@ test("Brack: +2, 2d8 fire, resistance, exact breath and unresolved aura", () => 
   assert.equal(b.effects[0].params.dice, "6d6");
   assert.equal(
     d.abilities.find((a) => a.id === "aura").effects[0].params.damageType,
-    null,
+    "fire",
   );
   const spent = spendResource(d, i, "souffle");
   assert.equal(spent.resources.souffle, 0);
@@ -134,7 +134,7 @@ test("Kentaro: weapon-scoped +1, no inferred fire or Charisma/class bonus", () =
   );
   assert.equal(resolvePassive([s]).bonuses["attack:wearer"], undefined);
 });
-test("Nans: unresolved mode coexistence never applies all forms", () => {
+test("Nans: sword and shield coexist, axe remains exclusive", () => {
   const d = get("Volto-Fendoir"),
     i = active(d);
   i.modeIds = ["sword", "axe", "shield"];
@@ -142,7 +142,7 @@ test("Nans: unresolved mode coexistence never applies all forms", () => {
   assert.equal(s.contributions.length, 0);
   assert.ok(s.pending.length);
   assert.equal(
-    d.modes.find((m) => m.id === "shield").effects[0].params.value,
+    d.modes.find((m) => m.id === "sword").effects.find(e=>e.templateId==="p20:effect:modifier").params.value,
     2,
   );
   d.modes.forEach((m) => (m.exclusiveGroup = "forme"));
