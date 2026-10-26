@@ -5,9 +5,9 @@ import {check,keys,integer,id,json} from '../character/contracts.js';
 const ABILITIES=['str','dex','con','int','wis','cha'];
 export const ACTION_KINDS=['weaponAttack','dash','disengage','hide','useObject'];
 const STATS=['ac','speed','attack','damage',...ABILITIES.map(k=>'save.'+k)];
-const CONDITIONS=['incapacitated','cannotAct','cannotMove','cannotCast','cannotConcentrate','unconscious','next-attack-disadvantage','attacks-from-source-advantage'];
+const CONDITIONS=['incapacitated','cannotAct','cannotMove','cannotCast','cannotConcentrate','unconscious','next-attack-disadvantage','next-attack-against-source-disadvantage','attacks-from-source-advantage'];
 export function validateEffectRule(r) {
-  keys(r,['id','stack','duration','modifiers','conditions','concentration','actionGrant','onEnd','when'],['id','stack','duration','modifiers','conditions','concentration']);
+  keys(r,['id','stack','duration','modifiers','conditions','concentration','actionGrant','onEnd','when','defenses'],['id','stack','duration','modifiers','conditions','concentration']);
   check(id(r.id) && typeof r.concentration==='boolean','Effect identity');
   keys(r.stack,['key','policy','priority']);check(id(r.stack.key) && ['independent','priority','replace'].includes(r.stack.policy) && integer(r.stack.priority,-1000,1000),'Explicit stacking');
   keys(r.duration,['unit','value','anchor','boundary']);check(['turn','round','minute','attack'].includes(r.duration.unit) && integer(r.duration.value,1,1000) && ['source','target'].includes(r.duration.anchor) && ['start','end'].includes(r.duration.boundary),'Effect duration');
@@ -17,6 +17,10 @@ export function validateEffectRule(r) {
     check(integer(m.value,-1000,1000),'Modifier value');
     if(m.operation==='multiply') check(m.value>=0,'Nonnegative multiplier');
     if(['advantage','disadvantage'].includes(m.operation)) check(m.stat.startsWith('save.') && m.value===1,'Save advantage flag');
+  }
+  if(r.defenses!==undefined) {
+    check(Array.isArray(r.defenses) && r.defenses.length<=20,'Temporary defenses');
+    for(const d of r.defenses) {keys(d,['kind','damageType']);check(['resistance','immunity','vulnerability'].includes(d.kind) && id(d.damageType),'Temporary defense');}
   }
   if(r.actionGrant!==undefined) {keys(r.actionGrant,['kinds','attacks']);check(Array.isArray(r.actionGrant.kinds) && r.actionGrant.kinds.length>0 && r.actionGrant.kinds.every(k=>ACTION_KINDS.includes(k)) && new Set(r.actionGrant.kinds).size===r.actionGrant.kinds.length && r.actionGrant.attacks===1,'Restricted single-attack budget');}
   if(r.when!==undefined) check(['always','success','failure'].includes(r.when),'Ongoing save condition');
@@ -124,10 +128,13 @@ export function saveModes(a,ability) {
 /** Roll flags use effect provenance, so a mark never benefits another attacker. */
 export function attackModes(source,target) {
   return {advantage:activeEffects(target).some(e=>e.sourceActorId===source.definition.id && e.rule.conditions.includes('attacks-from-source-advantage')),
-    disadvantage:hasCondition(source,'next-attack-disadvantage')};
+    disadvantage:hasCondition(source,'next-attack-disadvantage') || activeEffects(source).some(e=>e.sourceActorId===target.definition.id && e.rule.conditions.includes('next-attack-against-source-disadvantage'))};
 }
-export function consumeAttackEffects(a) {
-  for(const e of [...activeEffects(a)])if(e.rule.duration.unit==='attack'&&--e.remaining===0)removeEffect(a,e.id);
+export function consumeAttackEffects(a,target) {
+  for(const e of [...activeEffects(a)]){
+    if(e.rule.conditions.includes('next-attack-against-source-disadvantage') && e.sourceActorId!==target?.definition.id)continue;
+    if(e.rule.duration.unit==='attack'&&--e.remaining===0)removeEffect(a,e.id);
+  }
 }
 export function removeEffect(a,effectId) {
   const x=advanced(a),e=x.effects.find(e=>e.id===effectId);check(e,'Unknown effect instance');

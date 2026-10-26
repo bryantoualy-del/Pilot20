@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-10-26",
   "itemCount": 54,
-  "scenarioCount": 97,
+  "scenarioCount": 104,
   "rows": [
     {
       "owner": "Brack",
@@ -2300,6 +2300,45 @@
     {
       "owner": "Moteur universel",
       "item": "Contrat Forge / combat",
+      "capability": "Encounter host resolves pinned intent with authoritative dice and persisted charge, reconnect returns current private view without reroll",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "Encounter host rejects forged identity, client damage, stale generation/revision and colliding intent IDs",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "Encounter host emits no ACK on storage failure and concurrent intentions commit only once",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
       "capability": "authoritative aura resolves off turn after owner ended: no action, typed defenses, replay after reconnect",
       "expected": "Toutes les assertions du scénario passent",
       "calculated": null,
@@ -2308,7 +2347,7 @@
       "blockers": [
         "Ne certifie ni la géométrie ni le raccordement au serveur live"
       ],
-      "scope": "tests/forge-runtime-integration.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
     },
     {
       "owner": "Moteur universel",
@@ -2321,7 +2360,7 @@
       "blockers": [
         "Ne certifie ni la géométrie ni le raccordement au serveur live"
       ],
-      "scope": "tests/forge-runtime-integration.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
     },
     {
       "owner": "Moteur universel",
@@ -2334,7 +2373,7 @@
       "blockers": [
         "Ne certifie ni la géométrie ni le raccordement au serveur live"
       ],
-      "scope": "tests/forge-runtime-integration.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
     },
     {
       "owner": "Moteur universel",
@@ -2347,7 +2386,7 @@
       "blockers": [
         "Ne certifie ni la géométrie ni le raccordement au serveur live"
       ],
-      "scope": "tests/forge-runtime-integration.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
     },
     {
       "owner": "Moteur universel",
@@ -2360,7 +2399,7 @@
       "blockers": [
         "Ne certifie ni la géométrie ni le raccordement au serveur live"
       ],
-      "scope": "tests/forge-runtime-integration.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
     },
     {
       "owner": "Moteur universel",
@@ -2373,7 +2412,7 @@
       "blockers": [
         "Ne certifie ni la géométrie ni le raccordement au serveur live"
       ],
-      "scope": "tests/forge-runtime-integration.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
     },
     {
       "owner": "Moteur universel",
@@ -2386,7 +2425,7 @@
       "blockers": [
         "Ne certifie ni la géométrie ni le raccordement au serveur live"
       ],
-      "scope": "tests/forge-runtime-integration.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
     },
     {
       "owner": "Moteur universel",
@@ -2399,7 +2438,7 @@
       "blockers": [
         "Ne certifie ni la géométrie ni le raccordement au serveur live"
       ],
-      "scope": "tests/forge-runtime-integration.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
     },
     {
       "owner": "Moteur universel",
@@ -2412,7 +2451,7 @@
       "blockers": [
         "Ne certifie ni la géométrie ni le raccordement au serveur live"
       ],
-      "scope": "tests/forge-runtime-integration.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
     },
     {
       "owner": "Moteur universel",
@@ -2425,7 +2464,7 @@
       "blockers": [
         "Ne certifie ni la géométrie ni le raccordement au serveur live"
       ],
-      "scope": "tests/forge-runtime-integration.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
     },
     {
       "owner": "Moteur universel",
@@ -2438,7 +2477,7 @@
       "blockers": [
         "Ne certifie ni la géométrie ni le raccordement au serveur live"
       ],
-      "scope": "tests/forge-runtime-integration.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
     },
     {
       "owner": "Moteur universel",
@@ -2451,7 +2490,59 @@
       "blockers": [
         "Ne certifie ni la géométrie ni le raccordement au serveur live"
       ],
-      "scope": "tests/forge-runtime-integration.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "automatic damage continues through a persisted reaction without spending owner action or repeating the trigger",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "two blade hits completed after reactions qualify for the seal; provisional hits changed to misses do not",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "temporary typed defenses apply once, expire, and restore underlying defenses without mutating definitions",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "source-scoped next attack disadvantage does not penalize allies and is spent on a missed attack against its source",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
     }
   ]
 }

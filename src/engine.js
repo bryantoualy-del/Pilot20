@@ -3,7 +3,7 @@ import {modifyCasting,stanceDamage,stanceDefense,activity,tokenRules} from './ru
 import {guardWorkload} from './workload.js';
 import {PHASES,beginEvent,nextWindow,respond,guardPending} from './rules/reactive.js';
 import {json} from './character/contracts.js';
-import {attackModes,consumeAttackEffects,advanced,profileExecutable,statistic,saveModes,hasCondition,cleanupConcentration,boundary,checkCanAct,payAction,prepareCast,establish,addEffect,removeEffect} from './rules/combat.js';
+import {activeEffects,attackModes,consumeAttackEffects,advanced,profileExecutable,statistic,saveModes,hasCondition,cleanupConcentration,boundary,checkCanAct,payAction,prepareCast,establish,addEffect,removeEffect} from './rules/combat.js';
 import {copy, validate, requireThat as check, integer, id, diceSpec} from './model.js';
 const game = s => copy({actors:s.actors,activeActorId:s.activeActorId,turnId:s.turnId,...(s.reactive?{reactive:s.reactive}:{})});
 function dieRoll(rolls, sides, count) {
@@ -20,6 +20,12 @@ export function effectiveDamage(amount, type, definition) {
   if (definition.immunities.includes(type)) return 0;
   let n = definition.resistances.includes(type) ? Math.floor(amount/2) : amount;
   return definition.vulnerabilities.includes(type) ? n*2 : n;
+}
+/** Temporary defenses share effect stacking and expiration with all other effects. */
+function defenses(a) {
+  const temporary=activeEffects(a).flatMap(e=>e.rule.defenses??[]);
+  return Object.fromEntries([['resistances','resistance',stanceDefense(a)],['immunities','immunity',a.definition.immunities],['vulnerabilities','vulnerability',a.definition.vulnerabilities]]
+    .map(([key,kind,base])=>[key,[...new Set([...base,...temporary.filter(d=>d.kind===kind).map(d=>d.damageType)])]]));
 }
 function loseConcentration(a) { a.concentration = null; a.checks = []; }
 function activateConcentration(a, rule, instanceId, hit) {
@@ -81,7 +87,7 @@ function useAbility(s,c,triggered=false) {
 function rollPlan(s,p) {
  const a=s.actors[p.command.actorId],ability=p.ability,c=p.command;
  if(ability.combat?.roll && p.total===null) {const r=ability.combat.roll,m=saveModes(a,r.ability);p.total=d20(c.attackRolls,m.advantage,m.disadvantage)+r.bonus;}
- if(ability.attack && p.natural===null) {const modes=attackModes(a,s.actors[p.targetIds[0]]);p.natural=d20(c.attackRolls,c.advantage===true||modes.advantage,c.disadvantage===true||modes.disadvantage);consumeAttackEffects(a);p.total=p.natural+statistic(a,'attack',ability.attack.bonus);p.critical=p.natural===20;const t=s.actors[p.targetIds[0]];p.hit=p.natural!==1 && (p.critical || p.total>=statistic(t,'ac',t.definition.ac));}
+ if(ability.attack && p.natural===null) {const modes=attackModes(a,s.actors[p.targetIds[0]]);p.natural=d20(c.attackRolls,c.advantage===true||modes.advantage,c.disadvantage===true||modes.disadvantage);consumeAttackEffects(a,s.actors[p.targetIds[0]]);p.total=p.natural+statistic(a,'attack',ability.attack.bonus);p.critical=p.natural===20;const t=s.actors[p.targetIds[0]];p.hit=p.natural!==1 && (p.critical || p.total>=statistic(t,'ac',t.definition.ac));}
  if(ability.save && !Object.keys(p.saves).length)for(const key of p.targetIds) {const t=s.actors[key],r=ability.save,m=saveModes(t,r.ability);check(integer(t.definition.saves[r.ability],-100,100),'Target save statistic required');p.saves[key]=d20(c.saveRolls?.[key],m.advantage,m.disadvantage || ability.combat?.castPlan?.firstSaveDisadvantageTarget===key)+statistic(t,'save.'+r.ability,t.definition.saves[r.ability]);}
 }
 /** Validate on an isolated game snapshot before persisting a pause; never apply a preview. */
@@ -139,7 +145,7 @@ function finishAbility(s,event) {
         if(save?.success) n=ability.save.onSuccess==='half'?Math.floor(n/2):ability.save.onSuccess==='none'?0:n;
         const afterSave=n;
         n=Math.floor(n/event.modifiers.damageDivisor);
-        const final=effectiveDamage(n,type,{...target.definition,resistances:stanceDefense(target)});breakdown.push({type,raw,afterSave,afterModifiers:n,afterDefenses:final});
+        const final=effectiveDamage(n,type,defenses(target));breakdown.push({type,raw,afterSave,afterModifiers:n,afterDefenses:final});
         return sum+final;
       },0);
       detail={targetId:key,rawDamage:breakdown.reduce((n,c)=>n+c.raw,0),modifiedDamage:breakdown.reduce((n,c)=>n+c.afterModifiers,0),defendedDamage:n,components:breakdown,...damage(target,n,c.id+':'+key)};
@@ -191,16 +197,23 @@ function apply(s,c) {
     if(['source-turn-start','source-turn-end'].includes(event.type))check(s.activeActorId===c.actorId,'Wrong source turn');
     if(['target-turn-start','target-turn-end'].includes(event.type))check(s.activeActorId===event.targetId,'Wrong target turn');
     // Historical hits supplied by a client are never trusted. Only committed attacks count.
-    const turnHits=s.history.flatMap(h=>h.result.hit===true && h.command?.type==='useAbility' && h.before.actors[h.command.actorId]?.definition.abilities[h.command.abilityId]?.attack && h.before.turnId===s.turnId ?
-      (h.command.targetIds??[]).map(targetId=>({turnId:String(s.turnId),sourceId:h.command.actorId,targetId,weaponId:h.command.abilityId,hit:true})):[]);
+    const turnHits=s.history.flatMap(h=>{
+      // A response belongs to the original attack, not to the reacting creature.
+      // Pending/cancelled outcomes never contribute a hit, even if a provisional
+      // roll succeeded before Shield or another reaction changed the outcome.
+      const attack=h.command?.type==='respondDecision'?h.before.reactive?.event?.plan.command:h.command;
+      if(h.result.pending || h.result.cancelled || h.result.hit!==true || attack?.type!=='useAbility' ||
+        !h.before.actors[attack.actorId]?.definition.abilities[attack.abilityId]?.attack || h.before.turnId!==s.turnId)return [];
+      return (attack.targetIds??[]).map(targetId=>({turnId:String(s.turnId),sourceId:attack.actorId,targetId,weaponId:attack.abilityId,hit:true}));
+    });
     const plan=planForgeTriggers({event,rules:[{...rule,sourceId:c.actorId}],receipts,turnHits});
     check(!plan.pending.length,plan.pending[0]?.reason??'Incomplete trigger');
     if(!plan.matches.length) return {skipped:true,results:[]};
     check(a.definition.abilities[c.abilityId].target==='self' || c.targetIds?.length===1 && c.targetIds[0]===event.targetId,'Trigger target mismatch');
     const out=useAbility(s,c,true);
-    // Pending reactive windows must retain the receipt until final commit; until
-    // that integration exists, fail atomically instead of publishing half an event.
-    check(!out.pending,'Triggered reactive window not supported');
+    // Reserve the trigger with the persisted continuation. guardPending blocks
+    // dependent commands until it finishes; reconnects reuse the same window.
+    // No separate receipt write can survive a failed transaction.
     return {...out,triggerReceipt:plan.matches[0].receiptKey};
   }
   if(c.type==='recoverResource') {
@@ -214,7 +227,11 @@ function apply(s,c) {
   }
   if(c.type==='setUnconscious') {const a=actor(s,c.actorId);check(typeof c.value==='boolean','Boolean unconsciousness');advanced(a).unconscious=c.value;return {unconscious:c.value};}
   if(c.type==='endStance') {const a=actor(s,c.actorId),x=advanced(a);check(x.stance && s.activeActorId===c.actorId && x.turnOpen!==false && a.economy.bonus,'Voluntary stance end requires bonus action');a.economy.bonus=false;x.stance=null;return {ended:true};}
-  if (c.type === 'respondDecision') {const e=respond(s,c);validateContinuation(s,e);return advanceEvent(s,e);}
+  if (c.type === 'respondDecision') {
+    const e=respond(s,c);validateContinuation(s,e);const result=advanceEvent(s,e);
+    const triggerReceipt=s.receipts[e.id]?.result.triggerReceipt;
+    return triggerReceipt?{...result,triggerReceipt}:result;
+  }
   if (c.type === 'resumeDecision') throw Error('Continuation resumes atomically with its decision; double resume refused');
   if (c.type === 'useAbility') return useAbility(s,c);
   if (c.type === 'declareManual') return declareManual(s,c);
@@ -249,7 +266,7 @@ function apply(s,c) {
     if (!success) loseConcentration(a); return {total,dc:q.dc,success};
   }
   if (c.type === 'damage') {
-    const a = actor(s,c.actorId); return damage(a,effectiveDamage(c.amount,c.damageType,{...a.definition,resistances:stanceDefense(a)}),c.id);
+    const a = actor(s,c.actorId); return damage(a,effectiveDamage(c.amount,c.damageType,defenses(a)),c.id);
   }
   if (c.type === 'setIncapacitated') {
     const a = actor(s,c.actorId); check(typeof c.value === 'boolean','Boolean required');

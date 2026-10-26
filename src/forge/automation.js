@@ -101,11 +101,17 @@ export function compileCapability(item,a,{instance,context={}}={}) {
       }
       if(e.duration||a.duration) limitations.push('Répétition des dégâts/soins à relier au calendrier.');
       automated.push(t==='damage'?'Dés, dégâts typés, résistances et vulnérabilités.':'Soins plafonnés aux PV maximum.');
-    } else if(t==='condition' && p.operation==='apply' && ['next-attack-disadvantage','attacks-from-source-advantage','incapacitated','cannotMove'].includes(p.condition)) {
+    } else if(t==='condition' && p.operation==='apply' && ['next-attack-disadvantage','next-attack-against-source-disadvantage','attacks-from-source-advantage','incapacitated','cannotMove'].includes(p.condition)) {
       const d=duration(e.duration??a.duration);
       if(!d)missing.push('Durée et expiration explicites requises pour l’état.');
       else ability.combat.ongoing.push({id:e.id,stack:{key:item.id+':'+e.id,policy:'replace',priority:0},duration:d,modifiers:[],conditions:[p.condition],concentration:false});
       automated.push('État appliqué après échec du JdS, expiration automatique.');
+    } else if(t==='defense') {
+      const d=duration(e.duration??a.duration);
+      if(p.condition)limitations.push('Condition de défense à valider par Encounter.');
+      if(!d)missing.push('Durée et expiration explicites requises pour la défense temporaire.');
+      else ability.combat.ongoing.push({id:e.id,stack:{key:item.id+':'+e.id,policy:'replace',priority:0},duration:d,modifiers:[],conditions:[],concentration:false,defenses:[{kind:p.kind,damageType:p.damageType}]});
+      automated.push('Défense temporaire typée, sans cumul, et expiration dans le moteur de combat.');
     } else if(t==='mode-switch') {
       const mode=item.modes.find(m=>m.id===p.modeId);
       if(a.effects.filter(e=>e.templateId==='p20:effect:mode-switch').length>1)limitations.push('Plusieurs transformations simultanées non prises en charge.');

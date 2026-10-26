@@ -1,6 +1,6 @@
 # Matrice exécutée des objets CC
 
-54 objets/références, 97 lignes. Les contributions isolées ne certifient pas l’automatisation de l’objet entier. Aucun scénario narratif n’est présenté comme exécuté.
+54 objets/références, 104 lignes. Les contributions isolées ne certifient pas l’automatisation de l’objet entier. Aucun scénario narratif n’est présenté comme exécuté.
 
 | Porteur | Objet / capacité | Attendu | Calculé | Observé | Statut | Blocage |
 |---|---|---|---|---|---|---|
@@ -89,6 +89,9 @@
 | Brack | PyroMerlin / Souffle / Réussite | 9 | 9 | 9 | Partiellement automatisé | ["Sélection géométrique des cibles de zone à relier à Encounter."] |
 | Brack | PyroMerlin / Souffle / Résistance | 9 | 9 | 9 | Partiellement automatisé | ["Sélection géométrique des cibles de zone à relier à Encounter."] |
 | Brack | PyroMerlin / Souffle / Réussite + résistance | 4 | 4 | 4 | Partiellement automatisé | ["Sélection géométrique des cibles de zone à relier à Encounter."] |
+| Moteur universel | Contrat Forge / combat / Encounter host resolves pinned intent with authoritative dice and persisted charge, reconnect returns current private view without reroll | "Toutes les assertions du scénario passent" | "—" | "PASS" | Validé (scénario moteur isolé) | ["Ne certifie ni la géométrie ni le raccordement au serveur live"] |
+| Moteur universel | Contrat Forge / combat / Encounter host rejects forged identity, client damage, stale generation/revision and colliding intent IDs | "Toutes les assertions du scénario passent" | "—" | "PASS" | Validé (scénario moteur isolé) | ["Ne certifie ni la géométrie ni le raccordement au serveur live"] |
+| Moteur universel | Contrat Forge / combat / Encounter host emits no ACK on storage failure and concurrent intentions commit only once | "Toutes les assertions du scénario passent" | "—" | "PASS" | Validé (scénario moteur isolé) | ["Ne certifie ni la géométrie ni le raccordement au serveur live"] |
 | Moteur universel | Contrat Forge / combat / authoritative aura resolves off turn after owner ended: no action, typed defenses, replay after reconnect | "Toutes les assertions du scénario passent" | "—" | "PASS" | Validé (scénario moteur isolé) | ["Ne certifie ni la géométrie ni le raccordement au serveur live"] |
 | Moteur universel | Contrat Forge / combat / authoritative trigger fails closed on authority, player spoof, geometry, stale turn, target and invalid roll | "Toutes les assertions du scénario passent" | "—" | "PASS" | Validé (scénario moteur isolé) | ["Ne certifie ni la géométrie ni le raccordement au serveur live"] |
 | Moteur universel | Contrat Forge / combat / recovery at dawn uses pinned dice, caps, validates and deduplicates independently of envelope | "Toutes les assertions du scénario passent" | "—" | "PASS" | Validé (scénario moteur isolé) | ["Ne certifie ni la géométrie ni le raccordement au serveur live"] |
@@ -101,3 +104,7 @@
 | Moteur universel | Contrat Forge / combat / existing executable spell contracts retain saves and consume item charges instead of slots | "Toutes les assertions du scénario passent" | "—" | "PASS" | Validé (scénario moteur isolé) | ["Ne certifie ni la géométrie ni le raccordement au serveur live"] |
 | Moteur universel | Contrat Forge / combat / legacy network capabilities do not falsely certify a universal Forge connection | "Toutes les assertions du scénario passent" | "—" | "PASS" | Validé (scénario moteur isolé) | ["Ne certifie ni la géométrie ni le raccordement au serveur live"] |
 | Moteur universel | Contrat Forge / combat / trigger results cross the existing presentation boundary without private receipts or duplicate FX | "Toutes les assertions du scénario passent" | "—" | "PASS" | Validé (scénario moteur isolé) | ["Ne certifie ni la géométrie ni le raccordement au serveur live"] |
+| Moteur universel | Contrat Forge / combat / automatic damage continues through a persisted reaction without spending owner action or repeating the trigger | "Toutes les assertions du scénario passent" | "—" | "PASS" | Validé (scénario moteur isolé) | ["Ne certifie ni la géométrie ni le raccordement au serveur live"] |
+| Moteur universel | Contrat Forge / combat / two blade hits completed after reactions qualify for the seal; provisional hits changed to misses do not | "Toutes les assertions du scénario passent" | "—" | "PASS" | Validé (scénario moteur isolé) | ["Ne certifie ni la géométrie ni le raccordement au serveur live"] |
+| Moteur universel | Contrat Forge / combat / temporary typed defenses apply once, expire, and restore underlying defenses without mutating definitions | "Toutes les assertions du scénario passent" | "—" | "PASS" | Validé (scénario moteur isolé) | ["Ne certifie ni la géométrie ni le raccordement au serveur live"] |
+| Moteur universel | Contrat Forge / combat / source-scoped next attack disadvantage does not penalize allies and is spent on a missed attack against its source | "Toutes les assertions du scénario passent" | "—" | "PASS" | Validé (scénario moteur isolé) | ["Ne certifie ni la géométrie ni le raccordement au serveur live"] |

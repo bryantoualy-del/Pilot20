@@ -130,3 +130,70 @@ test('trigger results cross the existing presentation boundary without private r
  const view=transactionView(out,{role:'player',actorId:'brack'});assert.equal(view.events.length,1);assert.equal(JSON.stringify(view).includes('triggerReceipt'),false);
  const duplicate=execute(out.state,{...c,id:'duplicate'},ctx);assert.equal(transactionView(duplicate,{role:'gm'}).events.length,0);
 });
+
+test('automatic damage continues through a persisted reaction without spending owner action or repeating the trigger',async()=>{
+ const {answer,rule}=await import('./helpers/reactive.js');
+ const {s,c}=auraSession();
+ s.actors.orc.definition.rules=[rule('reduce-aura',{trigger:{version:1,event:'ability-targeted',scope:'target',limit:'none',whileEffect:null},conditions:[],options:[{id:'reduce',label:'Protection',costs:[],reaction:true,effects:[{kind:'adjust',field:'damageDivisor',amount:2}]}]})];
+ const out=execute(s,c,ctx);assert.ok(out.result.pending);assert.ok(out.result.triggerReceipt);
+ assert.equal(out.state.actors.orc.hp.current,100);
+ const restored=deserialize(serialize(out.state));assert.equal(execute(restored,c,ctx).replayed,true);
+ assert.throws(()=>execute(restored,{...c,id:'racing-trigger'},ctx),/pending/);
+ const done=execute(restored,answer(restored),ctx);
+ assert.equal(done.result.triggerReceipt,out.result.triggerReceipt);
+ assert.equal(done.state.actors.orc.hp.current,97);assert.equal(done.state.actors.orc.economy.reaction,false);
+ assert.deepEqual(done.state.actors.brack.economy,s.actors.brack.economy);
+ assert.equal(execute(done.state,{...c,id:'transport-retry'},ctx).result.skipped,true);
+ assert.equal(execute(done.state,answer(restored),ctx).replayed,true);
+});
+
+test('two blade hits completed after reactions qualify for the seal; provisional hits changed to misses do not',async()=>{
+ const {answer,rule}=await import('./helpers/reactive.js');
+ for(const preventHit of [false,true]){
+  const source=actor('source'),target=actor('target');
+  const strike={name:'Lame',cost:'action',attackAction:true,target:'selected',maxTargets:1,attack:{bonus:5},effects:[{kind:'damage',amount:1,damageType:'slashing'}]};
+  source.abilities={sun:structuredClone(strike),moon:structuredClone(strike),seal:{name:'Sceau',cost:'none',target:'selected',maxTargets:1,effects:[{kind:'damage',amount:9,damageType:'radiant'}],combat:{version:1,mode:'automatic',requirements:[],trigger:{id:'seal',itemInstanceId:'blades',trigger:'on-hit',frequency:'once-per-target-per-turn',requireOwnTurn:true,requireSameTargetWeaponHits:['sun','moon']}}}};
+  target.rules=[rule('parry',{trigger:{version:1,event:'ability-targeted',scope:'target',limit:'none',whileEffect:null},phase:'after-roll',conditions:[{fact:'attack',equals:true}],options:[{id:'choice',label:'Parade',costs:[],reaction:true,effects:[{kind:'effect',rule:{id:'defense',stack:{key:'defense',policy:'replace',priority:0},duration:{unit:'turn',value:1,anchor:'target',boundary:'start'},modifiers:[{stat:'ac',operation:'add',value:20}],conditions:[],concentration:false}}]}]})];
+  let s=createSession([source,target]);
+  for(const [n,abilityId]of ['sun','moon'].entries()){
+   s=execute(s,{id:'strike'+n,type:'useAbility',actorId:'source',abilityId,targetIds:['target'],attackRolls:[15]}).state;
+   if(s.reactive?.event?.status==='pending')s=execute(s,answer(s,preventHit?'accept':'decline')).state;
+  }
+  const out=execute(s,{id:'seal',type:'triggerAbility',actorId:'source',abilityId:'seal',targetIds:['target'],event:{id:'hit',type:'on-hit',sourceId:'source',targetId:'target',turnId:'0'}});
+  assert.equal(out.result.skipped===true,preventHit);
+  assert.equal(out.state.actors.target.hp.current,preventHit?100:89);
+ }
+});
+
+test('temporary typed defenses apply once, expire, and restore underlying defenses without mutating definitions',async()=>{
+ const {effect}=await import('../src/forge/model.js');
+ for(const [kind,expected]of [['resistance',4],['immunity',0],['vulnerability',18]]){
+  const d=newItem(),a=guidedAbility('protect');a.activation='bonus-action';
+  const e=effect('defense',{kind,damageType:'fire',condition:null});e.target={kind:'self',count:1,filter:null};e.duration={unit:'turn',value:1,endsAt:'start-of-source-turn'};a.effects=[e];
+  const compiled=compileCapability(d,a);assert.equal(compiled.status,'automatic');
+  const source=actor('source');source.abilities.protect=compiled.ability;
+  if(kind==='resistance')source.resistances=['fire'];
+  let s=createSession([source,actor('enemy')]);const definition=structuredClone(s.actors.source.definition);
+  s=execute(s,{id:'protect',type:'useAbility',actorId:'source',abilityId:'protect'}).state;
+  let out=execute(s,{id:'fire',type:'damage',actorId:'source',amount:9,damageType:'fire'});
+  assert.equal(out.result.damage,expected);
+  assert.equal(execute(s,{id:'cold',type:'damage',actorId:'source',amount:9,damageType:'cold'}).result.damage,9);
+  s=execute(out.state,{id:'new-turn',type:'startTurn',actorId:'source'}).state;
+  assert.equal(execute(s,{id:'expired',type:'damage',actorId:'source',amount:9,damageType:'fire'}).result.damage,kind==='resistance'?4:9);
+  assert.deepEqual(s.actors.source.definition,definition);
+ }
+});
+
+test('source-scoped next attack disadvantage does not penalize allies and is spent on a missed attack against its source',()=>{
+ const d=newItem(),a=guidedAbility('condition');a.effects[0].params.condition='next-attack-against-source-disadvantage';a.effects[0].duration={unit:'until-next-attack',value:null,endsAt:null};a.save={ability:'wis',dc:{kind:'fixed',value:15},success:'no-effect'};
+ const source=actor('kentaro'),target=actor('enemy');source.abilities.mark=compileCapability(d,a).ability;
+ target.abilities.attack={name:'Attaque',cost:'action',attackAction:true,target:'selected',maxTargets:1,attack:{bonus:0},effects:[{kind:'damage',amount:5,damageType:'slashing'}]};
+ let s=createSession([source,target,actor('ally')]);
+ s=execute(s,{id:'mark',type:'useAbility',actorId:'kentaro',abilityId:'mark',targetIds:['enemy'],saveRolls:{enemy:[1]}}).state;
+ s=execute(s,{id:'enemy-turn',type:'startTurn',actorId:'enemy'}).state;
+ assert.equal(attackModes(s.actors.enemy,s.actors.ally).disadvantage,false);
+ s=execute(s,{id:'attack-ally',type:'useAbility',actorId:'enemy',abilityId:'attack',targetIds:['ally'],attackRolls:[1]}).state;
+ assert.equal(s.actors.enemy.advanced.effects.length,1);assert.equal(attackModes(s.actors.enemy,s.actors.kentaro).disadvantage,true);
+ s=execute(s,{id:'attack-source',type:'useAbility',actorId:'enemy',abilityId:'attack',targetIds:['kentaro'],attackRolls:[1,20]}).state;
+ assert.equal(s.actors.kentaro.hp.current,100);assert.equal(s.actors.enemy.advanced.effects.length,0);
+});
