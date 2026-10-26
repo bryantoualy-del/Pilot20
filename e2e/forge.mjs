@@ -149,6 +149,7 @@ try {
       "phone overflow",
     );
     await p.getByLabel("Nom du pouvoir").first().waitFor();
+    assert.ok(await p.getByLabel("Sur réussite",{exact:true}).first().evaluate(e=>e.getBoundingClientRect().width>250),"Save outcome uses full phone width");
     await p.screenshot({
       path: `docs/forge/screenshots/iphone-${width}.png`,
       fullPage: true,
