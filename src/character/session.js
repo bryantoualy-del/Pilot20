@@ -1,3 +1,5 @@
+import {prepareForgeActor} from '../forge/loadout.js';
+import {advanced} from '../rules/combat.js';
 import {createSession,validate,validateDefinition,migrate} from '../model.js';
 import {execute} from '../engine.js';
 import {check,id,integer,keys,json} from './contracts.js';
@@ -6,13 +8,18 @@ import {derive} from './derive.js';
 export function createCombat(sessionId,participants,{authority='local'}={}) {
   check(id(sessionId) && ['local','free','encounter'].includes(authority),'Session header');
   check(Array.isArray(participants) && participants.length>0 && participants.length<=100 && new Set(participants.map(p=>p.instanceId)).size===participants.length,'Participants');
+  const prepared=new Map();
   const refs={},defs=participants.map(p=>{
     check(id(p.instanceId),'Participant ID');
     const d=p.character,s=derive(d);
     refs[p.instanceId]={characterId:d.id,definitionRevision:d.revision};
-    return validateDefinition({id:p.instanceId,name:d.identity.name,level:s.level,maxHp:s.maxHp,ac:s.ac,speed:s.speed,attacksPerAction:s.attacksPerAction,saves:s.saves,resources:s.resources,abilities:s.abilities,...(s.reactiveRules.length?{rules:s.reactiveRules}:{}),...(s.castingModifiers.length?{castingModifiers:s.castingModifiers}:{}),...structuredClone(d.defenses)});
+    const base=validateDefinition({id:p.instanceId,name:d.identity.name,level:s.level,maxHp:s.maxHp,ac:s.ac,speed:s.speed,attacksPerAction:s.attacksPerAction,saves:s.saves,resources:s.resources,abilities:s.abilities,...(s.reactiveRules.length?{rules:s.reactiveRules}:{}),...(s.castingModifiers.length?{castingModifiers:s.castingModifiers}:{}),...structuredClone(d.defenses)});
+    if(!p.forgeItems?.length)return base;
+    check(p.forgeBaseStatistics===true,'Forge requires item-free base statistics');
+    const gear=prepareForgeActor(base,p.forgeItems,p.forgeContext??{});prepared.set(p.instanceId,gear);return gear.definition;
   });
   const engine=createSession(defs);engine.mode=authority;
+  for(const [key,gear] of prepared){Object.assign(engine.actors[key].resources,gear.resources);advanced(engine.actors[key]).forms=gear.forms;}
   return validateCombat({kind:'combat',schemaVersion:2,id:sessionId,participants:refs,engine,initiative:[],targets:[]});
 }
 export function validateCombat(s) {

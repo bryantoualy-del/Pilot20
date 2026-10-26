@@ -2,6 +2,7 @@
 import { createSession, diceSpec, validateDefinition } from '../model.js';
 import { execute } from '../engine.js';
 import { conditionMet } from './conditions.js';
+import { validTriggerRule } from './trigger-runtime.js';
 import { instanceOf, newAbility, effect } from './model.js';
 
 export const capabilityKinds = {
@@ -9,7 +10,7 @@ export const capabilityKinds = {
   spell:'Lancer un sort', transform:'Changer de forme', condition:'Appliquer un état',
   summon:'Invoquer', automatic:'Effet automatique', other:'Autre pouvoir',
 };
-export const triggerLabels = {'on-attack':'Attaque déclarée','on-hit':'Attaque réussie','on-miss':'Attaque ratée','on-critical':'Critique','damage-taken':'Dégâts subis','source-turn-start':'Début du tour du porteur','source-turn-end':'Fin du tour du porteur','target-turn-start':'Début du tour de la cible','target-turn-end':'Fin du tour de la cible','zone-enter':'Entrée dans une zone','zone-leave':'Sortie de zone','mode-change':'Changement de forme','rest':'Repos'};
+export const triggerLabels = {'on-attack':'Attaque déclarée','on-hit':'Attaque réussie','on-miss':'Attaque ratée','on-critical':'Critique','damage-taken':'Dégâts subis','source-turn-start':'Début du tour du porteur','source-turn-end':'Fin du tour du porteur','target-turn-start':'Début du tour de la cible','target-turn-end':'Fin du tour de la cible','zone-enter':'Entrée dans une zone','zone-leave':'Sortie de zone','mode-change':'Changement de forme','rest':'Repos','short-rest':'Repos court','long-rest':'Repos long','daily-recovery':'Récupération quotidienne','reaction-used':'Réaction utilisée'};
 export function guidedAbility(kind) {
   const a=newAbility(); a.name.fr=capabilityKinds[kind] ?? 'Autre pouvoir';
   const p={damage:['damage',{dice:'1d6',damageType:'fire',role:'standalone'}],attack:['damage',{dice:'1d8',damageType:'slashing',role:'weapon-base'}],heal:['healing',{dice:'1d8'}],protect:['modifier',{stat:'ac',value:2,operation:'add',scope:'wearer'}],spell:['cast-spell',{spellId:'forge:unresolved',level:null,dc:null,attackBonus:null}],transform:['mode-switch',{modeId:'forge:unresolved',exclusiveGroup:'forme'}],condition:['condition',{condition:'blinded',operation:'apply'}],automatic:['damage',{dice:'1d6',damageType:'fire',role:'standalone'}]};
@@ -22,6 +23,7 @@ export function guidedAbility(kind) {
 }
 const costMap={action:'action','bonus-action':'bonus',reaction:'reaction',passive:'none',triggered:'none'};
 const duration=d=> {
+  if(d?.unit==='until-next-attack')return {unit:'attack',value:1,anchor:'target',boundary:'start'};
   if(!d || !['turn','round','minute'].includes(d.unit)||!Number.isInteger(d.value)||d.value<1||!d.endsAt||d.endsAt==='manual') return null;
   return {unit:d.unit,value:d.value,anchor:d.endsAt.includes('source')?'source':'target',boundary:d.endsAt.startsWith('start')?'start':'end'};
 };
@@ -29,6 +31,9 @@ function baseActor(id, level=10) {return {id,name:id,level,maxHp:200,ac:15,attac
 /** Fail closed: diagnostic is based on compilable mechanics, never mechanicsStatus. */
 export function compileCapability(item,a,{instance,context={}}={}) {
   const missing=[],limitations=[],automated=[];
+  const triggerBinding=context.triggerBinding;
+  const bound=!!triggerBinding && validTriggerRule(triggerBinding) && instance && triggerBinding.itemInstanceId===instance.instanceId;
+
   const ability={name:a.name.fr,cost:costMap[a.activation]??'none',target:'selected',maxTargets:1,effects:[],combat:{version:1,mode:'automatic',requirements:[],ongoing:[]}};
   if(!Object.hasOwn(costMap,a.activation)) missing.push('Activation à préciser.');
   if(!a.effects.length) missing.push('Aucun effet défini.');
@@ -68,18 +73,56 @@ export function compileCapability(item,a,{instance,context={}}={}) {
     if(e.target?.filter) limitations.push('Filtre de cible à relier.');
     if(e.target && !['self','creature'].includes(e.target.kind)) limitations.push('Cible non prise en charge.');
     if(e.trigger && !Object.hasOwn(triggerLabels,e.trigger)) limitations.push('Déclencheur non reconnu : '+e.trigger);
-    if(e.trigger && !(e.trigger==='on-hit'&&hasWeapon&&['weapon-base','additional'].includes(p.role))) limitations.push('Abonnement au déclencheur '+(triggerLabels[e.trigger]??e.trigger)+' non relié.');
-    if(['damage','healing'].includes(t)) {
-      try{diceSpec(p.dice);}catch{missing.push('Dés invalides : '+p.dice);}
+    if(e.trigger && !(bound && a.activation==='triggered' && triggerBinding.trigger===e.trigger) && !(e.trigger==='on-hit'&&hasWeapon&&['weapon-base','additional'].includes(p.role))) limitations.push('Abonnement au déclencheur '+(triggerLabels[e.trigger]??e.trigger)+' non relié.');
+    if(t==='cast-spell' && context.spells?.[p.spellId]) {
+      const spell=structuredClone(context.spells[p.spellId]);
+      if(a.effects.length!==1 || spell.combat?.mode!=='automatic' || spell.combat?.requirements?.length || spell.combat?.deferred?.length || !spell.combat?.spell || spell.resource)limitations.push('Contrat du sort référencé non exécutable ou composite.');
+      else {
+        const cost=ability.cost,resource=ability.resource,name=ability.name;
+        Object.assign(ability,spell,{cost,name});
+        if(resource)ability.resource=resource;
+        ability.combat.spell.slotPolicy='free';ability.combat.spell.available=true;
+        if(p.level!==null && p.level!==ability.combat.spell.level)limitations.push('Niveau de lancement différent du contrat du sort.');
+        if(p.dc){
+          if(p.dc.kind==='fixed' && ability.save)ability.save.dc=p.dc.value;
+          else limitations.push('DD de sort non transposable au contrat.');
+        }
+        if(p.attackBonus!==null && ability.attack)ability.attack.bonus=p.attackBonus;
+        automated.push('Sort référencé résolu par le moteur existant, sans emplacement supplémentaire.');
+      }
+    } else if(['damage','healing'].includes(t)) {
+      const fixed=/^\d+$/.test(p.dice);
+      try{if(!fixed)diceSpec(p.dice);}catch{missing.push('Dés invalides : '+p.dice);}
       if(t==='damage'&&!p.damageType) missing.push('Type de dégâts à préciser.');
-      ability.effects.push({kind:t==='damage'?'damage':'heal',dice:p.dice,...(t==='damage'?{damageType:p.damageType??'untyped'}:{})});
+      ability.effects.push({kind:t==='damage'?'damage':'heal',...(fixed?{amount:Number(p.dice)}:{dice:p.dice}),...(t==='damage'?{damageType:p.damageType??'untyped'}:{})});
       if(p.role==='weapon-base') {
         if(save)limitations.push('Attaque et sauvegarde successives non reliées.');
-        else {ability.attack={bonus:context.attackBonus??0};ability.combat.actionKind='weaponAttack';ability.combat.weapon=true;}
+        else {ability.attack={bonus:context.attackBonus??0};ability.attackAction=true;ability.combat.actionKind='weaponAttack';ability.combat.weapon=true;}
       }
       if(e.duration||a.duration) limitations.push('Répétition des dégâts/soins à relier au calendrier.');
       automated.push(t==='damage'?'Dés, dégâts typés, résistances et vulnérabilités.':'Soins plafonnés aux PV maximum.');
+    } else if(t==='condition' && p.operation==='apply' && ['next-attack-disadvantage','attacks-from-source-advantage','incapacitated','cannotMove'].includes(p.condition)) {
+      const d=duration(e.duration??a.duration);
+      if(!d)missing.push('Durée et expiration explicites requises pour l’état.');
+      else ability.combat.ongoing.push({id:e.id,stack:{key:item.id+':'+e.id,policy:'replace',priority:0},duration:d,modifiers:[],conditions:[p.condition],concentration:false});
+      automated.push('État appliqué après échec du JdS, expiration automatique.');
+    } else if(t==='mode-switch') {
+      const mode=item.modes.find(m=>m.id===p.modeId);
+      if(a.effects.filter(e=>e.templateId==='p20:effect:mode-switch').length>1)limitations.push('Plusieurs transformations simultanées non prises en charge.');
+      if(mode && instance) {
+        ability.target='self';
+        const modifiers=[];
+        if(!mode.exclusiveGroup || mode.exclusiveGroup!==p.exclusiveGroup)missing.push('Groupe de formes incohérent.');
+        for(const me of mode.effects){
+          if(me.conditions.length||me.save||me.duration||me.trigger)limitations.push('Condition de forme non résolue.');
+          if(me.templateId==='p20:effect:modifier'&&me.params.operation==='add'&&me.params.scope==='wearer'&&['ac','attack','damage'].includes(me.params.stat))modifiers.push({stat:me.params.stat,operation:'add',value:me.params.value});
+          else if(me.templateId!=='p20:effect:damage')limitations.push('Propriété de forme non interprétée.');
+        }
+        ability.combat.form={key:instance.instanceId,id:mode.id,modifiers};
+        automated.push('Changement exclusif de forme et recalcul des bonus, dans la même transaction.');
+      } else if(mode)missing.push('Instance requise pour le changement de forme.');
     } else if(t==='modifier'&&p.operation==='add'&&['ac','attack','damage'].includes(p.stat)) {
+      if(p.scope!=='wearer')limitations.push('Portée du bonus temporaire non interprétée.');
       const d=duration(e.duration??a.duration);
       if(!d)missing.push('Durée et expiration explicites requises pour le bonus temporaire.');
       else ability.combat.ongoing.push({id:e.id,stack:{key:item.id+':'+e.id,policy:'replace',priority:0},duration:d,modifiers:[{stat:p.stat,operation:'add',value:p.value}],conditions:[],concentration:false});
@@ -94,10 +137,14 @@ export function compileCapability(item,a,{instance,context={}}={}) {
     for(const c of [item.attunement.prerequisites,a.prerequisites,...a.effects.flatMap(e=>e.conditions)])if(conditionMet(c,instance,context)!==true)missing.push('Prérequis non satisfait dans ce contexte.');
     if(a.effects.some(e=>e.modeId&&!instance.modeIds.includes(e.modeId)))missing.push('Forme requise inactive.');
   }
+  if(bound && a.activation==='triggered')ability.combat.trigger=structuredClone(triggerBinding);
+  if(context.requiredForm)ability.combat.requiredForm=structuredClone(context.requiredForm);
+  if(a.activation==='passive')limitations.push('Capacité passive : contribution persistante à intégrer, pas une activation répétable.');
   // Validate the compiled contract even when the catalogue itself is valid.
   if(a.activation==='triggered'&&!a.effects.some(e=>e.trigger))missing.push('Déclencheur automatique à préciser.');
   if(!missing.length){try{const d=baseActor('source');d.resources=Object.fromEntries(item.resources.map(r=>[r.id,{max:r.maximum,recovery:'none'}]));d.abilities={power:ability};validateDefinition(d);}catch(e){limitations.push('Contrat de combat : '+e.message);}}
   const status=missing.length?'incomplete':limitations.length?'partial':'automatic';
+  if(status!=='automatic')ability.combat.requirements=[...new Set([...missing,...limitations])];
   return {status,label:{incomplete:'À compléter',partial:'Partiellement automatisé',automatic:'Automatique'}[status],missing:[...new Set(missing)],limitations:[...new Set(limitations)],automated:[...new Set([...automated,...(Object.hasOwn(costMap,a.activation)?['Économie d’action contrôlée par le moteur.']:[]),...(a.costs.length?['Coût de réserve atomique.']:[])])],ability};
 }
 /** A detached sandbox. Even partial previews never claim to resolve omitted effects. */
@@ -107,7 +154,9 @@ export function simulateCapability(item,a,options={}) {
   if(diagnostic.missing.length) return {diagnostic,timeline:diagnostic.missing.map(x=>'À compléter : '+x)};
   const source=baseActor('source',options.level??10),target=baseActor('target');
   source.resources=Object.fromEntries(item.resources.map(r=>[r.id,{max:r.maximum,recovery:'none'}]));
-  source.abilities={power:diagnostic.ability};target.ac=options.ac??15;
+  // Partial previews deliberately clear requirements only on a detached copy.
+  const previewAbility=structuredClone(diagnostic.ability);previewAbility.combat.requirements=[];
+  source.abilities={power:previewAbility};target.ac=options.ac??15;
   for(const kind of ['resistances','vulnerabilities','immunities'])target[kind]=options[kind]??[];
   target.saves=Object.fromEntries(Object.keys(target.saves).map(k=>[k,options.saveBonus??0]));
   let state;
@@ -118,8 +167,10 @@ export function simulateCapability(item,a,options={}) {
     if(options.reactionSpent)state.actors.source.economy.reaction=false;
     if(options.phase==='outside-turn')state.activeActorId='target';
     state.actors.target.hp.current=options.targetHP??100;
-    const command={id:'forge-simulation',type:'useAbility',actorId:'source',abilityId:'power',targetIds:['target'],attackRolls:[options.attackRoll??15],saveRolls:{target:[options.saveRoll??1],source:[options.saveRoll??1]},effectRolls:{}};
+    const command={id:'forge-simulation',type:previewAbility.combat.trigger?'triggerAbility':'useAbility',actorId:'source',abilityId:'power',targetIds:['target'],attackRolls:[options.attackRoll??15],saveRolls:{target:[options.saveRoll??1],source:[options.saveRoll??1]},effectRolls:{}};
+    if(previewAbility.combat.trigger)command.event=options.event;
     for(const [i,e] of diagnostic.ability.effects.entries()){
+      if(e.amount!==undefined)continue;
       const d=diceSpec(e.dice),critical=!!diagnostic.ability.attack&&command.attackRolls[0]===20&&e.kind==='damage';
       command.effectRolls[i]=options.effectRolls?.[i]??Array.from({length:d.count*(critical?2:1)},()=>1+Math.floor(Math.random()*d.sides));
     }
@@ -153,5 +204,5 @@ export function weaponCapability(item,instance,context={}) {
   const bonus=stat=>all.filter(e=>e.templateId==='p20:effect:modifier'&&e.params.stat===stat&&e.params.scope==='this-weapon'&&e.params.operation==='add'&&!e.trigger&&!e.duration&&e.conditions.every(c=>conditionMet(c,instance,context)===true)).reduce((n,e)=>n+e.params.value,0);
   const b=a.effects.find(e=>e.params.role==='weapon-base'),d=diceSpec(b.params.dice),value=d.bonus+(context.damageBonus??0)+bonus('damage');
   b.params.dice=d.count+'d'+d.sides+(value? (value>0?'+':'')+value:'');
-  return {ability:a,context:{...context,attackBonus:(context.attackBonus??0)+bonus('attack')}};
+  return {ability:a,context:{...context,...(activeModes.length===1?{requiredForm:{key:instance.instanceId,id:activeModes[0].id}}:{}),attackBonus:(context.attackBonus??0)+bonus('attack')}};
 }

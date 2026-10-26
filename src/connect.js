@@ -16,3 +16,11 @@ export function healthIntent(state,{id:actionId,actorId,targetIds,amount,source,
 }
 // This envelope still requires transport metadata (resolutionGeneration), handshake,
 // reservation/ACK/reconciliation and Encounter binding. It is NOT a live client.
+
+/** The legacy handshake does not imply support for universal Forge transactions.
+ * No live Forge intent may be sent until Encounter advertises this contract. */
+export function forgeConnectionReadiness(characterId,capabilities=[]) {
+  const result=connectionReadiness(characterId,capabilities);
+  if(!capabilities.includes('forge-runtime-v1'))result.reasons.push('Missing capability: forge-runtime-v1');
+  return {ready:result.reasons.length===0,reasons:result.reasons};
+}

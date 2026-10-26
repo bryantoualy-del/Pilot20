@@ -118,7 +118,8 @@
               "enum": [
                 "turn",
                 "round",
-                "minute"
+                "minute",
+                "attack"
               ]
             },
             "value": {
@@ -162,7 +163,9 @@
               "cannotMove",
               "cannotCast",
               "cannotConcentrate",
-              "unconscious"
+              "unconscious",
+              "next-attack-disadvantage",
+              "attacks-from-source-advantage"
             ]
           },
           "uniqueItems": true
@@ -617,6 +620,115 @@
           "items": {
             "type": "string"
           }
+        },
+        "trigger": {
+          "type": "object",
+          "required": [
+            "id",
+            "itemInstanceId",
+            "trigger"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "itemInstanceId": {
+              "type": "string"
+            },
+            "trigger": {
+              "enum": [
+                "on-attack",
+                "on-hit",
+                "on-miss",
+                "on-critical",
+                "damage-taken",
+                "source-turn-start",
+                "source-turn-end",
+                "target-turn-start",
+                "target-turn-end",
+                "zone-enter",
+                "zone-leave",
+                "mode-change",
+                "reaction-used",
+                "rest",
+                "short-rest",
+                "long-rest",
+                "daily-recovery"
+              ]
+            },
+            "frequency": {
+              "enum": [
+                "per-event",
+                "per-attack",
+                "once-per-turn",
+                "once-per-target-per-turn",
+                "once-per-target",
+                "once-per-rest"
+              ]
+            },
+            "sourceId": {
+              "type": "string"
+            },
+            "requireHostile": {
+              "type": "boolean"
+            },
+            "requireInRange": {
+              "type": "boolean"
+            },
+            "requireOwnTurn": {
+              "type": "boolean"
+            },
+            "requireSameTargetWeaponHits": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "requiredForm": {
+          "type": "object",
+          "required": [
+            "key",
+            "id"
+          ],
+          "properties": {
+            "key": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "form": {
+          "type": "object",
+          "required": [
+            "key",
+            "id",
+            "modifiers"
+          ],
+          "properties": {
+            "key": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "modifiers": {
+              "type": "array",
+              "maxItems": 20,
+              "items": {
+                "$ref": "#/$defs/modifier"
+              }
+            }
+          },
+          "additionalProperties": false
         }
       },
       "required": [
@@ -1531,6 +1643,34 @@
         },
         "unconscious": {
           "type": "boolean"
+        },
+        "forms": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "object",
+            "required": [
+              "key",
+              "id",
+              "modifiers"
+            ],
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "modifiers": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "$ref": "#/$defs/modifier"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
         }
       },
       "required": [

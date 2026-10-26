@@ -41,6 +41,11 @@ export function validateDefinition(d) {
   if(d.speed!==undefined) requireThat(integer(d.speed,0,1000),'Speed');
   for (const [key,r] of Object.entries(d.resources)) {
     requireThat(id(key) && object(r) && integer(r.max) && ['short','long','none'].includes(r.recovery), 'Resource definition');
+    if(r.recharge!==undefined) {
+      requireThat(object(r.recharge) && ['dawn','dusk','short-rest','long-rest'].includes(r.recharge.event) && typeof r.recharge.formula==='string','Recharge definition');
+      if(/^\d+$/.test(r.recharge.formula))requireThat(integer(Number(r.recharge.formula)),'Recharge amount');else diceSpec(r.recharge.formula);
+      requireThat(r.recovery==='none','Recharge must have one authority');
+    }
     if(r.slotLevel!==undefined) requireThat(integer(r.slotLevel,1,9) && ['standard','pact'].includes(r.pool),'Slot metadata');
   }
   for (const [key,a] of Object.entries(d.abilities)) {

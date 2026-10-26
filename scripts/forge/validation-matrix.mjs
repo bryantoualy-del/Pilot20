@@ -1,3 +1,4 @@
+import {spawnSync} from 'node:child_process';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {instanceOf,newAbility} from '../../src/forge/model.js';
@@ -42,7 +43,20 @@ for(const [name,opts,expected] of [['Échec',{},18],['Réussite',{saveRoll:20},9
  const out=simulateCapability(pyro,breath,{...opts,effectRolls:{0:[3,3,3,3,3,3]}});assert.equal(out.result.results[0].damage,expected);
  rows.push({owner:'Brack',item:'PyroMerlin',capability:'Souffle / '+name,expected,calculated:expected,observed:out.result.results[0].damage,status:'Partiellement automatisé',blockers:out.diagnostic.limitations,scope:'Résolution réelle sur une cible sélectionnée ; géométrie non résolue'});
 }
+// Execute integration scenarios, rather than labeling a planned scenario as passed.
+const integration=spawnSync(process.execPath,['--test','--test-reporter=tap','tests/forge-runtime-integration.test.mjs'],{encoding:'utf8'});
+assert.equal(integration.status,0,integration.stdout+'\n'+integration.stderr);
+for(const line of integration.stdout.split('\n'))if(/^ok \d+ - /.test(line))rows.push({owner:'Moteur universel',item:'Contrat Forge / combat',capability:line.replace(/^ok \d+ - /,''),expected:'Toutes les assertions du scénario passent',calculated:null,observed:'PASS',status:'Validé (scénario moteur isolé)',blockers:['Ne certifie ni la géométrie ni le raccordement au serveur live'],scope:'tests/forge-runtime-integration.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario'});
 fs.mkdirSync('docs/forge/validation',{recursive:true});fs.writeFileSync('docs/forge/validation/cc-matrix.json',JSON.stringify({generatedAt:'2026-10-26',itemCount:items.length,scenarioCount:rows.length,rows},null,2)+'\n');
 const cell=v=>JSON.stringify(v??'—').replaceAll('|','/').replaceAll('\n',' ');
 fs.writeFileSync('docs/forge/validation/CC-MATRIX.md','# Matrice exécutée des objets CC\n\n'+items.length+' objets/références, '+rows.length+' lignes. Les contributions isolées ne certifient pas l’automatisation de l’objet entier. Aucun scénario narratif n’est présenté comme exécuté.\n\n| Porteur | Objet / capacité | Attendu | Calculé | Observé | Statut | Blocage |\n|---|---|---|---|---|---|---|\n'+rows.map(r=>`| ${r.owner} | ${r.item} / ${r.capability} | ${cell(r.expected)} | ${cell(typeof r.calculated==='object'&&r.calculated!==null?'Contrat de combat dans cc-matrix.json':r.calculated)} | ${cell(r.observed)} | ${r.status} | ${cell(r.blockers)} |`).join('\n')+'\n');
 console.log(`${items.length} objets, ${rows.length} résultats consignés ; contrôles numériques réussis.`);
+
+const inventory=items.map(item=>{
+ const evidence=rows.filter(r=>r.definitionId===item.id);
+ const blockers=[...new Set([...item.unknowns,...evidence.flatMap(r=>r.blockers)])];
+ const incomplete=evidence.some(r=>r.status==='À compléter');
+ return {id:item.id,owner:item.ownerLabel,name:item.name.fr,version:item.version,status:incomplete?'À compléter':blockers.length||evidence.some(r=>!r.status.startsWith('Automatique'))?'Partiellement automatisé':'Automatique (contributions isolées)',liveStatus:'Non raccordé au protocole universel Forge',blockers,evidenceCount:evidence.length};
+});
+fs.writeFileSync('docs/forge/validation/cc-inventory.json',JSON.stringify({itemCount:items.length,items:inventory},null,2)+'\n');
+fs.writeFileSync('docs/forge/validation/CC-INVENTORY.md','# Inventaire CC — état réel\n\nAucun objet n’est certifié full auto dans Encounter live. Les statuts concernent les capacités et contributions du catalogue ; les limites de source sont conservées.\n\n| Porteur | Objet | État | Blocages |\n|---|---|---|---|\n'+inventory.map(r=>`| ${r.owner} | ${r.name} | ${r.status} | ${cell(r.blockers)} |`).join('\n')+'\n');

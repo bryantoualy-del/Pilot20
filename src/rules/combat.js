@@ -1,15 +1,16 @@
+import {validTriggerRule} from '../forge/trigger-runtime.js';
 import {validateConditional,validateTransfer,validateStance,conditionalBoundary,conditionalCleanup,transfer} from './conditional.js';
 /** Reusable P0 mechanics. No class, subclass or character identifiers. */
 import {check,keys,integer,id,json} from '../character/contracts.js';
 const ABILITIES=['str','dex','con','int','wis','cha'];
 export const ACTION_KINDS=['weaponAttack','dash','disengage','hide','useObject'];
 const STATS=['ac','speed','attack','damage',...ABILITIES.map(k=>'save.'+k)];
-const CONDITIONS=['incapacitated','cannotAct','cannotMove','cannotCast','cannotConcentrate','unconscious'];
+const CONDITIONS=['incapacitated','cannotAct','cannotMove','cannotCast','cannotConcentrate','unconscious','next-attack-disadvantage','attacks-from-source-advantage'];
 export function validateEffectRule(r) {
   keys(r,['id','stack','duration','modifiers','conditions','concentration','actionGrant','onEnd','when'],['id','stack','duration','modifiers','conditions','concentration']);
   check(id(r.id) && typeof r.concentration==='boolean','Effect identity');
   keys(r.stack,['key','policy','priority']);check(id(r.stack.key) && ['independent','priority','replace'].includes(r.stack.policy) && integer(r.stack.priority,-1000,1000),'Explicit stacking');
-  keys(r.duration,['unit','value','anchor','boundary']);check(['turn','round','minute'].includes(r.duration.unit) && integer(r.duration.value,1,1000) && ['source','target'].includes(r.duration.anchor) && ['start','end'].includes(r.duration.boundary),'Effect duration');
+  keys(r.duration,['unit','value','anchor','boundary']);check(['turn','round','minute','attack'].includes(r.duration.unit) && integer(r.duration.value,1,1000) && ['source','target'].includes(r.duration.anchor) && ['start','end'].includes(r.duration.boundary),'Effect duration');
   check(Array.isArray(r.modifiers) && Array.isArray(r.conditions) && r.conditions.every(k=>CONDITIONS.includes(k)) && new Set(r.conditions).size===r.conditions.length,'Effect conditions');
   for(const m of r.modifiers) {
     keys(m,['stat','operation','value']);check(STATS.includes(m.stat) && ['add','multiply','set','advantage','disadvantage'].includes(m.operation),'Modifier operation');
@@ -22,8 +23,14 @@ export function validateEffectRule(r) {
   if(r.onEnd!==undefined) check(r.onEnd==='no-actions-until-next-turn-end','Effect end consequence');return r;
 }
 export function validateProfile(p,{compiled=false}={}) {
-  json(p);keys(p,['version','mode','requirements','spell','upcast','ongoing','grant','actionKind','weapon','deferred','duration','traits','tags','negatedByEffects','transfer','stance','roll','externalRequirements'],['version','mode','requirements']);
+  json(p);keys(p,['version','mode','requirements','spell','upcast','ongoing','grant','actionKind','weapon','deferred','duration','traits','tags','negatedByEffects','transfer','stance','roll','externalRequirements','trigger','form','requiredForm'],['version','mode','requirements']);
   check(p.version===1 && ['automatic','manual','referenced'].includes(p.mode) && Array.isArray(p.requirements) && p.requirements.every(v=>typeof v==='string' && v.trim()),'Combat profile');
+  for(const field of ['form','requiredForm']) if(p[field]) {
+    const f=p[field];keys(f,field==='form'?['key','id','modifiers']:['key','id']);
+    check(id(f.key)&&id(f.id),'Form identity');
+    if(field==='form')check(Array.isArray(f.modifiers)&&f.modifiers.length<=20&&f.modifiers.every(m=>Object.keys(m).length===3&&['ac','attack','damage'].includes(m.stat)&&m.operation==='add'&&integer(m.value,-100,100)),'Form modifiers');
+  }
+  if(p.trigger!==undefined) check(validTriggerRule(p.trigger),'Trigger profile');
   if(p.deferred!==undefined) check(Array.isArray(p.deferred) && p.deferred.every(k=>['reactionWindow','triggeredEffect','decision','transformation','summon','zone','aura'].includes(k)),'Deferred primitives');
   if(p.externalRequirements!==undefined)check(Array.isArray(p.externalRequirements) && p.externalRequirements.length<=20 && p.externalRequirements.every(id),'External prerequisites');
   if(p.transfer)validateTransfer(p.transfer);
@@ -52,7 +59,11 @@ export function validateAdvanced(a,state) {
   if(a.advanced===undefined) return;
   const x=a.advanced;
   validateConditional(a,state);
-  keys(x,['version','effects','extraActions','extraAttacks','grantUses','restrictedUsed','casts','turnStarts','turnOpen','lethargyUntil','movementSpent','dashCount','pendingManual','concentrationClock','tokens','stance','activity','unconscious'],['version','effects','extraActions','extraAttacks','grantUses','restrictedUsed','casts','turnStarts','turnOpen','lethargyUntil','movementSpent','dashCount','pendingManual','concentrationClock']);
+  keys(x,['version','effects','extraActions','extraAttacks','grantUses','restrictedUsed','casts','turnStarts','turnOpen','lethargyUntil','movementSpent','dashCount','pendingManual','concentrationClock','tokens','stance','activity','unconscious','forms'],['version','effects','extraActions','extraAttacks','grantUses','restrictedUsed','casts','turnStarts','turnOpen','lethargyUntil','movementSpent','dashCount','pendingManual','concentrationClock']);
+  if(x.forms!==undefined) {
+    check(Array.isArray(x.forms)&&x.forms.length<=20&&new Set(x.forms.map(f=>f.key)).size===x.forms.length,'Form state');
+    for(const f of x.forms)validateProfile({version:1,mode:'automatic',requirements:[],form:f});
+  }
   check(x.version===1 && integer(x.extraActions,0,10) && integer(x.extraAttacks,0,10) && integer(x.turnStarts) && integer(x.lethargyUntil) && typeof x.turnOpen==='boolean' && integer(x.movementSpent) && integer(x.dashCount),'Advanced runtime');
   check(x.lethargyUntil===0 || x.lethargyUntil>=x.turnStarts,'Stale action inhibition');
   check(x.grantUses && typeof x.grantUses==='object' && !Array.isArray(x.grantUses) && Object.entries(x.grantUses).every(([k,n])=>id(k) && integer(n,0,10)),'Grant use ledger');
@@ -99,7 +110,7 @@ export function hasCondition(a,k) {
   return activeEffects(a).some(e=>e.rule.conditions.includes(k));
 }
 export function statistic(a,stat,base=0) {
-  const mods=activeEffects(a).flatMap(e=>e.rule.modifiers).filter(m=>m.stat===stat);
+  const mods=[...activeEffects(a).flatMap(e=>e.rule.modifiers),...(a.advanced?.forms??[]).flatMap(f=>f.modifiers)].filter(m=>m.stat===stat);
   const sets=mods.filter(m=>m.operation==='set');check(sets.length<=1,'Incompatible statistic replacements');
   let n=sets.length?sets[0].value:base;
   n+=mods.filter(m=>m.operation==='add').reduce((n,m)=>n+m.value,0);
@@ -109,6 +120,14 @@ export function statistic(a,stat,base=0) {
 export function saveModes(a,ability) {
   const mods=activeEffects(a).flatMap(e=>e.rule.modifiers).filter(m=>m.stat==='save.'+ability);
   return {advantage:a.advanced?.stance?.rule.advantageAbilities.includes(ability) || mods.some(m=>m.operation==='advantage'),disadvantage:mods.some(m=>m.operation==='disadvantage')};
+}
+/** Roll flags use effect provenance, so a mark never benefits another attacker. */
+export function attackModes(source,target) {
+  return {advantage:activeEffects(target).some(e=>e.sourceActorId===source.definition.id && e.rule.conditions.includes('attacks-from-source-advantage')),
+    disadvantage:hasCondition(source,'next-attack-disadvantage')};
+}
+export function consumeAttackEffects(a) {
+  for(const e of [...activeEffects(a)])if(e.rule.duration.unit==='attack'&&--e.remaining===0)removeEffect(a,e.id);
 }
 export function removeEffect(a,effectId) {
   const x=advanced(a),e=x.effects.find(e=>e.id===effectId);check(e,'Unknown effect instance');
@@ -145,6 +164,7 @@ export function boundary(s,actorId,phase) {
   const a=s.actors[actorId],clock=a.advanced?.concentrationClock;
   if(clock?.boundary===phase && --clock.remaining===0) {a.concentration=null;a.checks=[];a.advanced.concentrationClock=null;}
   for(const target of Object.values(s.actors)) for(const e of [...(target.advanced?.effects??[])]) if(e.anchorActorId===actorId && e.rule.duration.boundary===phase) {
+    if(e.rule.duration.unit==='attack')continue;
     if(--e.remaining===0) removeEffect(target,e.id);
   }
   cleanupConcentration(s);
@@ -211,6 +231,10 @@ export function prepareCast(a,ability,c) {
 }
 export function establish(s,a,ability,c,targetIds,saveResults={}) {
   const p=ability.combat;if(!p)return;
+  if(p.form) {
+    check(ability.target==='self'&&!ability.attack&&!ability.save,'Form changes require self target');
+    const x=advanced(a);x.forms=[...(x.forms??[]).filter(f=>f.key!==p.form.key),structuredClone(p.form)];
+  }
   if(p.transfer)for(const targetId of targetIds) {advanced(s.actors[targetId]);transfer(s,a,targetId,p.transfer,c);}
   if(p.stance) {check(p.stance.requirements.every(k=>c.facts?.[c.actorId]?.[k]===true),'Stance eligibility requires external validation');const x=advanced(a);check(!x.stance,'Stance already active');x.stance={rule:structuredClone(p.stance),remaining:p.stance.duration};}
   if(p.duration && a.concentration?.instanceId===c.id) advanced(a).concentrationClock={instanceId:c.id,remaining:p.duration.value*(p.duration.unit==='minute'?10:1),boundary:p.duration.boundary};

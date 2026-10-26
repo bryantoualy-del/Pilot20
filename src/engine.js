@@ -1,8 +1,9 @@
+import {planForgeTriggers} from './forge/trigger-runtime.js';
 import {modifyCasting,stanceDamage,stanceDefense,activity,tokenRules} from './rules/conditional.js';
 import {guardWorkload} from './workload.js';
 import {PHASES,beginEvent,nextWindow,respond,guardPending} from './rules/reactive.js';
 import {json} from './character/contracts.js';
-import {advanced,profileExecutable,statistic,saveModes,hasCondition,cleanupConcentration,boundary,checkCanAct,payAction,prepareCast,establish,addEffect,removeEffect} from './rules/combat.js';
+import {attackModes,consumeAttackEffects,advanced,profileExecutable,statistic,saveModes,hasCondition,cleanupConcentration,boundary,checkCanAct,payAction,prepareCast,establish,addEffect,removeEffect} from './rules/combat.js';
 import {copy, validate, requireThat as check, integer, id, diceSpec} from './model.js';
 const game = s => copy({actors:s.actors,activeActorId:s.activeActorId,turnId:s.turnId,...(s.reactive?{reactive:s.reactive}:{})});
 function dieRoll(rolls, sides, count) {
@@ -41,10 +42,12 @@ function resolveAmount(e, rolls, critical) {
   return Math.max(0,dieRoll(rolls,spec.sides,count).reduce((a,b)=>a+b,0)+spec.bonus);
 }
 function actor(s,key) { check(Object.hasOwn(s.actors,key),'Unknown actor'); return s.actors[key]; }
-function activation(s,c,manual=false) {
+function activation(s,c,manual=false,triggered=false) {
   const a=actor(s,c.actorId);check(Object.hasOwn(a.definition.abilities,c.abilityId),'Unknown ability');
   const ability=copy(a.definition.abilities[c.abilityId]),p=ability.combat;
   check((p?.externalRequirements??[]).every(k=>c.facts?.[c.actorId]?.[k]===true),'Ability prerequisites require external validation');
+  if(p?.requiredForm)check(a.advanced?.forms?.some(f=>f.key===p.requiredForm.key&&f.id===p.requiredForm.id),'Required form inactive');
+  check(triggered || !p?.trigger,'Automatic effect requires authoritative event');
   modifyCasting(a,ability,c);
   checkCanAct(s,a);
   check(!ability.concentration || !hasCondition(a,'cannotConcentrate'),'Concentration restricted');
@@ -57,7 +60,8 @@ function activation(s,c,manual=false) {
   check(!ability.attack || ids.length===1,'One attack target required');
   check(!a.checks.length || ability.concentration?.start==='activation','Resolve concentration first');
   if(p?.spell)check(!hasCondition(a,'cannotCast'),'Spellcasting restricted');
-  payAction(s,a,ability,c);
+  if(!triggered) payAction(s,a,ability,c);
+  else check(ability.cost==='none' && !ability.attack && !p?.spell,'Invalid automatic activation');
   if(ability.resource) {const r=ability.resource;check(a.resources[r.id]>=r.amount,'Resource depleted');a.resources[r.id]-=r.amount;}
   const slotLevel=prepareCast(a,ability,c);
   if(p?.upcast) {
@@ -66,8 +70,8 @@ function activation(s,c,manual=false) {
   }
   return {a,ability,targets,slotLevel};
 }
-function useAbility(s,c) {
-  const {a,ability,targets,slotLevel}=activation(s,c);
+function useAbility(s,c,triggered=false) {
+  const {a,ability,targets,slotLevel}=activation(s,c,false,triggered);
   if(ability.attack && a.advanced?.stance?.rule.sustain)check(typeof c.facts?.[c.actorId]?.hostileTarget==='boolean','Hostility requires external validation');
   if(ability.attack && c.facts?.[c.actorId]?.hostileTarget===true) {advanced(a);activity(a).attacked=true;}
   const plan={command:copy(c),ability,targetIds:targets.map(([key])=>key),slotLevel,natural:null,total:null,critical:false,hit:true,saves:{}};
@@ -77,7 +81,7 @@ function useAbility(s,c) {
 function rollPlan(s,p) {
  const a=s.actors[p.command.actorId],ability=p.ability,c=p.command;
  if(ability.combat?.roll && p.total===null) {const r=ability.combat.roll,m=saveModes(a,r.ability);p.total=d20(c.attackRolls,m.advantage,m.disadvantage)+r.bonus;}
- if(ability.attack && p.natural===null) {p.natural=d20(c.attackRolls,c.advantage===true,c.disadvantage===true);p.total=p.natural+statistic(a,'attack',ability.attack.bonus);p.critical=p.natural===20;const t=s.actors[p.targetIds[0]];p.hit=p.natural!==1 && (p.critical || p.total>=statistic(t,'ac',t.definition.ac));}
+ if(ability.attack && p.natural===null) {const modes=attackModes(a,s.actors[p.targetIds[0]]);p.natural=d20(c.attackRolls,c.advantage===true||modes.advantage,c.disadvantage===true||modes.disadvantage);consumeAttackEffects(a);p.total=p.natural+statistic(a,'attack',ability.attack.bonus);p.critical=p.natural===20;const t=s.actors[p.targetIds[0]];p.hit=p.natural!==1 && (p.critical || p.total>=statistic(t,'ac',t.definition.ac));}
  if(ability.save && !Object.keys(p.saves).length)for(const key of p.targetIds) {const t=s.actors[key],r=ability.save,m=saveModes(t,r.ability);check(integer(t.definition.saves[r.ability],-100,100),'Target save statistic required');p.saves[key]=d20(c.saveRolls?.[key],m.advantage,m.disadvantage || ability.combat?.castPlan?.firstSaveDisadvantageTarget===key)+statistic(t,'save.'+r.ability,t.definition.saves[r.ability]);}
 }
 /** Validate on an isolated game snapshot before persisting a pause; never apply a preview. */
@@ -178,6 +182,36 @@ function resolveManual(s,c) {
   x.pendingManual=null;cleanupConcentration(s);return {resolved:pending.id,reason:c.reason,results};
 }
 function apply(s,c) {
+  if(c.type==='triggerAbility') {
+    const a=actor(s,c.actorId),rule=a.definition.abilities[c.abilityId]?.combat?.trigger;
+    check(rule && c.event?.sourceId===c.actorId,'Trigger owner mismatch');
+    const receipts=Object.values(s.receipts).flatMap(r=>r.result.triggerReceipt?[r.result.triggerReceipt]:[]);
+    const event={...c.event,activeActorId:s.activeActorId};
+    if(!['rest','short-rest','long-rest','daily-recovery'].includes(event.type)) check(event.turnId===String(s.turnId),'Stale trigger turn');
+    if(['source-turn-start','source-turn-end'].includes(event.type))check(s.activeActorId===c.actorId,'Wrong source turn');
+    if(['target-turn-start','target-turn-end'].includes(event.type))check(s.activeActorId===event.targetId,'Wrong target turn');
+    // Historical hits supplied by a client are never trusted. Only committed attacks count.
+    const turnHits=s.history.flatMap(h=>h.result.hit===true && h.command?.type==='useAbility' && h.before.actors[h.command.actorId]?.definition.abilities[h.command.abilityId]?.attack && h.before.turnId===s.turnId ?
+      (h.command.targetIds??[]).map(targetId=>({turnId:String(s.turnId),sourceId:h.command.actorId,targetId,weaponId:h.command.abilityId,hit:true})):[]);
+    const plan=planForgeTriggers({event,rules:[{...rule,sourceId:c.actorId}],receipts,turnHits});
+    check(!plan.pending.length,plan.pending[0]?.reason??'Incomplete trigger');
+    if(!plan.matches.length) return {skipped:true,results:[]};
+    check(a.definition.abilities[c.abilityId].target==='self' || c.targetIds?.length===1 && c.targetIds[0]===event.targetId,'Trigger target mismatch');
+    const out=useAbility(s,c,true);
+    // Pending reactive windows must retain the receipt until final commit; until
+    // that integration exists, fail atomically instead of publishing half an event.
+    check(!out.pending,'Triggered reactive window not supported');
+    return {...out,triggerReceipt:plan.matches[0].receiptKey};
+  }
+  if(c.type==='recoverResource') {
+    const a=actor(s,c.actorId),r=a.definition.resources[c.resourceId],spec=r?.recharge;
+    check(spec && c.event===spec.event && id(c.periodId),'Recovery event required');
+    const recoveryReceipt=JSON.stringify([c.actorId,c.resourceId,c.event,c.periodId]);
+    if(Object.values(s.receipts).some(r=>r.result.recoveryReceipt===recoveryReceipt))return {skipped:true};
+    const amount=spec.formula.match(/^\d+$/)?Number(spec.formula):resolveAmount({kind:'heal',dice:spec.formula},c.rolls,false);
+    const before=a.resources[c.resourceId];a.resources[c.resourceId]=Math.min(r.max,before+amount);
+    return {recoveryReceipt,before,after:a.resources[c.resourceId]};
+  }
   if(c.type==='setUnconscious') {const a=actor(s,c.actorId);check(typeof c.value==='boolean','Boolean unconsciousness');advanced(a).unconscious=c.value;return {unconscious:c.value};}
   if(c.type==='endStance') {const a=actor(s,c.actorId),x=advanced(a);check(x.stance && s.activeActorId===c.actorId && x.turnOpen!==false && a.economy.bonus,'Voluntary stance end requires bonus action');a.economy.bonus=false;x.stance=null;return {ended:true};}
   if (c.type === 'respondDecision') {const e=respond(s,c);validateContinuation(s,e);return advanceEvent(s,e);}
@@ -251,7 +285,7 @@ export function execute(input, command, context = {}) {
   if (input.mode === 'encounter') check(context.authority === 'encounter','Encounter authority required');
   const fingerprint = JSON.stringify(command), prior=input.receipts[command.id];
   if (prior) { check(prior.fingerprint === fingerprint,'Command ID collision'); return {state:copy(input),result:copy(prior.result),replayed:true}; }
-  if (['correct','damage','setIncapacitated','setUnconscious','startTurn','endTurn','rest','undo','removeEffect','declareManual','resolveManual'].includes(command.type)) check(context.role === 'gm' || input.mode !== 'encounter','GM command required');
+  if (['triggerAbility','recoverResource','correct','damage','setIncapacitated','setUnconscious','startTurn','endTurn','rest','undo','removeEffect','declareManual','resolveManual'].includes(command.type)) check(context.role === 'gm' || input.mode !== 'encounter','GM command required');
   if(command.expectedRevision!==undefined) check(command.expectedRevision===input.revision,'Revision conflict');
   if(Object.values(input.actors).some(a=>a.advanced?.pendingManual)) check(['resolveManual','undo'].includes(command.type),'Resolve pending manual decision first');
   guardPending(input,command);

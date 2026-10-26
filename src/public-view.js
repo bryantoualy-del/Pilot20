@@ -46,7 +46,7 @@ export function transactionView(transaction,viewer) {
   else if(result.pending) {
     const d=view.decisions.find(d=>d.id===result.pending);
     if(d)events.push({version:1,type:'combat.decision.requested',eventId:d.eventId,decisionId:d.id,phase:d.phase,revision:state.revision});
-  } else if(latest && ['useAbility','respondDecision'].includes(latest.command.type)) {
+  } else if(latest && !result.skipped && ['useAbility','triggerAbility','respondDecision'].includes(latest.command.type)) {
     const e=state.reactive?.event,c=latest.command;
     const sourceId=c.type==='respondDecision'?e?.actorId:c.actorId;
     const targets=c.type==='respondDecision'?e?.targetIds:c.targetIds??[sourceId];
