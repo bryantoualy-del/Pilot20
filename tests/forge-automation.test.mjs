@@ -38,7 +38,7 @@ test('attack miss deals no damage; critical doubles dice without a second action
  const hit=simulateCapability(d,a,{attackRoll:20,effectRolls:{0:[4,5]}});assert.equal(hit.result.critical,true);assert.equal(hit.result.results[0].damage,9);
 });
 test('healing caps at max and simultaneous typed effects do not double consume',()=>{
- const [d,a]=setup('heal');const out=simulateCapability(d,a,{targetHP:199,effectRolls:{0:[8]}});assert.equal(out.state.actors.source.hp.current,200);
+ const [d,a]=setup('heal');a.effects[0].target.kind='creature';const out=simulateCapability(d,a,{targetHP:199,effectRolls:{0:[8]}});assert.equal(out.state.actors.target.hp.current,200);
  const [w,b]=setup();b.effects.push({...structuredClone(b.effects[0]),id:'other',params:{dice:'1d6',damageType:'cold',role:'additional'}});
  const multi=simulateCapability(w,b,{effectRolls:{0:[3],1:[5]}});assert.equal(multi.result.results[0].damage,8);
 });

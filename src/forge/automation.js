@@ -89,7 +89,7 @@ export function compileCapability(item,a,{instance,context={}}={}) {
     }
   }
   if(instance){
-    if(!instance.ownerId||!instance.equipped&&item.equipment.requiresEquipped!==false||item.attunement.required!==false&&!instance.attuned||instance.consumed||instance.active===false) missing.push('Objet inactif, non équipé ou non harmonisé.');
+    if(!instance.ownerId||instance.quantity<1||!instance.equipped&&item.equipment.requiresEquipped!==false||item.attunement.required!==false&&!instance.attuned||instance.consumed||instance.active===false) missing.push('Objet inactif, non équipé ou non harmonisé.');
     if(instance.definitionId!==item.id||instance.definitionVersion!==item.version)missing.push('Version de l’objet incompatible.');
     for(const c of [item.attunement.prerequisites,a.prerequisites,...a.effects.flatMap(e=>e.conditions)])if(conditionMet(c,instance,context)!==true)missing.push('Prérequis non satisfait dans ce contexte.');
     if(a.effects.some(e=>e.modeId&&!instance.modeIds.includes(e.modeId)))missing.push('Forme requise inactive.');
@@ -135,7 +135,10 @@ export function simulateCapability(item,a,options={}) {
     for(const e of out.state.actors.target.advanced?.effects??out.state.actors.source.advanced?.effects??[])timeline.push(`Effet temporaire : ${e.rule.duration.value} ${e.rule.duration.unit}, expiration ${e.rule.duration.boundary==='start'?'début':'fin'} du tour ${e.rule.duration.anchor==='source'?'du porteur':'de la cible'}`);
     timeline.push(...diagnostic.limitations.map(x=>'Non exécuté : '+x));
     return {...out,command,before:state,diagnostic,timeline};
-  }catch(e){return {diagnostic,timeline:['Exécution refusée : '+e.message,...diagnostic.limitations.map(x=>'Non exécuté : '+x)],error:e.message};}
+  }catch(e){
+    const message=({'Action spent':'Action ou réaction déjà utilisée.','Resource depleted':'Charges insuffisantes.','Not actor turn':'Cette activation exige le tour du porteur.','Invalid dice results':'Résultats des dés invalides.','Resource bounds':'Nombre de charges hors limites.','Character statistics':'Niveau ou statistiques hors limites.','Resolve concentration first':'Résolvez d’abord le test de concentration.'})[e.message]??'Paramètres incompatibles avec le moteur de combat.';
+    return {diagnostic,timeline:['Exécution refusée : '+message,...diagnostic.limitations.map(x=>'Non exécuté : '+x)],error:e.message};
+  }
 }
 
 /** One attack profile, with separate base/additional dice and exactly one magic bonus. */

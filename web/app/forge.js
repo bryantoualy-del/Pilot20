@@ -692,7 +692,7 @@ export async function renderForge(root, a) {
         : null,
     );
   }
-  function effectsEditor(list) {
+  function effectsEditor(list, removalList = list) {
     const box = el("div", { class: "forge-effects" });
     for (const e of list) {
       if (
@@ -942,7 +942,7 @@ export async function renderForge(root, a) {
           describe(e),
           grid(...fields),
           advancedEffect(e),
-          remove(list, e),
+          remove(removalList, e),
         ),
       );
     }
@@ -990,7 +990,7 @@ export async function renderForge(root, a) {
     const box=el("div",{class:"forge-capability-fields"});
     for(const e of b.effects){
       const t=e.templateId.split(":").at(-1),p=e.params;
-      if(!["damage","healing"].includes(t)) {const existing=effectsEditor([e]);existing.querySelector(":scope > .forge-add")?.remove();box.append(existing);continue;}
+      if(!["damage","healing"].includes(t)) {const existing=effectsEditor([e],b.effects);existing.querySelector(":scope > .forge-add")?.remove();box.append(existing);continue;}
       if(t==="damage"){
         const periodic=e.trigger?.includes("turn-");
         box.append(choice("Quels dégâts ?",{"weapon-base":"Dégâts de base de l’arme",additional:"Dégâts supplémentaires à la touche",standalone:"Dégâts d’un pouvoir",periodic:"Dégâts automatiques ou périodiques"},periodic?"periodic":p.role,v=>{
