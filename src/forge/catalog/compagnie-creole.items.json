@@ -1715,7 +1715,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -1738,7 +1738,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Stocke cinq niveaux de sorts ; contenu et modalités de lancement à renseigner."
+      "Stocke cinq niveaux de sorts ; contenu et modalités de lancement à renseigner.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -1779,7 +1780,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -1802,7 +1803,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Liée dans la fiche ; déclenchement et effet de chute à relier."
+      "Liée dans la fiche ; déclenchement et effet de chute à relier.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -1843,7 +1845,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -1882,7 +1884,9 @@
       "en": null
     },
     "rulesNotes": [],
-    "unknowns": [],
+    "unknowns": [
+      "Harmonisation non précisée dans les sources consultées."
+    ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
     "ownerLabel": "Kentaro"
@@ -1922,7 +1926,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -1961,7 +1965,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "+2 Force, plafond non précisé."
+      "+2 Force, plafond non précisé.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -2002,7 +2007,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -2025,7 +2030,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Récupération d’emplacement : modalités à confirmer pour la magie de pacte."
+      "Récupération d’emplacement : modalités à confirmer pour la magie de pacte.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -2066,7 +2072,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -2089,7 +2095,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Effet non décrit."
+      "Effet non décrit.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -2130,7 +2137,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -2153,7 +2160,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Effet, activation et durée non décrits."
+      "Effet, activation et durée non décrits.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -2194,7 +2202,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -2217,7 +2225,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Trois objets non identifiés, conservés ensemble selon la fiche."
+      "Trois objets non identifiés, conservés ensemble selon la fiche.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -2386,7 +2395,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -2409,7 +2418,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Contenu non détaillé."
+      "Contenu non détaillé.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -2617,7 +2627,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -2640,7 +2650,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation."
+      "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -2681,7 +2692,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -2704,7 +2715,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation."
+      "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -2745,7 +2757,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -2768,7 +2780,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation."
+      "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -2809,7 +2822,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -2832,7 +2845,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation."
+      "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -2970,7 +2984,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -3026,7 +3040,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Compagnon : réaction +2 CA contre une attaque à distance, 1 utilisation ; rechargement à confirmer. Action bonus : mouvements silencieux."
+      "Compagnon : réaction +2 CA contre une attaque à distance, 1 utilisation ; rechargement à confirmer. Action bonus : mouvements silencieux.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -3067,7 +3082,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -3123,7 +3138,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Compagnon : touche à deux mains +1d6, retour 1d4 force ; +1 dégâts d’arme à 62 PV ou moins. Type du d6 et seuil générique à confirmer."
+      "Compagnon : touche à deux mains +1d6, retour 1d4 force ; +1 dégâts d’arme à 62 PV ou moins. Type du d6 et seuil générique à confirmer.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -3253,7 +3269,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -3276,7 +3292,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Marche aux murs : identification officielle et restrictions à confirmer."
+      "Marche aux murs : identification officielle et restrictions à confirmer.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -3317,7 +3334,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -3340,7 +3357,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Règles à rapprocher du Compagnon."
+      "Règles à rapprocher du Compagnon.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -3381,7 +3399,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -3404,7 +3422,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Règles non décrites."
+      "Règles non décrites.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -3445,7 +3464,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -3468,7 +3487,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Profil magique non décrit."
+      "Profil magique non décrit.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -3509,7 +3529,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -3547,7 +3567,9 @@
       "en": null
     },
     "rulesNotes": [],
-    "unknowns": [],
+    "unknowns": [
+      "Harmonisation non précisée dans les sources consultées."
+    ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
     "ownerLabel": "Rufus"
@@ -3587,7 +3609,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -3610,7 +3632,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Invocation : profil de créature, durée et usages à confirmer."
+      "Invocation : profil de créature, durée et usages à confirmer.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -3651,7 +3674,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -3674,7 +3697,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Transformation visuelle : modalités non décrites."
+      "Transformation visuelle : modalités non décrites.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -3845,7 +3869,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -3883,7 +3907,9 @@
       "en": null
     },
     "rulesNotes": [],
-    "unknowns": [],
+    "unknowns": [
+      "Harmonisation non précisée dans les sources consultées."
+    ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
     "ownerLabel": "Samoth"
@@ -3923,7 +3949,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -3946,7 +3972,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Effet non décrit ; Compagnon également à confirmer."
+      "Effet non décrit ; Compagnon également à confirmer.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -3987,7 +4014,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -4040,7 +4067,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "1d6 PV par heure, sans dépasser le maximum ; condition d’équipement à confirmer."
+      "1d6 PV par heure, sans dépasser le maximum ; condition d’équipement à confirmer.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -4081,7 +4109,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -4120,7 +4148,9 @@
       "en": null
     },
     "rulesNotes": [],
-    "unknowns": [],
+    "unknowns": [
+      "Harmonisation non précisée dans les sources consultées."
+    ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
     "ownerLabel": "Samoth"
@@ -4160,7 +4190,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -4183,7 +4213,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Dans le Yann ; propriétés inconnues."
+      "Dans le Yann ; propriétés inconnues.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -4224,7 +4255,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -4247,7 +4278,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Charge 300 kg ; vitesse et dimensions non décrites."
+      "Charge 300 kg ; vitesse et dimensions non décrites.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -4288,7 +4320,7 @@
     "price": null,
     "weight": null,
     "attunement": {
-      "required": false,
+      "required": null,
       "prerequisites": null
     },
     "equipment": {
@@ -4311,7 +4343,8 @@
     },
     "rulesNotes": [],
     "unknowns": [
-      "Identification officielle à confirmer avant de fixer Constitution."
+      "Identification officielle à confirmer avant de fixer Constitution.",
+      "Harmonisation non précisée dans les sources consultées."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],

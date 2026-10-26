@@ -1083,7 +1083,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Stocke cinq niveaux de sorts ; contenu et modalités de lancement à renseigner."
+        "Stocke cinq niveaux de sorts ; contenu et modalités de lancement à renseigner.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1105,7 +1106,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Liée dans la fiche ; déclenchement et effet de chute à relier."
+        "Liée dans la fiche ; déclenchement et effet de chute à relier.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1173,7 +1175,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Récupération d’emplacement : modalités à confirmer pour la magie de pacte."
+        "Récupération d’emplacement : modalités à confirmer pour la magie de pacte.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1195,7 +1198,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Effet non décrit."
+        "Effet non décrit.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1217,7 +1221,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Effet, activation et durée non décrits."
+        "Effet, activation et durée non décrits.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1239,7 +1244,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Trois objets non identifiés, conservés ensemble selon la fiche."
+        "Trois objets non identifiés, conservés ensemble selon la fiche.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1305,7 +1311,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Contenu non détaillé."
+        "Contenu non détaillé.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1385,7 +1392,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation."
+        "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1407,7 +1415,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation."
+        "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1429,7 +1438,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation."
+        "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1451,7 +1461,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation."
+        "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1510,11 +1521,13 @@
       ],
       "calculated": null,
       "observed": [
-        "À compléter : Activation à préciser."
+        "À compléter : Activation à préciser.",
+        "À compléter : Harmonisation à confirmer pour cet objet."
       ],
       "status": "À compléter",
       "blockers": [
         "Activation à préciser.",
+        "Harmonisation à confirmer pour cet objet.",
         "Pouvoir personnalisé"
       ],
       "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
@@ -1542,11 +1555,13 @@
       ],
       "calculated": null,
       "observed": [
-        "À compléter : Activation à préciser."
+        "À compléter : Activation à préciser.",
+        "À compléter : Harmonisation à confirmer pour cet objet."
       ],
       "status": "À compléter",
       "blockers": [
         "Activation à préciser.",
+        "Harmonisation à confirmer pour cet objet.",
         "Pouvoir personnalisé"
       ],
       "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
@@ -1607,7 +1622,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Marche aux murs : identification officielle et restrictions à confirmer."
+        "Marche aux murs : identification officielle et restrictions à confirmer.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1629,7 +1645,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Règles à rapprocher du Compagnon."
+        "Règles à rapprocher du Compagnon.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1651,7 +1668,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Règles non décrites."
+        "Règles non décrites.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1673,7 +1691,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Profil magique non décrit."
+        "Profil magique non décrit.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1715,7 +1734,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Invocation : profil de créature, durée et usages à confirmer."
+        "Invocation : profil de créature, durée et usages à confirmer.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1737,7 +1757,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Transformation visuelle : modalités non décrites."
+        "Transformation visuelle : modalités non décrites.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1851,7 +1872,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Effet non décrit ; Compagnon également à confirmer."
+        "Effet non décrit ; Compagnon également à confirmer.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1873,33 +1895,13 @@
           "dice": "1d6"
         }
       ],
-      "calculated": {
-        "name": "Régénération horaire",
-        "cost": "none",
-        "target": "selected",
-        "maxTargets": 1,
-        "effects": [
-          {
-            "kind": "heal",
-            "dice": "1d6"
-          }
-        ],
-        "combat": {
-          "version": 1,
-          "mode": "automatic",
-          "requirements": [],
-          "ongoing": []
-        }
-      },
+      "calculated": null,
       "observed": [
-        "Activation : Régénération horaire",
-        "Action : aucune",
-        "PV après soin : 101",
-        "Non exécuté : Déclencheur non reconnu : hour",
-        "Non exécuté : Abonnement au déclencheur hour non relié."
+        "À compléter : Harmonisation à confirmer pour cet objet."
       ],
-      "status": "Partiellement automatisé",
+      "status": "À compléter",
       "blockers": [
+        "Harmonisation à confirmer pour cet objet.",
         "Déclencheur non reconnu : hour",
         "Abonnement au déclencheur hour non relié."
       ],
@@ -1943,7 +1945,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Dans le Yann ; propriétés inconnues."
+        "Dans le Yann ; propriétés inconnues.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1965,7 +1968,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Charge 300 kg ; vitesse et dimensions non décrites."
+        "Charge 300 kg ; vitesse et dimensions non décrites.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },
@@ -1987,7 +1991,8 @@
       "observed": "Aucune mécanique inventée",
       "status": "À compléter",
       "blockers": [
-        "Identification officielle à confirmer avant de fixer Constitution."
+        "Identification officielle à confirmer avant de fixer Constitution.",
+        "Harmonisation non précisée dans les sources consultées."
       ],
       "scope": "Inventaire documentaire"
     },

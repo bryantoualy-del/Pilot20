@@ -8,7 +8,7 @@ const slug=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().re
 const get=name=>items.find(x=>x.name.fr===name);
 function add(owner,name,category='wondrous',notes='Règles non détaillées dans la fiche.',page=2){
  const id='p20:mi:2014:cc:'+slug(owner+'-'+name);let d=items.find(x=>x.id===id);if(d)return d;
- d=newItem(category);Object.assign(d,{id,familyId:id,ownerLabel:owner,origin:'homebrew',recordKind:'family',name:{fr:name,en:null},legal:{status:'user-provided-private',attributionId:null},provenance:[{sourceId:'cc-'+slug(owner),page,section:'Équipement / trésors'}],description:{fr:notes,en:null},unknowns:[notes],mechanicsStatus:'partial'});
+ d=newItem(category);d.attunement.required=['armor','potion','consumable'].includes(category)?false:null;Object.assign(d,{id,familyId:id,ownerLabel:owner,origin:'homebrew',recordKind:'family',name:{fr:name,en:null},legal:{status:'user-provided-private',attributionId:null},provenance:[{sourceId:'cc-'+slug(owner),page,section:'Équipement / trésors'}],description:{fr:notes,en:null},unknowns:[notes],mechanicsStatus:'partial'});
  items.push(d);return d;
 }
 function fx(d,type,params){const e=effect(type,params);e.id='effect-'+(d.effects.length+1);d.effects.push(e);return e;}
