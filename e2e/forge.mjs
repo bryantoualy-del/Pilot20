@@ -60,10 +60,10 @@ try {
     .click();
   await p.locator(".forge-effects summary").first().click();
   await p.getByLabel("Dés · Dé", { exact: true }).selectOption("10");
-  await p.getByLabel("Bonus magique").fill("1");
+  await p.getByLabel("Bonus magique",{exact:true}).fill("1");
   await p.getByRole("button", {name:"Réserves",exact:true}).click();
   await p.getByRole("button", {name:"Ajouter une réserve",exact:true}).click();
-  await p.getByLabel("Réserve maximale").fill("10");
+  await p.getByLabel("Réserve maximale",{exact:true}).fill("10");
   await p.getByLabel("Quantité récupérée · Calcul").selectOption("dice");
   await p.getByLabel("Quantité récupérée · Dé",{exact:true}).selectOption("4");
   await p.getByLabel("Quantité récupérée · Bonus",{exact:true}).fill("1");
