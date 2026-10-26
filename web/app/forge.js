@@ -1002,7 +1002,7 @@ export async function renderForge(root, a) {
       }
       box.append(grid(input(t==="damage"?"Dés de dégâts":"Dés de soins",p.dice,v=>p.dice=v),t==="damage"?choice("Type de dégâts",damageTypes,p.damageType,v=>p.damageType=v):null),
         choice("Qui reçoit cet effet ?",{self:"Le porteur",creature:"La cible choisie"},e.target?.kind??"creature",v=>e.target={kind:v,count:1,filter:null}),
-        saveEditor(e),detail("Durée et conditions",durationEditor(e),advancedEffect(e)),remove(b.effects,e));
+        saveEditor(e.save?e:b),detail("Conditions détaillées",advancedEffect(e)),remove(b.effects,e));
     }
     box.append(detail("Combiner un autre effet", effectsEditorAdd(b)));
     return box;
@@ -1540,7 +1540,7 @@ export async function renderForge(root, a) {
           capabilityStatus(b),
           button("Simuler", () => simulator(b)),
           contextualEffects(b),
-          choice("Réserve consommée",{"":"Aucune",...Object.fromEntries(d.resources.map((r,i)=>[r.id,`Réserve ${i+1} (${r.maximum})`]))},b.costs.length===1?b.costs[0].resourceId:"",v=>b.costs=v?[{resourceId:v,amount:1,timing:"on-use"}]:[],true),
+          b.costs.length>1?el("p",{class:"muted"},"Plusieurs réserves : détails dans Coût, portée et limites."):choice("Réserve consommée",{"":"Aucune",...Object.fromEntries(d.resources.map((r,i)=>[r.id,`Réserve ${i+1} (${r.maximum})`]))},b.costs.length===1?b.costs[0].resourceId:"",v=>b.costs=v?[{resourceId:v,amount:1,timing:"on-use"}]:[],true),
           b.costs.length===1?input("Coût en charges / utilisations",b.costs[0].amount,v=>b.costs[0].amount=v,{number:true,min:1}):null,
         );
         const advanced = detail("Coût, portée et limites");

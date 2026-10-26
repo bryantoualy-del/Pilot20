@@ -135,6 +135,7 @@ try {
   );
   await p.getByRole("button", {name:"Capacités",exact:true}).click();
   await p.locator(".forge-editor > details > summary").filter({hasText:"Souffle de la forge"}).click();
+  assert.equal(await p.getByLabel("Jet de sauvegarde",{exact:true}).first().inputValue(),"dex");
   await p.screenshot({
     path: "docs/forge/screenshots/ipad-pyromerlin.png",
     fullPage: true,
