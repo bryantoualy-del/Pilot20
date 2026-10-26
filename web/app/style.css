@@ -2001,3 +2001,15 @@ button.primary,.single-actions .primary{color:#191b1f}
 @media(max-width:760px){.forge-page{padding:16px}.forge-page .section-head{align-items:start;gap:10px}.forge-page h1{font-size:26px}.forge-save{font-size:10px}.forge-workspace{display:block;margin-top:14px}.forge-workspace>.forge-library,.forge-workspace>.forge-editor,.forge-workspace>.forge-preview{display:none}.forge-workspace[data-screen=library]>.forge-library,.forge-workspace[data-screen=editor]>.forge-editor,.forge-workspace[data-screen=preview]>.forge-preview{display:block}.forge-library>button{margin-bottom:10px}.forge-editor{padding:0;border:0}.forge-preview{position:static}.forge-mobile-tabs{display:flex;gap:4px;margin-top:16px}.forge-mobile-tabs button{flex:1;padding:10px 6px;font-size:12px}.forge-fields{gap:8px}.forge-page .eyebrow{font-size:9px}.forge-add{flex-wrap:wrap}.forge-add select{flex-basis:180px}.forge-toolbar{gap:4px}.forge-steps{justify-content:space-between}.forge-page details{padding:10px}.forge-page header nav{gap:2px}}
 /* A final unpaired answer gets a full row, keeping save outcomes readable on phones. */
 .forge-capability-fields .forge-fields > .field:last-child:nth-child(odd){grid-column:1 / -1}
+
+/* Guided Forge controls: touch targets remain usable on phone and tablet. */
+.forge-stepper{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:4px;align-items:center}
+.forge-stepper button{min-width:44px;min-height:44px;padding:4px;font-size:1.2rem}
+.forge-stepper input{min-width:0;width:100%;text-align:center}
+.forge-dice{min-width:0;margin:0;padding:12px;border:1px solid var(--border,#394154);border-radius:10px;grid-column:1/-1}
+.forge-dice legend{padding:0 6px;font-weight:600}
+.forge-dice-parts{display:grid;grid-template-columns:minmax(0,1fr) minmax(70px,.6fr) minmax(0,1fr);gap:10px}
+.forge-dice output{display:block;margin-top:8px;font-weight:600;color:var(--accent,#d6af71)}
+.forge-power-picker{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.forge-power-picker button{min-height:44px;white-space:normal}
+@media(max-width:600px){.forge-dice-parts{grid-template-columns:minmax(0,1fr)}.forge-power-picker{grid-template-columns:repeat(2,minmax(0,1fr))}}
