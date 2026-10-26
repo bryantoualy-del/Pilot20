@@ -1,5 +1,7 @@
 # Forge — atelier d’objets magiques 2014
 
+> État historique du 25 octobre. Pour la version revue et les limites actuelles, voir [REFONTE-2026-10-26.md](REFONTE-2026-10-26.md) et sa matrice de validation.
+
 Branche : `feat/forge-magic-items`. Base examinée : `fd83cc7` (PR #89). Aucun déploiement de production ni fusion.
 
 ## Architecture et choix d’intégration

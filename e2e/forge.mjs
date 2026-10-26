@@ -93,6 +93,8 @@ try {
   const file = await download.path(),
     exported = JSON.parse(await fs.readFile(file, "utf8"));
   assert.equal(exported.items[0].definition.name.fr, "Lame de test");
+  for(const stat of ["attack","damage"]){const rows=exported.items[0].definition.effects.filter(e=>e.templateId==="p20:effect:modifier"&&e.params.stat===stat);assert.equal(rows.length,1);assert.equal(rows[0].params.value,1);}
+
   await p.getByRole("button", { name: "Dupliquer", exact: true }).click();
   await p
     .locator(".forge-library")
@@ -132,6 +134,7 @@ try {
     "PyroMerlin (copie)",
   );
   await p.getByRole("button", {name:"Capacités",exact:true}).click();
+  await p.locator(".forge-editor > details > summary").filter({hasText:"Souffle de la forge"}).click();
   await p.screenshot({
     path: "docs/forge/screenshots/ipad-pyromerlin.png",
     fullPage: true,
@@ -144,6 +147,7 @@ try {
       ),
       "phone overflow",
     );
+    await p.getByLabel("Nom du pouvoir").first().waitFor();
     await p.screenshot({
       path: `docs/forge/screenshots/iphone-${width}.png`,
       fullPage: true,

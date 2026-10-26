@@ -1,7 +1,7 @@
 /** Forge -> existing combat contract. No separate resolver or character persistence. */
 import { createSession, diceSpec, validateDefinition } from '../model.js';
 import { execute } from '../engine.js';
-import { conditionMet } from './engine.js';
+import { conditionMet } from './conditions.js';
 import { instanceOf, newAbility, effect } from './model.js';
 
 export const capabilityKinds = {
@@ -44,6 +44,9 @@ export function compileCapability(item,a,{instance,context={}}={}) {
   if(Object.keys(grouped).length>1) limitations.push('Plusieurs réserves : transaction de combat non reliée.');
   if(Object.keys(grouped).length===1) ability.resource={id:Object.keys(grouped)[0],amount:Object.values(grouped)[0]};
   for(const r of item.resources.filter(r=>Object.hasOwn(grouped,r.id))) if(r.lastCharge) limitations.push('Conséquence de dernière charge à résoudre.');
+  if(a.prerequisites || a.effects.some(e=>e.conditions.length))limitations.push('Conditions évaluées dans le contexte du porteur ; routage à relier.');
+  if(a.range && !['self'].includes(a.range.kind)) limitations.push('Portée et visibilité à valider par Encounter.');
+  const hasWeapon=a.effects.some(e=>e.templateId==='p20:effect:damage'&&e.params.role==='weapon-base');
   const saves=[a.save,...a.effects.map(e=>e.save)].filter(Boolean);
   if(new Set(saves.map(s=>JSON.stringify(s))).size>1) limitations.push('Sauvegardes distinctes dans une même capacité non reliées.');
   const save=saves[0];
@@ -65,7 +68,7 @@ export function compileCapability(item,a,{instance,context={}}={}) {
     if(e.target?.filter) limitations.push('Filtre de cible à relier.');
     if(e.target && !['self','creature'].includes(e.target.kind)) limitations.push('Cible non prise en charge.');
     if(e.trigger && !Object.hasOwn(triggerLabels,e.trigger)) limitations.push('Déclencheur non reconnu : '+e.trigger);
-    if(e.trigger && !(e.trigger==='on-hit'&&p.role==='weapon-base')) limitations.push('Abonnement au déclencheur '+(triggerLabels[e.trigger]??e.trigger)+' non relié.');
+    if(e.trigger && !(e.trigger==='on-hit'&&hasWeapon&&['weapon-base','additional'].includes(p.role))) limitations.push('Abonnement au déclencheur '+(triggerLabels[e.trigger]??e.trigger)+' non relié.');
     if(['damage','healing'].includes(t)) {
       try{diceSpec(p.dice);}catch{missing.push('Dés invalides : '+p.dice);}
       if(t==='damage'&&!p.damageType) missing.push('Type de dégâts à préciser.');
@@ -92,6 +95,7 @@ export function compileCapability(item,a,{instance,context={}}={}) {
     if(a.effects.some(e=>e.modeId&&!instance.modeIds.includes(e.modeId)))missing.push('Forme requise inactive.');
   }
   // Validate the compiled contract even when the catalogue itself is valid.
+  if(a.activation==='triggered'&&!a.effects.some(e=>e.trigger))missing.push('Déclencheur automatique à préciser.');
   if(!missing.length){try{const d=baseActor('source');d.resources=Object.fromEntries(item.resources.map(r=>[r.id,{max:r.maximum,recovery:'none'}]));d.abilities={power:ability};validateDefinition(d);}catch(e){limitations.push('Contrat de combat : '+e.message);}}
   const status=missing.length?'incomplete':limitations.length?'partial':'automatic';
   return {status,label:{incomplete:'À compléter',partial:'Partiellement automatisé',automatic:'Automatique'}[status],missing:[...new Set(missing)],limitations:[...new Set(limitations)],automated:[...new Set([...automated,...(Object.hasOwn(costMap,a.activation)?['Économie d’action contrôlée par le moteur.']:[]),...(a.costs.length?['Coût de réserve atomique.']:[])])],ability};
@@ -112,6 +116,7 @@ export function simulateCapability(item,a,options={}) {
     state.actors.source.resources={...instance.resources};
     if(options.charges!==undefined)for(const k of Object.keys(state.actors.source.resources))state.actors.source.resources[k]=options.charges;
     if(options.reactionSpent)state.actors.source.economy.reaction=false;
+    if(options.phase==='outside-turn')state.activeActorId='target';
     state.actors.target.hp.current=options.targetHP??100;
     const command={id:'forge-simulation',type:'useAbility',actorId:'source',abilityId:'power',targetIds:['target'],attackRolls:[options.attackRoll??15],saveRolls:{target:[options.saveRoll??1],source:[options.saveRoll??1]},effectRolls:{}};
     for(const [i,e] of diagnostic.ability.effects.entries()){
@@ -131,4 +136,19 @@ export function simulateCapability(item,a,options={}) {
     timeline.push(...diagnostic.limitations.map(x=>'Non exécuté : '+x));
     return {...out,command,before:state,diagnostic,timeline};
   }catch(e){return {diagnostic,timeline:['Exécution refusée : '+e.message,...diagnostic.limitations.map(x=>'Non exécuté : '+x)],error:e.message};}
+}
+
+/** One attack profile, with separate base/additional dice and exactly one magic bonus. */
+export function weaponCapability(item,instance,context={}) {
+  const activeModes=item.modes.filter(m=>instance.modeIds.includes(m.id));
+  if(new Set(activeModes.map(m=>m.exclusiveGroup)).size!==activeModes.length||activeModes.some(m=>!m.exclusiveGroup))throw Error('Formes incompatibles.');
+  const all=[...item.effects,...activeModes.flatMap(m=>m.effects)];
+  const base=all.filter(e=>e.templateId==='p20:effect:damage'&&e.params.role==='weapon-base');
+  if(base.length!==1)throw Error('Un seul profil de dégâts de base est requis.');
+  const a=newAbility();a.id='weapon-attack';a.name.fr='Attaquer avec '+item.name.fr;
+  a.effects=structuredClone(all.filter(e=>e.templateId==='p20:effect:damage'&&['weapon-base','additional'].includes(e.params.role)));
+  const bonus=stat=>all.filter(e=>e.templateId==='p20:effect:modifier'&&e.params.stat===stat&&e.params.scope==='this-weapon'&&e.params.operation==='add'&&!e.trigger&&!e.duration&&e.conditions.every(c=>conditionMet(c,instance,context)===true)).reduce((n,e)=>n+e.params.value,0);
+  const b=a.effects.find(e=>e.params.role==='weapon-base'),d=diceSpec(b.params.dice),value=d.bonus+(context.damageBonus??0)+bonus('damage');
+  b.params.dice=d.count+'d'+d.sides+(value? (value>0?'+':'')+value:'');
+  return {ability:a,context:{...context,attackBonus:(context.attackBonus??0)+bonus('attack')}};
 }

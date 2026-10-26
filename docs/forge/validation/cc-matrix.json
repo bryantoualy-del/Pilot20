@@ -1,0 +1,2297 @@
+{
+  "generatedAt": "2026-10-26",
+  "itemCount": 54,
+  "scenarioCount": 85,
+  "rows": [
+    {
+      "owner": "Brack",
+      "item": "PyroMerlin",
+      "definitionId": "p20:mi:2014:cc:pyromerlin",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-brack",
+          "page": 1,
+          "section": null
+        },
+        {
+          "sourceId": "cc-brack",
+          "page": 2,
+          "section": "Pyromerlin : Éveillé"
+        }
+      ],
+      "capability": "effect-1",
+      "expected": 2,
+      "calculated": 2,
+      "observed": 2,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Brack",
+      "item": "PyroMerlin",
+      "definitionId": "p20:mi:2014:cc:pyromerlin",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-brack",
+          "page": 1,
+          "section": null
+        },
+        {
+          "sourceId": "cc-brack",
+          "page": 2,
+          "section": "Pyromerlin : Éveillé"
+        }
+      ],
+      "capability": "effect-2",
+      "expected": 2,
+      "calculated": 2,
+      "observed": 2,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Brack",
+      "item": "PyroMerlin",
+      "definitionId": "p20:mi:2014:cc:pyromerlin",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-brack",
+          "page": 1,
+          "section": null
+        },
+        {
+          "sourceId": "cc-brack",
+          "page": 2,
+          "section": "Pyromerlin : Éveillé"
+        }
+      ],
+      "capability": "effect-3",
+      "expected": {
+        "dice": "1d10",
+        "damageType": "bludgeoning",
+        "role": "weapon-base"
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Contribution transmise ; interprétation par le module destinataire"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Brack",
+      "item": "PyroMerlin",
+      "definitionId": "p20:mi:2014:cc:pyromerlin",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-brack",
+          "page": 1,
+          "section": null
+        },
+        {
+          "sourceId": "cc-brack",
+          "page": 2,
+          "section": "Pyromerlin : Éveillé"
+        }
+      ],
+      "capability": "effect-4",
+      "expected": {
+        "dice": "2d8",
+        "damageType": "fire",
+        "role": "additional"
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Contribution transmise ; interprétation par le module destinataire"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Brack",
+      "item": "PyroMerlin",
+      "definitionId": "p20:mi:2014:cc:pyromerlin",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-brack",
+          "page": 1,
+          "section": null
+        },
+        {
+          "sourceId": "cc-brack",
+          "page": 2,
+          "section": "Pyromerlin : Éveillé"
+        }
+      ],
+      "capability": "effect-5",
+      "expected": true,
+      "calculated": true,
+      "observed": true,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Brack",
+      "item": "PyroMerlin",
+      "definitionId": "p20:mi:2014:cc:pyromerlin",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-brack",
+          "page": 1,
+          "section": null
+        },
+        {
+          "sourceId": "cc-brack",
+          "page": 2,
+          "section": "Pyromerlin : Éveillé"
+        }
+      ],
+      "capability": "effect-6",
+      "expected": {
+        "radius": 9,
+        "unit": "m",
+        "intensity": null
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Contribution transmise ; interprétation par le module destinataire"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Brack",
+      "item": "PyroMerlin",
+      "definitionId": "p20:mi:2014:cc:pyromerlin",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-brack",
+          "page": 1,
+          "section": null
+        },
+        {
+          "sourceId": "cc-brack",
+          "page": 2,
+          "section": "Pyromerlin : Éveillé"
+        }
+      ],
+      "capability": "Souffle de la forge",
+      "expected": 6,
+      "calculated": {
+        "name": "Souffle de la forge",
+        "cost": "action",
+        "target": "selected",
+        "maxTargets": 1,
+        "effects": [
+          {
+            "kind": "damage",
+            "dice": "6d6",
+            "damageType": "fire"
+          }
+        ],
+        "combat": {
+          "version": 1,
+          "mode": "automatic",
+          "requirements": [],
+          "ongoing": []
+        },
+        "resource": {
+          "id": "souffle",
+          "amount": 1
+        },
+        "save": {
+          "ability": "dex",
+          "dc": 16,
+          "onSuccess": "half"
+        }
+      },
+      "observed": [
+        "Activation : Souffle de la forge",
+        "Action : action",
+        "Sauvegarde : 1 / DD 16 — échec",
+        "Dégâts : 6 (fire : 6 → 6)",
+        "Réserve uses : 1 → 0",
+        "Non exécuté : Sélection géométrique des cibles de zone à relier à Encounter."
+      ],
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Sélection géométrique des cibles de zone à relier à Encounter."
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Brack",
+      "item": "PyroMerlin",
+      "definitionId": "p20:mi:2014:cc:pyromerlin",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-brack",
+          "page": 1,
+          "section": null
+        },
+        {
+          "sourceId": "cc-brack",
+          "page": 2,
+          "section": "Pyromerlin : Éveillé"
+        }
+      ],
+      "capability": "Créature hostile au corps à corps",
+      "expected": 2,
+      "calculated": null,
+      "observed": [
+        "À compléter : Prérequis non satisfait dans ce contexte."
+      ],
+      "status": "À compléter",
+      "blockers": [
+        "Prérequis non satisfait dans ce contexte.",
+        "Condition à arbitrer manuellement.",
+        "Conditions évaluées dans le contexte du porteur ; routage à relier.",
+        "Abonnement au déclencheur Début du tour de la cible non relié."
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Brack",
+      "item": "PyroMerlin",
+      "definitionId": "p20:mi:2014:cc:pyromerlin",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-brack",
+          "page": 1,
+          "section": null
+        },
+        {
+          "sourceId": "cc-brack",
+          "page": 2,
+          "section": "Pyromerlin : Éveillé"
+        }
+      ],
+      "capability": "Contrecoup de campagne",
+      "expected": [
+        {
+          "key": "cc:contrecoup-de-campagne",
+          "summary": "2d6 feu sur Brack : déclencheur et application de la résistance à confirmer.",
+          "payload": {
+            "dice": "2d6",
+            "damageType": "fire",
+            "target": "self"
+          },
+          "fallback": "manual"
+        }
+      ],
+      "calculated": null,
+      "observed": [
+        "À compléter : Activation à préciser."
+      ],
+      "status": "À compléter",
+      "blockers": [
+        "Activation à préciser.",
+        "Pouvoir personnalisé"
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Kane",
+      "definitionId": "p20:mi:2014:cc:kane",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "effect-1",
+      "expected": 1,
+      "calculated": 1,
+      "observed": 1,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Kane",
+      "definitionId": "p20:mi:2014:cc:kane",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "effect-2",
+      "expected": 1,
+      "calculated": 1,
+      "observed": 1,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Kane",
+      "definitionId": "p20:mi:2014:cc:kane",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "effect-3",
+      "expected": {
+        "dice": "1d8",
+        "damageType": "slashing",
+        "role": "weapon-base"
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Contribution transmise ; interprétation par le module destinataire"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Kane",
+      "definitionId": "p20:mi:2014:cc:kane",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "effect-4",
+      "expected": {
+        "dice": "2d6",
+        "damageType": null,
+        "role": "additional"
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Type de dégâts inconnu",
+        "Type de dégâts inconnu"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Solinar",
+      "definitionId": "p20:mi:2014:cc:solinar",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "effect-1",
+      "expected": {
+        "dice": "1d8",
+        "damageType": null,
+        "role": "weapon-base"
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Type de dégâts inconnu",
+        "Type de dégâts inconnu"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Solinar",
+      "definitionId": "p20:mi:2014:cc:solinar",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "effect-2",
+      "expected": {
+        "dice": "1d6",
+        "damageType": "radiant",
+        "role": "additional"
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Contribution transmise ; interprétation par le module destinataire"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Solinar",
+      "definitionId": "p20:mi:2014:cc:solinar",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "Effet associé au jet de sauvegarde",
+      "expected": [
+        {
+          "condition": "blinded",
+          "operation": "apply"
+        }
+      ],
+      "calculated": null,
+      "observed": [
+        "À compléter : Activation à préciser.",
+        "À compléter : Harmonisation à confirmer pour cet objet.",
+        "À compléter : Conséquence du JdS réussi à préciser."
+      ],
+      "status": "À compléter",
+      "blockers": [
+        "Activation à préciser.",
+        "Harmonisation à confirmer pour cet objet.",
+        "Conséquence du JdS réussi à préciser.",
+        "État et conséquences de jeu"
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Sélhane",
+      "definitionId": "p20:mi:2014:cc:selhane",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "effect-1",
+      "expected": {
+        "dice": "1d8",
+        "damageType": null,
+        "role": "weapon-base"
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Type de dégâts inconnu",
+        "Type de dégâts inconnu"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Sélhane",
+      "definitionId": "p20:mi:2014:cc:selhane",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "effect-2",
+      "expected": {
+        "dice": "1d6",
+        "damageType": "psychic",
+        "role": "additional"
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Contribution transmise ; interprétation par le module destinataire"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Sélhane",
+      "definitionId": "p20:mi:2014:cc:selhane",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "Effet associé au jet de sauvegarde",
+      "expected": [
+        {
+          "condition": "next-attack-disadvantage",
+          "operation": "apply"
+        }
+      ],
+      "calculated": null,
+      "observed": [
+        "À compléter : Activation à préciser.",
+        "À compléter : Harmonisation à confirmer pour cet objet.",
+        "À compléter : Conséquence du JdS réussi à préciser."
+      ],
+      "status": "À compléter",
+      "blockers": [
+        "Activation à préciser.",
+        "Harmonisation à confirmer pour cet objet.",
+        "Conséquence du JdS réussi à préciser.",
+        "État et conséquences de jeu"
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Nans",
+      "item": "Volto-Fendoir",
+      "definitionId": "p20:mi:2014:cc:volto-fendoir",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-nans",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "sword / sword-1",
+      "expected": {
+        "dice": "1d6",
+        "damageType": "slashing",
+        "role": "weapon-base"
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Contribution transmise ; interprétation par le module destinataire"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Nans",
+      "item": "Volto-Fendoir",
+      "definitionId": "p20:mi:2014:cc:volto-fendoir",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-nans",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "sword / shield-1",
+      "expected": 2,
+      "calculated": 2,
+      "observed": 2,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Nans",
+      "item": "Volto-Fendoir",
+      "definitionId": "p20:mi:2014:cc:volto-fendoir",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-nans",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "axe / axe-1",
+      "expected": {
+        "dice": "1d12",
+        "damageType": "slashing",
+        "role": "weapon-base"
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Contribution transmise ; interprétation par le module destinataire"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Nans",
+      "item": "Volto-Fendoir",
+      "definitionId": "p20:mi:2014:cc:volto-fendoir",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-nans",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "Épée et bouclier",
+      "expected": [
+        {
+          "modeId": "sword",
+          "exclusiveGroup": "forme"
+        }
+      ],
+      "calculated": null,
+      "observed": [
+        "À compléter : Harmonisation à confirmer pour cet objet."
+      ],
+      "status": "À compléter",
+      "blockers": [
+        "Harmonisation à confirmer pour cet objet.",
+        "Transformation et recalcul du profil"
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Nans",
+      "item": "Volto-Fendoir",
+      "definitionId": "p20:mi:2014:cc:volto-fendoir",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-nans",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "Hache",
+      "expected": [
+        {
+          "modeId": "axe",
+          "exclusiveGroup": "forme"
+        }
+      ],
+      "calculated": null,
+      "observed": [
+        "À compléter : Harmonisation à confirmer pour cet objet."
+      ],
+      "status": "À compléter",
+      "blockers": [
+        "Harmonisation à confirmer pour cet objet.",
+        "Transformation et recalcul du profil"
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Rufus",
+      "item": "Hexen Blade",
+      "definitionId": "p20:mi:2014:cc:hexen-blade",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-rufus",
+          "page": 1,
+          "section": null
+        },
+        {
+          "sourceId": "cc-rufus",
+          "page": 2,
+          "section": null
+        },
+        {
+          "sourceId": "cc-rufus",
+          "page": 3,
+          "section": null
+        }
+      ],
+      "capability": "effect-1",
+      "expected": 1,
+      "calculated": 1,
+      "observed": 1,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Rufus",
+      "item": "Hexen Blade",
+      "definitionId": "p20:mi:2014:cc:hexen-blade",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-rufus",
+          "page": 1,
+          "section": null
+        },
+        {
+          "sourceId": "cc-rufus",
+          "page": 2,
+          "section": null
+        },
+        {
+          "sourceId": "cc-rufus",
+          "page": 3,
+          "section": null
+        }
+      ],
+      "capability": "effect-2",
+      "expected": 1,
+      "calculated": 1,
+      "observed": 1,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Rufus",
+      "item": "Hexen Blade",
+      "definitionId": "p20:mi:2014:cc:hexen-blade",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-rufus",
+          "page": 1,
+          "section": null
+        },
+        {
+          "sourceId": "cc-rufus",
+          "page": 2,
+          "section": null
+        },
+        {
+          "sourceId": "cc-rufus",
+          "page": 3,
+          "section": null
+        }
+      ],
+      "capability": "effect-3",
+      "expected": {
+        "dice": "1d6",
+        "damageType": "piercing",
+        "role": "weapon-base"
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Contribution transmise ; interprétation par le module destinataire"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Rufus",
+      "item": "Hexen Blade",
+      "definitionId": "p20:mi:2014:cc:hexen-blade",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-rufus",
+          "page": 1,
+          "section": null
+        },
+        {
+          "sourceId": "cc-rufus",
+          "page": 2,
+          "section": null
+        },
+        {
+          "sourceId": "cc-rufus",
+          "page": 3,
+          "section": null
+        }
+      ],
+      "capability": "Déguisement",
+      "expected": [
+        {
+          "spellId": "srd51:disguise-self",
+          "level": null,
+          "dc": {
+            "kind": "fixed",
+            "value": 15
+          },
+          "attackBonus": null
+        }
+      ],
+      "calculated": null,
+      "observed": [
+        "À compléter : Activation à préciser."
+      ],
+      "status": "À compléter",
+      "blockers": [
+        "Activation à préciser.",
+        "Résolution du sort référencé"
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Rufus",
+      "item": "Hexen Blade",
+      "definitionId": "p20:mi:2014:cc:hexen-blade",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-rufus",
+          "page": 1,
+          "section": null
+        },
+        {
+          "sourceId": "cc-rufus",
+          "page": 2,
+          "section": null
+        },
+        {
+          "sourceId": "cc-rufus",
+          "page": 3,
+          "section": null
+        }
+      ],
+      "capability": "Image miroir",
+      "expected": [
+        {
+          "spellId": "srd51:mirror-image",
+          "level": null,
+          "dc": {
+            "kind": "fixed",
+            "value": 15
+          },
+          "attackBonus": null
+        }
+      ],
+      "calculated": null,
+      "observed": [
+        "À compléter : Activation à préciser."
+      ],
+      "status": "À compléter",
+      "blockers": [
+        "Activation à préciser.",
+        "Résolution du sort référencé"
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Rufus",
+      "item": "Hexen Blade",
+      "definitionId": "p20:mi:2014:cc:hexen-blade",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-rufus",
+          "page": 1,
+          "section": null
+        },
+        {
+          "sourceId": "cc-rufus",
+          "page": 2,
+          "section": null
+        },
+        {
+          "sourceId": "cc-rufus",
+          "page": 3,
+          "section": null
+        }
+      ],
+      "capability": "Motif hypnotique",
+      "expected": [
+        {
+          "spellId": "srd51:hypnotic-pattern",
+          "level": null,
+          "dc": {
+            "kind": "fixed",
+            "value": 15
+          },
+          "attackBonus": null
+        }
+      ],
+      "calculated": null,
+      "observed": [
+        "À compléter : Activation à préciser."
+      ],
+      "status": "À compléter",
+      "blockers": [
+        "Activation à préciser.",
+        "Résolution du sort référencé"
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Bâton Givre confluence",
+      "definitionId": "p20:mi:2014:cc:baton-givre-confluence",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "Mains (abréviation)",
+      "expected": [
+        {
+          "key": "cc:unresolved-spell",
+          "summary": "Identité du sort à confirmer.",
+          "payload": {
+            "sheetLabel": "Mains"
+          },
+          "fallback": "manual"
+        }
+      ],
+      "calculated": null,
+      "observed": [
+        "À compléter : Activation à préciser.",
+        "À compléter : Harmonisation à confirmer pour cet objet."
+      ],
+      "status": "À compléter",
+      "blockers": [
+        "Activation à préciser.",
+        "Harmonisation à confirmer pour cet objet.",
+        "Pouvoir personnalisé"
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Bâton Givre confluence",
+      "definitionId": "p20:mi:2014:cc:baton-givre-confluence",
+      "version": "1.1.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "Vortex (abréviation)",
+      "expected": [
+        {
+          "key": "cc:unresolved-spell",
+          "summary": "Identité du sort à confirmer.",
+          "payload": {
+            "sheetLabel": "Vortex"
+          },
+          "fallback": "manual"
+        }
+      ],
+      "calculated": null,
+      "observed": [
+        "À compléter : Activation à préciser.",
+        "À compléter : Harmonisation à confirmer pour cet objet."
+      ],
+      "status": "À compléter",
+      "blockers": [
+        "Activation à préciser.",
+        "Harmonisation à confirmer pour cet objet.",
+        "Pouvoir personnalisé"
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Zéphyr",
+      "item": "Bouclier magique +3",
+      "definitionId": "p20:mi:2014:cc:bouclier-magique-3",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-zephyr",
+          "page": 1,
+          "section": null
+        }
+      ],
+      "capability": "effect-1",
+      "expected": 3,
+      "calculated": 3,
+      "observed": 3,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Demi-plate",
+      "definitionId": "p20:mi:2014:cc:kentaro-demi-plate",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 1,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "base-profile",
+      "expected": {
+        "key": "forge:base-profile",
+        "summary": "Profil physique",
+        "payload": {
+          "kind": "armor",
+          "range": null,
+          "longRange": null,
+          "versatileDice": null,
+          "baseAC": 15,
+          "shieldBase": null,
+          "dexCap": 2,
+          "minimumStrength": null,
+          "stealthDisadvantage": true
+        },
+        "fallback": "manual"
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Résolution manuelle",
+        "Résolution manuelle"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Anneau de stockage",
+      "definitionId": "p20:mi:2014:cc:kentaro-anneau-de-stockage",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Stocke cinq niveaux de sorts ; contenu et modalités de lancement à renseigner.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Stocke cinq niveaux de sorts ; contenu et modalités de lancement à renseigner."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Bague de feuille morte",
+      "definitionId": "p20:mi:2014:cc:kentaro-bague-de-feuille-morte",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Liée dans la fiche ; déclenchement et effet de chute à relier.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Liée dans la fiche ; déclenchement et effet de chute à relier."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Cape +1 CA",
+      "definitionId": "p20:mi:2014:cc:kentaro-cape-1-ca",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "effect-1",
+      "expected": 1,
+      "calculated": 1,
+      "observed": 1,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Bracelet de force",
+      "definitionId": "p20:mi:2014:cc:kentaro-bracelet-de-force",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "effect-1",
+      "expected": {
+        "ability": "str",
+        "operation": "add",
+        "value": 2
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Valeur fixée ou plafond à arbitrer avec les autres sources"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Perle de pouvoir",
+      "definitionId": "p20:mi:2014:cc:kentaro-perle-de-pouvoir",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Récupération d’emplacement : modalités à confirmer pour la magie de pacte.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Récupération d’emplacement : modalités à confirmer pour la magie de pacte."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Éponge magique",
+      "definitionId": "p20:mi:2014:cc:kentaro-eponge-magique",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Effet non décrit.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Effet non décrit."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Bague échangeant les visages",
+      "definitionId": "p20:mi:2014:cc:kentaro-bague-echangeant-les-visages",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Effet, activation et durée non décrits.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Effet, activation et durée non décrits."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Cape, anneau et graines de Josiane Pichet",
+      "definitionId": "p20:mi:2014:cc:kentaro-cape-anneau-et-graines-de-josiane-pichet",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Trois objets non identifiés, conservés ensemble selon la fiche.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Trois objets non identifiés, conservés ensemble selon la fiche."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Sang violet de chimère",
+      "definitionId": "p20:mi:2014:cc:kentaro-sang-violet-de-chimere",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Trois fioles ; effets non décrits.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Trois fioles ; effets non décrits."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Tanto",
+      "definitionId": "p20:mi:2014:cc:kentaro-tanto",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Deux dagues ; pas de propriété magique documentée.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Deux dagues ; pas de propriété magique documentée."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Sac de bijoux",
+      "definitionId": "p20:mi:2014:cc:kentaro-sac-de-bijoux",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Contenu non détaillé.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Contenu non détaillé."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Brack",
+      "item": "Ceinturon de géant des collines",
+      "definitionId": "p20:mi:2014:cc:brack-ceinturon-de-geant-des-collines",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-brack",
+          "page": 1,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "effect-1",
+      "expected": 21,
+      "calculated": 21,
+      "observed": 21,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Brack",
+      "item": "Armure de plate du Duergar",
+      "definitionId": "p20:mi:2014:cc:brack-armure-de-plate-du-duergar",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-brack",
+          "page": 1,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "base-profile",
+      "expected": {
+        "key": "forge:base-profile",
+        "summary": "Profil physique",
+        "payload": {
+          "kind": "armor",
+          "range": null,
+          "longRange": null,
+          "versatileDice": null,
+          "baseAC": 18,
+          "shieldBase": null,
+          "dexCap": 0,
+          "minimumStrength": null,
+          "stealthDisadvantage": true
+        },
+        "fallback": "manual"
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Résolution manuelle",
+        "Résolution manuelle"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Brack",
+      "item": "Pôpa",
+      "definitionId": "p20:mi:2014:cc:brack-popa",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-brack",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Brack",
+      "item": "Gorlock",
+      "definitionId": "p20:mi:2014:cc:brack-gorlock",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-brack",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Brack",
+      "item": "KamelBourktar",
+      "definitionId": "p20:mi:2014:cc:brack-kamelbourktar",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-brack",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Brack",
+      "item": "Bâton inamovible",
+      "definitionId": "p20:mi:2014:cc:brack-baton-inamovible",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-brack",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Kentaro",
+      "item": "Sceau d’éclipse",
+      "definitionId": "p20:mi:2014:cc:kentaro-sceau-d-eclipse",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-kentaro",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Sceau d’éclipse",
+      "expected": [
+        {
+          "key": "cc:sceau-d-eclipse",
+          "summary": "Deux lames sur la même cible pendant le tour : 1d8 radiant et 1d8 psychique, avantage réservé au porteur jusqu’à la fin de son prochain tour. Nécessite un historique des touches par cible.",
+          "payload": {},
+          "fallback": "manual"
+        }
+      ],
+      "calculated": null,
+      "observed": [
+        "À compléter : Activation à préciser."
+      ],
+      "status": "À compléter",
+      "blockers": [
+        "Activation à préciser.",
+        "Pouvoir personnalisé"
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Nans",
+      "item": "Cape de la Brise Silencieuse",
+      "definitionId": "p20:mi:2014:cc:nans-cape-de-la-brise-silencieuse",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-nans",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Cape de la Brise Silencieuse",
+      "expected": [
+        {
+          "key": "cc:cape-de-la-brise-silencieuse",
+          "summary": "Compagnon : réaction +2 CA contre une attaque à distance, 1 utilisation ; rechargement à confirmer. Action bonus : mouvements silencieux.",
+          "payload": {},
+          "fallback": "manual"
+        }
+      ],
+      "calculated": null,
+      "observed": [
+        "À compléter : Activation à préciser."
+      ],
+      "status": "À compléter",
+      "blockers": [
+        "Activation à préciser.",
+        "Pouvoir personnalisé"
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Nans",
+      "item": "Anneau de la Surcharge Furieuse",
+      "definitionId": "p20:mi:2014:cc:nans-anneau-de-la-surcharge-furieuse",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-nans",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Anneau de la Surcharge Furieuse",
+      "expected": [
+        {
+          "key": "cc:anneau-de-la-surcharge-furieuse",
+          "summary": "Compagnon : touche à deux mains +1d6, retour 1d4 force ; +1 dégâts d’arme à 62 PV ou moins. Type du d6 et seuil générique à confirmer.",
+          "payload": {},
+          "fallback": "manual"
+        }
+      ],
+      "calculated": null,
+      "observed": [
+        "À compléter : Activation à préciser."
+      ],
+      "status": "À compléter",
+      "blockers": [
+        "Activation à préciser.",
+        "Pouvoir personnalisé"
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Rufus",
+      "item": "Armure de cuir",
+      "definitionId": "p20:mi:2014:cc:rufus-armure-de-cuir",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-rufus",
+          "page": 1,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "base-profile",
+      "expected": {
+        "key": "forge:base-profile",
+        "summary": "Profil physique",
+        "payload": {
+          "kind": "armor",
+          "range": null,
+          "longRange": null,
+          "versatileDice": null,
+          "baseAC": 11,
+          "shieldBase": null,
+          "dexCap": null,
+          "minimumStrength": null,
+          "stealthDisadvantage": false
+        },
+        "fallback": "manual"
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Résolution manuelle",
+        "Résolution manuelle"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Rufus",
+      "item": "Chaussons araignée",
+      "definitionId": "p20:mi:2014:cc:rufus-chaussons-araignee",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-rufus",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Marche aux murs : identification officielle et restrictions à confirmer.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Marche aux murs : identification officielle et restrictions à confirmer."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Rufus",
+      "item": "Dague spectrale",
+      "definitionId": "p20:mi:2014:cc:rufus-dague-spectrale",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-rufus",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Règles à rapprocher du Compagnon.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Règles à rapprocher du Compagnon."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Rufus",
+      "item": "Dague kori",
+      "definitionId": "p20:mi:2014:cc:rufus-dague-kori",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-rufus",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Règles non décrites.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Règles non décrites."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Rufus",
+      "item": "Arbalète duergar",
+      "definitionId": "p20:mi:2014:cc:rufus-arbalete-duergar",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-rufus",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Profil magique non décrit.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Profil magique non décrit."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Rufus",
+      "item": "Collier de résistance nécrotique",
+      "definitionId": "p20:mi:2014:cc:rufus-collier-de-resistance-necrotique",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-rufus",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "effect-1",
+      "expected": true,
+      "calculated": true,
+      "observed": true,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Rufus",
+      "item": "Statue éléphant",
+      "definitionId": "p20:mi:2014:cc:rufus-statue-elephant",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-rufus",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Invocation : profil de créature, durée et usages à confirmer.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Invocation : profil de créature, durée et usages à confirmer."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Rufus",
+      "item": "Bague d’échange d’apparence",
+      "definitionId": "p20:mi:2014:cc:rufus-bague-d-echange-d-apparence",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-rufus",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Transformation visuelle : modalités non décrites.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Transformation visuelle : modalités non décrites."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Fiole sanguine +2",
+      "definitionId": "p20:mi:2014:cc:samoth-fiole-sanguine-2",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "effect-1",
+      "expected": 2,
+      "calculated": 2,
+      "observed": 2,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Fiole sanguine +2",
+      "definitionId": "p20:mi:2014:cc:samoth-fiole-sanguine-2",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "effect-2",
+      "expected": 2,
+      "calculated": 2,
+      "observed": 2,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Fiole sanguine +2",
+      "definitionId": "p20:mi:2014:cc:samoth-fiole-sanguine-2",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Récupération de sorcellerie",
+      "expected": [
+        {
+          "key": "cc:recuperation-de-sorcellerie",
+          "summary": "Dépense de dés de vie : +5 points de sorcellerie une fois par aube, plafonnés à la réserve de classe.",
+          "payload": {},
+          "fallback": "manual"
+        }
+      ],
+      "calculated": null,
+      "observed": [
+        "À compléter : Activation à préciser."
+      ],
+      "status": "À compléter",
+      "blockers": [
+        "Activation à préciser.",
+        "Pouvoir personnalisé"
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Anneau de chaleur constante",
+      "definitionId": "p20:mi:2014:cc:samoth-anneau-de-chaleur-constante",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "effect-1",
+      "expected": true,
+      "calculated": true,
+      "observed": true,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Anneau de transplanation chaotique",
+      "definitionId": "p20:mi:2014:cc:samoth-anneau-de-transplanation-chaotique",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Effet non décrit ; Compagnon également à confirmer.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Effet non décrit ; Compagnon également à confirmer."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Anneau en bois",
+      "definitionId": "p20:mi:2014:cc:samoth-anneau-en-bois",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Régénération horaire",
+      "expected": [
+        {
+          "dice": "1d6"
+        }
+      ],
+      "calculated": {
+        "name": "Régénération horaire",
+        "cost": "none",
+        "target": "selected",
+        "maxTargets": 1,
+        "effects": [
+          {
+            "kind": "heal",
+            "dice": "1d6"
+          }
+        ],
+        "combat": {
+          "version": 1,
+          "mode": "automatic",
+          "requirements": [],
+          "ongoing": []
+        }
+      },
+      "observed": [
+        "Activation : Régénération horaire",
+        "Action : aucune",
+        "PV après soin : 101",
+        "Non exécuté : Déclencheur non reconnu : hour",
+        "Non exécuté : Abonnement au déclencheur hour non relié."
+      ],
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Déclencheur non reconnu : hour",
+        "Abonnement au déclencheur hour non relié."
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Broche protectrice",
+      "definitionId": "p20:mi:2014:cc:samoth-broche-protectrice",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "effect-1",
+      "expected": 1,
+      "calculated": 1,
+      "observed": 1,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Couronne vestige corrompue",
+      "definitionId": "p20:mi:2014:cc:samoth-couronne-vestige-corrompue",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Dans le Yann ; propriétés inconnues.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Dans le Yann ; propriétés inconnues."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Tapis volant",
+      "definitionId": "p20:mi:2014:cc:samoth-tapis-volant",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Charge 300 kg ; vitesse et dimensions non décrites.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Charge 300 kg ; vitesse et dimensions non décrites."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Amulette de santé",
+      "definitionId": "p20:mi:2014:cc:samoth-amulette-de-sante",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Identification officielle à confirmer avant de fixer Constitution.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Identification officielle à confirmer avant de fixer Constitution."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Potion de soin mineur",
+      "definitionId": "p20:mi:2014:cc:samoth-potion-de-soin-mineur",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Quatre exemplaires ; dés non explicités.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Quatre exemplaires ; dés non explicités."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Potion de soin majeur",
+      "definitionId": "p20:mi:2014:cc:samoth-potion-de-soin-majeur",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Un exemplaire ; dés non explicités.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Un exemplaire ; dés non explicités."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Potion de soin supérieur",
+      "definitionId": "p20:mi:2014:cc:samoth-potion-de-soin-superieur",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Boire",
+      "expected": [
+        {
+          "dice": "8d4+8"
+        }
+      ],
+      "calculated": {
+        "name": "Boire",
+        "cost": "action",
+        "target": "self",
+        "maxTargets": 1,
+        "effects": [
+          {
+            "kind": "heal",
+            "dice": "8d4+8"
+          }
+        ],
+        "combat": {
+          "version": 1,
+          "mode": "automatic",
+          "requirements": [],
+          "ongoing": []
+        },
+        "resource": {
+          "id": "dose",
+          "amount": 1
+        }
+      },
+      "observed": [
+        "Activation : Boire",
+        "Action : action",
+        "PV après soin : 200",
+        "Réserve uses : 1 → 0"
+      ],
+      "status": "Automatique",
+      "blockers": [],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Potion d’immunité au froid",
+      "definitionId": "p20:mi:2014:cc:samoth-potion-d-immunite-au-froid",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Un exemplaire ; durée non précisée.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Un exemplaire ; durée non précisée."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Potion de résistance au tonnerre",
+      "definitionId": "p20:mi:2014:cc:samoth-potion-de-resistance-au-tonnerre",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Un exemplaire ; durée non précisée.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Un exemplaire ; durée non précisée."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Samoth",
+      "item": "Antivenin",
+      "definitionId": "p20:mi:2014:cc:samoth-antivenin",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-samoth",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Propriétés à documenter",
+      "expected": "Un exemplaire ; identification à confirmer.",
+      "calculated": null,
+      "observed": "Aucune mécanique inventée",
+      "status": "À compléter",
+      "blockers": [
+        "Un exemplaire ; identification à confirmer."
+      ],
+      "scope": "Inventaire documentaire"
+    },
+    {
+      "owner": "Zéphyr",
+      "item": "Cotte de mailles",
+      "definitionId": "p20:mi:2014:cc:zephyr-cotte-de-mailles",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-zephyr",
+          "page": 1,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "base-profile",
+      "expected": {
+        "key": "forge:base-profile",
+        "summary": "Profil physique",
+        "payload": {
+          "kind": "armor",
+          "range": null,
+          "longRange": null,
+          "versatileDice": null,
+          "baseAC": 16,
+          "shieldBase": null,
+          "dexCap": 0,
+          "minimumStrength": null,
+          "stealthDisadvantage": true
+        },
+        "fallback": "manual"
+      },
+      "calculated": null,
+      "observed": "Non exécuté dans ce scénario",
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Résolution manuelle",
+        "Résolution manuelle"
+      ],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Zéphyr",
+      "item": "Ceinture de Force de géant du feu",
+      "definitionId": "p20:mi:2014:cc:zephyr-ceinture-de-force-de-geant-du-feu",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-zephyr",
+          "page": 1,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "effect-1",
+      "expected": 25,
+      "calculated": 25,
+      "observed": 25,
+      "status": "Automatique (contribution passive isolée)",
+      "blockers": [],
+      "scope": "Contexte équipé et harmonisé synthétique ; aucune fiche modifiée"
+    },
+    {
+      "owner": "Zéphyr",
+      "item": "Protection de l’Ancre Sacrée",
+      "definitionId": "p20:mi:2014:cc:zephyr-protection-de-l-ancre-sacree",
+      "version": "1.0.0",
+      "source": [
+        {
+          "sourceId": "cc-zephyr",
+          "page": 2,
+          "section": "Équipement / trésors"
+        }
+      ],
+      "capability": "Protection et soin des alliés",
+      "expected": [
+        {
+          "key": "cc:protection-et-soin-des-allies",
+          "summary": "Une attaque reçue divisée par deux et soins niveau + Charisme aux alliés à 9 m, une fois par jour. Le compagnon arme la prochaine attaque et dépense sans action ; PDF laisse le choix de l’attaque. Raccord d’interception nécessaire.",
+          "payload": {},
+          "fallback": "manual"
+        }
+      ],
+      "calculated": null,
+      "observed": [
+        "À compléter : Activation à préciser."
+      ],
+      "status": "À compléter",
+      "blockers": [
+        "Activation à préciser.",
+        "Pouvoir personnalisé"
+      ],
+      "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
+    },
+    {
+      "owner": "Brack",
+      "item": "PyroMerlin",
+      "capability": "Souffle / Échec",
+      "expected": 18,
+      "calculated": 18,
+      "observed": 18,
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Sélection géométrique des cibles de zone à relier à Encounter."
+      ],
+      "scope": "Résolution réelle sur une cible sélectionnée ; géométrie non résolue"
+    },
+    {
+      "owner": "Brack",
+      "item": "PyroMerlin",
+      "capability": "Souffle / Réussite",
+      "expected": 9,
+      "calculated": 9,
+      "observed": 9,
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Sélection géométrique des cibles de zone à relier à Encounter."
+      ],
+      "scope": "Résolution réelle sur une cible sélectionnée ; géométrie non résolue"
+    },
+    {
+      "owner": "Brack",
+      "item": "PyroMerlin",
+      "capability": "Souffle / Résistance",
+      "expected": 9,
+      "calculated": 9,
+      "observed": 9,
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Sélection géométrique des cibles de zone à relier à Encounter."
+      ],
+      "scope": "Résolution réelle sur une cible sélectionnée ; géométrie non résolue"
+    },
+    {
+      "owner": "Brack",
+      "item": "PyroMerlin",
+      "capability": "Souffle / Réussite + résistance",
+      "expected": 4,
+      "calculated": 4,
+      "observed": 4,
+      "status": "Partiellement automatisé",
+      "blockers": [
+        "Sélection géométrique des cibles de zone à relier à Encounter."
+      ],
+      "scope": "Résolution réelle sur une cible sélectionnée ; géométrie non résolue"
+    }
+  ]
+}

@@ -42,3 +42,18 @@ test('healing caps at max and simultaneous typed effects do not double consume',
  const [w,b]=setup();b.effects.push({...structuredClone(b.effects[0]),id:'other',params:{dice:'1d6',damageType:'cold',role:'additional'}});
  const multi=simulateCapability(w,b,{effectRolls:{0:[3],1:[5]}});assert.equal(multi.result.results[0].damage,8);
 });
+
+test('weapon +1 and extra damage resolve together, magic is added exactly once',async()=>{
+ const {effect}=await import('../src/forge/model.js');const {weaponCapability}=await import('../src/forge/automation.js');
+ const [d]=setup();d.abilities=[];d.effects=[effect('damage',{dice:'1d8',damageType:'slashing',role:'weapon-base'}),effect('damage',{dice:'2d6',damageType:'fire',role:'additional'}),...['attack','damage'].map(stat=>effect('modifier',{stat,operation:'add',scope:'this-weapon',value:1}))];d.effects[0].trigger=d.effects[1].trigger='on-hit';
+ const i={...instanceOf(d,'source'),equipped:true};const built=weaponCapability(d,i,{attackBonus:7,damageBonus:4});
+ const out=simulateCapability(d,built.ability,{...built.context,instance:i,attackRoll:10,effectRolls:{0:[5],1:[3,4]}});
+ assert.equal(out.result.total,18);assert.equal(out.result.results[0].damage,17);assert.equal(out.diagnostic.status,'automatic');
+});
+
+test('random recovery rejects impossible results and caps at maximum',async()=>{
+ const {recoverResource}=await import('../src/forge/engine.js');const [d]=setup();const r=newResource();d.resources=[r];const i=instanceOf(d,'source');i.resources[r.id]=3;
+ assert.equal(recoverResource(d,i,r.id,'dawn',5).resources[r.id],5);
+ assert.throws(()=>recoverResource(d,i,r.id,'dawn',6),/limites/);assert.throws(()=>recoverResource(d,i,r.id,'dawn',0),/limites/);
+ assert.equal(i.resources[r.id],3);
+});

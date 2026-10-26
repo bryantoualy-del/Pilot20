@@ -1,5 +1,6 @@
 import { el, button, field, select, check, badge, download } from "./dom.js";
 import {
+  instanceOf,
   newItem,
   baseProfile,
   addBaseProfile,
@@ -13,7 +14,7 @@ import {
   damageTypes,
   exportItems,
 } from "../../src/forge/model.js";
-import { capabilityKinds, triggerLabels, guidedAbility, compileCapability, simulateCapability } from "../../src/forge/automation.js";
+import { capabilityKinds, triggerLabels, guidedAbility, compileCapability, simulateCapability, weaponCapability } from "../../src/forge/automation.js";
 import { spellReference } from "../../src/catalog/spell-reference.js";
 import { localizedName } from "../../src/catalog/localization.js";
 import { forgeRepository } from "../../src/forge/repository.js";
@@ -320,6 +321,7 @@ export async function renderForge(root, a) {
             {},
             `${activations[p.activation]}${p.costs.length ? " · " + p.costs.map((c) => c.amount + (d.resources.find(r=>r.id===c.resourceId)?.unit === "uses" ? " utilisation(s)" : " charge(s)")).join(", ") : ""}`,
           ),
+          capabilityStatus(p),
           ...p.effects.map((e) => el("p", {}, describe(e))),
           p.save
             ? el(
@@ -386,6 +388,7 @@ export async function renderForge(root, a) {
     fn();
     save();
     if (redraw) drawEditor();
+    else for(const node of editor.querySelectorAll("[data-capability-status]")){const b=current.definition.abilities.find(x=>x.id===node.dataset.capabilityStatus);if(b)node.textContent=compileCapability(current.definition,b).label+" ⓘ";}
   };
   const input = (
     label,
@@ -975,17 +978,31 @@ export async function renderForge(root, a) {
     return box;
   }
   function capabilityStatus(b) {
-    const result = compileCapability(current.definition,b);
-    return button(result.label+" ⓘ",()=>a.modal(el("section",{},el("h2",{},result.label),
-      ...[["Exécutable",result.automated],["À compléter",result.missing],["Limites",result.limitations]].map(([title,list])=>el("div",{},el("h3",{},title),...list.map(x=>el("p",{},x)))))));
+    const node=button(compileCapability(current.definition,b).label+" ⓘ",()=>{
+      const result=compileCapability(current.definition,b);
+      a.modal(el("section",{},el("h2",{},result.label),
+        ...[["Exécutable",result.automated],["À compléter",result.missing],["Limites",result.limitations]].map(([title,list])=>el("div",{},el("h3",{},title),...list.map(x=>el("p",{},x))))));
+    });
+    node.dataset.capabilityStatus=b.id;
+    return node;
   }
   function contextualEffects(b) {
-    const box=effectsEditor(b.effects);
-    box.querySelector(":scope > .forge-add")?.remove();
-    for(const node of box.querySelectorAll(":scope > details")) node.open=true;
-    // Put the essential target/save questions directly in the capacity, without extra dialogs.
-    for(const node of box.querySelectorAll("details")) {
-      if(node.querySelector(":scope > summary")?.textContent==="Déclencheur, cible et durée") node.open=true;
+    const box=el("div",{class:"forge-capability-fields"});
+    for(const e of b.effects){
+      const t=e.templateId.split(":").at(-1),p=e.params;
+      if(!["damage","healing"].includes(t)) {const existing=effectsEditor([e]);existing.querySelector(":scope > .forge-add")?.remove();box.append(existing);continue;}
+      if(t==="damage"){
+        const periodic=e.trigger?.includes("turn-");
+        box.append(choice("Quels dégâts ?",{"weapon-base":"Dégâts de base de l’arme",additional:"Dégâts supplémentaires à la touche",standalone:"Dégâts d’un pouvoir",periodic:"Dégâts automatiques ou périodiques"},periodic?"periodic":p.role,v=>{
+          p.role=v==="periodic"?"standalone":v;
+          e.trigger=v==="periodic"?"target-turn-start":["additional","weapon-base"].includes(v)?"on-hit":null;
+          b.activation=["additional","periodic"].includes(v)?"triggered":"action";
+        },true));
+        if(b.activation==="triggered"||e.trigger&&e.trigger!=="on-hit")box.append(choice("Quand ?",triggerLabels,e.trigger??"",v=>e.trigger=v));
+      }
+      box.append(grid(input(t==="damage"?"Dés de dégâts":"Dés de soins",p.dice,v=>p.dice=v),t==="damage"?choice("Type de dégâts",damageTypes,p.damageType,v=>p.damageType=v):null),
+        choice("Qui reçoit cet effet ?",{self:"Le porteur",creature:"La cible choisie"},e.target?.kind??"creature",v=>e.target={kind:v,count:1,filter:null}),
+        saveEditor(e),detail("Durée et conditions",durationEditor(e),advancedEffect(e)),remove(b.effects,e));
     }
     box.append(detail("Combiner un autre effet", effectsEditorAdd(b)));
     return box;
@@ -995,14 +1012,15 @@ export async function renderForge(root, a) {
     return el("div",{class:"forge-add"},select(entries(capabilityKinds),kind,e=>kind=e.target.value,{"aria-label":"Effet complémentaire"}),
       button("Associer",()=>change(()=>b.effects.push(...guidedAbility(kind).effects),true)));
   }
-  function simulator(b) {
-    const opts={level:10,attackBonus:7,ac:15,attackRoll:15,saveRoll:1,saveBonus:0};
+  function simulator(b,initial={}) {
+    const opts={level:10,attackBonus:7,ac:15,attackRoll:15,saveRoll:1,saveBonus:0,spellSaveDC:15,...initial};
     const result=el("ol",{class:"forge-simulation", "aria-live":"polite"});
     const num=(label,key)=>field(label,el("input",{type:"number",value:opts[key],oninput:e=>opts[key]=Number(e.target.value)}));
     const panel=el("section",{class:"forge-simulator"},el("h2",{},"Simuler · "+b.name.fr),
       el("p",{},"Essai isolé utilisant le moteur de combat. Aucun personnage sauvegardé n’est modifié."),
-      grid(num("Niveau du porteur","level"),num("Bonus d’attaque total","attackBonus"),num("CA de la cible","ac"),num("Résultat du d20 d’attaque","attackRoll"),num("Résultat du d20 de sauvegarde","saveRoll"),num("Bonus de sauvegarde","saveBonus")),
+      grid(num("Niveau du porteur","level"),num("Bonus d’attaque total","attackBonus"),num("CA de la cible","ac"),num("Résultat du d20 d’attaque","attackRoll"),num("Résultat du d20 de sauvegarde","saveRoll"),num("Bonus de sauvegarde","saveBonus"),num("DD des sorts du porteur","spellSaveDC")),
       field("Défense de la cible",select([["none","Aucune"],["resistances","Résistance"],["vulnerabilities","Vulnérabilité"],["immunities","Immunité"]],"none",e=>{for(const k of ["resistances","vulnerabilities","immunities"])opts[k]=e.target.value===k?b.effects.filter(x=>x.params.damageType).map(x=>x.params.damageType):[];})),
+      field("Phase de combat",select([["own-turn","Tour du porteur"],["outside-turn","Tour de la cible"]],"own-turn",e=>opts.phase=e.target.value)),
       check("Réaction déjà utilisée",false,e=>opts.reactionSpent=e.target.checked),
       ...current.definition.resources.map(r=>field("Charges disponibles (maximum "+r.maximum+")",el("input",{type:"number",min:0,max:r.maximum,value:r.maximum,oninput:e=>opts.charges=Number(e.target.value)}))),
       button("Lancer la simulation",()=>{const out=simulateCapability(current.definition,b,opts); result.replaceChildren(...out.timeline.map(line=>el("li",{},line)));}),result);
@@ -1296,6 +1314,11 @@ export async function renderForge(root, a) {
       );
       if (["weapon", "ammunition", "staff"].includes(d.category))
         editor.append(
+          button("Simuler l’attaque de l’arme",()=>{try{
+            const instance={...instanceOf(d,"source"),equipped:true,attuned:true};
+            const built=weaponCapability(d,instance,{attackBonus:7,damageBonus:4});
+            simulator(built.ability,{...built.context,instance});
+          }catch(error){a.fail(error);}}),
           button("Ajouter le profil de dégâts", () =>
             change(() => {
               if (
@@ -1517,6 +1540,8 @@ export async function renderForge(root, a) {
           capabilityStatus(b),
           button("Simuler", () => simulator(b)),
           contextualEffects(b),
+          choice("Réserve consommée",{"":"Aucune",...Object.fromEntries(d.resources.map((r,i)=>[r.id,`Réserve ${i+1} (${r.maximum})`]))},b.costs.length===1?b.costs[0].resourceId:"",v=>b.costs=v?[{resourceId:v,amount:1,timing:"on-use"}]:[],true),
+          b.costs.length===1?input("Coût en charges / utilisations",b.costs[0].amount,v=>b.costs[0].amount=v,{number:true,min:1}):null,
         );
         const advanced = detail("Coût, portée et limites");
         for (const c of b.costs)
