@@ -1,7 +1,7 @@
 [
   {
     "id": "p20:mi:2014:cc:pyromerlin",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "familyId": "p20:mi:2014:cc:pyromerlin",
     "recordKind": "family",
     "name": {
@@ -209,7 +209,7 @@
             "templateId": "p20:effect:damage",
             "params": {
               "dice": "2d6",
-              "damageType": null,
+              "damageType": "fire",
               "role": "standalone"
             },
             "conditions": [],
@@ -228,6 +228,42 @@
           "op": "manual",
           "text": "Créature hostile au corps à corps; distance exacte non donnée."
         }
+      },
+      {
+        "id": "contrecoup-de-campagne",
+        "name": {
+          "fr": "Contrecoup de campagne",
+          "en": null
+        },
+        "activation": "unknown",
+        "costs": [],
+        "effects": [
+          {
+            "id": "contrecoup-de-campagne-effect",
+            "templateId": "p20:effect:custom",
+            "params": {
+              "key": "cc:contrecoup-de-campagne",
+              "summary": "2d6 feu sur Brack : déclencheur et application de la résistance à confirmer.",
+              "payload": {
+                "dice": "2d6",
+                "damageType": "fire",
+                "target": "self"
+              },
+              "fallback": "manual"
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": null,
+        "prerequisites": null
       }
     ],
     "resources": [
@@ -250,12 +286,13 @@
     },
     "rulesNotes": [
       "Seul le stade Éveillé est documenté.",
-      "Aucun auto-dégât au porteur documenté dans cette fiche."
+      "Aucun auto-dégât au porteur documenté dans cette fiche.",
+      "RPG-Connect/BRACK-PROTOCOL.md et Brackmard/index.html : aura 2d6 feu, déclenchement sans action, contact hostile confirmé par Encounter.",
+      "Règle de campagne mentionnée : 2d6 feu de retour sur Brack. Déclencheur exact et ordre avec résistance non établis par les fiches ou le code observé ; non appliqués arbitrairement."
     ],
     "unknowns": [
       "Rarity not documented.",
       "Price and weight not documented.",
-      "Type des 2d6 de l’aura non explicite.",
       "Moment de récupération du souffle, conditions de la résistance et intensité lumineuse non précisés.",
       "1d10 indiqué : prise à deux mains ou règle propre non précisée."
     ],
@@ -749,7 +786,7 @@
   },
   {
     "id": "p20:mi:2014:cc:volto-fendoir",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "familyId": "p20:mi:2014:cc:volto-fendoir",
     "recordKind": "family",
     "name": {
@@ -796,16 +833,77 @@
       "evolving": null
     },
     "effects": [],
-    "abilities": [],
+    "abilities": [
+      {
+        "id": "forme-sword",
+        "name": {
+          "fr": "Épée et bouclier",
+          "en": null
+        },
+        "activation": "bonus-action",
+        "costs": [],
+        "effects": [
+          {
+            "id": "forme-sword-switch",
+            "templateId": "p20:effect:mode-switch",
+            "params": {
+              "modeId": "sword",
+              "exclusiveGroup": "forme"
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": null,
+        "prerequisites": null
+      },
+      {
+        "id": "forme-axe",
+        "name": {
+          "fr": "Hache",
+          "en": null
+        },
+        "activation": "bonus-action",
+        "costs": [],
+        "effects": [
+          {
+            "id": "forme-axe-switch",
+            "templateId": "p20:effect:mode-switch",
+            "params": {
+              "modeId": "axe",
+              "exclusiveGroup": "forme"
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": null,
+        "prerequisites": null
+      }
+    ],
     "resources": [],
     "modes": [
       {
         "id": "sword",
         "name": {
-          "fr": "Épée",
+          "fr": "Épée et bouclier",
           "en": null
         },
-        "exclusiveGroup": null,
+        "exclusiveGroup": "forme",
         "baseItemId": null,
         "properties": [
           "finesse"
@@ -825,6 +923,22 @@
             "trigger": null,
             "save": null,
             "target": null
+          },
+          {
+            "id": "shield-1",
+            "templateId": "p20:effect:modifier",
+            "params": {
+              "stat": "ac",
+              "value": 2,
+              "operation": "add",
+              "scope": "wearer"
+            },
+            "conditions": [],
+            "modeId": "sword",
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
           }
         ]
       },
@@ -834,7 +948,7 @@
           "fr": "Hache",
           "en": null
         },
-        "exclusiveGroup": null,
+        "exclusiveGroup": "forme",
         "baseItemId": null,
         "properties": [],
         "effects": [
@@ -854,46 +968,18 @@
             "target": null
           }
         ]
-      },
-      {
-        "id": "shield",
-        "name": {
-          "fr": "Bouclier",
-          "en": null
-        },
-        "exclusiveGroup": null,
-        "baseItemId": "srd51:shield",
-        "properties": [],
-        "effects": [
-          {
-            "id": "shield-1",
-            "templateId": "p20:effect:modifier",
-            "params": {
-              "stat": "ac",
-              "value": 2,
-              "operation": "add",
-              "scope": "wearer"
-            },
-            "conditions": [],
-            "modeId": "shield",
-            "duration": null,
-            "trigger": null,
-            "save": null,
-            "target": null
-          }
-        ]
       }
     ],
     "description": {
       "fr": null,
       "en": null
     },
-    "rulesNotes": [],
+    "rulesNotes": [
+      "Nans/index.html toggleWeaponMode : épée + bouclier ensemble OU hache ; transformation par action bonus. CA 18/16 de Nans = totaux, ne pas enregistrer comme bonus."
+    ],
     "unknowns": [
       "Rarity not documented.",
       "Price and weight not documented.",
-      "Action de transformation non décrite dans le PDF.",
-      "Combinaisons simultanées épée/bouclier/hache à confirmer.",
       "Le +1 de la décomposition d’attaque n’est pas attribué explicitement à l’objet.",
       "Le +8 aux dégâts est un total de personnage, pas un bonus magique."
     ],
@@ -945,7 +1031,7 @@
   },
   {
     "id": "p20:mi:2014:cc:hexen-blade",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "familyId": "p20:mi:2014:cc:hexen-blade",
     "recordKind": "family",
     "name": {
@@ -1031,6 +1117,21 @@
         "modeId": null,
         "duration": null,
         "trigger": null,
+        "save": null,
+        "target": null
+      },
+      {
+        "id": "effect-3",
+        "templateId": "p20:effect:damage",
+        "params": {
+          "dice": "1d6",
+          "damageType": "piercing",
+          "role": "weapon-base"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": "on-hit",
         "save": null,
         "target": null
       }
@@ -1211,7 +1312,7 @@
   },
   {
     "id": "p20:mi:2014:cc:baton-givre-confluence",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "familyId": "p20:mi:2014:cc:baton-givre-confluence",
     "recordKind": "family",
     "name": {
@@ -1359,7 +1460,9 @@
       "en": null
     },
     "rulesNotes": [
-      "Mention « lié » conservée sans assimilation certaine à l’harmonisation."
+      "Mention « lié » conservée sans assimilation certaine à l’harmonisation.",
+      "Conflit explicite : PDF = 10 charges, récupération 1d6+4 ; Samoth/companion.js = 8 charges, 1d4+2 à l’aube. Le PDF est conservé, aucun écrasement silencieux.",
+      "Compagnon : Mains givrantes (1), Brouillard (1), Vortex (3), Grêle (4), Cône (5), Mur (4). Ces modalités ne certifient pas que le profil PDF et le profil Companion sont la même version."
     ],
     "unknowns": [
       "Rarity not documented.",
@@ -1367,7 +1470,8 @@
       "Le +1 magique : attaques d’arme, attaques de sorts, DD ou plusieurs ?",
       "Mains et Vortex ne sont pas des références de sort résolues.",
       "Moment de récupération non précisé.",
-      "Aucun autre sort ni coût ajouté depuis les souvenirs de conversation."
+      "Aucun autre sort ni coût ajouté depuis les souvenirs de conversation.",
+      "Arbitrer version PDF / Companion avant activation automatique des pouvoirs du bâton."
     ],
     "mechanicsStatus": "partial",
     "relatedIds": [],
@@ -1486,5 +1590,3462 @@
         "scope": "character-sheet-total"
       }
     ]
+  },
+  {
+    "id": "p20:mi:2014:cc:kentaro-demi-plate",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:kentaro-demi-plate",
+    "recordKind": "family",
+    "name": {
+      "fr": "Demi-plate",
+      "en": null
+    },
+    "aliases": [],
+    "category": "armor",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-kentaro",
+        "page": 1,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": false,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [
+      {
+        "id": "base-profile",
+        "templateId": "p20:effect:custom",
+        "params": {
+          "key": "forge:base-profile",
+          "summary": "Profil physique",
+          "payload": {
+            "kind": "armor",
+            "range": null,
+            "longRange": null,
+            "versatileDice": null,
+            "baseAC": 15,
+            "shieldBase": null,
+            "dexCap": 2,
+            "minimumStrength": null,
+            "stealthDisadvantage": true
+          },
+          "fallback": "manual"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "CA de base distincte de toute magie.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Kentaro"
+  },
+  {
+    "id": "p20:mi:2014:cc:kentaro-anneau-de-stockage",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:kentaro-anneau-de-stockage",
+    "recordKind": "family",
+    "name": {
+      "fr": "Anneau de stockage",
+      "en": null
+    },
+    "aliases": [],
+    "category": "ring",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-kentaro",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Stocke cinq niveaux de sorts ; contenu et modalités de lancement à renseigner.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Stocke cinq niveaux de sorts ; contenu et modalités de lancement à renseigner.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Kentaro"
+  },
+  {
+    "id": "p20:mi:2014:cc:kentaro-bague-de-feuille-morte",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:kentaro-bague-de-feuille-morte",
+    "recordKind": "family",
+    "name": {
+      "fr": "Bague de feuille morte",
+      "en": null
+    },
+    "aliases": [],
+    "category": "ring",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-kentaro",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Liée dans la fiche ; déclenchement et effet de chute à relier.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Liée dans la fiche ; déclenchement et effet de chute à relier.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Kentaro"
+  },
+  {
+    "id": "p20:mi:2014:cc:kentaro-cape-1-ca",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:kentaro-cape-1-ca",
+    "recordKind": "family",
+    "name": {
+      "fr": "Cape +1 CA",
+      "en": null
+    },
+    "aliases": [],
+    "category": "cloak",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-kentaro",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [
+      {
+        "id": "effect-1",
+        "templateId": "p20:effect:modifier",
+        "params": {
+          "stat": "ac",
+          "value": 1,
+          "operation": "add",
+          "scope": "wearer"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Bonus de CA explicitement indiqué, aucun bonus de sauvegarde ajouté.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Kentaro"
+  },
+  {
+    "id": "p20:mi:2014:cc:kentaro-bracelet-de-force",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:kentaro-bracelet-de-force",
+    "recordKind": "family",
+    "name": {
+      "fr": "Bracelet de force",
+      "en": null
+    },
+    "aliases": [],
+    "category": "jewelry",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-kentaro",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [
+      {
+        "id": "effect-1",
+        "templateId": "p20:effect:ability-score",
+        "params": {
+          "ability": "str",
+          "operation": "add",
+          "value": 2
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "+2 Force, plafond non précisé.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "+2 Force, plafond non précisé.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Kentaro"
+  },
+  {
+    "id": "p20:mi:2014:cc:kentaro-perle-de-pouvoir",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:kentaro-perle-de-pouvoir",
+    "recordKind": "family",
+    "name": {
+      "fr": "Perle de pouvoir",
+      "en": null
+    },
+    "aliases": [],
+    "category": "wondrous",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-kentaro",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Récupération d’emplacement : modalités à confirmer pour la magie de pacte.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Récupération d’emplacement : modalités à confirmer pour la magie de pacte.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Kentaro"
+  },
+  {
+    "id": "p20:mi:2014:cc:kentaro-eponge-magique",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:kentaro-eponge-magique",
+    "recordKind": "family",
+    "name": {
+      "fr": "Éponge magique",
+      "en": null
+    },
+    "aliases": [],
+    "category": "wondrous",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-kentaro",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Effet non décrit.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Effet non décrit.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Kentaro"
+  },
+  {
+    "id": "p20:mi:2014:cc:kentaro-bague-echangeant-les-visages",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:kentaro-bague-echangeant-les-visages",
+    "recordKind": "family",
+    "name": {
+      "fr": "Bague échangeant les visages",
+      "en": null
+    },
+    "aliases": [],
+    "category": "ring",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-kentaro",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Effet, activation et durée non décrits.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Effet, activation et durée non décrits.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Kentaro"
+  },
+  {
+    "id": "p20:mi:2014:cc:kentaro-cape-anneau-et-graines-de-josiane-pichet",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:kentaro-cape-anneau-et-graines-de-josiane-pichet",
+    "recordKind": "family",
+    "name": {
+      "fr": "Cape, anneau et graines de Josiane Pichet",
+      "en": null
+    },
+    "aliases": [],
+    "category": "wondrous",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-kentaro",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Trois objets non identifiés, conservés ensemble selon la fiche.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Trois objets non identifiés, conservés ensemble selon la fiche.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Kentaro"
+  },
+  {
+    "id": "p20:mi:2014:cc:kentaro-sang-violet-de-chimere",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:kentaro-sang-violet-de-chimere",
+    "recordKind": "family",
+    "name": {
+      "fr": "Sang violet de chimère",
+      "en": null
+    },
+    "aliases": [],
+    "category": "consumable",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-kentaro",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": false,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Trois fioles ; effets non décrits.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Trois fioles ; effets non décrits."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Kentaro"
+  },
+  {
+    "id": "p20:mi:2014:cc:kentaro-tanto",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:kentaro-tanto",
+    "recordKind": "family",
+    "name": {
+      "fr": "Tanto",
+      "en": null
+    },
+    "aliases": [],
+    "category": "weapon",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-kentaro",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": false,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 1,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Deux dagues ; pas de propriété magique documentée.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Deux dagues ; pas de propriété magique documentée."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Kentaro"
+  },
+  {
+    "id": "p20:mi:2014:cc:kentaro-sac-de-bijoux",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:kentaro-sac-de-bijoux",
+    "recordKind": "family",
+    "name": {
+      "fr": "Sac de bijoux",
+      "en": null
+    },
+    "aliases": [],
+    "category": "wondrous",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-kentaro",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Contenu non détaillé.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Contenu non détaillé.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Kentaro"
+  },
+  {
+    "id": "p20:mi:2014:cc:brack-ceinturon-de-geant-des-collines",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:brack-ceinturon-de-geant-des-collines",
+    "recordKind": "family",
+    "name": {
+      "fr": "Ceinturon de géant des collines",
+      "en": null
+    },
+    "aliases": [],
+    "category": "belt",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-brack",
+        "page": 1,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": true,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [
+      {
+        "id": "effect-1",
+        "templateId": "p20:effect:ability-score",
+        "params": {
+          "ability": "str",
+          "operation": "floor",
+          "value": 21
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Valeur minimale de caractéristique, harmonisation requise.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [],
+    "mechanicsStatus": "structured",
+    "relatedIds": [],
+    "ownerLabel": "Brack"
+  },
+  {
+    "id": "p20:mi:2014:cc:brack-armure-de-plate-du-duergar",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:brack-armure-de-plate-du-duergar",
+    "recordKind": "family",
+    "name": {
+      "fr": "Armure de plate du Duergar",
+      "en": null
+    },
+    "aliases": [],
+    "category": "armor",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-brack",
+        "page": 1,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": false,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [
+      {
+        "id": "base-profile",
+        "templateId": "p20:effect:custom",
+        "params": {
+          "key": "forge:base-profile",
+          "summary": "Profil physique",
+          "payload": {
+            "kind": "armor",
+            "range": null,
+            "longRange": null,
+            "versatileDice": null,
+            "baseAC": 18,
+            "shieldBase": null,
+            "dexCap": 0,
+            "minimumStrength": null,
+            "stealthDisadvantage": true
+          },
+          "fallback": "manual"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "CA de base distincte de toute magie.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Brack"
+  },
+  {
+    "id": "p20:mi:2014:cc:brack-popa",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:brack-popa",
+    "recordKind": "family",
+    "name": {
+      "fr": "Pôpa",
+      "en": null
+    },
+    "aliases": [],
+    "category": "weapon",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-brack",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 1,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Brack"
+  },
+  {
+    "id": "p20:mi:2014:cc:brack-gorlock",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:brack-gorlock",
+    "recordKind": "family",
+    "name": {
+      "fr": "Gorlock",
+      "en": null
+    },
+    "aliases": [],
+    "category": "weapon",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-brack",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 1,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Brack"
+  },
+  {
+    "id": "p20:mi:2014:cc:brack-kamelbourktar",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:brack-kamelbourktar",
+    "recordKind": "family",
+    "name": {
+      "fr": "KamelBourktar",
+      "en": null
+    },
+    "aliases": [],
+    "category": "wondrous",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-brack",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Brack"
+  },
+  {
+    "id": "p20:mi:2014:cc:brack-baton-inamovible",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:brack-baton-inamovible",
+    "recordKind": "family",
+    "name": {
+      "fr": "Bâton inamovible",
+      "en": null
+    },
+    "aliases": [],
+    "category": "wondrous",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-brack",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Brack"
+  },
+  {
+    "id": "p20:mi:2014:cc:kentaro-sceau-d-eclipse",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:kentaro-sceau-d-eclipse",
+    "recordKind": "family",
+    "name": {
+      "fr": "Sceau d’éclipse",
+      "en": null
+    },
+    "aliases": [],
+    "category": "wondrous",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-kentaro",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": false,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": false
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [
+      {
+        "id": "sceau-d-eclipse",
+        "name": {
+          "fr": "Sceau d’éclipse",
+          "en": null
+        },
+        "activation": "unknown",
+        "costs": [],
+        "effects": [
+          {
+            "id": "sceau-d-eclipse-effect",
+            "templateId": "p20:effect:custom",
+            "params": {
+              "key": "cc:sceau-d-eclipse",
+              "summary": "Deux lames sur la même cible pendant le tour : 1d8 radiant et 1d8 psychique, avantage réservé au porteur jusqu’à la fin de son prochain tour. Nécessite un historique des touches par cible.",
+              "payload": {},
+              "fallback": "manual"
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": null,
+        "prerequisites": null
+      }
+    ],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Synergie des deux lames, pas un troisième objet équipable.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Synergie des deux lames, pas un troisième objet équipable."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Kentaro"
+  },
+  {
+    "id": "p20:mi:2014:cc:nans-cape-de-la-brise-silencieuse",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:nans-cape-de-la-brise-silencieuse",
+    "recordKind": "family",
+    "name": {
+      "fr": "Cape de la Brise Silencieuse",
+      "en": null
+    },
+    "aliases": [],
+    "category": "cloak",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-nans",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [
+      {
+        "id": "cape-de-la-brise-silencieuse",
+        "name": {
+          "fr": "Cape de la Brise Silencieuse",
+          "en": null
+        },
+        "activation": "unknown",
+        "costs": [],
+        "effects": [
+          {
+            "id": "cape-de-la-brise-silencieuse-effect",
+            "templateId": "p20:effect:custom",
+            "params": {
+              "key": "cc:cape-de-la-brise-silencieuse",
+              "summary": "Compagnon : réaction +2 CA contre une attaque à distance, 1 utilisation ; rechargement à confirmer. Action bonus : mouvements silencieux.",
+              "payload": {},
+              "fallback": "manual"
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": null,
+        "prerequisites": null
+      }
+    ],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Compagnon : réaction +2 CA contre une attaque à distance, 1 utilisation ; rechargement à confirmer. Action bonus : mouvements silencieux.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Compagnon : réaction +2 CA contre une attaque à distance, 1 utilisation ; rechargement à confirmer. Action bonus : mouvements silencieux.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Nans"
+  },
+  {
+    "id": "p20:mi:2014:cc:nans-anneau-de-la-surcharge-furieuse",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:nans-anneau-de-la-surcharge-furieuse",
+    "recordKind": "family",
+    "name": {
+      "fr": "Anneau de la Surcharge Furieuse",
+      "en": null
+    },
+    "aliases": [],
+    "category": "ring",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-nans",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [
+      {
+        "id": "anneau-de-la-surcharge-furieuse",
+        "name": {
+          "fr": "Anneau de la Surcharge Furieuse",
+          "en": null
+        },
+        "activation": "unknown",
+        "costs": [],
+        "effects": [
+          {
+            "id": "anneau-de-la-surcharge-furieuse-effect",
+            "templateId": "p20:effect:custom",
+            "params": {
+              "key": "cc:anneau-de-la-surcharge-furieuse",
+              "summary": "Compagnon : touche à deux mains +1d6, retour 1d4 force ; +1 dégâts d’arme à 62 PV ou moins. Type du d6 et seuil générique à confirmer.",
+              "payload": {},
+              "fallback": "manual"
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": null,
+        "prerequisites": null
+      }
+    ],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Compagnon : touche à deux mains +1d6, retour 1d4 force ; +1 dégâts d’arme à 62 PV ou moins. Type du d6 et seuil générique à confirmer.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Compagnon : touche à deux mains +1d6, retour 1d4 force ; +1 dégâts d’arme à 62 PV ou moins. Type du d6 et seuil générique à confirmer.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Nans"
+  },
+  {
+    "id": "p20:mi:2014:cc:rufus-armure-de-cuir",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:rufus-armure-de-cuir",
+    "recordKind": "family",
+    "name": {
+      "fr": "Armure de cuir",
+      "en": null
+    },
+    "aliases": [],
+    "category": "armor",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-rufus",
+        "page": 1,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": false,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [
+      {
+        "id": "base-profile",
+        "templateId": "p20:effect:custom",
+        "params": {
+          "key": "forge:base-profile",
+          "summary": "Profil physique",
+          "payload": {
+            "kind": "armor",
+            "range": null,
+            "longRange": null,
+            "versatileDice": null,
+            "baseAC": 11,
+            "shieldBase": null,
+            "dexCap": null,
+            "minimumStrength": null,
+            "stealthDisadvantage": false
+          },
+          "fallback": "manual"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "CA de base distincte de toute magie.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Rufus"
+  },
+  {
+    "id": "p20:mi:2014:cc:rufus-chaussons-araignee",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:rufus-chaussons-araignee",
+    "recordKind": "family",
+    "name": {
+      "fr": "Chaussons araignée",
+      "en": null
+    },
+    "aliases": [],
+    "category": "boots",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-rufus",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Marche aux murs : identification officielle et restrictions à confirmer.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Marche aux murs : identification officielle et restrictions à confirmer.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Rufus"
+  },
+  {
+    "id": "p20:mi:2014:cc:rufus-dague-spectrale",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:rufus-dague-spectrale",
+    "recordKind": "family",
+    "name": {
+      "fr": "Dague spectrale",
+      "en": null
+    },
+    "aliases": [],
+    "category": "weapon",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-rufus",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 1,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Règles à rapprocher du Compagnon.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Règles à rapprocher du Compagnon.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Rufus"
+  },
+  {
+    "id": "p20:mi:2014:cc:rufus-dague-kori",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:rufus-dague-kori",
+    "recordKind": "family",
+    "name": {
+      "fr": "Dague kori",
+      "en": null
+    },
+    "aliases": [],
+    "category": "weapon",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-rufus",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 1,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Règles non décrites.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Règles non décrites.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Rufus"
+  },
+  {
+    "id": "p20:mi:2014:cc:rufus-arbalete-duergar",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:rufus-arbalete-duergar",
+    "recordKind": "family",
+    "name": {
+      "fr": "Arbalète duergar",
+      "en": null
+    },
+    "aliases": [],
+    "category": "weapon",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-rufus",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 1,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Profil magique non décrit.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Profil magique non décrit.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Rufus"
+  },
+  {
+    "id": "p20:mi:2014:cc:rufus-collier-de-resistance-necrotique",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:rufus-collier-de-resistance-necrotique",
+    "recordKind": "family",
+    "name": {
+      "fr": "Collier de résistance nécrotique",
+      "en": null
+    },
+    "aliases": [],
+    "category": "amulet",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-rufus",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [
+      {
+        "id": "effect-1",
+        "templateId": "p20:effect:defense",
+        "params": {
+          "kind": "resistance",
+          "damageType": "necrotic",
+          "condition": null
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Résistance nécrotique explicitement indiquée.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Rufus"
+  },
+  {
+    "id": "p20:mi:2014:cc:rufus-statue-elephant",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:rufus-statue-elephant",
+    "recordKind": "family",
+    "name": {
+      "fr": "Statue éléphant",
+      "en": null
+    },
+    "aliases": [],
+    "category": "wondrous",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-rufus",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Invocation : profil de créature, durée et usages à confirmer.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Invocation : profil de créature, durée et usages à confirmer.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Rufus"
+  },
+  {
+    "id": "p20:mi:2014:cc:rufus-bague-d-echange-d-apparence",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:rufus-bague-d-echange-d-apparence",
+    "recordKind": "family",
+    "name": {
+      "fr": "Bague d’échange d’apparence",
+      "en": null
+    },
+    "aliases": [],
+    "category": "ring",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-rufus",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Transformation visuelle : modalités non décrites.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Transformation visuelle : modalités non décrites.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Rufus"
+  },
+  {
+    "id": "p20:mi:2014:cc:samoth-fiole-sanguine-2",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:samoth-fiole-sanguine-2",
+    "recordKind": "family",
+    "name": {
+      "fr": "Fiole sanguine +2",
+      "en": null
+    },
+    "aliases": [],
+    "category": "focus",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-samoth",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": true,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [
+      {
+        "id": "effect-1",
+        "templateId": "p20:effect:modifier",
+        "params": {
+          "stat": "spell-attack",
+          "value": 2,
+          "operation": "add",
+          "scope": "sorcerer-spells"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      },
+      {
+        "id": "effect-2",
+        "templateId": "p20:effect:modifier",
+        "params": {
+          "stat": "spell-save-dc",
+          "value": 2,
+          "operation": "add",
+          "scope": "sorcerer-spells"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [
+      {
+        "id": "recuperation-de-sorcellerie",
+        "name": {
+          "fr": "Récupération de sorcellerie",
+          "en": null
+        },
+        "activation": "unknown",
+        "costs": [],
+        "effects": [
+          {
+            "id": "recuperation-de-sorcellerie-effect",
+            "templateId": "p20:effect:custom",
+            "params": {
+              "key": "cc:recuperation-de-sorcellerie",
+              "summary": "Dépense de dés de vie : +5 points de sorcellerie une fois par aube, plafonnés à la réserve de classe.",
+              "payload": {},
+              "fallback": "manual"
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": null,
+        "prerequisites": null
+      }
+    ],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "PDF p.2 : +2 attaques et DD des sorts d’ensorceleur ; cinq points de sorcellerie lors de dépense de dés de vie, une fois jusqu’à l’aube.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "PDF p.2 : +2 attaques et DD des sorts d’ensorceleur ; cinq points de sorcellerie lors de dépense de dés de vie, une fois jusqu’à l’aube."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Samoth"
+  },
+  {
+    "id": "p20:mi:2014:cc:samoth-anneau-de-chaleur-constante",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:samoth-anneau-de-chaleur-constante",
+    "recordKind": "family",
+    "name": {
+      "fr": "Anneau de chaleur constante",
+      "en": null
+    },
+    "aliases": [],
+    "category": "ring",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-samoth",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [
+      {
+        "id": "effect-1",
+        "templateId": "p20:effect:defense",
+        "params": {
+          "kind": "resistance",
+          "damageType": "cold",
+          "condition": null
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "PDF p.1 : résistance au froid. Le compagnon laisse d’autres effets à confirmer.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Samoth"
+  },
+  {
+    "id": "p20:mi:2014:cc:samoth-anneau-de-transplanation-chaotique",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:samoth-anneau-de-transplanation-chaotique",
+    "recordKind": "family",
+    "name": {
+      "fr": "Anneau de transplanation chaotique",
+      "en": null
+    },
+    "aliases": [],
+    "category": "ring",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-samoth",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Effet non décrit ; Compagnon également à confirmer.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Effet non décrit ; Compagnon également à confirmer.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Samoth"
+  },
+  {
+    "id": "p20:mi:2014:cc:samoth-anneau-en-bois",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:samoth-anneau-en-bois",
+    "recordKind": "family",
+    "name": {
+      "fr": "Anneau en bois",
+      "en": null
+    },
+    "aliases": [],
+    "category": "ring",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-samoth",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [
+      {
+        "id": "regeneration-horaire",
+        "name": {
+          "fr": "Régénération horaire",
+          "en": null
+        },
+        "activation": "triggered",
+        "costs": [],
+        "effects": [
+          {
+            "id": "regeneration",
+            "templateId": "p20:effect:healing",
+            "params": {
+              "dice": "1d6"
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": "hour",
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": null,
+        "prerequisites": null
+      }
+    ],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "1d6 PV par heure, sans dépasser le maximum ; condition d’équipement à confirmer.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "1d6 PV par heure, sans dépasser le maximum ; condition d’équipement à confirmer.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Samoth"
+  },
+  {
+    "id": "p20:mi:2014:cc:samoth-broche-protectrice",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:samoth-broche-protectrice",
+    "recordKind": "family",
+    "name": {
+      "fr": "Broche protectrice",
+      "en": null
+    },
+    "aliases": [],
+    "category": "jewelry",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-samoth",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [
+      {
+        "id": "effect-1",
+        "templateId": "p20:effect:modifier",
+        "params": {
+          "stat": "ac",
+          "value": 1,
+          "operation": "add",
+          "scope": "wearer"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "PDF « Broche de merde » et Compagnon : +1 CA, pas de résistance inventée.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Samoth"
+  },
+  {
+    "id": "p20:mi:2014:cc:samoth-couronne-vestige-corrompue",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:samoth-couronne-vestige-corrompue",
+    "recordKind": "family",
+    "name": {
+      "fr": "Couronne vestige corrompue",
+      "en": null
+    },
+    "aliases": [],
+    "category": "headwear",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-samoth",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Dans le Yann ; propriétés inconnues.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Dans le Yann ; propriétés inconnues.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Samoth"
+  },
+  {
+    "id": "p20:mi:2014:cc:samoth-tapis-volant",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:samoth-tapis-volant",
+    "recordKind": "family",
+    "name": {
+      "fr": "Tapis volant",
+      "en": null
+    },
+    "aliases": [],
+    "category": "wondrous",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-samoth",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Charge 300 kg ; vitesse et dimensions non décrites.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Charge 300 kg ; vitesse et dimensions non décrites.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Samoth"
+  },
+  {
+    "id": "p20:mi:2014:cc:samoth-amulette-de-sante",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:samoth-amulette-de-sante",
+    "recordKind": "family",
+    "name": {
+      "fr": "Amulette de santé",
+      "en": null
+    },
+    "aliases": [],
+    "category": "amulet",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-samoth",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": null,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Identification officielle à confirmer avant de fixer Constitution.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Identification officielle à confirmer avant de fixer Constitution.",
+      "Harmonisation non précisée dans les sources consultées."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Samoth"
+  },
+  {
+    "id": "p20:mi:2014:cc:samoth-potion-de-soin-mineur",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:samoth-potion-de-soin-mineur",
+    "recordKind": "family",
+    "name": {
+      "fr": "Potion de soin mineur",
+      "en": null
+    },
+    "aliases": [],
+    "category": "potion",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-samoth",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": false,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Quatre exemplaires ; dés non explicités.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Quatre exemplaires ; dés non explicités."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Samoth"
+  },
+  {
+    "id": "p20:mi:2014:cc:samoth-potion-de-soin-majeur",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:samoth-potion-de-soin-majeur",
+    "recordKind": "family",
+    "name": {
+      "fr": "Potion de soin majeur",
+      "en": null
+    },
+    "aliases": [],
+    "category": "potion",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-samoth",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": false,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Un exemplaire ; dés non explicités.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Un exemplaire ; dés non explicités."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Samoth"
+  },
+  {
+    "id": "p20:mi:2014:cc:samoth-potion-de-soin-superieur",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:samoth-potion-de-soin-superieur",
+    "recordKind": "family",
+    "name": {
+      "fr": "Potion de soin supérieur",
+      "en": null
+    },
+    "aliases": [],
+    "category": "potion",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-samoth",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": false,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": false
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [
+      {
+        "id": "boire",
+        "name": {
+          "fr": "Boire",
+          "en": null
+        },
+        "activation": "action",
+        "costs": [
+          {
+            "resourceId": "dose",
+            "amount": 1,
+            "timing": "on-use"
+          }
+        ],
+        "effects": [
+          {
+            "id": "soin",
+            "templateId": "p20:effect:healing",
+            "params": {
+              "dice": "8d4+8"
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": {
+              "kind": "self",
+              "count": 1,
+              "filter": null
+            }
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": null,
+        "prerequisites": null
+      }
+    ],
+    "resources": [
+      {
+        "id": "dose",
+        "maximum": 1,
+        "unit": "uses",
+        "recovery": {
+          "event": "never",
+          "formula": null,
+          "capAtMaximum": true
+        },
+        "lastCharge": null
+      }
+    ],
+    "modes": [],
+    "description": {
+      "fr": "Un exemplaire ; 8d4+8 explicitement indiqués.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Samoth"
+  },
+  {
+    "id": "p20:mi:2014:cc:samoth-potion-d-immunite-au-froid",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:samoth-potion-d-immunite-au-froid",
+    "recordKind": "family",
+    "name": {
+      "fr": "Potion d’immunité au froid",
+      "en": null
+    },
+    "aliases": [],
+    "category": "potion",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-samoth",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": false,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Un exemplaire ; durée non précisée.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Un exemplaire ; durée non précisée."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Samoth"
+  },
+  {
+    "id": "p20:mi:2014:cc:samoth-potion-de-resistance-au-tonnerre",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:samoth-potion-de-resistance-au-tonnerre",
+    "recordKind": "family",
+    "name": {
+      "fr": "Potion de résistance au tonnerre",
+      "en": null
+    },
+    "aliases": [],
+    "category": "potion",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-samoth",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": false,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Un exemplaire ; durée non précisée.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Un exemplaire ; durée non précisée."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Samoth"
+  },
+  {
+    "id": "p20:mi:2014:cc:samoth-antivenin",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:samoth-antivenin",
+    "recordKind": "family",
+    "name": {
+      "fr": "Antivenin",
+      "en": null
+    },
+    "aliases": [],
+    "category": "consumable",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-samoth",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": false,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Un exemplaire ; identification à confirmer.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Un exemplaire ; identification à confirmer."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Samoth"
+  },
+  {
+    "id": "p20:mi:2014:cc:zephyr-cotte-de-mailles",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:zephyr-cotte-de-mailles",
+    "recordKind": "family",
+    "name": {
+      "fr": "Cotte de mailles",
+      "en": null
+    },
+    "aliases": [],
+    "category": "armor",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-zephyr",
+        "page": 1,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": false,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [
+      {
+        "id": "base-profile",
+        "templateId": "p20:effect:custom",
+        "params": {
+          "key": "forge:base-profile",
+          "summary": "Profil physique",
+          "payload": {
+            "kind": "armor",
+            "range": null,
+            "longRange": null,
+            "versatileDice": null,
+            "baseAC": 16,
+            "shieldBase": null,
+            "dexCap": 0,
+            "minimumStrength": null,
+            "stealthDisadvantage": true
+          },
+          "fallback": "manual"
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "CA de base distincte de toute magie.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Zéphyr"
+  },
+  {
+    "id": "p20:mi:2014:cc:zephyr-ceinture-de-force-de-geant-du-feu",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:zephyr-ceinture-de-force-de-geant-du-feu",
+    "recordKind": "family",
+    "name": {
+      "fr": "Ceinture de Force de géant du feu",
+      "en": null
+    },
+    "aliases": [],
+    "category": "belt",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-zephyr",
+        "page": 1,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": true,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": true
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [
+      {
+        "id": "effect-1",
+        "templateId": "p20:effect:ability-score",
+        "params": {
+          "ability": "str",
+          "operation": "floor",
+          "value": 25
+        },
+        "conditions": [],
+        "modeId": null,
+        "duration": null,
+        "trigger": null,
+        "save": null,
+        "target": null
+      }
+    ],
+    "abilities": [],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Valeur minimale de caractéristique, harmonisation requise.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [],
+    "mechanicsStatus": "structured",
+    "relatedIds": [],
+    "ownerLabel": "Zéphyr"
+  },
+  {
+    "id": "p20:mi:2014:cc:zephyr-protection-de-l-ancre-sacree",
+    "version": "1.0.0",
+    "familyId": "p20:mi:2014:cc:zephyr-protection-de-l-ancre-sacree",
+    "recordKind": "family",
+    "name": {
+      "fr": "Protection de l’Ancre Sacrée",
+      "en": null
+    },
+    "aliases": [],
+    "category": "wondrous",
+    "subcategory": null,
+    "ruleset": "dnd5e-2014",
+    "origin": "homebrew",
+    "provenance": [
+      {
+        "sourceId": "cc-zephyr",
+        "page": 2,
+        "section": "Équipement / trésors"
+      }
+    ],
+    "legal": {
+      "status": "user-provided-private",
+      "attributionId": null
+    },
+    "rarity": "unknown",
+    "baseItem": {
+      "id": null,
+      "label": null,
+      "properties": [],
+      "material": null
+    },
+    "price": null,
+    "weight": null,
+    "attunement": {
+      "required": false,
+      "prerequisites": null
+    },
+    "equipment": {
+      "slots": [],
+      "hands": 0,
+      "requiresEquipped": false
+    },
+    "traits": {
+      "cursed": false,
+      "sentient": false,
+      "evolving": false
+    },
+    "effects": [],
+    "abilities": [
+      {
+        "id": "protection-et-soin-des-allies",
+        "name": {
+          "fr": "Protection et soin des alliés",
+          "en": null
+        },
+        "activation": "unknown",
+        "costs": [],
+        "effects": [
+          {
+            "id": "protection-et-soin-des-allies-effect",
+            "templateId": "p20:effect:custom",
+            "params": {
+              "key": "cc:protection-et-soin-des-allies",
+              "summary": "Une attaque reçue divisée par deux et soins niveau + Charisme aux alliés à 9 m, une fois par jour. Le compagnon arme la prochaine attaque et dépense sans action ; PDF laisse le choix de l’attaque. Raccord d’interception nécessaire.",
+              "payload": {},
+              "fallback": "manual"
+            },
+            "conditions": [],
+            "modeId": null,
+            "duration": null,
+            "trigger": null,
+            "save": null,
+            "target": null
+          }
+        ],
+        "range": null,
+        "area": null,
+        "duration": null,
+        "save": null,
+        "prerequisites": null
+      }
+    ],
+    "resources": [],
+    "modes": [],
+    "description": {
+      "fr": "Pouvoir de campagne ; attribution à un équipement non prouvée, conservé à part.",
+      "en": null
+    },
+    "rulesNotes": [],
+    "unknowns": [
+      "Pouvoir de campagne ; attribution à un équipement non prouvée, conservé à part."
+    ],
+    "mechanicsStatus": "partial",
+    "relatedIds": [],
+    "ownerLabel": "Zéphyr"
   }
 ]

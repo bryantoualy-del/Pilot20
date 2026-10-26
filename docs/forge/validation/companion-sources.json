@@ -1,0 +1,37 @@
+[
+  {
+    "repository": "https://github.com/bryantoualy-del/RPG-Connect",
+    "commit": "204f044860ef18ef6268494236a682fa201c5202",
+    "readOnly": true
+  },
+  {
+    "repository": "https://github.com/bryantoualy-del/Brackmard",
+    "commit": "7dc3a089f25341e88c57620d711d7551214e7520",
+    "readOnly": true
+  },
+  {
+    "repository": "https://github.com/bryantoualy-del/Kentaro",
+    "commit": "5f3b3bb502f8a2577e7c044832ad8e9ba999bf00",
+    "readOnly": true
+  },
+  {
+    "repository": "https://github.com/bryantoualy-del/Nans",
+    "commit": "7cff816a99f531e037a487740305d78c48c6f275",
+    "readOnly": true
+  },
+  {
+    "repository": "https://github.com/bryantoualy-del/Rufus",
+    "commit": "96123e3edb5da36b5a4cafd89b9df124ffff50e7",
+    "readOnly": true
+  },
+  {
+    "repository": "https://github.com/bryantoualy-del/Samoth",
+    "commit": "61bf079cdf70c18e7ffd387a940f4d64ba322574",
+    "readOnly": true
+  },
+  {
+    "repository": "https://github.com/bryantoualy-del/Zephyr",
+    "commit": "597b81b3be135895f5f82e572459057021959a36",
+    "readOnly": true
+  }
+]

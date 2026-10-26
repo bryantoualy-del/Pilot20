@@ -30,7 +30,7 @@
     "benchmark:quick": "node e2e/races-quick.mjs",
     "dev:lan": "npm run build:web && node scripts/serve-web.mjs --lan",
     "test:e2e:legacy": "node e2e/run.mjs && node e2e/builder-v031.mjs && node e2e/builder-v032.mjs && node e2e/races-quick.mjs",
-    "test:forge": "node --test tests/forge.test.mjs",
+    "test:forge": "node --test tests/forge*.mjs && node scripts/forge/validation-matrix.mjs",
     "test:e2e:forge": "node e2e/forge.mjs",
     "build:forge-validator": "node scripts/build-forge-validator.mjs"
   },

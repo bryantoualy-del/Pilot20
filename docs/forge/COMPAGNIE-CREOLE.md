@@ -1,5 +1,7 @@
 # Objets tests Compagnie Créole
 
+> État historique du 25 octobre. Pour la version revue et les limites actuelles, voir [REFONTE-2026-10-26.md](REFONTE-2026-10-26.md) et sa matrice de validation.
+
 Source exclusive des propriétés : les six PDF fournis. Aucun pouvoir n’est ajouté à partir des souvenirs de conversation. Les références de page figurent dans le JSON ; les fichiers complets ne sont pas redistribués.
 
 | Personnage / objet | Encodage attesté | Incertitudes conservées |

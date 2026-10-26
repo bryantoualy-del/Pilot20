@@ -1,45 +1,8 @@
+import { conditionMet } from "./conditions.js";
+export { conditionMet } from "./conditions.js";
+import { compileCapability } from "./automation.js";
+import { diceSpec } from "../model.js";
 /** Read-only adapter: describes contributions; never mutates a character or resolves combat. */
-export function conditionMet(c, instance, context = {}) {
-  if (!c) return true;
-  switch (c.op) {
-    case "equipped":
-      return instance.equipped === true;
-    case "attuned":
-      return instance.attuned === true;
-    case "state":
-      return Object.hasOwn(context.state ?? {}, c.key)
-        ? context.state[c.key] === c.value
-        : null;
-    case "class-level":
-      return context.classes
-        ? (context.classes[c.classId] ?? 0) >= c.minimum
-        : null;
-    case "ability-minimum":
-      return context.scores?.[c.ability] === undefined
-        ? null
-        : context.scores[c.ability] >= c.minimum;
-    case "wearing-armor":
-      return context.wearingArmor ?? null;
-    case "wielding-shield":
-      return context.wieldingShield ?? null;
-    case "manual":
-      return null;
-    case "not": {
-      const v = conditionMet(c.condition, instance, context);
-      return v === null ? null : !v;
-    }
-    case "all": {
-      const v = c.conditions.map((x) => conditionMet(x, instance, context));
-      return v.includes(false) ? false : v.includes(null) ? null : true;
-    }
-    case "any": {
-      const v = c.conditions.map((x) => conditionMet(x, instance, context));
-      return v.includes(true) ? true : v.includes(null) ? null : false;
-    }
-    default:
-      return null;
-  }
-}
 export function itemSource(definition, instance, context = {}) {
   const result = {
     sourceId: instance.instanceId,
@@ -135,7 +98,9 @@ export function itemSource(definition, instance, context = {}) {
   modes.forEach((m) => m.effects.forEach(collect));
   for (const ability of definition.abilities) {
     const allowed = conditionMet(ability.prerequisites, instance, context);
+    const automation = compileCapability(definition, ability, {instance, context});
     result.actions.push({
+      automation,
       sourceId: instance.instanceId,
       ability: structuredClone(ability),
       available:
@@ -147,9 +112,7 @@ export function itemSource(definition, instance, context = {}) {
             instance.resources[c.resourceId] >= c.amount,
         ),
       manual:
-        allowed !== true ||
-        ability.activation === "unknown" ||
-        ability.effects.some((e) => e.templateId === "p20:effect:custom"),
+        automation.status !== "automatic",
     });
   }
   return result;
@@ -314,6 +277,12 @@ export function recoverResource(item, instance, resourceId, event, rolled) {
     !Number.isInteger(instance.resources[resourceId])
   )
     throw Error("Récupération incorrecte");
+  const formula = r.recovery.formula;
+  if(formula === null) throw Error("Quantité de récupération à confirmer");
+  let minimum, maximum;
+  if(/^\d+$/.test(formula)) minimum=maximum=Number(formula);
+  else {const spec=diceSpec(formula);minimum=Math.max(0,spec.count+spec.bonus);maximum=spec.count*spec.sides+spec.bonus;}
+  if(rolled<minimum || rolled>maximum) throw Error("Jet de récupération hors limites");
   const next = structuredClone(instance);
   next.resources[resourceId] = Math.min(
     r.maximum,
