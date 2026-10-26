@@ -18,6 +18,7 @@ export const LANGUAGES = [
   "primordial",
   "sylvan",
   "undercommon",
+  "oriental",
 ];
 export const POINT_COST = {
   8: 0,

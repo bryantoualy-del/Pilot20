@@ -1,3 +1,4 @@
+import {invocationOptions,selectInvocationChoice} from '../../src/creator/invocation-selection.js';
 import {capabilityList as renderCapabilityList} from './capability-list.js';
 import {selectOriginChoice} from '../../src/creator/origin-selection.js';
 import {selectBackground} from '../../src/creator/background-selection.js';
@@ -333,11 +334,21 @@ export async function renderCreator(main,input,a) {
       }else body.append(choiceList(q,values,save,{origin:true}));
     }
     if(current.kind==='class-choice'){
-      const q=current.choice;body.append(el('p',{},a.cls(q.classId)+' · '+text('level')+' '+q.level));
+      const q=current.choice.id==='warlock:invocations'?{...current.choice,options:invocationOptions(a.context,a.config,d)}:current.choice;body.append(el('p',{},a.cls(q.classId)+' · '+text('level')+' '+q.level));
       const values=q.kind==='subclass'?[d.classes.find(c=>c.id===q.classId)?.subclassId].filter(Boolean):report.selections?.[q.id]??d.selections[q.id]??[];
-      const saveChoice=values=>update(x=>{
-        if(q.kind==='subclass'){const c=x.classes.find(c=>c.id===q.classId);if(c.subclassId&&c.subclassId!==values[0])retainDecision(x,'subclass',q.classId);c.subclassId=values[0]??null;}else x.selections[q.id]=values;
-      });
+      const saveChoice=(values,replacement=null)=>{
+        const candidate=structuredClone(d);
+        const result=q.kind==='subclass'?'ok':selectInvocationChoice(candidate,q,values,a.context.index,report,replacement);
+        if(result==='replace-cantrip'){
+          a.modal(el('section',{},el('h2',{},w('Remplacer un sort mineur','Replace a cantrip')),el('p',{},w('Décharge occulte est requise. Choisissez le sort mineur à remplacer.','Eldritch Blast is required. Choose a cantrip to replace.')),
+            ...(d.selections['warlock:cantrips']??[]).map(id=>button(optionName(id,a),()=>{document.querySelector('#dialog')?.close();saveChoice(values,id);})),button(w('Annuler','Cancel'),()=>document.querySelector('#dialog')?.close())));return;
+        }
+        if(result==='required-blast'){a.notice(w('Retirez d’abord les invocations qui nécessitent Décharge occulte.','First remove invocations requiring Eldritch Blast.'));draw();return;}
+        if(result==='unavailable-blast'){a.notice(w('Décharge occulte n’est pas disponible dans vos choix de sorts mineurs.','Eldritch Blast is unavailable in your cantrip choices.'));return;}
+        return update(x=>{
+          if(q.kind==='subclass'){const c=x.classes.find(c=>c.id===q.classId);if(c.subclassId&&c.subclassId!==values[0])retainDecision(x,'subclass',q.classId);c.subclassId=values[0]??null;}else x.selections=candidate.selections;
+        }).then(()=>{if(result==='added-blast')a.notice(w('Décharge occulte ajoutée — prérequis de cette invocation.','Eldritch Blast added — required by this invocation.'));});
+      };
       if(q.kind==='asi'){
         if(!a.config.enabledOptions.includes('feats'))body.append(el('p',{},w('Les dons sont désactivés dans cette campagne. Vous pouvez les autoriser ci-dessous.','Feats are disabled for this campaign. You can enable them below.')),button(w('Autoriser les dons pour cette campagne','Enable feats for this campaign'),async()=>{const next={...a.config,revision:a.config.revision+1,enabledOptions:[...a.config.enabledOptions,'feats']};await a.campaigns.save(next,{expectedRevision:a.config.revision});await a.nav('creator',d.id);}));
         const selected=values[0]??'',isFeat=selected&&!selected.startsWith('asi:'),feats=q.options.filter(id=>!id.startsWith('asi:'));
