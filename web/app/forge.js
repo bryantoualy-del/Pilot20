@@ -1,3 +1,4 @@
+import {diceControl, numberControl} from "./forge-controls.js";
 import { el, button, field, select, check, badge, download } from "./dom.js";
 import {
   instanceOf,
@@ -395,7 +396,7 @@ export async function renderForge(root, a) {
     value,
     set,
     { number = false, min = 0, ...attrs } = {},
-  ) =>
+  ) => number ? numberControl(label,value,v=>change(()=>set(v)),{min,...attrs}) :
     field(
       label,
       el("input", {
@@ -409,6 +410,7 @@ export async function renderForge(root, a) {
         },
       }),
     );
+  const dice = (label,value,set) => diceControl(label,value,v=>change(()=>set(v)),{optional:["Quantité récupérée","Dés à deux mains (polyvalence)"].includes(label)});
   const choice = (label, options, value, set, redraw = false) =>
     field(
       label,
@@ -538,7 +540,7 @@ export async function renderForge(root, a) {
   }
   function advancedEffect(e) {
     return detail(
-      "Déclencheur, cible et durée",
+      "Options avancées : déclencheur, cible et durée",
       choice(
         "Déclencheur",
         {
@@ -749,7 +751,7 @@ export async function renderForge(root, a) {
         );
       else if (t === "damage")
         fields.push(
-          txt("Dés", "dice"),
+          dice("Dés", p.dice, v=>p.dice=v??"0"),
           sel("Type de dégâts", "damageType", {
             "": "À préciser",
             ...damageTypes,
@@ -781,7 +783,7 @@ export async function renderForge(root, a) {
           }),
           num("Valeur", "value"),
         );
-      else if (t === "healing") fields.push(txt("Dés de soins", "dice"));
+      else if (t === "healing") fields.push(dice("Dés de soins", p.dice, v=>p.dice=v??"0"));
       else if (t === "cast-spell")
         fields.push(
           sel("Sort", "spellId", {
@@ -841,7 +843,7 @@ export async function renderForge(root, a) {
         );
       else if (t === "condition")
         fields.push(
-          txt("État imposé", "condition"),
+          sel("État imposé", "condition", {prone:"À terre",blinded:"Aveuglé",charmed:"Charmé",frightened:"Effrayé",poisoned:"Empoisonné",stunned:"Étourdi",restrained:"Entravé",grappled:"Agrippé",invisible:"Invisible",incapacitated:"Neutralisé",paralyzed:"Paralysé",petrified:"Pétrifié",deafened:"Assourdi",unconscious:"Inconscient","next-attack-disadvantage":"Désavantage à la prochaine attaque",...(!["prone","blinded","charmed","frightened","poisoned","stunned","restrained","grappled","invisible","incapacitated","paralyzed","petrified","deafened","unconscious","next-attack-disadvantage"].includes(p.condition)?{[p.condition]:"État du modèle conservé"}:{})}),
           sel("Opération", "operation", {
             apply: "Appliquer",
             remove: "Retirer",
@@ -1000,7 +1002,7 @@ export async function renderForge(root, a) {
         },true));
         if(b.activation==="triggered"||e.trigger&&e.trigger!=="on-hit")box.append(choice("Quand ?",triggerLabels,e.trigger??"",v=>e.trigger=v));
       }
-      box.append(grid(input(t==="damage"?"Dés de dégâts":"Dés de soins",p.dice,v=>p.dice=v),t==="damage"?choice("Type de dégâts",damageTypes,p.damageType,v=>p.damageType=v):null),
+      box.append(grid(dice(t==="damage"?"Dés de dégâts":"Dés de soins",p.dice,v=>p.dice=v??"0"),t==="damage"?choice("Type de dégâts",damageTypes,p.damageType,v=>p.damageType=v):null),
         choice("Qui reçoit cet effet ?",{self:"Le porteur",creature:"La cible choisie"},e.target?.kind??"creature",v=>e.target={kind:v,count:1,filter:null}),
         saveEditor(e.save?e:b),detail("Conditions détaillées",advancedEffect(e)),remove(b.effects,e));
     }
@@ -1384,7 +1386,7 @@ export async function renderForge(root, a) {
                 (v) => (p.longRange = v),
                 { number: true },
               ),
-              input(
+              dice(
                 "Dés à deux mains (polyvalence)",
                 p.versatileDice,
                 (v) => (p.versatileDice = v || null),
@@ -1510,7 +1512,7 @@ export async function renderForge(root, a) {
                 r.recovery.event,
                 (v) => (r.recovery.event = v),
               ),
-              input(
+              dice(
                 "Quantité récupérée",
                 r.recovery.formula,
                 (v) => (r.recovery.formula = v || null),
@@ -1543,7 +1545,7 @@ export async function renderForge(root, a) {
           b.costs.length>1?el("p",{class:"muted"},"Plusieurs réserves : détails dans Coût, portée et limites."):choice("Réserve consommée",{"":"Aucune",...Object.fromEntries(d.resources.map((r,i)=>[r.id,`Réserve ${i+1} (${r.maximum})`]))},b.costs.length===1?b.costs[0].resourceId:"",v=>b.costs=v?[{resourceId:v,amount:1,timing:"on-use"}]:[],true),
           b.costs.length===1?input("Coût en charges / utilisations",b.costs[0].amount,v=>b.costs[0].amount=v,{number:true,min:1}):null,
         );
-        const advanced = detail("Coût, portée et limites");
+        const advanced = detail("Options avancées : coût, portée et limites");
         for (const c of b.costs)
           advanced.append(
             grid(
@@ -1657,12 +1659,10 @@ export async function renderForge(root, a) {
         power.append(advanced, remove(d.abilities, b));
         editor.append(power);
       }
-      let kind = "damage";
-      editor.append(el("div", {class:"forge-add"},
-        select(entries(capabilityKinds), kind, e=>kind=e.target.value, {"aria-label":"Type de capacité"}),
-        button("Ajouter une capacité",()=>change(()=>{
+      editor.append(el("h2",{},"Ajouter un pouvoir"),el("div", {class:"forge-power-picker"},
+        ...entries(capabilityKinds).map(([kind,label])=>button(label,()=>change(()=>{
           const b=guidedAbility(kind); d.abilities.push(b); openSections.add(b.name.fr);
-        },true),"primary")));
+        },true)))));
 
     }
   }

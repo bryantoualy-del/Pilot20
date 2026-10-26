@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-10-26",
   "itemCount": 54,
-  "scenarioCount": 85,
+  "scenarioCount": 104,
   "rows": [
     {
       "owner": "Brack",
@@ -205,7 +205,9 @@
         "combat": {
           "version": 1,
           "mode": "automatic",
-          "requirements": [],
+          "requirements": [
+            "Sélection géométrique des cibles de zone à relier à Encounter."
+          ],
           "ongoing": []
         },
         "resource": {
@@ -567,8 +569,7 @@
       "blockers": [
         "Activation à préciser.",
         "Harmonisation à confirmer pour cet objet.",
-        "Conséquence du JdS réussi à préciser.",
-        "État et conséquences de jeu"
+        "Conséquence du JdS réussi à préciser."
       ],
       "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
     },
@@ -669,8 +670,7 @@
       ],
       "status": "À compléter",
       "blockers": [
-        "Harmonisation à confirmer pour cet objet.",
-        "Transformation et recalcul du profil"
+        "Harmonisation à confirmer pour cet objet."
       ],
       "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
     },
@@ -699,8 +699,7 @@
       ],
       "status": "À compléter",
       "blockers": [
-        "Harmonisation à confirmer pour cet objet.",
-        "Transformation et recalcul du profil"
+        "Harmonisation à confirmer pour cet objet."
       ],
       "scope": "Dés fixés à 1 ; cible CA15 / sauvegarde 1 ; moteur execute réel"
     },
@@ -2297,6 +2296,253 @@
         "Sélection géométrique des cibles de zone à relier à Encounter."
       ],
       "scope": "Résolution réelle sur une cible sélectionnée ; géométrie non résolue"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "Encounter host resolves pinned intent with authoritative dice and persisted charge, reconnect returns current private view without reroll",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "Encounter host rejects forged identity, client damage, stale generation/revision and colliding intent IDs",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "Encounter host emits no ACK on storage failure and concurrent intentions commit only once",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "authoritative aura resolves off turn after owner ended: no action, typed defenses, replay after reconnect",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "authoritative trigger fails closed on authority, player spoof, geometry, stale turn, target and invalid roll",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "recovery at dawn uses pinned dice, caps, validates and deduplicates independently of envelope",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "Volto mechanics: atomic bonus-action switch, AC recomputation, form-gated attack and no mode stacking",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "partial capabilities cannot execute in real combat even if their individual dice preview works",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "event frequency handles untargeted rests, multiple targets and distinct weapon requirement",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "eclipse requires two real weapon hits in own turn; mark benefits only its source and expires",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "next-attack disadvantage survives turns, applies once even on miss, and succeeds/fails saves",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "trigger receipts and effects persist atomically under concurrent commits and storage failure",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "existing executable spell contracts retain saves and consume item charges instead of slots",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "legacy network capabilities do not falsely certify a universal Forge connection",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "trigger results cross the existing presentation boundary without private receipts or duplicate FX",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "automatic damage continues through a persisted reaction without spending owner action or repeating the trigger",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "two blade hits completed after reactions qualify for the seal; provisional hits changed to misses do not",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "temporary typed defenses apply once, expire, and restore underlying defenses without mutating definitions",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
+    },
+    {
+      "owner": "Moteur universel",
+      "item": "Contrat Forge / combat",
+      "capability": "source-scoped next attack disadvantage does not penalize allies and is spent on a missed attack against its source",
+      "expected": "Toutes les assertions du scénario passent",
+      "calculated": null,
+      "observed": "PASS",
+      "status": "Validé (scénario moteur isolé)",
+      "blockers": [
+        "Ne certifie ni la géométrie ni le raccordement au serveur live"
+      ],
+      "scope": "tests/forge-runtime-integration.test.mjs et tests/forge-encounter-host.test.mjs ; valeurs synthétiques et arbitrages de test explicités dans chaque scénario"
     }
   ]
 }

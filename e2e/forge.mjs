@@ -59,15 +59,20 @@ try {
     .getByRole("button", { name: "Ajouter le profil de dégâts", exact: true })
     .click();
   await p.locator(".forge-effects summary").first().click();
-  await p.getByLabel("Dés", { exact: true }).fill("1d10");
-  await p.getByLabel("Bonus magique").fill("1");
+  await p.getByLabel("Dés · Dé", { exact: true }).selectOption("10");
+  await p.getByLabel("Bonus magique",{exact:true}).fill("1");
   await p.getByRole("button", {name:"Réserves",exact:true}).click();
   await p.getByRole("button", {name:"Ajouter une réserve",exact:true}).click();
-  await p.getByLabel("Réserve maximale").fill("10");
+  await p.getByLabel("Réserve maximale",{exact:true}).fill("10");
+  await p.getByLabel("Quantité récupérée · Calcul").selectOption("dice");
+  await p.getByLabel("Quantité récupérée · Dé",{exact:true}).selectOption("4");
+  await p.getByLabel("Quantité récupérée · Bonus",{exact:true}).fill("1");
   await p.getByRole("button", {name:"Capacités",exact:true}).click();
-  await p.getByLabel("Type de capacité",{exact:true}).selectOption("damage");
-  await p.getByRole("button", {name:"Ajouter une capacité",exact:true}).click();
+  await p.locator(".forge-power-picker").getByRole("button", {name:"Infliger des dégâts",exact:true}).click();
   await p.getByLabel("Nom du pouvoir").fill("Souffle de test");
+  await p.getByLabel("Dés de dégâts · Nombre",{exact:true}).fill("2");
+  await p.getByLabel("Dés de dégâts · Dé",{exact:true}).selectOption("8");
+  await p.getByRole("button",{name:"Augmenter · Dés de dégâts · Bonus",exact:true}).click();
   await p.getByRole("button", {name:"Simuler",exact:true}).click();
   await p.getByRole("button", {name:"Lancer la simulation",exact:true}).click();
   await p.locator(".forge-simulation").getByText(/Dégâts :/).waitFor();
@@ -93,6 +98,9 @@ try {
   const file = await download.path(),
     exported = JSON.parse(await fs.readFile(file, "utf8"));
   assert.equal(exported.items[0].definition.name.fr, "Lame de test");
+  assert.equal(exported.items[0].definition.effects.find(e=>e.params.role==="weapon-base").params.dice,"1d10");
+  assert.equal(exported.items[0].definition.resources[0].recovery.formula,"1d4+1");
+  assert.equal(exported.items[0].definition.abilities[0].effects[0].params.dice,"2d8+1");
   for(const stat of ["attack","damage"]){const rows=exported.items[0].definition.effects.filter(e=>e.templateId==="p20:effect:modifier"&&e.params.stat===stat);assert.equal(rows.length,1);assert.equal(rows[0].params.value,1);}
 
   await p.getByRole("button", { name: "Dupliquer", exact: true }).click();

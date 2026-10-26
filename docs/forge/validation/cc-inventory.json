@@ -1,0 +1,741 @@
+{
+  "itemCount": 54,
+  "items": [
+    {
+      "id": "p20:mi:2014:cc:pyromerlin",
+      "owner": "Brack",
+      "name": "PyroMerlin",
+      "version": "1.1.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Rarity not documented.",
+        "Price and weight not documented.",
+        "Moment de récupération du souffle, conditions de la résistance et intensité lumineuse non précisés.",
+        "1d10 indiqué : prise à deux mains ou règle propre non précisée.",
+        "Contribution transmise ; interprétation par le module destinataire",
+        "Sélection géométrique des cibles de zone à relier à Encounter.",
+        "Prérequis non satisfait dans ce contexte.",
+        "Condition à arbitrer manuellement.",
+        "Conditions évaluées dans le contexte du porteur ; routage à relier.",
+        "Abonnement au déclencheur Début du tour de la cible non relié.",
+        "Activation à préciser.",
+        "Pouvoir personnalisé"
+      ],
+      "evidenceCount": 9
+    },
+    {
+      "id": "p20:mi:2014:cc:kane",
+      "owner": "Kentaro",
+      "name": "Kane",
+      "version": "1.0.0",
+      "status": "Partiellement automatisé",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Rarity not documented.",
+        "Price and weight not documented.",
+        "Type et activation des 2d6.",
+        "Nature exacte du lien.",
+        "Contribution transmise ; interprétation par le module destinataire",
+        "Type de dégâts inconnu"
+      ],
+      "evidenceCount": 4
+    },
+    {
+      "id": "p20:mi:2014:cc:solinar",
+      "owner": "Kentaro",
+      "name": "Solinar",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Rarity not documented.",
+        "Price and weight not documented.",
+        "Type d’arme, type du d8 et bonus magique non documentés.",
+        "Déclencheur, cible et fin exacte de l’effet non précisés.",
+        "Type de dégâts inconnu",
+        "Contribution transmise ; interprétation par le module destinataire",
+        "Activation à préciser.",
+        "Harmonisation à confirmer pour cet objet.",
+        "Conséquence du JdS réussi à préciser.",
+        "État et conséquences de jeu"
+      ],
+      "evidenceCount": 3
+    },
+    {
+      "id": "p20:mi:2014:cc:selhane",
+      "owner": "Kentaro",
+      "name": "Sélhane",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Rarity not documented.",
+        "Price and weight not documented.",
+        "Type d’arme, type du d8 et bonus magique non documentés.",
+        "Déclencheur, cible et fin exacte de l’effet non précisés.",
+        "Type de dégâts inconnu",
+        "Contribution transmise ; interprétation par le module destinataire",
+        "Activation à préciser.",
+        "Harmonisation à confirmer pour cet objet.",
+        "Conséquence du JdS réussi à préciser."
+      ],
+      "evidenceCount": 3
+    },
+    {
+      "id": "p20:mi:2014:cc:volto-fendoir",
+      "owner": "Nans",
+      "name": "Volto-Fendoir",
+      "version": "1.1.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Rarity not documented.",
+        "Price and weight not documented.",
+        "Le +1 de la décomposition d’attaque n’est pas attribué explicitement à l’objet.",
+        "Le +8 aux dégâts est un total de personnage, pas un bonus magique.",
+        "Contribution transmise ; interprétation par le module destinataire",
+        "Harmonisation à confirmer pour cet objet."
+      ],
+      "evidenceCount": 5
+    },
+    {
+      "id": "p20:mi:2014:cc:hexen-blade",
+      "owner": "Rufus",
+      "name": "Hexen Blade",
+      "version": "1.1.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Poids, prix, restrictions d’harmonisation et comportement à la dernière charge non documentés.",
+        "Temps d’activation, concentration et autres modalités des sorts à confirmer ; ne pas les importer implicitement.",
+        "Contribution transmise ; interprétation par le module destinataire",
+        "Activation à préciser.",
+        "Résolution du sort référencé"
+      ],
+      "evidenceCount": 6
+    },
+    {
+      "id": "p20:mi:2014:cc:baton-givre-confluence",
+      "owner": "Samoth",
+      "name": "Bâton Givre confluence",
+      "version": "1.1.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Rarity not documented.",
+        "Price and weight not documented.",
+        "Le +1 magique : attaques d’arme, attaques de sorts, DD ou plusieurs ?",
+        "Mains et Vortex ne sont pas des références de sort résolues.",
+        "Moment de récupération non précisé.",
+        "Aucun autre sort ni coût ajouté depuis les souvenirs de conversation.",
+        "Arbitrer version PDF / Companion avant activation automatique des pouvoirs du bâton.",
+        "Activation à préciser.",
+        "Harmonisation à confirmer pour cet objet.",
+        "Pouvoir personnalisé"
+      ],
+      "evidenceCount": 2
+    },
+    {
+      "id": "p20:mi:2014:cc:bouclier-magique-3",
+      "owner": "Zéphyr",
+      "name": "Bouclier magique +3",
+      "version": "1.0.0",
+      "status": "Partiellement automatisé",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Rarity not documented.",
+        "Price and weight not documented.",
+        "Harmonisation non indiquée dans la fiche."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:kentaro-demi-plate",
+      "owner": "Kentaro",
+      "name": "Demi-plate",
+      "version": "1.0.0",
+      "status": "Partiellement automatisé",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Résolution manuelle"
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:kentaro-anneau-de-stockage",
+      "owner": "Kentaro",
+      "name": "Anneau de stockage",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Stocke cinq niveaux de sorts ; contenu et modalités de lancement à renseigner.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:kentaro-bague-de-feuille-morte",
+      "owner": "Kentaro",
+      "name": "Bague de feuille morte",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Liée dans la fiche ; déclenchement et effet de chute à relier.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:kentaro-cape-1-ca",
+      "owner": "Kentaro",
+      "name": "Cape +1 CA",
+      "version": "1.0.0",
+      "status": "Partiellement automatisé",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:kentaro-bracelet-de-force",
+      "owner": "Kentaro",
+      "name": "Bracelet de force",
+      "version": "1.0.0",
+      "status": "Partiellement automatisé",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "+2 Force, plafond non précisé.",
+        "Harmonisation non précisée dans les sources consultées.",
+        "Valeur fixée ou plafond à arbitrer avec les autres sources"
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:kentaro-perle-de-pouvoir",
+      "owner": "Kentaro",
+      "name": "Perle de pouvoir",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Récupération d’emplacement : modalités à confirmer pour la magie de pacte.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:kentaro-eponge-magique",
+      "owner": "Kentaro",
+      "name": "Éponge magique",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Effet non décrit.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:kentaro-bague-echangeant-les-visages",
+      "owner": "Kentaro",
+      "name": "Bague échangeant les visages",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Effet, activation et durée non décrits.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:kentaro-cape-anneau-et-graines-de-josiane-pichet",
+      "owner": "Kentaro",
+      "name": "Cape, anneau et graines de Josiane Pichet",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Trois objets non identifiés, conservés ensemble selon la fiche.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:kentaro-sang-violet-de-chimere",
+      "owner": "Kentaro",
+      "name": "Sang violet de chimère",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Trois fioles ; effets non décrits."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:kentaro-tanto",
+      "owner": "Kentaro",
+      "name": "Tanto",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Deux dagues ; pas de propriété magique documentée."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:kentaro-sac-de-bijoux",
+      "owner": "Kentaro",
+      "name": "Sac de bijoux",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Contenu non détaillé.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:brack-ceinturon-de-geant-des-collines",
+      "owner": "Brack",
+      "name": "Ceinturon de géant des collines",
+      "version": "1.0.0",
+      "status": "Automatique (contributions isolées)",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:brack-armure-de-plate-du-duergar",
+      "owner": "Brack",
+      "name": "Armure de plate du Duergar",
+      "version": "1.0.0",
+      "status": "Partiellement automatisé",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Résolution manuelle"
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:brack-popa",
+      "owner": "Brack",
+      "name": "Pôpa",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:brack-gorlock",
+      "owner": "Brack",
+      "name": "Gorlock",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:brack-kamelbourktar",
+      "owner": "Brack",
+      "name": "KamelBourktar",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:brack-baton-inamovible",
+      "owner": "Brack",
+      "name": "Bâton inamovible",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Fiche : objet présent ; distinguer profil propre et totaux du personnage avant automatisation.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:kentaro-sceau-d-eclipse",
+      "owner": "Kentaro",
+      "name": "Sceau d’éclipse",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Synergie des deux lames, pas un troisième objet équipable.",
+        "Activation à préciser.",
+        "Pouvoir personnalisé"
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:nans-cape-de-la-brise-silencieuse",
+      "owner": "Nans",
+      "name": "Cape de la Brise Silencieuse",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Compagnon : réaction +2 CA contre une attaque à distance, 1 utilisation ; rechargement à confirmer. Action bonus : mouvements silencieux.",
+        "Harmonisation non précisée dans les sources consultées.",
+        "Activation à préciser.",
+        "Harmonisation à confirmer pour cet objet.",
+        "Pouvoir personnalisé"
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:nans-anneau-de-la-surcharge-furieuse",
+      "owner": "Nans",
+      "name": "Anneau de la Surcharge Furieuse",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Compagnon : touche à deux mains +1d6, retour 1d4 force ; +1 dégâts d’arme à 62 PV ou moins. Type du d6 et seuil générique à confirmer.",
+        "Harmonisation non précisée dans les sources consultées.",
+        "Activation à préciser.",
+        "Harmonisation à confirmer pour cet objet.",
+        "Pouvoir personnalisé"
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:rufus-armure-de-cuir",
+      "owner": "Rufus",
+      "name": "Armure de cuir",
+      "version": "1.0.0",
+      "status": "Partiellement automatisé",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Résolution manuelle"
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:rufus-chaussons-araignee",
+      "owner": "Rufus",
+      "name": "Chaussons araignée",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Marche aux murs : identification officielle et restrictions à confirmer.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:rufus-dague-spectrale",
+      "owner": "Rufus",
+      "name": "Dague spectrale",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Règles à rapprocher du Compagnon.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:rufus-dague-kori",
+      "owner": "Rufus",
+      "name": "Dague kori",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Règles non décrites.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:rufus-arbalete-duergar",
+      "owner": "Rufus",
+      "name": "Arbalète duergar",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Profil magique non décrit.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:rufus-collier-de-resistance-necrotique",
+      "owner": "Rufus",
+      "name": "Collier de résistance nécrotique",
+      "version": "1.0.0",
+      "status": "Partiellement automatisé",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:rufus-statue-elephant",
+      "owner": "Rufus",
+      "name": "Statue éléphant",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Invocation : profil de créature, durée et usages à confirmer.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:rufus-bague-d-echange-d-apparence",
+      "owner": "Rufus",
+      "name": "Bague d’échange d’apparence",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Transformation visuelle : modalités non décrites.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:samoth-fiole-sanguine-2",
+      "owner": "Samoth",
+      "name": "Fiole sanguine +2",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "PDF p.2 : +2 attaques et DD des sorts d’ensorceleur ; cinq points de sorcellerie lors de dépense de dés de vie, une fois jusqu’à l’aube.",
+        "Activation à préciser.",
+        "Pouvoir personnalisé"
+      ],
+      "evidenceCount": 3
+    },
+    {
+      "id": "p20:mi:2014:cc:samoth-anneau-de-chaleur-constante",
+      "owner": "Samoth",
+      "name": "Anneau de chaleur constante",
+      "version": "1.0.0",
+      "status": "Partiellement automatisé",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:samoth-anneau-de-transplanation-chaotique",
+      "owner": "Samoth",
+      "name": "Anneau de transplanation chaotique",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Effet non décrit ; Compagnon également à confirmer.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:samoth-anneau-en-bois",
+      "owner": "Samoth",
+      "name": "Anneau en bois",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "1d6 PV par heure, sans dépasser le maximum ; condition d’équipement à confirmer.",
+        "Harmonisation non précisée dans les sources consultées.",
+        "Harmonisation à confirmer pour cet objet.",
+        "Déclencheur non reconnu : hour",
+        "Abonnement au déclencheur hour non relié."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:samoth-broche-protectrice",
+      "owner": "Samoth",
+      "name": "Broche protectrice",
+      "version": "1.0.0",
+      "status": "Partiellement automatisé",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:samoth-couronne-vestige-corrompue",
+      "owner": "Samoth",
+      "name": "Couronne vestige corrompue",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Dans le Yann ; propriétés inconnues.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:samoth-tapis-volant",
+      "owner": "Samoth",
+      "name": "Tapis volant",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Charge 300 kg ; vitesse et dimensions non décrites.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:samoth-amulette-de-sante",
+      "owner": "Samoth",
+      "name": "Amulette de santé",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Identification officielle à confirmer avant de fixer Constitution.",
+        "Harmonisation non précisée dans les sources consultées."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:samoth-potion-de-soin-mineur",
+      "owner": "Samoth",
+      "name": "Potion de soin mineur",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Quatre exemplaires ; dés non explicités."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:samoth-potion-de-soin-majeur",
+      "owner": "Samoth",
+      "name": "Potion de soin majeur",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Un exemplaire ; dés non explicités."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:samoth-potion-de-soin-superieur",
+      "owner": "Samoth",
+      "name": "Potion de soin supérieur",
+      "version": "1.0.0",
+      "status": "Automatique (contributions isolées)",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:samoth-potion-d-immunite-au-froid",
+      "owner": "Samoth",
+      "name": "Potion d’immunité au froid",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Un exemplaire ; durée non précisée."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:samoth-potion-de-resistance-au-tonnerre",
+      "owner": "Samoth",
+      "name": "Potion de résistance au tonnerre",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Un exemplaire ; durée non précisée."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:samoth-antivenin",
+      "owner": "Samoth",
+      "name": "Antivenin",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Un exemplaire ; identification à confirmer."
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:zephyr-cotte-de-mailles",
+      "owner": "Zéphyr",
+      "name": "Cotte de mailles",
+      "version": "1.0.0",
+      "status": "Partiellement automatisé",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Résolution manuelle"
+      ],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:zephyr-ceinture-de-force-de-geant-du-feu",
+      "owner": "Zéphyr",
+      "name": "Ceinture de Force de géant du feu",
+      "version": "1.0.0",
+      "status": "Automatique (contributions isolées)",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [],
+      "evidenceCount": 1
+    },
+    {
+      "id": "p20:mi:2014:cc:zephyr-protection-de-l-ancre-sacree",
+      "owner": "Zéphyr",
+      "name": "Protection de l’Ancre Sacrée",
+      "version": "1.0.0",
+      "status": "À compléter",
+      "liveStatus": "Non raccordé au protocole universel Forge",
+      "blockers": [
+        "Pouvoir de campagne ; attribution à un équipement non prouvée, conservé à part.",
+        "Activation à préciser.",
+        "Pouvoir personnalisé"
+      ],
+      "evidenceCount": 1
+    }
+  ]
+}

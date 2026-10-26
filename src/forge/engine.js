@@ -104,6 +104,7 @@ export function itemSource(definition, instance, context = {}) {
       sourceId: instance.instanceId,
       ability: structuredClone(ability),
       available:
+        automation.status === 'automatic' &&
         allowed === true &&
         ability.activation !== "unknown" &&
         ability.costs.every(
