@@ -53,9 +53,10 @@ try{
  const after=await p.evaluate(async()=>{const{openIndexedDB}=await import('/src/persistence/adapters.js'),s=await openIndexedDB(),record=await s.get('characters','compact-wizard');s.close();return record.definition;});assert.deepEqual(after,before);
  await p.reload();await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();await p.locator('article').filter({has:p.getByRole('heading',{name:'Compact wizard',exact:true})}).getByRole('button',{name:'Ouvrir',exact:true}).click();await p.locator('.sheet-tabs button[aria-pressed=true]').waitFor();assert.equal(await p.locator('.sheet-tabs button[aria-pressed=true]').innerText(),'Sorts');await p.locator('.grimoire').waitFor();
  assert.equal(await p.getByRole('button',{name:'Niveau 1',exact:true}).getAttribute('aria-pressed'),'true');
- await p.locator('.sheet-tabs').getByRole('button',{name:'Capacités',exact:true}).click();await p.locator('.sheet-simulation summary').click();await p.getByText('Équipement Forge · prochaine session',{exact:true}).click();
+ await p.locator('.sheet-tabs').getByRole('button',{name:'Capacités',exact:true}).click();await p.locator('.sheet-simulation > summary').click();await p.getByText('Équipement Forge · prochaine session',{exact:true}).click();
  await p.getByLabel('Marteau de recette',{exact:true}).check();await p.getByLabel('Maniement · Marteau de recette',{exact:true}).selectOption('2');
  await p.getByRole('button',{name:'Nouvelle séance de démonstration',exact:true}).click();await p.getByText('PV, CA et ressources : simulation locale active.',{exact:true}).waitFor();
+ await p.locator('.sheet-simulation > summary').click();
  await p.getByRole('heading',{name:'Attaquer avec Marteau de recette',exact:true}).waitFor();
  const action=p.locator('.ability').filter({has:p.getByRole('heading',{name:'Attaquer avec Marteau de recette',exact:true})});
  await action.getByRole('button').last().click();await p.locator('#dialog[open]').waitFor();await p.keyboard.press('Escape');
