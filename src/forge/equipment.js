@@ -54,7 +54,7 @@ export function profileSummary(item){
 /** Character values are resolved at session/use time, never stored in an item. */
 export function weaponContext(item,context={}){
  const explicit=baseProfile(item)?.params.payload,w=WEAPONS[resolveSubtype(item)];
- const p=explicit??(w?{proficiency:w.proficiency,weaponCategory:w.category,ranged:w.ranged}:null);
+ const p={...(w?{proficiency:w.proficiency,weaponCategory:w.category,ranged:w.ranged}:{}),...explicit};
  const props=explicit?item.baseItem.properties:[...new Set([...item.baseItem.properties,...(w?.properties??[])])];
  const hands=context.hands??item.equipment.hands;
  if(context.distance!=null&&(explicit?.longRange??explicit?.range)!=null&&context.distance>(explicit.longRange??explicit.range))throw Error('Cible hors de portée.');
@@ -69,7 +69,8 @@ export function weaponContext(item,context={}){
  const ability=override??(props.includes('finesse')?(scores.dex>scores.str?'dex':'str'):p?.ranged||props.includes('ranged')?'dex':'str');
  if(!Number.isFinite(scores[ability]))throw Error('Caractéristique du porteur manquante.');
  const mod=Math.floor((scores[ability]-10)/2),profs=context.proficiencies??[];
- const proficient=context.proficient??(profs.includes(p?.proficiency)||profs.includes((p?.weaponCategory??(props.includes('martial')?'martial':'simple'))+'-weapons'));
+ const category=p.weaponCategory??(props.includes('martial')?'martial':props.includes('simple')?'simple':null);
+ const proficient=context.proficient??(profs.includes(p.proficiency)||category!==null&&profs.includes(category+'-weapons'));
  const proficiencyBonus=context.proficiencyBonus??(context.level?2+Math.floor((context.level-1)/4):null);
  if(proficient&&!Number.isFinite(proficiencyBonus))throw Error('Bonus de maîtrise du porteur manquant.');
  return {...context,weaponTraits:{...weaponTraits,strength:ability==='str'},attackAbility:ability,attackBonus:mod+(proficient?proficiencyBonus:0)+(context.extraAttackBonus??0),damageBonus:mod+(context.extraDamageBonus??0)};

@@ -104,3 +104,6 @@ test('equipped shield prevents a two-handed Forge weapon from entering the execu
  assert.equal(gear.definition.abilities[wi.instanceId+':weapon-attack'],undefined);assert.ok(gear.diagnostics.some(d=>d.reason?.includes('Mains')));
  const blade=make('longsword');assert.throws(()=>weaponCapability(blade,worn(blade),{...ctx,distance:3}),/portée/);
 });
+test('a custom weapon with unspecified training does not invent simple-weapon proficiency',()=>{
+ const d=newItem();const c=weaponContext(d,ctx);assert.equal(c.attackBonus,5);
+});
