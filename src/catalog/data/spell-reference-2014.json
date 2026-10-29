@@ -18324,5 +18324,278 @@
     },
     "detailUrl": "https://www.aidedd.org/dnd/sorts.php?vf=zone-de-verite",
     "semanticReviewComplete": false
+  },
+  {
+    "id": "fizban:spell:rimes-binding-ice",
+    "name": {
+      "fr": "Entraves de givre",
+      "en": "Rime’s Binding Ice"
+    },
+    "aliases": [
+      "Entraves de givre",
+      "Rime's Binding Ice",
+      "Entrave de givre"
+    ],
+    "sourceIds": [
+      "fizban"
+    ],
+    "references": [
+      {
+        "sourceId": "fizban",
+        "pages": []
+      }
+    ],
+    "level": 2,
+    "schoolFr": "évocation",
+    "classIds": [
+      "sorcerer",
+      "wizard"
+    ],
+    "optionalTashaClassIds": [],
+    "casting": {
+      "time": "1 action",
+      "range": "personnelle (cône de 9 mètres)",
+      "duration": "instantanée",
+      "components": "S, M",
+      "material": "fiole d’eau de fonte",
+      "concentration": false,
+      "ritual": false
+    },
+    "detailUrl": "https://www.aidedd.org/dnd/sorts.php?vf=entraves-de-givre",
+    "semanticReviewComplete": false
+  },
+  {
+    "id": "fizban:spell:nathairs-mischief",
+    "name": {
+      "fr": "Espièglerie de Nathair",
+      "en": "Nathair’s Mischief"
+    },
+    "aliases": [
+      "Espièglerie de Nathair",
+      "Nathair's Mischief"
+    ],
+    "sourceIds": [
+      "fizban"
+    ],
+    "references": [
+      {
+        "sourceId": "fizban",
+        "pages": []
+      }
+    ],
+    "level": 2,
+    "schoolFr": "illusion",
+    "classIds": [
+      "bard",
+      "sorcerer",
+      "wizard"
+    ],
+    "optionalTashaClassIds": [],
+    "casting": {
+      "time": "1 action",
+      "range": "18 mètres",
+      "duration": "concentration, jusqu’à 1 minute",
+      "components": "S, M",
+      "material": "croûte de tarte aux pommes",
+      "concentration": true,
+      "ritual": false
+    },
+    "detailUrl": "https://www.aidedd.org/dnd/sorts.php?vf=espieglerie-de-nathair",
+    "semanticReviewComplete": false
+  },
+  {
+    "id": "fizban:spell:ashardalons-stride",
+    "name": {
+      "fr": "Foulée d’Ashardalon",
+      "en": "Ashardalon’s Stride"
+    },
+    "aliases": [
+      "Foulée d'Ashardalon",
+      "Ashardalon's Stride"
+    ],
+    "sourceIds": [
+      "fizban"
+    ],
+    "references": [
+      {
+        "sourceId": "fizban",
+        "pages": []
+      }
+    ],
+    "level": 3,
+    "schoolFr": "transmutation",
+    "classIds": [
+      "sorcerer",
+      "wizard",
+      "ranger"
+    ],
+    "optionalTashaClassIds": [],
+    "casting": {
+      "time": "1 action bonus",
+      "range": "personnelle",
+      "duration": "concentration, jusqu’à 1 minute",
+      "components": "V, S",
+      "material": null,
+      "concentration": true,
+      "ritual": false
+    },
+    "detailUrl": "https://www.aidedd.org/dnd/sorts.php?vf=foulee-d-ashardalon",
+    "semanticReviewComplete": false
+  },
+  {
+    "id": "fizban:spell:raulothims-psychic-lance",
+    "name": {
+      "fr": "Lance d’arçon psychique de Raulothim",
+      "en": "Raulothim’s Psychic Lance"
+    },
+    "aliases": [
+      "Lance d'arçon psychique de Raulothim",
+      "Raulothim's Psychic Lance"
+    ],
+    "sourceIds": [
+      "fizban"
+    ],
+    "references": [
+      {
+        "sourceId": "fizban",
+        "pages": []
+      }
+    ],
+    "level": 4,
+    "schoolFr": "enchantement",
+    "classIds": [
+      "bard",
+      "sorcerer",
+      "wizard",
+      "warlock"
+    ],
+    "optionalTashaClassIds": [],
+    "casting": {
+      "time": "1 action",
+      "range": "36 mètres",
+      "duration": "instantanée",
+      "components": "V",
+      "material": null,
+      "concentration": false,
+      "ritual": false
+    },
+    "detailUrl": "https://www.aidedd.org/dnd/sorts.php?vf=lance-d-arcon-psychique-de-raulothim",
+    "semanticReviewComplete": false
+  },
+  {
+    "id": "fizban:spell:summon-draconic-spirit",
+    "name": {
+      "fr": "Convocation d’esprit draconique",
+      "en": "Summon Draconic Spirit"
+    },
+    "aliases": [
+      "Convocation d'esprit draconique",
+      "Summon Draconic Spirit"
+    ],
+    "sourceIds": [
+      "fizban"
+    ],
+    "references": [
+      {
+        "sourceId": "fizban",
+        "pages": []
+      }
+    ],
+    "level": 5,
+    "schoolFr": "invocation",
+    "classIds": [
+      "druid",
+      "sorcerer",
+      "wizard"
+    ],
+    "optionalTashaClassIds": [],
+    "casting": {
+      "time": "1 action",
+      "range": "18 mètres",
+      "duration": "concentration, jusqu’à 1 heure",
+      "components": "V, S, M",
+      "material": "objet portant une représentation gravée de dragon, valeur minimale 500 po (non consommé)",
+      "concentration": true,
+      "ritual": false
+    },
+    "detailUrl": "https://www.aidedd.org/dnd/sorts.php?vf=convocation-d-esprit-draconique",
+    "semanticReviewComplete": false
+  },
+  {
+    "id": "fizban:spell:fizbans-platinum-shield",
+    "name": {
+      "fr": "Bouclier de platine de Fizban",
+      "en": "Fizban’s Platinum Shield"
+    },
+    "aliases": [
+      "Bouclier de platine de Fizban",
+      "Fizban's Platinum Shield"
+    ],
+    "sourceIds": [
+      "fizban"
+    ],
+    "references": [
+      {
+        "sourceId": "fizban",
+        "pages": []
+      }
+    ],
+    "level": 6,
+    "schoolFr": "abjuration",
+    "classIds": [
+      "sorcerer",
+      "wizard"
+    ],
+    "optionalTashaClassIds": [],
+    "casting": {
+      "time": "1 action bonus",
+      "range": "18 mètres",
+      "duration": "concentration, jusqu’à 1 minute",
+      "components": "V, S, M",
+      "material": "écaille de dragon plaquée de platine, valeur minimale 500 po (non consommée)",
+      "concentration": true,
+      "ritual": false
+    },
+    "detailUrl": "https://www.aidedd.org/dnd/sorts.php?vf=bouclier-de-platine-de-fizban",
+    "semanticReviewComplete": false
+  },
+  {
+    "id": "fizban:spell:draconic-transformation",
+    "name": {
+      "fr": "Transformation draconique",
+      "en": "Draconic Transformation"
+    },
+    "aliases": [
+      "Transformation draconique",
+      "Draconic Transformation"
+    ],
+    "sourceIds": [
+      "fizban"
+    ],
+    "references": [
+      {
+        "sourceId": "fizban",
+        "pages": []
+      }
+    ],
+    "level": 7,
+    "schoolFr": "transmutation",
+    "classIds": [
+      "druid",
+      "sorcerer",
+      "wizard"
+    ],
+    "optionalTashaClassIds": [],
+    "casting": {
+      "time": "1 action bonus",
+      "range": "personnelle (cône de 18 mètres)",
+      "duration": "concentration, jusqu’à 1 minute",
+      "components": "V, S, M",
+      "material": "statuette de dragon, valeur minimale 500 po (non consommée)",
+      "concentration": true,
+      "ritual": false
+    },
+    "detailUrl": "https://www.aidedd.org/dnd/sorts.php?vf=transformation-draconique",
+    "semanticReviewComplete": false
   }
 ]
