@@ -1,3 +1,5 @@
+import {forgeRepository} from '../../src/forge/repository.js';
+import {forgeParticipant} from '../../src/forge/character-loadout.js';
 import {resourceLabel} from './resource-labels.js';
 import {characterSheet} from './character-sheet.js';
 import { derive } from "../../src/character/derive.js";
@@ -23,6 +25,7 @@ export async function renderCompanion(main, id, a) {
       ? validateSavedPlan(a.context, draft).valid
       : d.features.every((id) => a.context.index.get(id));
   const repo = combatRepository(a.storage);
+  const forgeRows=await forgeRepository(a.storage).list(),forgeSelection=new Set(),forgeSettings={};
   let sessionId = await a.storage.get("meta", "creator:preview:" + id),
     session = sessionId ? await repo.load(sessionId) : null;
   if (session && session.participants.hero.definitionRevision !== d.revision)
@@ -35,7 +38,7 @@ export async function renderCompanion(main, id, a) {
     a.name(a.context.installed.get(ability.combat?.spell?.id ?? ability.id)) ||
     ability.name;
   const automation = (ability) =>
-    ability.combat?.mode === "manual"
+    ability.combat?.mode === "automatic" && !ability.combat.requirements?.length ? "automatic" : ability.combat?.mode === "manual"
       ? "manual"
       : (a.context.installed.get(ability.combat?.spell?.id ?? ability.id)?.data
           .automation.status ?? "partial");
@@ -48,7 +51,7 @@ export async function renderCompanion(main, id, a) {
     partner.reactiveRules = [];
     partner.castingModifiers = [];
     const initial = createCombat(crypto.randomUUID(), [
-      { instanceId: "hero", character: d },
+      forgeSelection.size?forgeParticipant(d,forgeRows.filter(r=>forgeSelection.has(r.definition.id)).map(r=>r.definition),forgeSettings):{ instanceId: 'hero', character: d },
       { instanceId: "partner", character: partner },
     ]);
     session = await repo.create(initial);
@@ -80,7 +83,7 @@ export async function renderCompanion(main, id, a) {
   }
   function draw() {
     const runtime = session?.engine.actors.hero,
-      abilities = d.abilities,
+      abilities = runtime?Object.entries(runtime.definition.abilities).map(([id,ability])=>({...ability,id})):d.abilities,
       fr = a.state.locale === "fr";
     const left = el("section", {},
       el("h2", {}, t("actions")),
@@ -179,6 +182,16 @@ export async function renderCompanion(main, id, a) {
           : null,
       ),
     );
+    if(forgeRows.length){
+      const equipment=el('details',{},el('summary',{},'Équipement Forge · prochaine session'),el('p',{},'Les objets choisis remplacent les armes, armures ou boucliers ordinaires de même type dans cette session uniquement. Démarrer une nouvelle session recharge les ressources.'));
+      for(const {definition:item} of forgeRows){
+        const config=forgeSettings[item.id]??={attuned:false,hands:item.equipment.hands??1};
+        equipment.append(check(item.name.fr,forgeSelection.has(item.id),e=>e.target.checked?forgeSelection.add(item.id):forgeSelection.delete(item.id)));
+        if(item.attunement.required!==false)equipment.append(check('Harmonisé · '+item.name.fr,config.attuned,e=>config.attuned=e.target.checked));
+        if(['weapon','staff'].includes(item.category))equipment.append(field('Maniement · '+item.name.fr,select([['1','Une main'],['2','Deux mains']],String(config.hands),e=>config.hands=Number(e.target.value))),field('Caractéristique · '+item.name.fr,select([['','Automatique'],['str','Force'],['dex','Dextérité'],['cha','Charisme (aptitude requise)']],config.attackAbility??'',e=>config.attackAbility=e.target.value)));
+      }
+      right.append(equipment);
+    }
     if (session) {
       const pending = session.engine.actors.hero.advanced?.pendingManual;
       if (pending)

@@ -1,3 +1,4 @@
+import {subtypes,resolveSubtype,applySubtype,hasBaseMechanics,profileSummary,propertyLabels,slotLabels,magicModifiers,setMagicBonus} from '../../src/forge/equipment.js';
 import {diceControl, numberControl} from "./forge-controls.js";
 import { el, button, field, select, check, badge, download } from "./dom.js";
 import {
@@ -290,7 +291,7 @@ export async function renderForge(root, a) {
     if (d.baseItem.label) preview.append(el("p", {}, d.baseItem.label));
     if (d.baseItem.properties.length)
       preview.append(
-        el("p", { class: "muted" }, d.baseItem.properties.join(" · ")),
+        el("p", { class: "muted" }, d.baseItem.properties.map(x=>propertyLabels[x]??x).join(" · ")),
       );
     for (const e of d.effects)
       preview.append(el("p", { class: "forge-stat" }, describe(e)));
@@ -388,6 +389,7 @@ export async function renderForge(root, a) {
   const change = (fn, redraw = false) => {
     fn();
     save();
+    for(const node of editor.querySelectorAll('[data-profile-summary]'))node.replaceChildren(...profileSummary(current.definition).map(t=>el('li',{},t)));
     if (redraw) drawEditor();
     else for(const node of editor.querySelectorAll("[data-capability-status]")){const b=current.definition.abilities.find(x=>x.id===node.dataset.capabilityStatus);if(b)node.textContent=compileCapability(current.definition,b).label+" ⓘ";}
   };
@@ -1028,6 +1030,29 @@ export async function renderForge(root, a) {
       button("Lancer la simulation",()=>{const out=simulateCapability(current.definition,b,opts); result.replaceChildren(...out.timeline.map(line=>el("li",{},line)));}),result);
     a.modal(panel);
   }
+  function multiChoices(label,values,labels) {
+    const group=detail(label);
+    for(const [id,name] of Object.entries({...Object.fromEntries(values.map(v=>[v,v])),...labels}))group.append(check(name,values.includes(id),e=>change(()=>{if(e.target.checked){if(!values.includes(id))values.push(id);}else values.splice(values.indexOf(id),1);} )));
+    const custom=el('input',{type:'text',placeholder:'Propriété personnalisée'});
+    group.append(field('Ajouter une valeur personnalisée',custom),button('Ajouter',()=>{const v=custom.value.trim();if(v&&!values.includes(v))change(()=>values.push(v),true);}));
+    return group;
+  }
+  function subtypePicker(d){
+    const selected=d.subcategory===null&&d.baseItem.id===null?null:resolveSubtype(d),choices=subtypes(d.category);
+    const pick=select([['','Autre / personnalisé'],...entries(choices)],selected??'',e=>{
+      const id=e.target.value;
+      if(!id){change(()=>{d.subcategory=null;d.baseItem.id=null;},true);return;}
+      const apply=()=>change(()=>applySubtype(d,id,{replace:true}),true);
+      if(hasBaseMechanics(d)||d.baseItem.properties.length){
+        a.modal(el('section',{},el('h2',{},'Remplacer le profil de base ?'),el('p',{},'Les dés de base et propriétés physiques seront remplacés. Vos enchantements, pouvoirs, charges et formes sont conservés.'),button('Remplacer le profil',e=>{apply();e.currentTarget.closest('dialog')?.close();})));
+        pick.value=selected??'';
+      }else apply();
+    });
+    const root=el('div',{},field('Sous-type',pick));
+    if(entries(choices).length>8)root.prepend(field('Rechercher un sous-type',el('input',{type:'search',oninput:e=>{const q=e.target.value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();const selectedValue=pick.value;pick.replaceChildren(...[['','Autre / personnalisé'],...entries(choices).filter(([id,label])=>id===selectedValue||label.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(q))].map(([id,label])=>el('option',{value:id},label)));pick.value=selectedValue;}})));
+    if(!selected)root.append(input('Sous-type personnalisé',d.subcategory,v=>d.subcategory=v||null));
+    return root;
+  }
   async function drawEditor() {
     editor.replaceChildren();
     queueMicrotask(() => {
@@ -1163,7 +1188,7 @@ export async function renderForge(root, a) {
         }),
         info(
           "Compatibilité Compagnon",
-          "L’objet exporte les définitions et pouvoirs du catalogue. Les effets ne sont pas appliqués aux personnages dans cette version.",
+          "L’objet exporte les définitions et pouvoirs du catalogue. Le moteur de session accepte ces objets via son contrat Forge ; l’équipement depuis la fiche reste à raccorder.",
         ),
       );
       return;
@@ -1176,10 +1201,14 @@ export async function renderForge(root, a) {
             "Type d’objet",
             categories,
             d.category,
-            (v) => (d.category = v),
+            (v) => {
+              const update=()=>change(()=>{d.category=v;d.subcategory=null;d.baseItem={...d.baseItem,id:null,label:null,properties:[]};d.effects=d.effects.filter(e=>e.params.role!=='weapon-base'&&e.params.key!=='forge:base-profile');d.equipment.hands=['weapon','shield','staff','wand'].includes(v)?1:0;d.equipment.slots=[];},true);
+              if(hasBaseMechanics(d))a.modal(el('section',{},el('h2',{},'Changer de type d’objet ?'),el('p',{},'Le profil de base sera retiré. Les pouvoirs, ressources et effets magiques sont conservés ; vérifiez leur compatibilité dans les réglages avancés.'),button('Changer le type',e=>{update();e.currentTarget.closest('dialog')?.close();})));
+              else update();
+            },
             true,
           ),
-          input("Sous-type", d.subcategory, (v) => (d.subcategory = v || null)),
+          subtypePicker(d),
           choice("Rareté", rarities, d.rarity, (v) => (d.rarity = v)),
         ),
         choice(
@@ -1249,35 +1278,24 @@ export async function renderForge(root, a) {
       );
     }
     if (tab === "Propriétés") {
-      if(["weapon","armor","shield","ammunition","staff"].includes(d.category)) {
-        const stats=["weapon","ammunition","staff"].includes(d.category)?["attack","damage"]:["ac"];
-        const scope=stats.length===2?"this-weapon":"wearer";
-        const modifiers=d.effects.filter(e=>e.templateId==="p20:effect:modifier" && stats.includes(e.params.stat) && e.params.scope===scope && e.params.operation==="add" && !e.trigger && !e.duration && !e.modeId && !e.conditions.length);
-        editor.append(el("h2",{},"Modifications magiques"),input("Bonus magique",modifiers[0]?.params.value??0,v=>{
-          for(const stat of stats){
-            const found=modifiers.filter(e=>e.params.stat===stat);
-            if(found.length>1)throw Error("Plusieurs bonus distincts : utilisez les propriétés détaillées.");
-            if(found[0])found[0].params.value=v;
-            else {const e=effect("modifier",{stat,operation:"add",scope,value:v});d.effects.push(e);modifiers.push(e);}
-          }
-        },{number:true,min:0,max:10}),el("p",{class:"muted"},"Le bonus magique est ajouté une seule fois, séparément du profil de base."));
+      editor.append(el('h2',{},'Caractéristiques'));
+      const summary=el('ul',{'data-profile-summary':''},profileSummary(d).map(t=>el('li',{},t)));
+      editor.append(summary);
+      const advanced=detail('Réglages avancés');
+      if(['weapon','armor','shield','ammunition','staff'].includes(d.category)){
+        const rows=magicModifiers(d),value=rows[0]?.params.value??0;
+        const set=v=>{try{setMagicBonus(d,v);summary.replaceChildren(...profileSummary(d).map(t=>el('li',{},t)));}catch(e){a.fail(e);}};
+        editor.append(value<=3?input('Bonus magique',value,set,{number:true,min:0,max:3}):el('p',{},'Bonus extraordinaire : +'+value+' (réglages avancés)'),info('Bonus magique','Ce bonus ne comprend ni la caractéristique ni la maîtrise du porteur.'));
+        advanced.append(input('Bonus magique extraordinaire',value,set,{number:true,min:0,max:20}));
       }
-      editor.append(
+      advanced.append(
         grid(
           input(
             "Objet de base",
             d.baseItem.label,
             (v) => (d.baseItem.label = v || null),
           ),
-          input(
-            "Propriétés de maniement / physiques",
-            d.baseItem.properties.join(", "),
-            (v) =>
-              (d.baseItem.properties = v
-                .split(",")
-                .map((x) => x.trim())
-                .filter(Boolean)),
-          ),
+          multiChoices('Propriétés de maniement / physiques',d.baseItem.properties,propertyLabels),
         ),
         grid(
           choice(
@@ -1291,15 +1309,7 @@ export async function renderForge(root, a) {
             d.equipment.hands ?? "unknown",
             (v) => (d.equipment.hands = v === "unknown" ? null : Number(v)),
           ),
-          input(
-            "Emplacements (séparés par une virgule)",
-            d.equipment.slots.join(", "),
-            (v) =>
-              (d.equipment.slots = v
-                .split(",")
-                .map((x) => x.trim())
-                .filter(Boolean)),
-          ),
+          multiChoices('Emplacements d’équipement',d.equipment.slots,slotLabels),
         ),
         choice(
           "Condition d’équipement",
@@ -1315,13 +1325,8 @@ export async function renderForge(root, a) {
         ),
       );
       if (["weapon", "ammunition", "staff"].includes(d.category))
-        editor.append(
-          button("Simuler l’attaque de l’arme",()=>{try{
-            const instance={...instanceOf(d,"source"),equipped:true,attuned:true};
-            const built=weaponCapability(d,instance,{attackBonus:7,damageBonus:4});
-            simulator(built.ability,{...built.context,instance});
-          }catch(error){a.fail(error);}}),
-          button("Ajouter le profil de dégâts", () =>
+        advanced.append(
+          button("Créer un profil de dégâts personnalisé", () =>
             change(() => {
               if (
                 !d.effects.some(
@@ -1331,8 +1336,8 @@ export async function renderForge(root, a) {
                 )
               ) {
                 const e = effect("damage", {
-                  dice: "1d8",
-                  damageType: "slashing",
+                  dice: "0",
+                  damageType: null,
                   role: "weapon-base",
                 });
                 e.trigger = "on-hit";
@@ -1342,11 +1347,11 @@ export async function renderForge(root, a) {
           ),
           info(
             "Profil de l’arme",
-            "Les dés de base sont distincts des dégâts supplémentaires. La portée et la polyvalence peuvent être définies dans les propriétés ou par des configurations séparées.",
+            "Les dés de base sont distincts des dégâts supplémentaires. Les restrictions de portée, de munitions et de chargement nécessitent le contexte du combat ; les situations spéciales restent à arbitrer.",
           ),
         );
       if (d.category === "shield")
-        editor.append(
+        advanced.append(
           el(
             "p",
             { class: "forge-hint" },
@@ -1354,7 +1359,7 @@ export async function renderForge(root, a) {
           ),
         );
       if (d.category === "armor")
-        editor.append(
+        advanced.append(
           info(
             "Profil d’armure",
             "La CA de base se définit comme une valeur fixée ; le bonus magique comme une addition distincte. Les restrictions restent des conditions explicites.",
@@ -1367,7 +1372,7 @@ export async function renderForge(root, a) {
         )
       ) {
         if (!profile)
-          editor.append(
+          advanced.append(
             button("Préciser le profil physique", () =>
               change(() => addBaseProfile(d), true),
             ),
@@ -1425,13 +1430,22 @@ export async function renderForge(root, a) {
                 { number: true },
               ),
             );
-          editor.append(detail("Profil physique", grid(...controls)));
+          advanced.append(detail("Profil physique", grid(...controls)));
         }
       }
-      editor.append(
+      advanced.append(
         el("h2", {}, "Dégâts de base et propriétés"),
         effectsEditor(d.effects),
       );
+      editor.append(advanced);
+      let testHands=d.equipment.hands??1;
+      if(['weapon','staff'].includes(d.category))editor.append(detail('Tester mon objet',field('Maniement pour le test',select([['1','Une main'],['2','Deux mains']],String(testHands),e=>testHands=Number(e.target.value))),el('p',{class:'muted'},'Exemple de porteur : bonus d’attaque +7, bonus de dégâts +4 avant magie.'),
+          button("Simuler l’attaque de l’arme",()=>{try{
+            const instance={...instanceOf(d,"source"),equipped:true,attuned:true};
+            const built=weaponCapability(d,instance,{attackBonus:7,damageBonus:4,hands:testHands});
+            simulator(built.ability,{...built.context,instance});
+          }catch(error){a.fail(error);}}),
+      ));
       const modes = detail(
         "Configurations et formes",
         el(
@@ -1450,15 +1464,7 @@ export async function renderForge(root, a) {
               m.exclusiveGroup,
               (v) => (m.exclusiveGroup = v || null),
             ),
-            input(
-              "Propriétés de cette forme",
-              m.properties.join(", "),
-              (v) =>
-                (m.properties = v
-                  .split(",")
-                  .map((x) => x.trim())
-                  .filter(Boolean)),
-            ),
+            multiChoices('Propriétés de cette forme',m.properties,propertyLabels),
             effectsEditor(m.effects),
             remove(d.modes, m),
           ),
@@ -1479,7 +1485,7 @@ export async function renderForge(root, a) {
           ),
         ),
       );
-      editor.append(modes);
+      advanced.append(modes);
     }
     if (tab === "Réserves" || tab === "Capacités") {
       const resources = detail(
