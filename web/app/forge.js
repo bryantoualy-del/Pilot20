@@ -1285,7 +1285,7 @@ export async function renderForge(root, a) {
       if(['weapon','armor','shield','ammunition','staff'].includes(d.category)){
         const rows=magicModifiers(d),value=rows[0]?.params.value??0;
         const set=v=>{try{setMagicBonus(d,v);summary.replaceChildren(...profileSummary(d).map(t=>el('li',{},t)));}catch(e){a.fail(e);}};
-        editor.append(value<=3?input('Bonus magique',value,set,{number:true,min:0,max:3}):el('p',{},'Bonus extraordinaire : +'+value+' (réglages avancés)'),info('Bonus magique','Ce bonus ne comprend ni la caractéristique ni la maîtrise du porteur.'));
+        editor.append(value<=3?input('Bonus magique',value,set,{number:true,min:0,max:3}):el('p',{},'Bonus extraordinaire : +'+value+' (réglages avancés)'),info('Comprendre le bonus magique','Ce bonus ne comprend ni la caractéristique ni la maîtrise du porteur.'));
         advanced.append(input('Bonus magique extraordinaire',value,set,{number:true,min:0,max:20}));
       }
       advanced.append(

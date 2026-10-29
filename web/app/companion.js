@@ -17,7 +17,10 @@ export async function renderCompanion(main, id, a) {
     await a.nav("library");
     return;
   }
-  const resourceName = (key) => resourceLabel(key, a, record.definition);
+  const resourceName = (key) => {
+    const power=Object.values(session?.engine.actors.hero.definition.abilities??{}).find(b=>b.resource?.id===key);
+    return power&&!Object.hasOwn(stats.resources,key)?power.name+' · charges':resourceLabel(key,a,record.definition);
+  };
   const d = record.definition,
     stats = derive(d),
     draft = await a.drafts.get(id),
