@@ -9,6 +9,7 @@ export function prepareForgeActor(base,entries,context={}) {
   const definition=structuredClone(base),resources={},forms=[],diagnostics=[];
   const seen=new Set(),sources=[];
   let shields=0,shieldBase=0,armors=0;
+  const shieldHeld=entries.some(({definition:d,instance:i})=>d.category==='shield'&&i.equipped&&i.active!==false&&!i.consumed&&i.quantity>0);
   for(const {definition:item,instance} of entries){
     assertItem(item);
     if(seen.has(instance.instanceId))throw Error('Duplicate item instance');seen.add(instance.instanceId);
@@ -33,7 +34,7 @@ export function prepareForgeActor(base,entries,context={}) {
     for(const mode of item.modes.length?item.modes:[null]){
       try{
         const i={...instance,modeIds:mode?[mode.id]:instance.modeIds};
-        const w=weaponCapability(item,i,{...context,...context.itemContexts?.[item.id]});w.ability.id=mode?'weapon-'+mode.id:'weapon-attack';
+        const w=weaponCapability(item,i,{availableHands:shieldHeld?1:2,...context,...context.itemContexts?.[item.id]});w.ability.id=mode?'weapon-'+mode.id:'weapon-attack';
         // Eligibility is checked for this candidate mode; the engine checks active form at use.
         candidates.push({...w,instance:i});
       }catch(e){if(item.category==='weapon')diagnostics.push({id:item.id,reason:e.message});}

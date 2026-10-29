@@ -11,5 +11,5 @@ export function forgeParticipant(character,items,settings={}) {
   itemContexts[definition.id]={...(config.hands?{hands:config.hands}:{}),...(config.attackAbility?{attackAbility:config.attackAbility}:{})};
   return {definition:structuredClone(definition),instance:{...instanceOf(definition,'hero'),equipped:true,attuned:config.attuned===true}};
  });
- return {instanceId:'hero',character:base,forgeItems,forgeBaseStatistics:true,forgeContext:{itemContexts}};
+ return {instanceId:'hero',character:base,forgeItems,forgeBaseStatistics:true,forgeContext:{itemContexts,...(base.equipment.some(e=>e.kind==='shield'&&e.equipped)?{availableHands:1}:{})}};
 }

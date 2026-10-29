@@ -98,3 +98,9 @@ test('selected Forge weapon reaches Companion runtime with wearer stats and surv
  const out=executeCombat(combat,{id:'hit',type:'useAbility',actorId:'hero',abilityId:id,targetIds:['target'],attackRolls:[19],effectRolls:{0:[6]}});
  assert.ok(out.result.hit);assert.equal(runtimeOf(validateCombat(JSON.parse(JSON.stringify(out.state))),'hero').economy.action,false);
 });
+test('equipped shield prevents a two-handed Forge weapon from entering the executable loadout',()=>{
+ const weapon=make('greatsword'),shield=make('shield','shield'),wi=worn(weapon);
+ const gear=prepareForgeActor(actor('source'),[{definition:weapon,instance:wi},{definition:shield,instance:worn(shield)}],ctx);
+ assert.equal(gear.definition.abilities[wi.instanceId+':weapon-attack'],undefined);assert.ok(gear.diagnostics.some(d=>d.reason?.includes('Mains')));
+ const blade=make('longsword');assert.throws(()=>weaponCapability(blade,worn(blade),{...ctx,distance:3}),/portée/);
+});

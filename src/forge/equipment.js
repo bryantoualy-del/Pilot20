@@ -57,7 +57,7 @@ export function weaponContext(item,context={}){
  const p=explicit??(w?{proficiency:w.proficiency,weaponCategory:w.category,ranged:w.ranged}:null);
  const props=explicit?item.baseItem.properties:[...new Set([...item.baseItem.properties,...(w?.properties??[])])];
  const hands=context.hands??item.equipment.hands;
- if(context.distance!=null&&explicit?.longRange!=null&&context.distance>explicit.longRange)throw Error('Cible hors de portée.');
+ if(context.distance!=null&&(explicit?.longRange??explicit?.range)!=null&&context.distance>(explicit.longRange??explicit.range))throw Error('Cible hors de portée.');
  if(props.includes('ammunition')&&context.ammunitionAvailable===false)throw Error('Munitions indisponibles.');
  if(props.includes('loading')&&context.loadingAttackSpent===true)throw Error('Chargement : une seule attaque par action, action bonus ou réaction.');
  if(props.includes('two-handed')&&hands!==2)throw Error('Cette arme exige deux mains.');
