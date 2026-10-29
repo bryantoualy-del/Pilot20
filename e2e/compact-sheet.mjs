@@ -14,7 +14,10 @@ try{
   const{playerCatalogs}=await import('/src/catalog/player-catalogs.js'),{campaignRepository}=await import('/src/campaign/repository.js'),{characterLibrary}=await import('/src/persistence/library.js'),{creatorRepository}=await import('/src/creator/repository.js'),{newDraft,suggestChoices,compileDraft}=await import('/src/creator/model.js');
   const lib=characterLibrary(s),repo=creatorRepository(s,lib),campaigns=campaignRepository(s,playerCatalogs),config=await campaigns.initialize(),ctx=await campaigns.context(config);
   let d=Object.assign(newDraft('default','compact-wizard'),{name:'Compact wizard',classChosen:true,raceId:'srd51:race:half-elf',backgroundId:'srd51:background:acolyte',classes:[{id:'wizard',level:3,subclassId:ctx.index.class('wizard').data.subclassIds[0]}],startingEquipmentEnabled:true});
-  d=suggestChoices(ctx,config,d);d.confirmed=d.reviewed=true;await repo.save(d);const result=compileDraft(ctx,config,d);if(!result.valid)throw Error(JSON.stringify(result.issues));await repo.finalize(d,result.character,{expectedDraftRevision:1,spellbook:result.spellbook});s.close();return result.character;
+  d=suggestChoices(ctx,config,d);d.confirmed=d.reviewed=true;await repo.save(d);const result=compileDraft(ctx,config,d);if(!result.valid)throw Error(JSON.stringify(result.issues));await repo.finalize(d,result.character,{expectedDraftRevision:1,spellbook:result.spellbook});
+  const {newItem}=await import('/src/forge/model.js'),{applySubtype,setMagicBonus}=await import('/src/forge/equipment.js'),{forgeRepository}=await import('/src/forge/repository.js');
+  const hammer=applySubtype(newItem('weapon'),'warhammer');hammer.name.fr='Marteau de recette';setMagicBonus(hammer,1);await forgeRepository(s).save(hammer);
+  s.close();return result.character;
  });
  await p.reload();await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();
  await p.locator('article').filter({has:p.getByRole('heading',{name:'Compact wizard',exact:true})}).getByRole('button',{name:'Ouvrir',exact:true}).click();
@@ -50,6 +53,13 @@ try{
  const after=await p.evaluate(async()=>{const{openIndexedDB}=await import('/src/persistence/adapters.js'),s=await openIndexedDB(),record=await s.get('characters','compact-wizard');s.close();return record.definition;});assert.deepEqual(after,before);
  await p.reload();await p.locator('header').getByRole('button',{name:'Mes persos',exact:true}).click();await p.locator('article').filter({has:p.getByRole('heading',{name:'Compact wizard',exact:true})}).getByRole('button',{name:'Ouvrir',exact:true}).click();await p.locator('.sheet-tabs button[aria-pressed=true]').waitFor();assert.equal(await p.locator('.sheet-tabs button[aria-pressed=true]').innerText(),'Sorts');await p.locator('.grimoire').waitFor();
  assert.equal(await p.getByRole('button',{name:'Niveau 1',exact:true}).getAttribute('aria-pressed'),'true');
- await p.locator('.sheet-tabs').getByRole('button',{name:'Capacités',exact:true}).click();await p.locator('.sheet-simulation summary').click();await p.getByRole('button',{name:'Nouvelle séance de démonstration',exact:true}).click();await p.getByText('PV et ressources : simulation locale active.',{exact:true}).waitFor();
+ await p.locator('.sheet-tabs').getByRole('button',{name:'Capacités',exact:true}).click();await p.locator('.sheet-simulation > summary').click();await p.getByText('Équipement Forge · prochaine session',{exact:true}).click();
+ await p.getByLabel('Marteau de recette',{exact:true}).check();await p.getByLabel('Maniement · Marteau de recette',{exact:true}).selectOption('2');
+ await p.getByRole('button',{name:'Nouvelle séance de démonstration',exact:true}).click();await p.getByText('PV, CA et ressources : simulation locale active.',{exact:true}).waitFor();
+ await p.locator('.sheet-simulation > summary').click();
+ await p.getByRole('heading',{name:'Attaquer avec Marteau de recette',exact:true}).waitFor();
+ const action=p.locator('.ability').filter({has:p.getByRole('heading',{name:'Attaquer avec Marteau de recette',exact:true})});
+ await action.getByRole('button').last().click();await p.locator('#dialog[open]').waitFor();await p.keyboard.press('Escape');
+ const unchanged=await p.evaluate(async()=>{const{openIndexedDB}=await import('/src/persistence/adapters.js'),s=await openIndexedDB(),r=await s.get('characters','compact-wizard');s.close();return r.definition;});assert.deepEqual(unchanged,before);
  assert.deepEqual(errors,[]);console.log('Compact sheet passed: real derived stats, five tabs, proficiency filtering, embedded spellbook, levels, details, persisted view, unchanged character, four widths.');
 }finally{if(browser)await browser.close();server.kill();}

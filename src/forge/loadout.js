@@ -4,11 +4,12 @@
 import {validateDefinition} from '../model.js';
 import {compileCapability,weaponCapability} from './automation.js';
 import {itemSource,resolvePassive} from './engine.js';
-import {assertItem} from './model.js';
+import {assertItem,baseProfile} from './model.js';
 export function prepareForgeActor(base,entries,context={}) {
   const definition=structuredClone(base),resources={},forms=[],diagnostics=[];
   const seen=new Set(),sources=[];
-  let shields=0;
+  let shields=0,shieldBase=0,armors=0;
+  const shieldHeld=entries.some(({definition:d,instance:i})=>d.category==='shield'&&i.equipped&&i.active!==false&&!i.consumed&&i.quantity>0);
   for(const {definition:item,instance} of entries){
     assertItem(item);
     if(seen.has(instance.instanceId))throw Error('Duplicate item instance');seen.add(instance.instanceId);
@@ -16,13 +17,24 @@ export function prepareForgeActor(base,entries,context={}) {
     const source=itemSource(item,instance,context);
     const prefix=instance.instanceId+':';
     sources.push({...source,contributions:source.contributions.filter(c=>!c.effect.modeId)});
-    if(item.category==='shield' && instance.equipped && instance.active!==false && !instance.consumed && instance.quantity>0)shields++;
+    const physical=baseProfile(item)?.params.payload;
+    const worn=instance.equipped&&instance.active!==false&&!instance.consumed&&instance.quantity>0&&instance.definitionId===item.id&&instance.definitionVersion===item.version;
+    if(item.category==='shield'&&worn){shields++;shieldBase+=physical?.shieldBase??2;}
+    if(item.category==='armor'&&worn&&physical?.baseAC!=null){
+      if(++armors>1)throw Error('Only one armor may contribute');
+      const dex=context.scores?.dex;
+      if(physical.dexCap!==0&&!Number.isFinite(dex))throw Error('Dextérité requise pour la CA');
+      const modifier=physical.dexCap===0?0:Math.floor((dex-10)/2);
+      definition.ac=physical.baseAC+(physical.dexCap==null?modifier:Math.min(modifier,physical.dexCap));
+      if(physical.minimumStrength&&(!Number.isFinite(context.scores?.str)||context.scores.str<physical.minimumStrength))diagnostics.push({id:item.id,reason:'Force minimale : pénalité de vitesse à arbitrer selon le porteur'});
+      if(physical.stealthDisadvantage)diagnostics.push({id:item.id,reason:'Désavantage aux tests de Discrétion'});
+    }
     const candidates=item.abilities.map(a=>({ability:a,context}));
     // Each mode has its own weapon action, gated by runtime form state.
     for(const mode of item.modes.length?item.modes:[null]){
       try{
         const i={...instance,modeIds:mode?[mode.id]:instance.modeIds};
-        const w=weaponCapability(item,i,context);w.ability.id=mode?'weapon-'+mode.id:'weapon-attack';
+        const w=weaponCapability(item,i,{availableHands:shieldHeld?1:2,...context,...context.itemContexts?.[item.id]});w.ability.id=mode?'weapon-'+mode.id:'weapon-attack';
         // Eligibility is checked for this candidate mode; the engine checks active form at use.
         candidates.push({...w,instance:i});
       }catch(e){if(item.category==='weapon')diagnostics.push({id:item.id,reason:e.message});}
@@ -54,7 +66,7 @@ export function prepareForgeActor(base,entries,context={}) {
     else if(key==='save:wearer')for(const k of Object.keys(definition.saves))definition.saves[k]+=value;
     else if(!key.includes(':this-weapon:'))diagnostics.push({id:key,reason:'Contribution passive non raccordée au profil de combat'});
   }
-  definition.ac+=shields*2;
+  definition.ac+=shieldBase;
   for(const k of ['resistances','immunities'])definition[k]=[...new Set([...definition[k],...passive[k]])];
   diagnostics.push(...passive.pending);
   if(new Set(forms.map(f=>f.key)).size!==forms.length)throw Error('Incompatible initial forms');

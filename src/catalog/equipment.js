@@ -41,8 +41,7 @@ export const EQUIPMENT = Object.fromEntries([
   ["none", null],
   ...Object.entries(ARMORS).map(([id, v]) => [id, v.profile]),
 ]);
-// Damage dice and ability use are declarative. Properties such as loading, reach,
-// thrown range, ammunition, heavy and versatile remain explicit manual adjudications.
+// Shared 2014 equipment data. Forge adds no parallel equipment catalogue.
 const weapons = [
   [
     "club",
@@ -459,7 +458,7 @@ export const WEAPONS = Object.fromEntries(
 );
 export function weaponProfile(id, scores, proficiencies) {
   const w = WEAPONS[id];
-  if (!w) return null;
+  if (!w || !w.dice) return null;
   return {
     ability: w.finesse
       ? scores.dex > scores.str
@@ -477,3 +476,27 @@ export function weaponProfile(id, scores, proficiencies) {
     damageType: w.damageType,
   };
 }
+
+// SRD 5.1 weapon properties, distances in metres (5 feet = 1.5 m).
+const propertyGroups = {
+  light: ['club','dagger','handaxe','light-hammer','sickle','scimitar','shortsword','hand-crossbow'],
+  heavy: ['glaive','greataxe','greatsword','halberd','maul','pike','heavy-crossbow','longbow'],
+  'two-handed': ['greatclub','light-crossbow','shortbow','glaive','greataxe','greatsword','halberd','maul','pike','heavy-crossbow','longbow'],
+  reach: ['glaive','halberd','lance','pike','whip'],
+  loading: ['light-crossbow','hand-crossbow','heavy-crossbow','blowgun'],
+  ammunition: ['light-crossbow','shortbow','sling','blowgun','hand-crossbow','heavy-crossbow','longbow'],
+  thrown: ['dagger','handaxe','javelin','light-hammer','spear','dart','trident','net'],
+  special: ['lance','net'],
+};
+const ranges = {dagger:[6,18],handaxe:[6,18],javelin:[9,36],'light-hammer':[6,18],spear:[6,18],dart:[6,18],trident:[6,18],net:[1.5,4.5],'light-crossbow':[24,96],shortbow:[24,96],sling:[9,36],blowgun:[7.5,30],'hand-crossbow':[9,36],'heavy-crossbow':[30,120],longbow:[45,180]};
+const versatile = {quarterstaff:'1d8',spear:'1d8',battleaxe:'1d10',longsword:'1d10',trident:'1d8',warhammer:'1d10'};
+WEAPONS.net = {name:{fr:'Filet (spécial, sans dégâts)',en:'Net (special, no damage)'},dice:null,damageType:null,category:'martial',ranged:true,finesse:false,proficiency:'nets'};
+for (const [id,w] of Object.entries(WEAPONS)) {
+  w.properties=Object.entries(propertyGroups).filter(([,ids])=>ids.includes(id)).map(([key])=>key);
+  if(w.finesse) w.properties.push('finesse');
+  if(versatile[id]) w.properties.push('versatile');
+  w.hands=w.properties.includes('two-handed')?2:1;
+  w.versatileDice=versatile[id]??null;
+  [w.range,w.longRange]=ranges[id]??[w.properties.includes('reach')?3:1.5,null];
+}
+for(const [id,a] of Object.entries(ARMORS)) a.stealthDisadvantage=['padded','scale','half-plate','ring','chain','splint','plate'].includes(id);

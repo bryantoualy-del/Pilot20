@@ -54,11 +54,19 @@ try {
     await nameField.evaluate((e) => e.isConnected),
     "typing does not redraw editor",
   );
+  await p.getByLabel('Rechercher un sous-type',{exact:true}).fill('marteau');
+  await p.getByLabel('Sous-type',{exact:true}).selectOption('warhammer');
   await p.getByRole("button", { name: "Propriétés", exact: true }).click();
-  await p
-    .getByRole("button", { name: "Ajouter le profil de dégâts", exact: true })
-    .click();
-  await p.locator(".forge-effects summary").first().click();
+  assert.ok(await p.locator('[data-profile-summary]').innerText().then(t=>t.includes('1d8 contondant')));
+  assert.equal(await p.getByRole('button',{name:'Créer un profil de dégâts personnalisé',exact:true}).isVisible(),false);
+  for(const width of [1180,390,375]){
+    await p.setViewportSize({width,height:844});
+    assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'equipment profile responsive');
+    assert.ok(await p.getByLabel('Bonus magique',{exact:true}).isVisible());
+  }
+  await p.setViewportSize({width:1180,height:820});
+  await p.locator('summary').filter({hasText:/^Réglages avancés$/}).click();
+  await p.locator(".forge-effects summary").filter({hasText:/1d8/}).first().click();
   await p.getByLabel("Dés · Dé", { exact: true }).selectOption("10");
   await p.getByLabel("Bonus magique",{exact:true}).fill("1");
   await p.getByRole("button", {name:"Réserves",exact:true}).click();
@@ -99,6 +107,7 @@ try {
     exported = JSON.parse(await fs.readFile(file, "utf8"));
   assert.equal(exported.items[0].definition.name.fr, "Lame de test");
   assert.equal(exported.items[0].definition.effects.find(e=>e.params.role==="weapon-base").params.dice,"1d10");
+  assert.equal(exported.items[0].definition.effects.find(e=>e.params.role==='weapon-base').params.damageType,'bludgeoning');
   assert.equal(exported.items[0].definition.resources[0].recovery.formula,"1d4+1");
   assert.equal(exported.items[0].definition.abilities[0].effects[0].params.dice,"2d8+1");
   for(const stat of ["attack","damage"]){const rows=exported.items[0].definition.effects.filter(e=>e.templateId==="p20:effect:modifier"&&e.params.stat===stat);assert.equal(rows.length,1);assert.equal(rows[0].params.value,1);}

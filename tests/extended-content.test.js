@@ -11,8 +11,8 @@ import {creatorRepository} from '../src/creator/repository.js';
 import {grimoireService} from '../src/spellbook/service.js';
 const config=defaultCampaign(),context=campaignCatalog(playerCatalogs,[],config);
 function character(level,subclassId=null){let d=newDraft();Object.assign(d,{name:'Artificier de recette',raceId:'srd51:race:human',backgroundId:'srd51:background:acolyte',scores:templateScores('artificer'),classes:[{id:'artificer',level,subclassId}],classChosen:true});d=suggestChoices(context,config,d);for(const q of draftProgression(context,config,d).choices.filter(q=>q.kind==='prepared'))d.selections[q.id]=q.options.slice(0,q.count);d.reviewed=d.confirmed=true;return d;}
-test('477 usable spell definitions preserve SRD IDs and include authored XGE/TCE/PHB summaries',()=>{
- const spells=context.index.list('spell');assert.equal(spells.length,477);assert.equal(spells.filter(s=>s.source.kind==='srd').length,319);assert.equal(spells.filter(s=>s.source.kind==='reference').length,158);
+test('484 usable spell definitions preserve SRD IDs and include authored XGE/TCE/PHB summaries',()=>{
+ const spells=context.index.list('spell');assert.equal(spells.length,484);assert.equal(spells.filter(s=>s.source.kind==='srd').length,319);assert.equal(spells.filter(s=>s.source.kind==='reference').length,165);
  for(const spell of spells.filter(s=>s.source.kind==='reference')){assert.ok(spell.data.description.length>50);assert.equal(spell.data.automation.status,'manual');assert.equal(spell.data.automation.handler,null);}
  assert.ok(context.index.get('phb14:spell:armor-of-agathys'));assert.ok(context.index.get('phb14:spell:hex'));
  const only=campaignCatalog(playerCatalogs,[],{...config,sourceRestrictions:true,enabledSourceIds:['srd51']});assert.equal(only.index.list('spell').length,319);assert.equal(only.index.class('artificer'),undefined);

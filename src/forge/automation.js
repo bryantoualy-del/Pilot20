@@ -1,4 +1,6 @@
 /** Forge -> existing combat contract. No separate resolver or character persistence. */
+import { weaponContext } from './equipment.js';
+import { baseProfile } from './model.js';
 import { createSession, diceSpec, validateDefinition } from '../model.js';
 import { execute } from '../engine.js';
 import { conditionMet } from './conditions.js';
@@ -97,7 +99,7 @@ export function compileCapability(item,a,{instance,context={}}={}) {
       ability.effects.push({kind:t==='damage'?'damage':'heal',...(fixed?{amount:Number(p.dice)}:{dice:p.dice}),...(t==='damage'?{damageType:p.damageType??'untyped'}:{})});
       if(p.role==='weapon-base') {
         if(save)limitations.push('Attaque et sauvegarde successives non reliées.');
-        else {ability.attack={bonus:context.attackBonus??0};ability.attackAction=true;ability.combat.actionKind='weaponAttack';ability.combat.weapon=true;}
+        else {ability.attack={bonus:context.attackBonus??0};ability.attackAction=true;ability.combat.actionKind='weaponAttack';ability.combat.weapon=true;if(context.weaponTraits)ability.combat.traits=context.weaponTraits;}
       }
       if(e.duration||a.duration) limitations.push('Répétition des dégâts/soins à relier au calendrier.');
       automated.push(t==='damage'?'Dés, dégâts typés, résistances et vulnérabilités.':'Soins plafonnés aux PV maximum.');
@@ -200,6 +202,8 @@ export function simulateCapability(item,a,options={}) {
 
 /** One attack profile, with separate base/additional dice and exactly one magic bonus. */
 export function weaponCapability(item,instance,context={}) {
+  if(!['weapon','staff','ammunition'].includes(item.category))throw Error('Objet sans profil d’arme.');
+  context=weaponContext(item,context);
   const activeModes=item.modes.filter(m=>instance.modeIds.includes(m.id));
   if(new Set(activeModes.map(m=>m.exclusiveGroup)).size!==activeModes.length||activeModes.some(m=>!m.exclusiveGroup))throw Error('Formes incompatibles.');
   const all=[...item.effects,...activeModes.flatMap(m=>m.effects)];
@@ -208,7 +212,10 @@ export function weaponCapability(item,instance,context={}) {
   const a=newAbility();a.id='weapon-attack';a.name.fr='Attaquer avec '+item.name.fr;
   a.effects=structuredClone(all.filter(e=>e.templateId==='p20:effect:damage'&&['weapon-base','additional'].includes(e.params.role)));
   const bonus=stat=>all.filter(e=>e.templateId==='p20:effect:modifier'&&e.params.stat===stat&&e.params.scope==='this-weapon'&&e.params.operation==='add'&&!e.trigger&&!e.duration&&e.conditions.every(c=>conditionMet(c,instance,context)===true)).reduce((n,e)=>n+e.params.value,0);
-  const b=a.effects.find(e=>e.params.role==='weapon-base'),d=diceSpec(b.params.dice),value=d.bonus+(context.damageBonus??0)+bonus('damage');
-  b.params.dice=d.count+'d'+d.sides+(value? (value>0?'+':'')+value:'');
+  const b=a.effects.find(e=>e.params.role==='weapon-base');
+  const versatile=baseProfile(item)?.params.payload.versatileDice;
+  if(context.hands===2&&versatile)b.params.dice=versatile;
+  const fixed=/^\d+$/.test(b.params.dice),d=fixed?{bonus:Number(b.params.dice)}:diceSpec(b.params.dice),value=d.bonus+(context.damageBonus??0)+bonus('damage');
+  b.params.dice=fixed?String(Math.max(0,value)):d.count+'d'+d.sides+(value? (value>0?'+':'')+value:'');
   return {ability:a,context:{...context,...(activeModes.length===1?{requiredForm:{key:instance.instanceId,id:activeModes[0].id}}:{}),attackBonus:(context.attackBonus??0)+bonus('attack')}};
 }

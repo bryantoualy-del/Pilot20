@@ -1,3 +1,4 @@
+import {statistic} from '../../src/rules/combat.js';
 import {ABILITIES,SKILLS} from '../../src/character/contracts.js';
 import {el,button} from './dom.js';
 import {optionName} from './editor.js';
@@ -16,9 +17,9 @@ export function characterSheet({record,draft,stats,runtime,a,tab,onTab,actions,s
  root.append(el('div',{class:'sheet-navigation'},button('← '+a.t('library'),()=>a.nav('library')),draft?button(a.t('edit'),()=>a.nav('creator',d.id)):null));
  root.append(el('div',{class:'sheet-identity'},el('div',{class:'avatar'},d.identity.portrait?el('img',{src:d.identity.portrait,alt:''}):d.identity.name.slice(0,1)),el('div',{},el('h1',{},d.identity.name),el('p',{},d.classes.map(c=>a.cls(c.id)+' '+c.level).join(' / ')),el('small',{},[d.ancestry?.subraceId?entryName(d.ancestry.subraceId):d.ancestry?.id?entryName(d.ancestry.id):null,...d.classes.map(c=>c.subclassId?entryName(c.subclassId):null)].filter(Boolean).join(' · ')))));
  const vital=(label,value)=>el('div',{class:'sheet-vital'},el('small',{},label),el('strong',{},value));
- root.append(el('div',{class:'sheet-vitals'},vital(a.t('hp'),runtime?runtime.hp.current+' / '+runtime.hp.max:stats.maxHp+' / '+stats.maxHp),vital(a.t('ac'),stats.ac),vital(w('Initiative','Initiative'),signed(stats.initiative)),vital(w('Vitesse','Speed'),fr?(stats.speed*.3).toLocaleString('fr')+' m':stats.speed+' ft.')));
+ root.append(el('div',{class:'sheet-vitals'},vital(a.t('hp'),runtime?runtime.hp.current+' / '+runtime.hp.max:stats.maxHp+' / '+stats.maxHp),vital(a.t('ac'),runtime?statistic(runtime,'ac',runtime.definition.ac):stats.ac),vital(w('Initiative','Initiative'),signed(stats.initiative)),vital(w('Vitesse','Speed'),fr?(stats.speed*.3).toLocaleString('fr')+' m':stats.speed+' ft.')));
  root.append(el('div',{class:'sheet-quick'},el('span',{},w('Maîtrise ','Proficiency ')+signed(stats.proficiency)),el('span',{},w('Dés de vie ','Hit dice ')+d.classes.map(c=>c.level+'d'+c.hitDie).join(' + ')),el('span',{},w('Perception passive ','Passive Perception ')+stats.passives.perception)));
- if(runtime)root.append(el('p',{class:'sheet-note'},w('PV et ressources : simulation locale active.','HP and resources: local simulation active.')));
+ if(runtime)root.append(el('p',{class:'sheet-note'},w('PV, CA et ressources : simulation locale active.','HP, AC and resources: local simulation active.')));
  if(!compatible)root.append(el('p',{class:'warning-text'},a.t('sourceAbsent')),button(a.t('sources'),()=>a.nav('sources')));
  const nav=el('nav',{class:'sheet-tabs','aria-label':w('Rubriques de la fiche','Character sections')}),body=el('div',{class:'sheet-content'});
  root.append(nav,body);
@@ -26,11 +27,12 @@ export function characterSheet({record,draft,stats,runtime,a,tab,onTab,actions,s
  el('div',{class:'sheet-abilities'},ABILITIES.map(k=>el('div',{class:'sheet-ability'},el('span',{class:'sheet-ability-label'},a.label(k)),el('strong',{},signed(stats.modifiers[k])),el('small',{},w('Valeur ','Score ')+d.scores[k]),el('span',{class:'sheet-save'},d.saveProficiencies.includes(k)?el('span',{'aria-label':w('Sauvegarde maîtrisée','Proficient saving throw')},'● '):null,w('Sauv. ','Save ')+signed(stats.saves[k]))))));
  overview.append(el('p',{class:'sheet-note'},w('● Sauvegarde maîtrisée.','● Proficient saving throw.')));
  const attacks=el('section',{},el('h2',{},w('Attaques','Attacks')));
- for(const item of d.equipment.filter(e=>e.equipped&&stats.weapons[e.id])){const v=stats.weapons[item.id];attacks.append(line(itemName(item),signed(v.attack),[item.weapon?.dice??item.weapon?.damageDice,w('Bonus aux dégâts ','Damage bonus ')+signed(v.damageBonus)].filter(Boolean).join(' · ')));}
+ if(runtime)for(const ability of Object.values(runtime.definition.abilities).filter(b=>b.combat?.weapon))attacks.append(line(ability.name,signed(ability.attack.bonus),ability.effects.filter(e=>e.kind==='damage').map(e=>(e.dice??e.amount)+' '+optionName(e.damageType,a)).join(' + ')));
+ else for(const item of d.equipment.filter(e=>e.equipped&&stats.weapons[e.id])){const v=stats.weapons[item.id];attacks.append(line(itemName(item),signed(v.attack),[item.weapon?.dice??item.weapon?.damageDice,w('Bonus aux dégâts ','Damage bonus ')+signed(v.damageBonus)].filter(Boolean).join(' · ')));}
  attacks.append(line(w('Action Attaquer','Attack action'),stats.attacksPerAction+' '+w('attaque(s)','attack(s)')));
  const resources=el('section',{},el('h2',{},w('Ressources','Resources')));
- for(const [key,r]of Object.entries(stats.resources))resources.append(line(resourceName(key,a),(runtime?.resources[key]??r.max)+' / '+r.max,r.recovery==='short'?w('Repos court','Short rest'):r.recovery==='long'?w('Repos long','Long rest'):null));
- if(!Object.keys(stats.resources).length)resources.append(el('p',{class:'sheet-note'},w('Aucune réserve limitée.','No limited resources.')));
+ for(const [key,r]of Object.entries(runtime?.definition.resources??stats.resources))resources.append(line(resourceName(key,a),(runtime?.resources[key]??r.max)+' / '+r.max,r.recovery==='short'?w('Repos court','Short rest'):r.recovery==='long'?w('Repos long','Long rest'):null));
+ if(!Object.keys(runtime?.definition.resources??stats.resources).length)resources.append(el('p',{class:'sheet-note'},w('Aucune réserve limitée.','No limited resources.')));
  overview.append(el('div',{class:'sheet-columns'},attacks,resources));
  for(const [key,label]of [['resistances',w('Résistances','Resistances')],['immunities',w('Immunités','Immunities')],['vulnerabilities',w('Vulnérabilités','Vulnerabilities')]])if(d.defenses?.[key]?.length)overview.append(el('p',{class:'sheet-note'},label+' : '+d.defenses[key].map(id=>optionName(id,a)).join(' · ')));
  panes.set('overview',overview);

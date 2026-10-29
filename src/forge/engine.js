@@ -307,7 +307,7 @@ export function shieldAC(
     !instance.equipped ||
     !instance.ownerId ||
     instance.quantity < 1 ||
-    instance.consumed
+    instance.consumed || instance.active === false
   )
     return { ac: baseACWithoutShield, pending: source.pending };
   const profile = definition.effects.find(
